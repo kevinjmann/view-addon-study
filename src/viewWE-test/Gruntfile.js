@@ -43,22 +43,34 @@ module.exports = function(grunt) {
       background: {
         files: {
           src: [
-            "../viewWE/background.js",
-            "test/unit/background.test.js"
+            "../viewWE/*.js",
+            "test/unit/*.test.js"
           ]
         },
-        preprocessors: {"../viewWE/background.js": ["coverage"]}
+        preprocessors: {"../viewWE/*.js": ["coverage"]}
       },
       toolbar: {
         files: {
           src: [
-            "../viewWE/toolbar/toolbar.js",
-            "test/unit/toolbar/toolbar.test.js"
+            "../viewWE/toolbar/*.js",
+            "test/unit/toolbar/*.test.js"
           ]
         },
         preprocessors: {
-          "../viewWE/toolbar/toolbar.js": ["coverage"],
+          "../viewWE/toolbar/*.js": ["coverage"],
           "**/toolbar.html": ["html2js"]
+        }
+      },
+      optionsjs: {
+        files: {
+          src: [
+            "../viewWE/options/*.js",
+            "test/unit/options/*.test.js"
+          ]
+        },
+        preprocessors: {
+          "../viewWE/options/*.js": ["coverage"],
+          "**/options.html": ["html2js"]
         }
       }
     }

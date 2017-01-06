@@ -12,7 +12,7 @@ var view = {
   // user options (defaults)
   fixedOrPercentage: 0,
   fixedNumberOfExercises: 25,
-  proportionOfExercises: 100,
+  percentageOfExercises: 100,
   choiceMode: 0,
   firstOffset: 0,
   intervalSize: 1,
@@ -38,9 +38,11 @@ var view = {
         msg: "call sendTopics"
       }, function(response) {
         console.log("received response: got topics JSON object.");
-        chrome.storage.local.get(["userEmail",
+        chrome.storage.local.get([
+          "userEmail",
           "userid",
-          "enabled"], function(res) {
+          "enabled"
+        ], function(res) {
           view.topics = response.topics;
           chrome.storage.local.set({
             serverURL: view.serverURL,
@@ -72,54 +74,46 @@ var view = {
     );
   },
 
+  /**
+   * Save all user options obtained from the options page.
+   */
+  saveUserOptions: function() {
+    console.log("saveUserOptions()");
+    chrome.storage.local.get([
+      "fixedOrPercentage",
+      "fixedNumberOfExercises",
+      "percentageOfExercises",
+      "choiceMode",
+      "firstOffset",
+      "intervalSize",
+      "showInst"
+    ], function(res) {
+      view.fixedOrPercentage = res.fixedOrPercentage;
+      view.fixedNumberOfExercises = res.fixedNumberOfExercises;
+      view.percentageOfExercises = res.percentageOfExercises;
+      view.choiceMode = res.choiceMode;
+      view.firstOffset = res.firstOffset;
+      view.intervalSize = res.intervalSize;
+      view.showInst = res.showInst;
+    });
+  },
+
   /*
    * Initialize all user options and make them accessible to VIEW.
    * Afterwards start enhancing.
    */
   startToEnhance: function() {
     console.log("startToEnhance()");
-    chrome.storage.local.get(["fixedOrPercentage",
-      "fixedNumberOfExercises",
-      "proportionOfExercises",
-      "choiceMode",
-      "firstOffset",
-      "intervalSize",
-      "showInst",
+    chrome.storage.local.get([
       "enabled",
       "language",
       "topic",
-      "activity"], function(res) {
-      if (chrome.runtime.lastError) {
-        // an error occurred, do nothing
-        console.log("startToEnhance: Storage error occurred!\n" + chrome.runtime.lastError);
-      }
-      else if (res.language == undefined || res.topic == undefined || res.activity == undefined) {
+      "activity"
+    ], function(res) {// TODO: this should be handled in the toolbar instead
+      if (res.language == undefined || res.topic == undefined || res.activity == undefined) {
         console.log("startToEnhance: user didn't select language, topic or activity." +
           "Use default values.");
-      }
-      else if (res.fixedOrPercentage == undefined) {
-        console.log("startToEnhance: in the options page no options were set yet, " +
-          "set enabled autorun, language, topic and activity and use default values for the rest.");
-
-        // enabled, language, topic and activity selections (default)
-        view.enabled = res.enabled;
-        view.language = res.language;
-        view.topic = res.topic;
-        view.activity = res.activity;
-
-        // set the topic name
-        view.topicName = view.interaction.getTopicName(view.topic);
       } else {
-        // the storage items are available, update...
-        // user options
-        view.fixedOrPercentage = res.fixedOrPercentage;
-        view.fixedNumberOfExercises = res.fixedNumberOfExercises;
-        view.proportionOfExercises = res.proportionOfExercises;
-        view.choiceMode = res.choiceMode;
-        view.firstOffset = res.firstOffset;
-        view.intervalSize = res.intervalSize;
-        view.showInst = res.showInst;
-
         // enabled, language, topic and activity selections (default)
         view.enabled = res.enabled;
         view.language = res.language;
@@ -146,6 +140,9 @@ function processMessageForView(request, sender, sendResponse) {
       console.log("startToEnhance: received '" + request.msg + "'");
       // initialize the user options and save them globally
       view.startToEnhance();
+      break;
+    case "call saveUserOptions":
+      view.saveUserOptions();
   }
 }
 

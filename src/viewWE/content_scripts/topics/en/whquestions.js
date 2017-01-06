@@ -122,7 +122,7 @@ view.whquestions = {
       numExercises = view.fixedNumberOfExercises;
     }
     else if (fixedOrPercentage == 1) {
-      numExercises = view.proportionOfExercises / 100.0 * $hits.length;
+      numExercises = view.percentageOfExercises / 100.0 * $hits.length;
     }
     else {
       // we should never get here

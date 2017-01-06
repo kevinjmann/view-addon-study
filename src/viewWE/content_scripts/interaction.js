@@ -449,7 +449,7 @@ view.interaction = {
 
     var fixedOrPercentageValue = view.fixedOrPercentage;
     var fixedNumberOfExercises = view.fixedNumberOfExercises;
-    var proportionOfExercises = view.proportionOfExercises;
+    var percentageOfExercises = view.percentageOfExercises;
     var choiceModeValue = view.choiceMode;
     var firstOffset = view.firstOffset;
     var intervalSize = view.intervalSize;
@@ -470,7 +470,7 @@ view.interaction = {
       numExercises = fixedNumberOfExercises * partExercises;
     }
     else if (fixedOrPercentageValue == 1) {
-      numExercises = proportionOfExercises * hitList.length;
+      numExercises = percentageOfExercises * hitList.length;
     }
     else {
       // we should never get here
@@ -582,7 +582,7 @@ view.interaction = {
 
     var fixedOrPercentageValue = view.fixedOrPercentage;
     var fixedNumberOfExercises = view.fixedNumberOfExercises;
-    var proportionOfExercises = view.proportionOfExercises;
+    var percentageOfExercises = view.percentageOfExercises;
     var choiceModeValue = view.choiceMode;
     var firstOffset = view.firstOffset;
     var intervalSize = view.intervalSize;
@@ -603,7 +603,7 @@ view.interaction = {
       numExercises = fixedNumberOfExercises * partExercises;
     }
     else if (fixedOrPercentageValue == 1) {
-      numExercises = proportionOfExercises * hitList.length;
+      numExercises = percentageOfExercises * hitList.length;
     }
     else {
       // we should never get here

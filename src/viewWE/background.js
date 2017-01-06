@@ -283,8 +283,19 @@ const background = {
     });
   },
 
+  /**
+   * Send a request to the content script to call abortEnhancement().
+   */
   callAbortEnhancement: function(){
     chrome.tabs.sendMessage(background.currentTabId, {msg: "call abortEnhancement"});
+  },
+
+  /**
+   * Send a request to the content script to call saveUserOptions().
+   */
+  callSaveUserOptions: function() {
+    console.log("saveUserOptions");
+    chrome.tabs.sendMessage(background.currentTabId, {msg: "call saveUserOptions"});
   },
 
   /**
@@ -528,6 +539,8 @@ function processMessage(request, sender, sendResponse) {
     case "send requestData abort":
       background.sendRequestDataAbort(request);
       break;
+    case "call saveUserOptions":
+      background.callSaveUserOptions(request);
     default:
       background.createBasicNotification(
         "unhandled-message-notification",
