@@ -8,10 +8,6 @@ authentic texts selected by the learner. VIEW is a multilingual extension of
 <a href="http://purl.org/icall/werti">Working with English Real Texts (WERTi)</a>,
 which has been under development since 2006.</p>
 
-<p>Get started with the <a href="index.jsp?content=intro">VIEW extension</a>
-or try a demo of one of the available <a href="index.jsp?content=activities">topics 
-and activities</a>!</p>			
-
 <h2>About VIEW</h2>
 
 <div class="text">
@@ -98,4 +94,4 @@ This projects contains the folders `viewWE` and `viewWE-test` and can both be fo
 
 The `viewWE` folder has all of the VIEW-Addon code.
 
-The `viewWE-test` folder contains tests designed for the VIEW-Addon code to maintain the addon easier.
+The `viewWE-test` folder contains tests designed for the VIEW-Addon to make the maintenance easier.
