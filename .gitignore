@@ -4,3 +4,4 @@ view-webextension.iml
 *.zip
 *.log
 *~
+src/viewWE-test/coverage
