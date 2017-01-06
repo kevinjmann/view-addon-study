@@ -1,0 +1,1784 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for toolbar/toolbar.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../prettify.css" />
+    <link rel="stylesheet" href="../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../index.html">all files</a> / <a href="index.html">toolbar/</a> toolbar.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>139/139</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>35/35</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>48/48</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>139/139</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+432
+433
+434
+435
+436
+437
+438
+439
+440
+441
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456
+457
+458
+459
+460
+461
+462
+463
+464
+465
+466
+467
+468
+469
+470
+471
+472
+473
+474
+475
+476
+477
+478
+479
+480
+481
+482
+483
+484
+485
+486
+487
+488
+489
+490
+491
+492
+493
+494
+495
+496
+497
+498
+499
+500
+501
+502
+503
+504
+505
+506
+507
+508
+509
+510
+511
+512
+513
+514
+515
+516
+517
+518
+519
+520
+521
+522
+523
+524
+525
+526
+527
+528
+529
+530
+531
+532
+533
+534
+535
+536
+537
+538
+539
+540
+541
+542
+543
+544
+545
+546
+547
+548
+549
+550
+551
+552
+553
+554
+555
+556
+557
+558
+559
+560
+561
+562
+563
+564
+565
+566
+567
+568
+569
+570
+571
+572
+573
+574</td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">68×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">199×</span>
+<span class="cline-any cline-yes">175×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">199×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">68×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">12×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">70×</span>
+<span class="cline-any cline-yes">70×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">8×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-yes">6×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">5×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span></td><td class="text"><pre class="prettyprint lang-js">/**
+ * From: https://gist.github.com/jtsternberg/1e03f5fd5be8427170c5
+ * Caches jquery selectors when they are requested, so that each element
+ * is only selected once. An element can be reset, if necessary.
+ * For selectors like $(this) in e.g. selection menus you should always
+ * reset the element or don't use it at all.
+ * Be careful of selections that won't stay the same.
+ *
+ * @returns {{get: get_from_cache}} use: let cache = new Selector_Cache();
+ * cache.get(selector) or
+ * cache.get(selector, true) if the selected element should be reset
+ * @constructor initialized with: new Selector_Cache()
+ */
+function Selector_Cache() {
+  const collection = {};
+&nbsp;
+  function get_from_cache(selector, reset) {
+    if (undefined === collection[selector] || true === reset) {
+      collection[selector] = $(selector);
+    }
+&nbsp;
+    return collection[selector];
+  }
+&nbsp;
+  return {get: get_from_cache};
+}
+&nbsp;
+&nbsp;
+const toolbar = {
+  topics: {},
+&nbsp;
+  $cache: new Selector_Cache(),
+&nbsp;
+  selectorStart: "#wertiview-toolbar-",
+&nbsp;
+  /**
+   * Send a request to the background script to send the topics.
+   * After they are received we start to initialize the toolbar.
+   */
+  requestTopicsAndInit: function() {
+    chrome.runtime.sendMessage({msg: "call sendTopics"}, function(response) {
+      toolbar.init(response.topics);
+    });
+  },
+&nbsp;
+  /**
+   * Initialization of the toolbar when the browser action button
+   * is clicked and active event handlers on the toolbar.
+   *
+   * @param {Object} topics info on topics obtained from the topics json files
+   */
+  init: function(topics) {
+    toolbar.topics = topics;
+&nbsp;
+    toolbar.initViewMenu();
+&nbsp;
+    toolbar.initAutoEnhance();
+&nbsp;
+    toolbar.initLanguageMenu();
+&nbsp;
+    toolbar.initTopicMenu();
+&nbsp;
+    toolbar.initialInteractionState();
+&nbsp;
+    toolbar.initEnhanceBtn();
+&nbsp;
+    toolbar.initAbortBtn();
+&nbsp;
+    toolbar.initRestoreBtn();
+&nbsp;
+    toolbar.initSignInOutInterfaces();
+&nbsp;
+    toolbar.initSignInLink();
+&nbsp;
+    toolbar.initSignOutLink();
+&nbsp;
+    toolbar.initToggleToolbar();
+&nbsp;
+    toolbar.restoreSelections();
+  },
+&nbsp;
+  /**
+   * Init the view menu handler. Toggle between hiding and showing
+   * the drop down content on click.
+   */
+  initViewMenu: function() {
+    toolbar.$cache.get("#wertiview-VIEW-menu-btn").on("click",
+      toolbar.requestToToggleMenuView);
+  },
+&nbsp;
+  /**
+   * Send a request to the background script to pass on the message to
+   * toggle the VIEW menu.
+   */
+  requestToToggleMenuView: function() {
+    chrome.runtime.sendMessage({msg: "toggle Menu VIEW"}, toolbar.noResponse);
+  },
+&nbsp;
+  /**
+   * A function that is supposed to be a placeholder for a response callback.
+   */
+  noResponse: function() {
+    // This is intentional
+  },
+&nbsp;
+  /**
+   * Init the handler for the auto enhance enabled/disabled buttons.
+   * A click on the enabled button will hide it and show the disabled button
+   * and vice versa.
+   */
+  initAutoEnhance: function() {
+    toolbar.$cache.get(toolbar.selectorStart + "enabled").on("click",
+      toolbar.turnOffAutoEnhanceAndSet);
+&nbsp;
+    toolbar.$cache.get(toolbar.selectorStart + "disabled").on("click",
+      toolbar.turnOnAutoEnhanceAndSet);
+  },
+&nbsp;
+  /**
+   * Turn off auto enhance and set enabled to "false".
+   */
+  turnOffAutoEnhanceAndSet: function() {
+    toolbar.turnOffAutoEnhance();
+    chrome.storage.local.set({enabled: false});
+  },
+&nbsp;
+  /**
+   * Turn off auto enhance by hiding the enabled button
+   * and showing the disabled button.
+   */
+  turnOffAutoEnhance: function() {
+    toolbar.$cache.get(toolbar.selectorStart + "enabled").hide();
+    toolbar.$cache.get(toolbar.selectorStart + "disabled").show();
+  },
+&nbsp;
+  /**
+   * Turn on auto enhance and set enabled to "true".
+   */
+  turnOnAutoEnhanceAndSet: function() {
+    toolbar.turnOnAutoEnhance();
+    chrome.storage.local.set({enabled: true});
+  },
+&nbsp;
+  /**
+   * Turn on auto enhance by hiding the disabled button
+   * and showing the enabled button.
+   */
+  turnOnAutoEnhance: function() {
+    toolbar.$cache.get(toolbar.selectorStart + "disabled").hide();
+    toolbar.$cache.get(toolbar.selectorStart + "enabled").show();
+  },
+&nbsp;
+  /**
+   * Init the handler for the language menu selection box.
+   * Select the topic menu according to the language on change.
+   */
+  initLanguageMenu: function() {
+    toolbar.$cache.get(toolbar.selectorStart + "language-menu").on("change", function() {
+      toolbar.selectTopicMenu($(this).val());
+    });
+  },
+&nbsp;
+  /**
+   * Select the topic menu according to the language option.
+   * Hide all other topic menus.
+   *
+   * @param {string} language the language selected by the user
+   */
+  selectTopicMenu: function(language) {
+    toolbar.$cache.get(toolbar.selectorStart + "language-menu").find("option").each(function() {
+      toolbar.toggleTopicMenu(language, $(this).val());
+    });
+  },
+&nbsp;
+  /**
+   * Toggles the topic menu in question according to the selected language
+   * and the current language option. If they are equal the topic menu will
+   * be shown, otherwise it will be hidden.
+   *
+   * @param {string} selectedLanguage the language selected by the user
+   * @param {string} currentLanguage any of the language options
+   */
+  toggleTopicMenu: function(selectedLanguage, currentLanguage) {
+    const $topicMenu = toolbar.$cache.get(toolbar.selectorStart + "topic-menu-" + currentLanguage);
+    const selectedTopicMenu = "selected-toolbar-topic-menu";
+&nbsp;
+    if (selectedLanguage === currentLanguage) {
+      $topicMenu.addClass(selectedTopicMenu).show();
+      toolbar.updateActivities(selectedLanguage, $topicMenu.val());
+    } else {
+      $topicMenu.removeClass(selectedTopicMenu).hide();
+    }
+  },
+&nbsp;
+  /**
+   * Update activities when the topic is changed. Enable activities available
+   * to the topic and disable the ones that aren't.
+   * Activity "Pick an Activity" is always enabled, selected and visible.
+   *
+   * @param language the current language
+   * @param topic the current topic
+   */
+  updateActivities: function(language, topic) {
+    const activitySelectors = toolbar.fillActivitySelectors();
+    const unselected = "unselected";
+    const undefinedType = "undefined";
+&nbsp;
+    activitySelectors[unselected].prop("disabled", false).prop("selected", true).show();
+&nbsp;
+    if (
+      language == unselected ||
+      topic.startsWith(unselected) ||
+      typeof toolbar.topics[language] === undefinedType ||
+      typeof toolbar.topics[language][topic] === undefinedType) {
+      activitySelectors[unselected].next().hide();
+    }
+    else {
+      toolbar.enableAndShowActivities(language, topic, activitySelectors);
+    }
+  },
+&nbsp;
+  /**
+   * Fill up the activity selectors, disable and hide all activities.
+   *
+   * @returns {Object} all activity selectors
+   */
+  fillActivitySelectors: function() {
+    let activitySelectors = {};
+&nbsp;
+    toolbar.$cache.get(toolbar.selectorStart + "activity-menu").find("option[value]").each(function() {
+      const currentActivity = $(this).val();
+      activitySelectors[currentActivity] =
+        $(toolbar.selectorStart + "activity-" + currentActivity).prop("disabled", true).hide();
+    });
+    return activitySelectors;
+  },
+&nbsp;
+  /**
+   * Enable and show only activities that are available for the language and
+   * topic combination. Show the horizontal separator.
+   *
+   * @param {string} language the selected language
+   * @param {string} topic the selected topic
+   * @param {Array} activitySelectors the object of jquery selectors for each
+   * activity
+   */
+  enableAndShowActivities: function(language, topic, activitySelectors) {
+    activitySelectors["unselected"].next().show();
+&nbsp;
+    const availableActivities = toolbar.topics[language][topic].activities;
+&nbsp;
+    for (let i = 0; i &lt; availableActivities.length; i++) {
+      activitySelectors[availableActivities[i].activity].prop("disabled", false).show();
+    }
+  },
+&nbsp;
+  /**
+   * Init the handler for the topic menu selection box.
+   * Update the activities according to language and topic on change.
+   */
+  initTopicMenu: function() {
+    toolbar.$cache.get(
+      toolbar.selectorStart + "topic-menu-unselected, " +
+      toolbar.selectorStart + "topic-menu-en, " +
+      toolbar.selectorStart + "topic-menu-de, " +
+      toolbar.selectorStart + "topic-menu-es, " +
+      toolbar.selectorStart + "topic-menu-ru").on("change", function() {
+      const language = toolbar.$cache.get(toolbar.selectorStart + "language-menu").val();
+      const topic = $(this).val();
+&nbsp;
+      toolbar.updateActivities(language, topic);
+    });
+  },
+&nbsp;
+  /**
+   * Returns to initial interaction state, where the loading image, abort
+   * and restore button are hidden and the enhance button is enabled.
+   */
+  initialInteractionState: function() {
+    toolbar.$cache.get(toolbar.selectorStart + "enhance-button").show();
+    toolbar.$cache.get(toolbar.selectorStart + "restore-button").hide();
+    toolbar.$cache.get(toolbar.selectorStart + "abort-button").hide();
+    toolbar.$cache.get(toolbar.selectorStart + "loading-image").hide();
+  },
+&nbsp;
+  /**
+   * Init the handler for the enhance button.
+   * Call setSelectionsAndPrepareToEnhance() on click.
+   */
+  initEnhanceBtn: function() {
+    toolbar.$cache.get(toolbar.selectorStart + "enhance-button").on("click",
+      toolbar.setSelectionsAndPrepareToEnhance);
+  },
+&nbsp;
+  /**
+   * Set language, topic and activity.
+   * Afterwards prepare to enhance the page.
+   */
+  setSelectionsAndPrepareToEnhance: function() {
+    chrome.storage.local.set({
+      language: toolbar.$cache.get(toolbar.selectorStart + "language-menu").val(),
+      topic: toolbar.$cache.get(".selected-toolbar-topic-menu").val(),
+      activity: toolbar.$cache.get(toolbar.selectorStart + "activity-menu").val()
+    }, toolbar.prepareToEnhance);
+  },
+&nbsp;
+  /**
+   * Disable enhance and restore button, show spinning wheel.
+   * Send a request to the background script to pass on the
+   * message to call startToEnhance().
+   */
+  prepareToEnhance: function() {
+    toolbar.$cache.get(toolbar.selectorStart + "enhance-button").hide();
+    toolbar.$cache.get(toolbar.selectorStart + "restore-button").hide();
+    toolbar.$cache.get(toolbar.selectorStart + "loading-image").show();
+&nbsp;
+    chrome.runtime.sendMessage({msg: "call startToEnhance"}, toolbar.noResponse);
+  },
+&nbsp;
+  /**
+   * Init the handler for the abort button.
+   * Call requestToCallAbort() on click.
+   */
+  initAbortBtn: function() {
+    toolbar.$cache.get(toolbar.selectorStart + "abort-button").on("click",
+      toolbar.requestToCallAbort);
+  },
+&nbsp;
+  /**
+   * Send a request to the background script to pass on the
+   * message to call abort().
+   */
+  requestToCallAbort: function() {
+    chrome.runtime.sendMessage({msg: "call abort"}, toolbar.noResponse);
+  },
+&nbsp;
+  /**
+   * Init the handler for the restore button.
+   * Call requestToCallRestoreToOriginal() on click.
+   */
+  initRestoreBtn: function() {
+    toolbar.$cache.get(toolbar.selectorStart + "restore-button").on("click",
+      toolbar.requestToCallRestoreToOriginal);
+  },
+&nbsp;
+  /**
+   * Send a request to the background script to pass on the
+   * message to call restoreToOriginal().
+   */
+  requestToCallRestoreToOriginal: function() {
+    chrome.runtime.sendMessage({msg: "call restoreToOriginal"}, toolbar.noResponse);
+  },
+&nbsp;
+  /**
+   * Set the href attribute for the identity sign-in/out link.
+   */
+  initSignInOutInterfaces: function() {
+    //chrome.storage.local.get("serverURL", function(res) {
+      //var link = res.serverURL + "/openid/authenticator.html";
+      // TODO: hardcoded, implement authenticator.html on this server
+    //});
+    const link = "http://sifnos.sfs.uni-tuebingen.de/VIEW/openid/authenticator.html";
+    toolbar.$cache.get(toolbar.selectorStart + "identity-signinlink").attr("link", link);
+    toolbar.$cache.get(toolbar.selectorStart + "identity-signoutlink").attr("link", link);
+  },
+&nbsp;
+  /**
+   * Init the handler for the sign in link.
+   * Call openSignInWinodow() on click.
+   */
+  initSignInLink: function() {
+    toolbar.$cache.get(toolbar.selectorStart + "identity-signinlink").on("click", 
+      toolbar.openSignInWindow);
+  },
+&nbsp;
+  /**
+   * Use the sign in link to open the authenticator sign in window.
+   */
+  openSignInWindow: function() {
+    window.open(
+      toolbar.$cache.get(toolbar.selectorStart + "identity-signinlink").attr("link"),
+      "Sign In",
+      "width=985,height=735").focus();
+  },
+&nbsp;
+  /**
+   * Init the handler for the sign out link.
+   * Call openSignOutWindow() on click.
+   */
+  initSignOutLink: function() {
+    toolbar.$cache.get(toolbar.selectorStart + "identity-signoutlink").on("click",
+      toolbar.openSignOutWindow);
+  },
+&nbsp;
+  /**
+   * Use the sign out link to open the authenticator sign out window.
+   */
+  openSignOutWindow: function() {
+    window.open(
+      toolbar.$cache.get(toolbar.selectorStart + "identity-signoutlink").attr("link"),
+      "Sign Out",
+      "width=1,height=1").moveTo(0, window.screen.availHeight + 1000);
+  },
+&nbsp;
+  /**
+   * Init the handler for the "X" button.
+   * Call requestToToggleToolbar() on click.
+   */
+  initToggleToolbar: function() {
+    toolbar.$cache.get(toolbar.selectorStart + "toggle-button").on("click",
+      toolbar.requestToToggleToolbar);
+  },
+&nbsp;
+  /**
+   * Send a request to the background script to pass on the
+   * message to toggle the toolbar.
+   */
+  requestToToggleToolbar: function() {
+    chrome.runtime.sendMessage({msg: "toggle toolbar"}, toolbar.noResponse);
+  },
+&nbsp;
+  /**
+   * Restores all selections from language, topic and activity.
+   * Restore auto-run option (enabled/disabled).
+   * The values right to "||" are default values.
+   */
+  restoreSelections: function() {
+    chrome.storage.local.get([
+      "language",
+      "topic",
+      "activity",
+      "userEmail",
+      "enabled"], function(res) {
+      const language = res.language || "unselected";
+      const topic = res.topic || "unselected";
+      const activity = res.activity || "unselected";
+      const userEmail = res.userEmail || "";
+      const enabled = res.enabled || false;
+&nbsp;
+      toolbar.restoreSelectionMenus(language, topic, activity);
+&nbsp;
+      toolbar.selectTopicMenu(language);
+&nbsp;
+      toolbar.verifySignInStatus(userEmail);
+&nbsp;
+      toolbar.restoreAutoEnhance(enabled);
+    });
+  },
+&nbsp;
+  /**
+   * Restore all selections of the selection menus.
+   *
+   * @param {string} language the stored language
+   * @param {string} topic the stored topic
+   * @param {string} activity the stored activity
+   */
+  restoreSelectionMenus: function(language, topic, activity) {
+    const selected = "selected";
+&nbsp;
+    toolbar.$cache.get(toolbar.selectorStart + "language-" + language).prop(selected, true);
+&nbsp;
+    const topicMenu = toolbar.selectorStart + "topic-" + topic;
+&nbsp;
+    // special case Dets and Preps are shared between en, de and es
+    if (topic == "determiners" || topic == "Preps") {
+      toolbar.$cache.get(topicMenu + "-" + language).prop(selected, true);
+    }
+    else {
+      toolbar.$cache.get(topicMenu).prop(selected, true);
+    }
+&nbsp;
+    toolbar.$cache.get(toolbar.selectorStart + "activity-" + activity).prop(selected, true);
+  },
+&nbsp;
+  /**
+   * The user will be signed in/out according to the value of the
+   * stored email address.
+   *
+   * @param {string} userEmail the email address of the user
+   */
+  verifySignInStatus: function(userEmail) {
+    if (userEmail == "") {
+      toolbar.signOut();
+    }
+    else {
+      toolbar.signIn(userEmail);
+    }
+  },
+&nbsp;
+  /**
+   * Restore enabled/disabled auto-enhance selection.
+   *
+   * @param {boolean} enabled true if auto-enhance is still enabled, false otherwise
+   */
+  restoreAutoEnhance: function(enabled) {
+    if (enabled) {
+      toolbar.turnOnAutoEnhance();
+&nbsp;
+      toolbar.$cache.get(toolbar.selectorStart + "enhance-button").click();
+    }
+    else {
+      toolbar.turnOffAutoEnhance();
+    }
+  },
+&nbsp;
+  /**
+   * Hide the sign in link and show the signed in status, user email and sign
+   * out link. Fill in the user email.
+   *
+   * @param {string} userEmail the user id given from the provider
+   */
+  signIn: function(userEmail) {
+    const identityIdStart = toolbar.selectorStart + "identity-";
+    const $UserEmailID = toolbar.$cache.get(identityIdStart + "signedinuseremail");
+&nbsp;
+    toolbar.$cache.get(identityIdStart + "signinlink").hide();
+&nbsp;
+    toolbar.$cache.get(identityIdStart + "signedinstatus").show();
+    $UserEmailID.show();
+    toolbar.$cache.get(identityIdStart + "signoutlink").show();
+&nbsp;
+    $UserEmailID.text(userEmail);
+  },
+&nbsp;
+  /**
+   * Show the sign in link and hide the signed in status, user email and sign
+   * out link.
+   */
+  signOut: function() {
+    const identityIdStart = toolbar.selectorStart + "identity-";
+&nbsp;
+    toolbar.$cache.get(identityIdStart + "signinlink").show();
+&nbsp;
+    toolbar.$cache.get(identityIdStart + "signedinstatus").hide();
+    toolbar.$cache.get(identityIdStart + "signedinuseremail").hide();
+    toolbar.$cache.get(identityIdStart + "signoutlink").hide();
+  }
+};
+&nbsp;
+/**
+ * Only start to request the topics and initialize the toolbar when the
+ * document is ready.
+ */
+toolbar.$cache.get(document).ready(function() {
+  toolbar.requestTopicsAndInit();
+});
+&nbsp;
+/**
+ * Processes all messages received from background.js.
+ * Sends requests to backround.js or handles requests here.
+ *
+ * @param {*} request the message sent by the calling script
+ */
+function processMessageForToolbar(request) {
+  switch (request.msg) {
+    case "show element":
+      toolbar.$cache.get(request.selector).show();
+      break;
+    case "hide element":
+      toolbar.$cache.get(request.selector).hide();
+      break;
+    case "call signIn":
+      toolbar.signIn(request.userEmail);
+      break;
+    case "call signOut":
+      toolbar.signOut();
+      break;
+    default:// TODO: remove eventually
+      console.log("There was an unhandled Message!\n" +
+        "The message was:" + request.msg);
+  }
+}
+&nbsp;
+chrome.runtime.onMessage.addListener(processMessageForToolbar);	</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Jan 06 2017 13:46:24 GMT+0100 (CET)
+</div>
+</div>
+<script src="../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../sorter.js"></script>
+</body>
+</html>
