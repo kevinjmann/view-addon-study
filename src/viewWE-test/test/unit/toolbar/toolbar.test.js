@@ -979,9 +979,9 @@ describe("toolbar.js", function() {
       });
 
       describe("restoreAutoEnhance", function() {
-        it("should call turnOnAutoEnhance() and click the enhance button as auto-enhance is enabled", function() {
+        it("should call turnOnAutoEnhance() and call setSelectionsAndPrepareToEnhance() as auto-enhance is enabled", function() {
           const turnOnAutoEnhanceSpy = sandbox.spy(toolbar, "turnOnAutoEnhance");
-          const clickSpy = sandbox.spy($.fn, "click");
+          const setSelectionsAndPrepareToEnhanceSpy = sandbox.spy(toolbar, "setSelectionsAndPrepareToEnhance");
 
           toolbar.initEnhanceBtn();
 
@@ -989,13 +989,10 @@ describe("toolbar.js", function() {
 
           sinon.assert.calledOnce(turnOnAutoEnhanceSpy);
 
-          sinon.assert.calledOnce(clickSpy);
-
-          expect($(clickSpy.returnValues[0]).attr("id"))
-          .to.equal(toolbar.selectorStart.substr(1) + "enhance-button");
+          sinon.assert.calledOnce(setSelectionsAndPrepareToEnhanceSpy);
         });
 
-        it("should call turnOffAutoEnhance() auto-enhance is disabled", function() {
+        it("should call turnOffAutoEnhance() as auto-enhance is disabled", function() {
           const turnOffAutoEnhanceSpy = sandbox.spy(toolbar, "turnOffAutoEnhance");
 
           toolbar.restoreAutoEnhance(false);

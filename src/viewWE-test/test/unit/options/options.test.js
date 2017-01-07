@@ -16,12 +16,12 @@ describe("options.js", function() {
 
   afterEach(function() {
     sandbox.restore();
-    toolbar.$cache = new Selector_Cache();
+    viewOptions.$cache = new Selector_Cache();
     fixture.cleanup();
   });
 
   describe("jquery selectors", function() {
-    it("should be able to find all required jquery selectors in the toolbar", function() {
+    it("should be able to find all required jquery selectors in the viewOptions", function() {
       // some selectors only need the element, its enough if they exist
       // some selectors need the val(), text() or attr("link"),
       // if there is the value we expect, they exist as well
@@ -29,57 +29,59 @@ describe("options.js", function() {
       // the expectations below don't need to be tested in other tests again
       // the selectors below can be freely used in the tests without problems
 
-      expect($("#wertiview-VIEW-menu-btn")).to.exist;
+      expect($(viewOptions.selectorStart + "fixed-number-of-exercises").val()).to.equal("0");
+      expect($(viewOptions.selectorStart + "fixed-number-of-exercises-value").val()).to.equal("25");
 
-      expect($(toolbar.selectorStart + "enabled")).to.exist;
-      expect($(toolbar.selectorStart + "disabled")).to.exist;
+      expect($(viewOptions.selectorStart + "percentage-of-exercises").val()).to.equal("1");
+      expect($(viewOptions.selectorStart + "percentage-of-exercises-value").val()).to.equal("100");
 
-      expect($(toolbar.selectorStart + "language-menu")).to.exist;
-      expect($(toolbar.selectorStart + "language-unselected").val()).to.equal("unselected");
-      expect($(toolbar.selectorStart + "language-en").val()).to.equal("en");
+      expect($(viewOptions.selectorStart + "random").val()).to.equal("0");
 
-      expect($(toolbar.selectorStart + "topic-menu-unselected")).to.exist;
-      expect($(toolbar.selectorStart + "topic-unselected").val()).to.equal("unselected");
+      expect($(viewOptions.selectorStart + "first-offset").val()).to.equal("1");
+      expect($(viewOptions.selectorStart + "first-offset-value").val()).to.equal("0");
 
-      expect($(toolbar.selectorStart + "topic-menu-en")).to.exist;
-      expect($(toolbar.selectorStart + "topic-unselected-en").val()).to.equal("unselected-en");
-      expect($(toolbar.selectorStart + "topic-articles").val()).to.equal("articles");
-      expect($(toolbar.selectorStart + "topic-determiners-en").val()).to.equal("determiners");
+      expect($(viewOptions.selectorStart + "interval-size").val()).to.equal("2");
+      expect($(viewOptions.selectorStart + "interval-size-value").val()).to.equal("1");
 
-      expect($(toolbar.selectorStart + "activity-menu")).to.exist;
-      expect($(toolbar.selectorStart + "activity-unselected").val()).to.equal("unselected");
-      expect($(toolbar.selectorStart + "activity-unselected").next().text()).to.equal("──────────");
-      expect($(toolbar.selectorStart + "activity-color").val()).to.equal("color");
-      expect($(toolbar.selectorStart + "activity-click").val()).to.equal("click");
-      expect($(toolbar.selectorStart + "activity-mc").val()).to.equal("mc");
-      expect($(toolbar.selectorStart + "activity-cloze").val()).to.equal("cloze");
+      expect($(viewOptions.selectorStart + "show-instructions")).to.exist;
 
-      expect($(toolbar.selectorStart + "enhance-button")).to.exist;
-      expect($(toolbar.selectorStart + "restore-button")).to.exist;
-      expect($(toolbar.selectorStart + "abort-button")).to.exist;
-      expect($(toolbar.selectorStart + "loading-image")).to.exist;
+      expect($(viewOptions.selectorStart + "save-options")).to.exist;
 
-      toolbar.initSignInOutInterfaces(); // adds the link attribute
-
-      expect($(identityIdStart + "signinlink").attr("link"))
-      .to.equal("http://sifnos.sfs.uni-tuebingen.de/VIEW/openid/authenticator.html");
-      expect($(identityIdStart + "signedinstatus")).to.exist;
-      expect($(identityIdStart + "signedinuseremail")).to.exist;
-      expect($(identityIdStart + "signoutlink").attr("link"))
-      .to.equal("http://sifnos.sfs.uni-tuebingen.de/VIEW/openid/authenticator.html");
-
-      expect($(toolbar.selectorStart + "toggle-button")).to.exist;
+      expect($(viewOptions.selectorStart + "options-saved")).to.exist;
     });
   });
 
   describe("document ready", function() {
-    it("should call requestTopicsAndInit() when the document is ready", function(done) {
-      const requestTopicsAndInitSpy = sandbox.spy(toolbar, "requestTopicsAndInit");
+    it("should call init() when the document is ready", function(done) {
+      const initSpy = sandbox.spy(viewOptions, "init");
 
       $(document).ready(function() {
-        sinon.assert.calledOnce(requestTopicsAndInitSpy);
+        sinon.assert.calledOnce(initSpy);
         done();
       });
     });
   });
+
+  describe("init", function() {
+    it("should initialize all handlers and restore previous user options", function() {
+      const initFixedNumberHandlerSpy = sandbox.spy(viewOptions, "initFixedNumberHandler");
+      const initPercentageHandlerSpy = sandbox.spy(viewOptions, "initPercentageHandler");
+      const initRandomChoiceHandlerSpy = sandbox.spy(viewOptions, "initRandomChoiceHandler");
+      const initFirstOffsetChoiceHandlerSpy = sandbox.spy(viewOptions, "initFirstOffsetChoiceHandler");
+      const initIntervalSizeChoiceHandlerSpy = sandbox.spy(viewOptions, "initIntervalSizeChoiceHandler");
+      const initSaveOptionsHandlerSpy = sandbox.spy(viewOptions, "initSaveOptionsHandler");
+      const restoreUserOptionsSpy = sandbox.spy(viewOptions, "restoreUserOptions");
+      
+      viewOptions.init();
+
+      sinon.assert.calledOnce(initFixedNumberHandlerSpy);
+      sinon.assert.calledOnce(initPercentageHandlerSpy);
+      sinon.assert.calledOnce(initRandomChoiceHandlerSpy);
+      sinon.assert.calledOnce(initFirstOffsetChoiceHandlerSpy);
+      sinon.assert.calledOnce(initIntervalSizeChoiceHandlerSpy);
+      sinon.assert.calledOnce(initSaveOptionsHandlerSpy);
+      sinon.assert.calledOnce(restoreUserOptionsSpy);
+    });
+  });
+
 });

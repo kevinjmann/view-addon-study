@@ -502,6 +502,7 @@ const toolbar = {
 
   /**
    * Restore enabled/disabled auto-enhance selection.
+   * If auto-enhance is enabled, set selections and prepare to enhance.
    *
    * @param {boolean} enabled true if auto-enhance is still enabled, false otherwise
    */
@@ -509,7 +510,7 @@ const toolbar = {
     if (enabled) {
       toolbar.turnOnAutoEnhance();
 
-      toolbar.$cache.get(toolbar.selectorStart + "enhance-button").click();
+      toolbar.setSelectionsAndPrepareToEnhance();
     }
     else {
       toolbar.turnOffAutoEnhance();
