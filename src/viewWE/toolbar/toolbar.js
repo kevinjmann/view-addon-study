@@ -293,15 +293,28 @@ const toolbar = {
   },
 
   /**
-   * Set language, topic and activity.
+   * Set language, topic and activity, if none of them are "unselected".
    * Afterwards prepare to enhance the page.
+   * Otherwise create a unselected notification for the user.
    */
   setSelectionsAndPrepareToEnhance: function() {
-    chrome.storage.local.set({
-      language: toolbar.$cache.get(toolbar.selectorStart + "language-menu").val(),
-      topic: toolbar.$cache.get(".selected-toolbar-topic-menu").val(),
-      activity: toolbar.$cache.get(toolbar.selectorStart + "activity-menu").val()
-    }, toolbar.prepareToEnhance);
+    const language = toolbar.$cache.get(toolbar.selectorStart + "language-menu").val();
+    const topic = toolbar.$cache.get(".selected-toolbar-topic-menu").val();
+    const activity = toolbar.$cache.get(toolbar.selectorStart + "activity-menu").val();
+    const unselected = "unselected";
+
+    if (language.startsWith(unselected) ||
+      topic.startsWith(unselected) ||
+      activity.startsWith(unselected)) {
+      chrome.runtime.sendMessage({msg: "create unselectedNotification"}, toolbar.noResponse);
+    }
+    else{
+      chrome.storage.local.set({
+        language: language,
+        topic: topic,
+        activity: activity
+      }, toolbar.prepareToEnhance);
+    }
   },
 
   /**

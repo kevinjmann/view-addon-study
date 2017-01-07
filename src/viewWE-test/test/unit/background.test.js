@@ -21,7 +21,7 @@ describe("background.js", function() {
     chrome.storage.local.set.reset();
     chrome.notifications.create.reset();
     chrome.tabs.create.reset();
-    chrome.runtime.openOptionsPage.reset();
+    chrome.runtime.callOpenOptionsPage.reset();
     background.currentTabId = -1;
     background.clickCounter = 0;
     background.topics = {};
@@ -340,16 +340,16 @@ describe("background.js", function() {
     });
 
     it("should process the message \"open options page\"", function() {
-      const openOptionsPageSpy = sandbox.spy(background, "openOptionsPage");
+      const openOptionsPageSpy = sandbox.spy(background, "callOpenOptionsPage");
 
-      const request = {msg: "open options page"};
+      const request = {msg: "call openOptionsPage"};
       const sender = {tab: {id: 5}};
 
       chrome.runtime.onMessage.trigger(request, sender);
 
       sinon.assert.calledOnce(openOptionsPageSpy);
 
-      sinon.assert.calledOnce(chrome.runtime.openOptionsPage);
+      sinon.assert.calledOnce(chrome.runtime.callOpenOptionsPage);
     });
 
     it("should process the message \"open help page\"", function() {

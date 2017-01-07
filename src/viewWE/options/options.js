@@ -25,29 +25,29 @@ function Selector_Cache() {
   return {get: get_from_cache};
 }
 
-const options = {
+const viewOptions = {
   $cache: new Selector_Cache(),
 
-  selectorStart: "wertiview-",
+  selectorStart: "#wertiview-",
 
   /**
    * Restore user options and initialize all options handler.
    */
   init: function() {
     console.log("init ready");
-    options.initFixedNumberHandler();
+    viewOptions.initFixedNumberHandler();
 
-    options.initPercentageHandler();
+    viewOptions.initPercentageHandler();
 
-    options.initRandomChoiceHandler();
+    viewOptions.initRandomChoiceHandler();
 
-    options.initFirstOffsetChoiceHandler();
+    viewOptions.initFirstOffsetChoiceHandler();
 
-    options.initIntervalSizeChoiceHandler();
+    viewOptions.initIntervalSizeChoiceHandler();
 
-    options.initSaveOptionsHandler();
+    viewOptions.initSaveOptionsHandler();
 
-    options.restoreUserOptions();
+    viewOptions.restoreUserOptions();
   },
 
   /**
@@ -74,21 +74,21 @@ const options = {
       const intervalSize = res.intervalSize || 1;
       const showInst = res.showInst || false;
 
-      options.chooseHowManyExercises(fixedOrPercentageValue);
+      viewOptions.chooseHowManyExercises(fixedOrPercentageValue);
 
-      options.restoreHowManyExercises(
+      viewOptions.restoreHowManyExercises(
         fixedNumberOfExercises,
         percentageOfExercises
       );
 
-      options.chooseHowToChooseExercises(choiceModeValue);
+      viewOptions.chooseHowToChooseExercises(choiceModeValue);
 
-      options.restoreHowToChooseExercises(
+      viewOptions.restoreHowToChooseExercises(
         firstOffset,
         intervalSize
       );
 
-      options.restoreIfToShowInstructions(showInst);
+      viewOptions.restoreIfToShowInstructions(showInst);
     });
   },
 
@@ -100,9 +100,9 @@ const options = {
   chooseHowManyExercises: function(fixedOrPercentageValue) {
     console.log("chooseHowManyExercises ready");
     if (fixedOrPercentageValue == 0) {
-      options.chooseFixedNumber();
+      viewOptions.chooseFixedNumber();
     } else {
-      options.choosePercentage();
+      viewOptions.choosePercentage();
     }
   },
 
@@ -112,8 +112,9 @@ const options = {
    */
   chooseFixedNumber: function() {
     console.log("chooseFixedNumber ready");
-    options.$cache.get(options.selectorStart + "fixed-number-of-exercises-value").show();
-    options.$cache.get(options.selectorStart + "percentage-of-exercises-value").hide();
+    viewOptions.$cache.get(viewOptions.selectorStart + "fixed-number-of-exercises").prop("checked", true);
+    viewOptions.$cache.get(viewOptions.selectorStart + "fixed-number-of-exercises-value").show();
+    viewOptions.$cache.get(viewOptions.selectorStart + "percentage-of-exercises-value").hide();
   },
 
   /**
@@ -122,8 +123,9 @@ const options = {
    */
   choosePercentage: function() {
     console.log("choosePercentage ready");
-    options.$cache.get(options.selectorStart + "percentage-of-exercises-value").show();
-    options.$cache.get(options.selectorStart + "fixed-number-of-exercises-value").hide();
+    viewOptions.$cache.get(viewOptions.selectorStart + "percentage-of-exercises").prop("checked", true);
+    viewOptions.$cache.get(viewOptions.selectorStart + "percentage-of-exercises-value").show();
+    viewOptions.$cache.get(viewOptions.selectorStart + "fixed-number-of-exercises-value").hide();
   },
 
   /**
@@ -134,9 +136,9 @@ const options = {
    */
   restoreHowManyExercises: function(fixedNumberOfExercises, percentageOfExercises) {
     console.log("restoreHowManyExercises ready");
-    options.$cache.get(options.selectorStart + "fixed-number-of-exercises-value").val(fixedNumberOfExercises);
+    viewOptions.$cache.get(viewOptions.selectorStart + "fixed-number-of-exercises-value").val(fixedNumberOfExercises);
 
-    options.$cache.get(options.selectorStart + "percentage-of-exercises-value").val(percentageOfExercises);
+    viewOptions.$cache.get(viewOptions.selectorStart + "percentage-of-exercises-value").val(percentageOfExercises);
 
   },
 
@@ -149,11 +151,11 @@ const options = {
   chooseHowToChooseExercises: function(choiceModeValue) {
     console.log("chooseHowToChooseExercises ready");
     if (choiceModeValue == 0) {
-      options.chooseRandom();
+      viewOptions.chooseRandom();
     } else if (choiceModeValue == 1) {
-      options.chooseFirstOffset();
+      viewOptions.chooseFirstOffset();
     } else {
-      options.chooseIntervalSize();
+      viewOptions.chooseIntervalSize();
     }
   },
 
@@ -163,8 +165,9 @@ const options = {
    */
   chooseRandom: function() {
     console.log("chooseRandom ready");
-    options.$cache.get(options.selectorStart + "first-offset-value").hide();
-    options.$cache.get(options.selectorStart + "interval-size-value").hide();
+    viewOptions.$cache.get(viewOptions.selectorStart + "random").prop("checked", true);
+    viewOptions.$cache.get(viewOptions.selectorStart + "first-offset-value").hide();
+    viewOptions.$cache.get(viewOptions.selectorStart + "interval-size-value").hide();
   },
 
   /**
@@ -173,8 +176,9 @@ const options = {
    */
   chooseFirstOffset: function() {
     console.log("chooseFirstOffset ready");
-    options.$cache.get(options.selectorStart + "first-offset-value").show();
-    options.$cache.get(options.selectorStart + "interval-size-value").hide();
+    viewOptions.$cache.get(viewOptions.selectorStart + "first-offset").prop("checked", true);
+    viewOptions.$cache.get(viewOptions.selectorStart + "first-offset-value").show();
+    viewOptions.$cache.get(viewOptions.selectorStart + "interval-size-value").hide();
   },
 
   /**
@@ -183,8 +187,9 @@ const options = {
    */
   chooseIntervalSize: function() {
     console.log("chooseIntervalSize ready");
-    options.$cache.get(options.selectorStart + "interval-size-value").show();
-    options.$cache.get(options.selectorStart + "first-offset-value").hide();
+    viewOptions.$cache.get(viewOptions.selectorStart + "interval-size").prop("checked", true);
+    viewOptions.$cache.get(viewOptions.selectorStart + "interval-size-value").show();
+    viewOptions.$cache.get(viewOptions.selectorStart + "first-offset-value").hide();
   },
 
   /**
@@ -195,9 +200,9 @@ const options = {
    */
   restoreHowToChooseExercises: function(firstOffset, intervalSize) {
     console.log("restoreHowToChooseExercises ready");
-    options.$cache.get(options.selectorStart + "first-offset-value").val(firstOffset);
+    viewOptions.$cache.get(viewOptions.selectorStart + "first-offset-value").val(firstOffset);
 
-    options.$cache.get(options.selectorStart + "interval-size-value").val(intervalSize);
+    viewOptions.$cache.get(viewOptions.selectorStart + "interval-size-value").val(intervalSize);
   },
 
   /**
@@ -207,7 +212,7 @@ const options = {
    */
   restoreIfToShowInstructions: function(showInst) {
     console.log("restoreIfToShowInstructions ready");
-    options.$cache.get(options.selectorStart + "show-instructions").prop("checked", showInst);
+    viewOptions.$cache.get(viewOptions.selectorStart + "show-instructions").prop("checked", showInst);
   },
 
   /**
@@ -215,7 +220,7 @@ const options = {
    */
   initFixedNumberHandler: function() {
     console.log("initFixedNumberHandler ready");
-    options.$cache.get(options.selectorStart + "fixed-number-of-exercises").on("click", options.chooseFixedNumber);
+    viewOptions.$cache.get(viewOptions.selectorStart + "fixed-number-of-exercises").on("click", viewOptions.chooseFixedNumber);
   },
 
   /**
@@ -223,7 +228,7 @@ const options = {
    */
   initPercentageHandler: function() {
     console.log("initPercentageHandler ready");
-    options.$cache.get(options.selectorStart + "percentage-of-exercises").on("click", options.choosePercentage);
+    viewOptions.$cache.get(viewOptions.selectorStart + "percentage-of-exercises").on("click", viewOptions.choosePercentage);
   },
 
   /**
@@ -231,7 +236,7 @@ const options = {
    */
   initRandomChoiceHandler: function() {
     console.log("initRandomChoiceHandler ready");
-    options.$cache.get(options.selectorStart + "random").on("click", options.chooseRandom);
+    viewOptions.$cache.get(viewOptions.selectorStart + "random").on("click", viewOptions.chooseRandom);
   },
 
   /**
@@ -239,7 +244,7 @@ const options = {
    */
   initFirstOffsetChoiceHandler: function() {
     console.log("initFirstOffsetChoiceHandler ready");
-    options.$cache.get(options.selectorStart + "first-offset").on("click", options.chooseFirstOffset);
+    viewOptions.$cache.get(viewOptions.selectorStart + "first-offset").on("click", viewOptions.chooseFirstOffset);
   },
 
   /**
@@ -247,7 +252,7 @@ const options = {
    */
   initIntervalSizeChoiceHandler: function() {
     console.log("initIntervalSizeChoiceHandler ready");
-    options.$cache.get(options.selectorStart + "interval-size").on("click", options.chooseIntervalSize);
+    viewOptions.$cache.get(viewOptions.selectorStart + "interval-size").on("click", viewOptions.chooseIntervalSize);
   },
 
   /**
@@ -255,7 +260,7 @@ const options = {
    */
   initSaveOptionsHandler: function() {
     console.log("initSaveOptionsHandler ready");
-    options.$cache.get(options.selectorStart + "save-options").on("click", options.saveUserOptions);
+    viewOptions.$cache.get(viewOptions.selectorStart + "save-options").on("click", viewOptions.saveUserOptions);
   },
 
   /**
@@ -263,37 +268,24 @@ const options = {
    */
   saveUserOptions: function() {
     console.log("saveUserOptions ready");
-    const fixedOrPercentage = options.$cache.get("input[name='fixedOrPercentage']:checked").val();
-    const fixedNumberOfExercises = options.$cache.get(options.selectorStart + "fixed-number-of-exercises-value").val();
-    const percentageOfExercises = options.$cache.get(options.selectorStart + "percentage-of-exercises-value").val();
-    const choiceMode = options.$cache.get("input[name='choiceMode']:checked").val();
-    const firstOffset = options.$cache.get(options.selectorStart + "first-offset-value").val();
-    const intervalSize = options.$cache.get(options.selectorStart + "interval-size-value").val();
-    const showInst = options.$cache.get(options.selectorStart + "show-instructions").prop("checked");
     chrome.storage.local.set({
-      fixedOrPercentage: fixedOrPercentage,
-      fixedNumberOfExercises: fixedNumberOfExercises,
-      percentageOfExercises: percentageOfExercises,
-      choiceMode: choiceMode,
-      firstOffset: firstOffset,
-      intervalSize: intervalSize,
-      showInst: showInst
-    }, options.requestToCallSaveUserOptions);
-  },
-
-  /**
-   * Send a request to pass on the message to call saveUserOptions().
-   */
-  requestToCallSaveUserOptions: function() {
-    console.log("requestToCallSaveUserOptions ready");
-    chrome.runtime.sendMessage({msg: "call saveUserOptions"});
+      fixedOrPercentage: viewOptions.$cache.get("input[name='fixedOrPercentage']:checked").val(),
+      fixedNumberOfExercises: viewOptions.$cache.get(viewOptions.selectorStart + "fixed-number-of-exercises-value").val(),
+      percentageOfExercises: viewOptions.$cache.get(viewOptions.selectorStart + "percentage-of-exercises-value").val(),
+      choiceMode: viewOptions.$cache.get("input[name='choiceMode']:checked").val(),
+      firstOffset: viewOptions.$cache.get(viewOptions.selectorStart + "first-offset-value").val(),
+      intervalSize: viewOptions.$cache.get(viewOptions.selectorStart + "interval-size-value").val(),
+      showInst: viewOptions.$cache.get(viewOptions.selectorStart + "show-instructions").prop("checked")
+    }, function() {
+      viewOptions.$cache.get(viewOptions.selectorStart + "options-saved").show().delay(5000).fadeOut();
+    });
   }
 };
 
 /**
  * Initialize the options when the document is ready.
  */
-options.$cache.get(document).ready(function() {
+viewOptions.$cache.get(document).ready(function() {
   console.log("document ready");
-  options.init();
+  viewOptions.init();
 });

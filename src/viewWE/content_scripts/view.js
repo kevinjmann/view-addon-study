@@ -75,27 +75,21 @@ var view = {
   },
 
   /**
-   * Save all user options obtained from the options page.
+   * Save all user options from the options page.
+   *
+   * @param {object} storageItems the storage items
    */
-  saveUserOptions: function() {
+  saveUserOptions: function(storageItems) {
     console.log("saveUserOptions()");
-    chrome.storage.local.get([
-      "fixedOrPercentage",
-      "fixedNumberOfExercises",
-      "percentageOfExercises",
-      "choiceMode",
-      "firstOffset",
-      "intervalSize",
-      "showInst"
-    ], function(res) {
-      view.fixedOrPercentage = res.fixedOrPercentage;
-      view.fixedNumberOfExercises = res.fixedNumberOfExercises;
-      view.percentageOfExercises = res.percentageOfExercises;
-      view.choiceMode = res.choiceMode;
-      view.firstOffset = res.firstOffset;
-      view.intervalSize = res.intervalSize;
-      view.showInst = res.showInst;
-    });
+    if (storageItems.fixedOrPercentage !== undefined) {
+      view.fixedOrPercentage = storageItems.fixedOrPercentage;
+      view.fixedNumberOfExercises = storageItems.fixedNumberOfExercises;
+      view.percentageOfExercises = storageItems.percentageOfExercises;
+      view.choiceMode = storageItems.choiceMode;
+      view.firstOffset = storageItems.firstOffset;
+      view.intervalSize = storageItems.intervalSize;
+      view.showInst = storageItems.showInst;
+    }
   },
 
   /*
@@ -105,24 +99,29 @@ var view = {
   startToEnhance: function() {
     console.log("startToEnhance()");
     chrome.storage.local.get([
+      "fixedOrPercentage",
+      "fixedNumberOfExercises",
+      "percentageOfExercises",
+      "choiceMode",
+      "firstOffset",
+      "intervalSize",
+      "showInst",
       "enabled",
       "language",
       "topic",
       "activity"
-    ], function(res) {// TODO: this should be handled in the toolbar instead
-      if (res.language == undefined || res.topic == undefined || res.activity == undefined) {
-        console.log("startToEnhance: user didn't select language, topic or activity." +
-          "Use default values.");
-      } else {
-        // enabled, language, topic and activity selections (default)
-        view.enabled = res.enabled;
-        view.language = res.language;
-        view.topic = res.topic;
-        view.activity = res.activity;
+    ], function(storageItems) {// TODO: this should be handled in the toolbar instead
+      // save user options, as they might have changed
+      view.saveUserOptions(storageItems);
 
-        // set the topic name
-        view.topicName = view.interaction.getTopicName(view.topic);
-      }
+      // enabled, language, topic and activity selections (default)
+      view.enabled = storageItems.enabled;
+      view.language = storageItems.language;
+      view.topic = storageItems.topic;
+      view.activity = storageItems.activity;
+
+      // set the topic name
+      view.topicName = view.interaction.getTopicName(view.topic);
 
       // start enhancing the page
       view.interaction.enhance();
@@ -140,9 +139,6 @@ function processMessageForView(request, sender, sendResponse) {
       console.log("startToEnhance: received '" + request.msg + "'");
       // initialize the user options and save them globally
       view.startToEnhance();
-      break;
-    case "call saveUserOptions":
-      view.saveUserOptions();
   }
 }
 

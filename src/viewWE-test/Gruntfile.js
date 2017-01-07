@@ -61,7 +61,7 @@ module.exports = function(grunt) {
           "**/toolbar.html": ["html2js"]
         }
       },
-      optionsjs: {
+      viewOptions: {
         files: {
           src: [
             "../viewWE/options/*.js",

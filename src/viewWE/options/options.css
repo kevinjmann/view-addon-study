@@ -9,3 +9,8 @@
 #wertiview-interval-size-value {
     display: none;
 }
+
+#wertiview-options-saved {
+    display: none;
+    color: green;
+}

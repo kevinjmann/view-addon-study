@@ -20,7 +20,7 @@ view.VIEWmenu = {
       $("#view-VIEW-menu-options").on("click", function() {
         console.log("click on options:  request 'open options page'");
         chrome.runtime.sendMessage({
-          msg: "open options page"
+          msg: "call openOptionsPage"
         });
       });
 
