@@ -198,7 +198,7 @@ describe("toolbar.js", function() {
         sinon.assert.calledWith(eventSpy, "click");
       });
 
-      it("should call requestToToggleMenuView() correctly on click", function() {
+      it("should call requestToToggleMenuView() on click", function() {
         const requestToToggleMenuViewSpy = sandbox.spy(toolbar, "requestToToggleMenuView");
 
         toolbar.initViewMenu();
@@ -232,7 +232,7 @@ describe("toolbar.js", function() {
       });
 
       describe("turnOffAutoEnhanceAndSet", function() {
-        it("should call turnOffAutoEnhanceAndSet() correctly on click", function() {
+        it("should call turnOffAutoEnhanceAndSet() on click", function() {
           const turnOffAutoEnhanceAndSetSpy = sandbox.spy(toolbar, "turnOffAutoEnhanceAndSet");
 
           toolbar.initAutoEnhance();
@@ -262,7 +262,7 @@ describe("toolbar.js", function() {
       });
 
       describe("turnOnAutoEnhanceAndSet", function() {
-        it("should call turnOnAutoEnhanceAndSet() correctly on click", function() {
+        it("should call turnOnAutoEnhanceAndSet() on click", function() {
           const turnOnAutoEnhanceAndSetSpy = sandbox.spy(toolbar, "turnOnAutoEnhanceAndSet");
 
           toolbar.initAutoEnhance();
@@ -305,7 +305,7 @@ describe("toolbar.js", function() {
         sinon.assert.calledWith(eventSpy, "change");
       });
 
-      it("should call selectTopicMenu(language) correctly on language change", function() {
+      it("should call selectTopicMenu(language) on language change", function() {
         const selectTopicMenuSpy = sandbox.spy(toolbar, "selectTopicMenu");
         const language = "en";
 
@@ -317,7 +317,7 @@ describe("toolbar.js", function() {
         sinon.assert.calledWithExactly(selectTopicMenuSpy, language);
       });
 
-      it("should go through all topic menus and call toggleTopicMenu(l1, l2) correctly", function() {
+      it("should go through all topic menus and call toggleTopicMenu(l1, l2)", function() {
         const selectorSpy = sandbox.spy(toolbar.$cache, "get");
         const findSpy = sandbox.spy($.fn, "find");
         const toggleTopicMenuSpy = sandbox.spy(toolbar, "toggleTopicMenu");
@@ -336,7 +336,7 @@ describe("toolbar.js", function() {
       });
 
       describe("toggleTopicMenu", function() {
-        it("should show the selected topic menu and call updateActivities(language, topic) correctly", function() {
+        it("should show the selected topic menu and call updateActivities(language, topic)", function() {
           const updateActivitiesSpy = sandbox.spy(toolbar, "updateActivities");
           const selectedLanguage = "en";
           const currentLanguage = "en";
@@ -448,7 +448,7 @@ describe("toolbar.js", function() {
           expect($(toolbar.selectorStart + "activity-unselected").next().is(":hidden")).to.be.true;
         });
 
-        it("should call enableAndShowActivities(language, topic, activitySelections) correctly", function() {
+        it("should call enableAndShowActivities(language, topic, activitySelections)", function() {
           const jsonData = fixture.load("fixtures/json/articles.json", true);
 
           const fillActivitySelectorsSpy = sandbox.spy(toolbar, "fillActivitySelectors");
@@ -511,7 +511,7 @@ describe("toolbar.js", function() {
       });
 
       // TODO: Should we do this for each topic menu?
-      it("should call updateActivities(language, topic) correctly on topic change", function() {
+      it("should call updateActivities(language, topic) on topic change", function() {
         const updateActivitiesSpy = sandbox.spy(toolbar, "updateActivities");
         const language = "en";
         const topic = "articles";
@@ -552,7 +552,7 @@ describe("toolbar.js", function() {
         sinon.assert.calledWith(eventSpy, "click");
       });
 
-      it("should call setSelectionsAndPrepareToEnhance() correctly on click", function() {
+      it("should call setSelectionsAndPrepareToEnhance() on click", function() {
         const setSelectionsAndPrepareToEnhanceSpy = sandbox.spy(toolbar, "setSelectionsAndPrepareToEnhance");
 
         toolbar.initEnhanceBtn();
@@ -620,7 +620,7 @@ describe("toolbar.js", function() {
           sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "create unselectedNotification"});
         });
 
-        it("should set language, topic and activity and call prepareToEnhance() correctly", function() {
+        it("should set language, topic and activity and call prepareToEnhance()", function() {
           const prepareToEnhanceSpy = sandbox.spy(toolbar, "prepareToEnhance");
 
           const language = "en";
@@ -676,7 +676,7 @@ describe("toolbar.js", function() {
         sinon.assert.calledWith(eventSpy, "click");
       });
 
-      it("should call requestToCallAbort() correctly on click", function() {
+      it("should call requestToCallAbort() on click", function() {
         const requestToCallAbortSpy = sandbox.spy(toolbar, "requestToCallAbort");
 
         toolbar.initAbortBtn();
@@ -708,7 +708,7 @@ describe("toolbar.js", function() {
         sinon.assert.calledWith(eventSpy, "click");
       });
 
-      it("should call requestToCallRestoreToOriginal() correctly on click", function() {
+      it("should call requestToCallRestoreToOriginal() on click", function() {
         const requestToCallRestoreToOriginalSpy = sandbox.spy(toolbar, "requestToCallRestoreToOriginal");
 
         toolbar.initRestoreBtn();
@@ -752,7 +752,7 @@ describe("toolbar.js", function() {
         sinon.assert.calledWith(eventSpy, "click");
       });
 
-      it("should call openSignInWindow() correctly on click", function() {
+      it("should call openSignInWindow() on click", function() {
         const openSignInWindowSpy = sandbox.spy(toolbar, "openSignInWindow");
 
         toolbar.initSignInLink();
@@ -762,7 +762,7 @@ describe("toolbar.js", function() {
         sinon.assert.calledOnce(openSignInWindowSpy);
       });
 
-      it("should open the sign in window correctly", function() {
+      it("should open the sign in window", function() {
         const windowOpenSpy = sandbox.spy(window, "open");
 
         toolbar.initSignInOutInterfaces("https://view.aleks.bg");
@@ -795,7 +795,7 @@ describe("toolbar.js", function() {
         sinon.assert.calledWith(eventSpy, "click");
       });
 
-      it("should call openSignOutWindow() correctly on click", function() {
+      it("should call openSignOutWindow() on click", function() {
         const openSignOutWindowSpy = sandbox.spy(toolbar, "openSignOutWindow");
 
         toolbar.initSignOutLink();
@@ -805,7 +805,7 @@ describe("toolbar.js", function() {
         sinon.assert.calledOnce(openSignOutWindowSpy);
       });
 
-      it("should open the sign out window correctly", function() {
+      it("should open the sign out window", function() {
         const windowOpenSpy = sandbox.spy(window, "open");
 
         toolbar.initSignInOutInterfaces("https://view.aleks.bg");
@@ -818,7 +818,7 @@ describe("toolbar.js", function() {
           "Sign Out",
           "width=1,height=1");
 
-        // TODO: Find out how to test if window.moveTo(x, y) was called correctly
+        // TODO: Find out how to test if window.moveTo(x, y) was called
       });
     });
 
@@ -836,7 +836,7 @@ describe("toolbar.js", function() {
         sinon.assert.calledWith(eventSpy, "click");
       });
 
-      it("should call requestToToggleToolbar() correctly on click", function() {
+      it("should call requestToToggleToolbar() on click", function() {
         const requestToToggleToolbarSpy = sandbox.spy(toolbar, "requestToToggleToolbar");
 
         toolbar.initToggleToolbar();
@@ -855,7 +855,7 @@ describe("toolbar.js", function() {
     });
 
     describe("restoreSelections", function() {
-      it("should call all restoration functions correctly with default values", function() {
+      it("should call all restoration functions with default values", function() {
         const restoreSelectionMenusSpy = sandbox.spy(toolbar, "restoreSelectionMenus");
         const selectTopicMenuSpy = sandbox.spy(toolbar, "selectTopicMenu");
         const verifySignInStatusSpy = sandbox.spy(toolbar, "verifySignInStatus");
@@ -884,7 +884,7 @@ describe("toolbar.js", function() {
         sinon.assert.calledWithExactly(restoreAutoEnhanceSpy, enabled);
       });
 
-      it("should call all restoration functions correctly with stored values", function() {
+      it("should call all restoration functions with stored values", function() {
         const restoreSelectionMenusSpy = sandbox.spy(toolbar, "restoreSelectionMenus");
         const selectTopicMenuSpy = sandbox.spy(toolbar, "selectTopicMenu");
         const verifySignInStatusSpy = sandbox.spy(toolbar, "verifySignInStatus");

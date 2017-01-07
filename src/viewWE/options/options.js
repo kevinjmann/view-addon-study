@@ -53,8 +53,7 @@ const viewOptions = {
    * Initialize the handler for the fixed number of exercises.
    */
   initFixedNumberHandler: function() {
-    console.log("initFixedNumberHandler ready");
-    viewOptions.$cache.get(viewOptions.selectorStart + "fixed-number-of-exercises").on("click",
+    viewOptions.$cache.get(viewOptions.selectorStart + "fixed-number-of-exercises").on("change",
       viewOptions.chooseFixedNumber);
   },
 
@@ -63,7 +62,6 @@ const viewOptions = {
    * hide the value for the percentage of exercises.
    */
   chooseFixedNumber: function() {
-    console.log("chooseFixedNumber ready");
     viewOptions.$cache.get(viewOptions.selectorStart + "fixed-number-of-exercises-value").show();
     viewOptions.$cache.get(viewOptions.selectorStart + "percentage-of-exercises-value").hide();
   },
@@ -72,8 +70,7 @@ const viewOptions = {
    * Initialize the handler for the percentage of exercises.
    */
   initPercentageHandler: function() {
-    console.log("initPercentageHandler ready");
-    viewOptions.$cache.get(viewOptions.selectorStart + "percentage-of-exercises").on("click",
+    viewOptions.$cache.get(viewOptions.selectorStart + "percentage-of-exercises").on("change",
       viewOptions.choosePercentage);
   },
 
@@ -82,7 +79,6 @@ const viewOptions = {
    * hide the value for the fixed number of exercises.
    */
   choosePercentage: function() {
-    console.log("choosePercentage ready");
     viewOptions.$cache.get(viewOptions.selectorStart + "percentage-of-exercises-value").show();
     viewOptions.$cache.get(viewOptions.selectorStart + "fixed-number-of-exercises-value").hide();
   },
@@ -91,8 +87,7 @@ const viewOptions = {
    * Initialize the handler for the random choice of exercises.
    */
   initRandomChoiceHandler: function() {
-    console.log("initRandomChoiceHandler ready");
-    viewOptions.$cache.get(viewOptions.selectorStart + "random").on("click",
+    viewOptions.$cache.get(viewOptions.selectorStart + "random").on("change",
       viewOptions.chooseRandom);
   },
 
@@ -101,7 +96,6 @@ const viewOptions = {
    * Hide first offset and interval size values.
    */
   chooseRandom: function() {
-    console.log("chooseRandom ready");
     viewOptions.$cache.get(viewOptions.selectorStart + "first-offset-value").hide();
     viewOptions.$cache.get(viewOptions.selectorStart + "interval-size-value").hide();
   },
@@ -110,8 +104,7 @@ const viewOptions = {
    * Initialize the handler for the first offset choice of exercises.
    */
   initFirstOffsetChoiceHandler: function() {
-    console.log("initFirstOffsetChoiceHandler ready");
-    viewOptions.$cache.get(viewOptions.selectorStart + "first-offset").on("click",
+    viewOptions.$cache.get(viewOptions.selectorStart + "first-offset").on("change",
       viewOptions.chooseFirstOffset);
   },
 
@@ -120,7 +113,6 @@ const viewOptions = {
    * Show the value and hide the interval size value.
    */
   chooseFirstOffset: function() {
-    console.log("chooseFirstOffset ready");
     viewOptions.$cache.get(viewOptions.selectorStart + "first-offset-value").show();
     viewOptions.$cache.get(viewOptions.selectorStart + "interval-size-value").hide();
   },
@@ -129,8 +121,7 @@ const viewOptions = {
    * Initialize the handler for the interval size choice of exercises.
    */
   initIntervalSizeChoiceHandler: function() {
-    console.log("initIntervalSizeChoiceHandler ready");
-    viewOptions.$cache.get(viewOptions.selectorStart + "interval-size").on("click",
+    viewOptions.$cache.get(viewOptions.selectorStart + "interval-size").on("change",
       viewOptions.chooseIntervalSize);
   },
 
@@ -139,7 +130,6 @@ const viewOptions = {
    * Show the value and hide the first offset value.
    */
   chooseIntervalSize: function() {
-    console.log("chooseIntervalSize ready");
     viewOptions.$cache.get(viewOptions.selectorStart + "interval-size-value").show();
     viewOptions.$cache.get(viewOptions.selectorStart + "first-offset-value").hide();
   },
@@ -148,7 +138,6 @@ const viewOptions = {
    * Initialize the handler for saving the user options.
    */
   initSaveOptionsHandler: function() {
-    console.log("initSaveOptionsHandler ready");
     viewOptions.$cache.get(viewOptions.selectorStart + "save-options").on("click",
       viewOptions.saveUserOptions);
   },
@@ -157,7 +146,6 @@ const viewOptions = {
    * Save all user option choices to the storage.
    */
   saveUserOptions: function() {
-    console.log("saveUserOptions ready");
     chrome.storage.local.set({
       fixedOrPercentage: viewOptions.$cache.get("input[name='fixedOrPercentage']:checked").val(),
       fixedNumberOfExercises: viewOptions.$cache.get(viewOptions.selectorStart + "fixed-number-of-exercises-value").val(),
@@ -182,7 +170,6 @@ const viewOptions = {
    * The values right to "||" are default values.
    */
   restoreUserOptions: function() {
-    console.log("restoreUserOptions ready");
     chrome.storage.local.get([
       "fixedOrPercentage",
       "fixedNumberOfExercises",
@@ -193,12 +180,12 @@ const viewOptions = {
       "showInst"
     ], function(res) {
 
-      const fixedOrPercentageValue = res.fixedOrPercentage || 0;
-      const fixedNumberOfExercises = res.fixedNumberOfExercises || 25;
-      const percentageOfExercises = res.percentageOfExercises || 100;
-      const choiceModeValue = res.choiceMode || 0;
-      const firstOffset = res.firstOffset || 0;
-      const intervalSize = res.intervalSize || 1;
+      const fixedOrPercentageValue = res.fixedOrPercentage || "0";
+      const fixedNumberOfExercises = res.fixedNumberOfExercises || "25";
+      const percentageOfExercises = res.percentageOfExercises || "100";
+      const choiceModeValue = res.choiceMode || "0";
+      const firstOffset = res.firstOffset || "0";
+      const intervalSize = res.intervalSize || "1";
       const showInst = res.showInst || false;
 
       viewOptions.chooseHowManyExercises(fixedOrPercentageValue);
@@ -222,25 +209,25 @@ const viewOptions = {
   /**
    * Choice between a fixed number or percentage of exercises.
    *
-   * @param {number} fixedOrPercentageValue 0 if fixed, percentage otherwise
+   * @param {string} fixedOrPercentageValue "0" if fixed, percentage otherwise
    */
   chooseHowManyExercises: function(fixedOrPercentageValue) {
-    console.log("chooseHowManyExercises ready");
-    if (fixedOrPercentageValue == 0) {
-      viewOptions.$cache.get(viewOptions.selectorStart + "fixed-number-of-exercises").trigger("click");
+    if (fixedOrPercentageValue === "0") {
+      viewOptions.$cache.get(viewOptions.selectorStart + "fixed-number-of-exercises").prop("checked", true);
+      viewOptions.chooseFixedNumber();
     } else {
-      viewOptions.$cache.get(viewOptions.selectorStart + "percentage-of-exercises").trigger("click");
+      viewOptions.$cache.get(viewOptions.selectorStart + "percentage-of-exercises").prop("checked", true);
+      viewOptions.choosePercentage();
     }
   },
 
   /**
    * Restore the values of the fixed number and percentage of exercises.
    *
-   * @param {number} fixedNumberOfExercises the number of exercises
-   * @param {number} percentageOfExercises the percentage of exercises
+   * @param {string} fixedNumberOfExercises the number of exercises
+   * @param {string} percentageOfExercises the percentage of exercises
    */
   restoreHowManyExercises: function(fixedNumberOfExercises, percentageOfExercises) {
-    console.log("restoreHowManyExercises ready");
     viewOptions.$cache.get(viewOptions.selectorStart + "fixed-number-of-exercises-value").val(fixedNumberOfExercises);
 
     viewOptions.$cache.get(viewOptions.selectorStart + "percentage-of-exercises-value").val(percentageOfExercises);
@@ -250,28 +237,29 @@ const viewOptions = {
   /**
    * Choice how exercises should be chosen.
    *
-   * @param {number} choiceModeValue 0 if random, 1 if first offset, interval
+   * @param {string} choiceModeValue "0" if random, "1" if first offset, interval
    * size otherwise
    */
   chooseHowToChooseExercises: function(choiceModeValue) {
-    console.log("chooseHowToChooseExercises ready");
-    if (choiceModeValue == 0) {
-      viewOptions.$cache.get(viewOptions.selectorStart + "random").trigger("click");
-    } else if (choiceModeValue == 1) {
-      viewOptions.$cache.get(viewOptions.selectorStart + "first-offset").trigger("click");
+    if (choiceModeValue === "0") {
+      viewOptions.$cache.get(viewOptions.selectorStart + "random").prop("checked", true);
+      viewOptions.chooseRandom();
+    } else if (choiceModeValue === "1") {
+      viewOptions.$cache.get(viewOptions.selectorStart + "first-offset").prop("checked", true);
+      viewOptions.chooseFirstOffset();
     } else {
-      viewOptions.$cache.get(viewOptions.selectorStart + "interval-size").trigger("click");
+      viewOptions.$cache.get(viewOptions.selectorStart + "interval-size").prop("checked", true);
+      viewOptions.chooseIntervalSize();
     }
   },
 
   /**
    * Restore the values of the first offset and the interval size.
    *
-   * @param {number} firstOffset the offset value
-   * @param {number} intervalSize the interval value
+   * @param {string} firstOffset the offset value
+   * @param {string} intervalSize the interval value
    */
   restoreHowToChooseExercises: function(firstOffset, intervalSize) {
-    console.log("restoreHowToChooseExercises ready");
     viewOptions.$cache.get(viewOptions.selectorStart + "first-offset-value").val(firstOffset);
 
     viewOptions.$cache.get(viewOptions.selectorStart + "interval-size-value").val(intervalSize);
@@ -283,7 +271,6 @@ const viewOptions = {
    * @param {boolean} showInst true if to show instructions, false otherwise
    */
   restoreIfToShowInstructions: function(showInst) {
-    console.log("restoreIfToShowInstructions ready");
     viewOptions.$cache.get(viewOptions.selectorStart + "show-instructions").prop("checked", showInst);
   }
 };
