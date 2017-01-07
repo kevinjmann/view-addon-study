@@ -21,7 +21,7 @@ describe("background.js", function() {
     chrome.storage.local.set.reset();
     chrome.notifications.create.reset();
     chrome.tabs.create.reset();
-    chrome.runtime.callOpenOptionsPage.reset();
+    chrome.runtime.openOptionsPage.reset();
     background.currentTabId = -1;
     background.clickCounter = 0;
     background.topics = {};
@@ -222,6 +222,22 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
+    it("should process the message \"create unselectedNotification\"", function() {
+      const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
+
+      const id = "unselected-notification";
+      const title = "Unselected language, topic or activity!";
+      const message = "You need to pick a language, topic and activity!";
+
+      const request = {msg: "create unselectedNotification"};
+      const sender = {tab: {id: 5}};
+
+      chrome.runtime.onMessage.trigger(request, sender);
+
+      sinon.assert.calledOnce(createBasicNotificationSpy);
+      sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
+    });
+
     it("should process the message \"call startToEnhance\"", function() {
       const callStartToEnhanceSpy = sandbox.spy(background, "callStartToEnhance");
 
@@ -339,17 +355,17 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.create, {url: request.link});
     });
 
-    it("should process the message \"open options page\"", function() {
-      const openOptionsPageSpy = sandbox.spy(background, "callOpenOptionsPage");
+    it("should process the message \"call openOptionsPage\"", function() {
+      const callOpenOptionsPageSpy = sandbox.spy(background, "callOpenOptionsPage");
 
       const request = {msg: "call openOptionsPage"};
       const sender = {tab: {id: 5}};
 
       chrome.runtime.onMessage.trigger(request, sender);
 
-      sinon.assert.calledOnce(openOptionsPageSpy);
+      sinon.assert.calledOnce(callOpenOptionsPageSpy);
 
-      sinon.assert.calledOnce(chrome.runtime.callOpenOptionsPage);
+      sinon.assert.calledOnce(chrome.runtime.openOptionsPage);
     });
 
     it("should process the message \"open help page\"", function() {

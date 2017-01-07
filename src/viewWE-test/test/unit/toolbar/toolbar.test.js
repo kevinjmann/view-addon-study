@@ -562,44 +562,103 @@ describe("toolbar.js", function() {
         sinon.assert.calledOnce(setSelectionsAndPrepareToEnhanceSpy);
       });
 
-      it("should set language, topic and activity and call prepareToEnhance() correctly", function() {
-        const prepareToEnhanceSpy = sandbox.spy(toolbar, "prepareToEnhance");
+      describe("setSelectionsAndPrepareToEnhance", function() {
+        it("should create an unselectedNotification as the language was not selected", function() {
+          const language = "unselected";
+          const topic = "unselected";
+          const activity = "unselected";
 
-        const language = "en";
-        const topic = "articles";
-        const activity = "color";
+          $(toolbar.selectorStart + "language-menu").val(language);
 
-        chrome.storage.local.set.yields(); // make set synchronous
+          $(toolbar.selectorStart + "topic-menu-" + language)
+          .addClass("selected-toolbar-topic-menu")
+          .val(topic);
 
-        $(toolbar.selectorStart + "language-menu").val(language);
+          $(toolbar.selectorStart + "activity-menu").val(activity);
 
-        $(toolbar.selectorStart + "topic-menu-" + language)
-        .addClass("selected-toolbar-topic-menu")
-        .val(topic);
+          toolbar.setSelectionsAndPrepareToEnhance();
 
-        $(toolbar.selectorStart + "activity-menu").val(activity);
-
-        toolbar.setSelectionsAndPrepareToEnhance();
-
-        sinon.assert.calledOnce(chrome.storage.local.set);
-        sinon.assert.calledWith(chrome.storage.local.set, {
-          language: language,
-          topic: topic,
-          activity: activity
+          sinon.assert.calledOnce(chrome.runtime.sendMessage);
+          sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "create unselectedNotification"});
         });
 
-        sinon.assert.calledOnce(prepareToEnhanceSpy);
-      });
+        it("should create an unselectedNotification as the topic was not selected", function() {
+          const language = "en";
+          const topic = "unselected-en";
+          const activity = "unselected";
 
-      it("should prepare and request to call startToEnhance()", function() {
-        toolbar.prepareToEnhance();
+          $(toolbar.selectorStart + "language-menu").val(language);
 
-        expect($(toolbar.selectorStart + "enhance-button").is(":hidden")).to.be.true;
-        expect($(toolbar.selectorStart + "restore-button").is(":hidden")).to.be.true;
-        expect($(toolbar.selectorStart + "loading-image").is(":visible")).to.be.true;
+          $(toolbar.selectorStart + "topic-menu-" + language)
+          .addClass("selected-toolbar-topic-menu")
+          .val(topic);
 
-        sinon.assert.calledOnce(chrome.runtime.sendMessage);
-        sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "call startToEnhance"});
+          $(toolbar.selectorStart + "activity-menu").val(activity);
+
+          toolbar.setSelectionsAndPrepareToEnhance();
+
+          sinon.assert.calledOnce(chrome.runtime.sendMessage);
+          sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "create unselectedNotification"});
+        });
+
+        it("should create an unselectedNotification as the activity was not selected", function() {
+          const language = "en";
+          const topic = "articles";
+          const activity = "unselected";
+
+          $(toolbar.selectorStart + "language-menu").val(language);
+
+          $(toolbar.selectorStart + "topic-menu-" + language)
+          .addClass("selected-toolbar-topic-menu")
+          .val(topic);
+
+          $(toolbar.selectorStart + "activity-menu").val(activity);
+
+          toolbar.setSelectionsAndPrepareToEnhance();
+
+          sinon.assert.calledOnce(chrome.runtime.sendMessage);
+          sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "create unselectedNotification"});
+        });
+
+        it("should set language, topic and activity and call prepareToEnhance() correctly", function() {
+          const prepareToEnhanceSpy = sandbox.spy(toolbar, "prepareToEnhance");
+
+          const language = "en";
+          const topic = "articles";
+          const activity = "color";
+
+          chrome.storage.local.set.yields(); // make set synchronous
+
+          $(toolbar.selectorStart + "language-menu").val(language);
+
+          $(toolbar.selectorStart + "topic-menu-" + language)
+          .addClass("selected-toolbar-topic-menu")
+          .val(topic);
+
+          $(toolbar.selectorStart + "activity-menu").val(activity);
+
+          toolbar.setSelectionsAndPrepareToEnhance();
+
+          sinon.assert.calledOnce(chrome.storage.local.set);
+          sinon.assert.calledWith(chrome.storage.local.set, {
+            language: language,
+            topic: topic,
+            activity: activity
+          });
+
+          sinon.assert.calledOnce(prepareToEnhanceSpy);
+        });
+
+        it("should prepare and request to call startToEnhance()", function() {
+          toolbar.prepareToEnhance();
+
+          expect($(toolbar.selectorStart + "enhance-button").is(":hidden")).to.be.true;
+          expect($(toolbar.selectorStart + "restore-button").is(":hidden")).to.be.true;
+          expect($(toolbar.selectorStart + "loading-image").is(":visible")).to.be.true;
+
+          sinon.assert.calledOnce(chrome.runtime.sendMessage);
+          sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "call startToEnhance"});
+        });
       });
     });
 
