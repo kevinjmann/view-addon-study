@@ -12,7 +12,7 @@ var view = {
   // user options (defaults)
   fixedOrPercentage: 0,
   fixedNumberOfExercises: 25,
-  proportionOfExercises: 100,
+  percentageOfExercises: 100,
   choiceMode: 0,
   firstOffset: 0,
   intervalSize: 1,
@@ -38,9 +38,11 @@ var view = {
         msg: "call sendTopics"
       }, function(response) {
         console.log("received response: got topics JSON object.");
-        chrome.storage.local.get(["userEmail",
+        chrome.storage.local.get([
+          "userEmail",
           "userid",
-          "enabled"], function(res) {
+          "enabled"
+        ], function(res) {
           view.topics = response.topics;
           chrome.storage.local.set({
             serverURL: view.serverURL,
@@ -72,15 +74,34 @@ var view = {
     );
   },
 
+  /**
+   * Save all user options from the options page.
+   *
+   * @param {object} storageItems the storage items
+   */
+  saveUserOptions: function(storageItems) {
+    console.log("saveUserOptions()");
+    if (storageItems.fixedOrPercentage !== undefined) {
+      view.fixedOrPercentage = storageItems.fixedOrPercentage;
+      view.fixedNumberOfExercises = storageItems.fixedNumberOfExercises;
+      view.percentageOfExercises = storageItems.percentageOfExercises;
+      view.choiceMode = storageItems.choiceMode;
+      view.firstOffset = storageItems.firstOffset;
+      view.intervalSize = storageItems.intervalSize;
+      view.showInst = storageItems.showInst;
+    }
+  },
+
   /*
    * Initialize all user options and make them accessible to VIEW.
    * Afterwards start enhancing.
    */
   startToEnhance: function() {
     console.log("startToEnhance()");
-    chrome.storage.local.get(["fixedOrPercentage",
+    chrome.storage.local.get([
+      "fixedOrPercentage",
       "fixedNumberOfExercises",
-      "proportionOfExercises",
+      "percentageOfExercises",
       "choiceMode",
       "firstOffset",
       "intervalSize",
@@ -88,47 +109,19 @@ var view = {
       "enabled",
       "language",
       "topic",
-      "activity"], function(res) {
-      if (chrome.runtime.lastError) {
-        // an error occurred, do nothing
-        console.log("startToEnhance: Storage error occurred!\n" + chrome.runtime.lastError);
-      }
-      else if (res.language == undefined || res.topic == undefined || res.activity == undefined) {
-        console.log("startToEnhance: user didn't select language, topic or activity." +
-          "Use default values.");
-      }
-      else if (res.fixedOrPercentage == undefined) {
-        console.log("startToEnhance: in the options page no options were set yet, " +
-          "set enabled autorun, language, topic and activity and use default values for the rest.");
+      "activity"
+    ], function(storageItems) {// TODO: this should be handled in the toolbar instead
+      // save user options, as they might have changed
+      view.saveUserOptions(storageItems);
 
-        // enabled, language, topic and activity selections (default)
-        view.enabled = res.enabled;
-        view.language = res.language;
-        view.topic = res.topic;
-        view.activity = res.activity;
+      // enabled, language, topic and activity selections (default)
+      view.enabled = storageItems.enabled;
+      view.language = storageItems.language;
+      view.topic = storageItems.topic;
+      view.activity = storageItems.activity;
 
-        // set the topic name
-        view.topicName = view.interaction.getTopicName(view.topic);
-      } else {
-        // the storage items are available, update...
-        // user options
-        view.fixedOrPercentage = res.fixedOrPercentage;
-        view.fixedNumberOfExercises = res.fixedNumberOfExercises;
-        view.proportionOfExercises = res.proportionOfExercises;
-        view.choiceMode = res.choiceMode;
-        view.firstOffset = res.firstOffset;
-        view.intervalSize = res.intervalSize;
-        view.showInst = res.showInst;
-
-        // enabled, language, topic and activity selections (default)
-        view.enabled = res.enabled;
-        view.language = res.language;
-        view.topic = res.topic;
-        view.activity = res.activity;
-
-        // set the topic name
-        view.topicName = view.interaction.getTopicName(view.topic);
-      }
+      // set the topic name
+      view.topicName = view.interaction.getTopicName(view.topic);
 
       // start enhancing the page
       view.interaction.enhance();

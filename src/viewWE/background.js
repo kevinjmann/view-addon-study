@@ -175,7 +175,7 @@ const background = {
   /**
    * The toolbar ui send the message to open the options page.
    */
-  openOptionsPage: function() {
+  callOpenOptionsPage: function() {
     chrome.runtime.openOptionsPage();
   },
 
@@ -283,6 +283,9 @@ const background = {
     });
   },
 
+  /**
+   * Send a request to the content script to call abortEnhancement().
+   */
   callAbortEnhancement: function(){
     chrome.tabs.sendMessage(background.currentTabId, {msg: "call abortEnhancement"});
   },
@@ -482,6 +485,8 @@ chrome.browserAction.onClicked.addListener(function(tab) {
  * when you have a response
  */
 function processMessage(request, sender, sendResponse) {
+  console.log(request);
+  console.log(sender.tab.id);
   background.currentTabId = sender.tab.id;
 
   switch (request.msg) {
@@ -490,6 +495,13 @@ function processMessage(request, sender, sendResponse) {
       break;
     case "toggle Menu VIEW":
       background.callToggleMenuVIEW();
+      break;
+    case "create unselectedNotification":
+      background.createBasicNotification(
+        "unselected-notification",
+        "Unselected language, topic or activity!",
+        "You need to pick a language, topic and activity!"
+      );
       break;
     case "call startToEnhance":
       background.callStartToEnhance();
@@ -510,8 +522,8 @@ function processMessage(request, sender, sendResponse) {
     case "redirect to link":
       background.redirect(request.link);
       break;
-    case "open options page":
-      background.openOptionsPage();
+    case "call openOptionsPage":
+      background.callOpenOptionsPage(sender.tab.id);
       break;
     case "open help page":
       background.openHelpPage();

@@ -1,111 +1,283 @@
-/*
- * Restore previous option settings from storage and handle
- * active events of the option page.
+/**
+ * From: https://gist.github.com/jtsternberg/1e03f5fd5be8427170c5
+ * Caches jquery selectors when they are requested, so that each element
+ * is only selected once. An element can be reset, if necessary.
+ * For selectors like $(this) in e.g. selection menus you should always
+ * reset the element or don't use it at all.
+ * Be careful of selections that won't stay the same.
+ *
+ * @returns {{get: get_from_cache}} use: let cache = new Selector_Cache();
+ * cache.get(selector) or
+ * cache.get(selector, true) if the selected element should be reset
+ * @constructor initialized with: new Selector_Cache()
  */
-$(document).ready(function() {
+function Selector_Cache() {
+  const collection = {};
 
-  restoreUserOptions();
+  function get_from_cache(selector, reset) {
+    if (undefined === collection[selector] || true === reset) {
+      collection[selector] = $(selector);
+    }
 
-  $("#wertiview-fixed-number-of-exercises").on("click", function() {
-    $(this).next().show();
-    $("#wertiview-proportion-of-exercises-value").hide();
-  });
+    return collection[selector];
+  }
 
-  $("#wertiview-proportion-of-exercises").on("click", function() {
-    $(this).next().show();
-    $("#wertiview-fixed-number-of-exercises-value").hide();
-  });
+  return {get: get_from_cache};
+}
 
-  $("#wertiview-random").on("click", function() {
-    $("#wertiview-first-offset-value").hide();
-    $("#wertiview-interval-size-value").hide();
-  });
+const viewOptions = {
+  $cache: new Selector_Cache(),
 
-  $("#wertiview-first-offset").on("click", function() {
-    $(this).next().show();
-    $("#wertiview-interval-size-value").hide();
-  });
+  selectorStart: "#wertiview-",
 
-  $("#wertiview-interval-size").on("click", function() {
-    $(this).next().show();
-    $("#wertiview-first-offset-value").hide();
-  });
+  /**
+   * Restore user options and initialize all options handler.
+   */
+  init: function() {
+    viewOptions.initFixedNumberHandler();
 
-  $("#wertiview-save-options").on("click", function() {
-    console.log("click on save: call saveUserOptions()");
-    saveUserOptions();
-  });
+    viewOptions.initPercentageHandler();
+
+    viewOptions.initRandomChoiceHandler();
+
+    viewOptions.initFirstOffsetChoiceHandler();
+
+    viewOptions.initIntervalSizeChoiceHandler();
+
+    viewOptions.initSaveOptionsHandler();
+
+    viewOptions.restoreUserOptions();
+  },
+
+  /**
+   * Initialize the handler for the fixed number of exercises.
+   */
+  initFixedNumberHandler: function() {
+    viewOptions.$cache.get(viewOptions.selectorStart + "fixed-number-of-exercises").on("change",
+      viewOptions.chooseFixedNumber);
+  },
+
+  /**
+   * Will choose fixed number as how many exercises are chosen and will
+   * hide the value for the percentage of exercises.
+   */
+  chooseFixedNumber: function() {
+    viewOptions.$cache.get(viewOptions.selectorStart + "fixed-number-of-exercises-value").show();
+    viewOptions.$cache.get(viewOptions.selectorStart + "percentage-of-exercises-value").hide();
+  },
+
+  /**
+   * Initialize the handler for the percentage of exercises.
+   */
+  initPercentageHandler: function() {
+    viewOptions.$cache.get(viewOptions.selectorStart + "percentage-of-exercises").on("change",
+      viewOptions.choosePercentage);
+  },
+
+  /**
+   * Will choose percentage as how many exercises are chosen and will
+   * hide the value for the fixed number of exercises.
+   */
+  choosePercentage: function() {
+    viewOptions.$cache.get(viewOptions.selectorStart + "percentage-of-exercises-value").show();
+    viewOptions.$cache.get(viewOptions.selectorStart + "fixed-number-of-exercises-value").hide();
+  },
+
+  /**
+   * Initialize the handler for the random choice of exercises.
+   */
+  initRandomChoiceHandler: function() {
+    viewOptions.$cache.get(viewOptions.selectorStart + "random").on("change",
+      viewOptions.chooseRandom);
+  },
+
+  /**
+   * Check the random choice on how exercises should be chosen.
+   * Hide first offset and interval size values.
+   */
+  chooseRandom: function() {
+    viewOptions.$cache.get(viewOptions.selectorStart + "first-offset-value").hide();
+    viewOptions.$cache.get(viewOptions.selectorStart + "interval-size-value").hide();
+  },
+
+  /**
+   * Initialize the handler for the first offset choice of exercises.
+   */
+  initFirstOffsetChoiceHandler: function() {
+    viewOptions.$cache.get(viewOptions.selectorStart + "first-offset").on("change",
+      viewOptions.chooseFirstOffset);
+  },
+
+  /**
+   * Check the first offset choice on how exercises should be chosen.
+   * Show the value and hide the interval size value.
+   */
+  chooseFirstOffset: function() {
+    viewOptions.$cache.get(viewOptions.selectorStart + "first-offset-value").show();
+    viewOptions.$cache.get(viewOptions.selectorStart + "interval-size-value").hide();
+  },
+
+  /**
+   * Initialize the handler for the interval size choice of exercises.
+   */
+  initIntervalSizeChoiceHandler: function() {
+    viewOptions.$cache.get(viewOptions.selectorStart + "interval-size").on("change",
+      viewOptions.chooseIntervalSize);
+  },
+
+  /**
+   * Check the interval size choice on how exercises should be chosen.
+   * Show the value and hide the first offset value.
+   */
+  chooseIntervalSize: function() {
+    viewOptions.$cache.get(viewOptions.selectorStart + "interval-size-value").show();
+    viewOptions.$cache.get(viewOptions.selectorStart + "first-offset-value").hide();
+  },
+
+  /**
+   * Initialize the handler for saving the user options.
+   */
+  initSaveOptionsHandler: function() {
+    viewOptions.$cache.get(viewOptions.selectorStart + "save-options").on("click",
+      viewOptions.saveUserOptions);
+  },
+
+  /**
+   * Save all user option choices to the storage.
+   */
+  saveUserOptions: function() {
+    chrome.storage.local.set({
+      fixedOrPercentage: viewOptions.$cache.get("input[name='fixedOrPercentage']:checked").val(),
+      fixedNumberOfExercises: viewOptions.$cache.get(viewOptions.selectorStart + "fixed-number-of-exercises-value").val(),
+      percentageOfExercises: viewOptions.$cache.get(viewOptions.selectorStart + "percentage-of-exercises-value").val(),
+      choiceMode: viewOptions.$cache.get("input[name='choiceMode']:checked").val(),
+      firstOffset: viewOptions.$cache.get(viewOptions.selectorStart + "first-offset-value").val(),
+      intervalSize: viewOptions.$cache.get(viewOptions.selectorStart + "interval-size-value").val(),
+      showInst: viewOptions.$cache.get(viewOptions.selectorStart + "show-instructions").prop("checked")
+    }, viewOptions.showSavedMessage);
+  },
+
+  /**
+   * When the options are saved, the user will see the message below the save
+   * button for 5 seconds.
+   */
+  showSavedMessage: function() {
+    viewOptions.$cache.get(viewOptions.selectorStart + "options-saved").show().delay(5000).fadeOut();
+  },
+
+  /**
+   * Restore previous user option settings from storage.
+   * The values right to "||" are default values.
+   */
+  restoreUserOptions: function() {
+    chrome.storage.local.get([
+      "fixedOrPercentage",
+      "fixedNumberOfExercises",
+      "percentageOfExercises",
+      "choiceMode",
+      "firstOffset",
+      "intervalSize",
+      "showInst"
+    ], function(res) {
+
+      const fixedOrPercentageValue = res.fixedOrPercentage || "0";
+      const fixedNumberOfExercises = res.fixedNumberOfExercises || "25";
+      const percentageOfExercises = res.percentageOfExercises || "100";
+      const choiceModeValue = res.choiceMode || "0";
+      const firstOffset = res.firstOffset || "0";
+      const intervalSize = res.intervalSize || "1";
+      const showInst = res.showInst || false;
+
+      viewOptions.chooseHowManyExercises(fixedOrPercentageValue);
+
+      viewOptions.restoreHowManyExercises(
+        fixedNumberOfExercises,
+        percentageOfExercises
+      );
+
+      viewOptions.chooseHowToChooseExercises(choiceModeValue);
+
+      viewOptions.restoreHowToChooseExercises(
+        firstOffset,
+        intervalSize
+      );
+
+      viewOptions.restoreIfToShowInstructions(showInst);
+    });
+  },
+
+  /**
+   * Choice between a fixed number or percentage of exercises.
+   *
+   * @param {string} fixedOrPercentageValue "0" if fixed, percentage otherwise
+   */
+  chooseHowManyExercises: function(fixedOrPercentageValue) {
+    if (fixedOrPercentageValue === "0") {
+      viewOptions.$cache.get(viewOptions.selectorStart + "fixed-number-of-exercises").prop("checked", true);
+      viewOptions.chooseFixedNumber();
+    } else {
+      viewOptions.$cache.get(viewOptions.selectorStart + "percentage-of-exercises").prop("checked", true);
+      viewOptions.choosePercentage();
+    }
+  },
+
+  /**
+   * Restore the values of the fixed number and percentage of exercises.
+   *
+   * @param {string} fixedNumberOfExercises the number of exercises
+   * @param {string} percentageOfExercises the percentage of exercises
+   */
+  restoreHowManyExercises: function(fixedNumberOfExercises, percentageOfExercises) {
+    viewOptions.$cache.get(viewOptions.selectorStart + "fixed-number-of-exercises-value").val(fixedNumberOfExercises);
+
+    viewOptions.$cache.get(viewOptions.selectorStart + "percentage-of-exercises-value").val(percentageOfExercises);
+
+  },
+
+  /**
+   * Choice how exercises should be chosen.
+   *
+   * @param {string} choiceModeValue "0" if random, "1" if first offset, interval
+   * size otherwise
+   */
+  chooseHowToChooseExercises: function(choiceModeValue) {
+    if (choiceModeValue === "0") {
+      viewOptions.$cache.get(viewOptions.selectorStart + "random").prop("checked", true);
+      viewOptions.chooseRandom();
+    } else if (choiceModeValue === "1") {
+      viewOptions.$cache.get(viewOptions.selectorStart + "first-offset").prop("checked", true);
+      viewOptions.chooseFirstOffset();
+    } else {
+      viewOptions.$cache.get(viewOptions.selectorStart + "interval-size").prop("checked", true);
+      viewOptions.chooseIntervalSize();
+    }
+  },
+
+  /**
+   * Restore the values of the first offset and the interval size.
+   *
+   * @param {string} firstOffset the offset value
+   * @param {string} intervalSize the interval value
+   */
+  restoreHowToChooseExercises: function(firstOffset, intervalSize) {
+    viewOptions.$cache.get(viewOptions.selectorStart + "first-offset-value").val(firstOffset);
+
+    viewOptions.$cache.get(viewOptions.selectorStart + "interval-size-value").val(intervalSize);
+  },
+
+  /**
+   * Choice whether instructions should be showed or not
+   *
+   * @param {boolean} showInst true if to show instructions, false otherwise
+   */
+  restoreIfToShowInstructions: function(showInst) {
+    viewOptions.$cache.get(viewOptions.selectorStart + "show-instructions").prop("checked", showInst);
+  }
+};
+
+/**
+ * Initialize the options when the document is ready.
+ */
+viewOptions.$cache.get(document).ready(function() {
+  viewOptions.init();
 });
-
-/*
- * Restore previous user option settings from storage.
- * The values right to "||" are default values.
- */
-function restoreUserOptions() {
-  chrome.storage.local.get(["fixedOrPercentage",
-    "fixedNumberOfExercises",
-    "proportionOfExercises",
-    "choiceMode",
-    "firstOffset",
-    "intervalSize",
-    "showInst"], function(res) {
-
-    var fixedOrPercentageValue = res.fixedOrPercentage || 0;
-    var fixedNumberOfExercises = res.fixedNumberOfExercises || 25;
-    var proportionOfExercises = res.proportionOfExercises || 100;
-    var choiceModeValue = res.choiceMode || 0;
-    var firstOffset = res.firstOffset || 0;
-    var intervalSize = res.intervalSize || 1;
-    var showInst = res.showInst || false;
-
-    // Choice between a fixed number or percentage of exercises
-    if (fixedOrPercentageValue == 0) {
-      $("#wertiview-fixed-number-of-exercises").prop("checked", true);
-      $("#wertiview-fixed-number-of-exercises-value").show();
-      $("#wertiview-proportion-of-exercises-value").hide();
-    } else {
-      $("#wertiview-proportion-of-exercises").prop("checked", true);
-      $("#wertiview-proportion-of-exercises-value").show();
-      $("#wertiview-fixed-number-of-exercises-value").hide();
-    }
-
-    $("#wertiview-fixed-number-of-exercises-value").val(fixedNumberOfExercises);
-
-    $("#wertiview-proportion-of-exercises-value").val(proportionOfExercises);
-
-    // Choice how exercises should be chosen
-    if (choiceModeValue == 0) {
-      $("#wertiview-random").prop("checked", true);
-    } else if (choiceModeValue == 1) {
-      $("#wertiview-first-offset").prop("checked", true);
-      $("#wertiview-first-offset-value").show();
-      $("#wertiview-interval-size-value").hide();
-    } else {
-      $("#wertiview-interval-size").prop("checked", true);
-      $("#wertiview-interval-size-value").show();
-      $("#wertiview-first-offset-value").hide();
-    }
-
-    $("#wertiview-first-offset-value").val(firstOffset);
-
-    $("#wertiview-interval-size-value").val(intervalSize);
-
-    // Choice whether instructions should be showed or not
-    $("#wertiview-show-instructions").prop("checked", showInst);
-  });
-}
-
-/*
- * Save all user option choices to the storage.
- */
-function saveUserOptions() {
-  chrome.storage.local.set({
-    fixedOrPercentage: $("input[name='fixedOrPercentage']:checked").val(),
-    fixedNumberOfExercises: $("#wertiview-fixed-number-of-exercises-value").val(),
-    proportionOfExercises: $("#wertiview-proportion-of-exercises-value").val(),
-    choiceMode: $("input[name='choiceMode']:checked").val(),
-    firstOffset: $("#wertiview-first-offset-value").val(),
-    intervalSize: $("#wertiview-interval-size-value").val(),
-    showInst: $("#wertiview-show-instructions").prop("checked")
-  });
-}

@@ -79,27 +79,8 @@ view.interaction = {
       view.interaction.restoreToOriginal();
     }
 
-    var language = view.language;
-    var topic = view.topic;
-    var activity = view.activity;
-
-    // check for appropriate selections
-    if (language == "unselected") {
-      alert("Please select a language!");
-      view.interaction.initialInteractionState();
-      return;
-    } else if (topic.startsWith("unselected")) {
-      alert("Please select a topic!");
-      view.interaction.initialInteractionState();
-      return;
-    } else if (activity == "unselected") {
-      alert("Please select an activity!");
-      view.interaction.initialInteractionState();
-      return;
-    }
-
     // blur the page for cloze activity
-    if (activity == "cloze") {
+    if (view.activity == "cloze") {
       view.blur.add();
     }
 
@@ -449,7 +430,7 @@ view.interaction = {
 
     var fixedOrPercentageValue = view.fixedOrPercentage;
     var fixedNumberOfExercises = view.fixedNumberOfExercises;
-    var proportionOfExercises = view.proportionOfExercises;
+    var percentageOfExercises = view.percentageOfExercises;
     var choiceModeValue = view.choiceMode;
     var firstOffset = view.firstOffset;
     var intervalSize = view.intervalSize;
@@ -470,7 +451,7 @@ view.interaction = {
       numExercises = fixedNumberOfExercises * partExercises;
     }
     else if (fixedOrPercentageValue == 1) {
-      numExercises = proportionOfExercises * hitList.length;
+      numExercises = percentageOfExercises * hitList.length;
     }
     else {
       // we should never get here
@@ -582,7 +563,7 @@ view.interaction = {
 
     var fixedOrPercentageValue = view.fixedOrPercentage;
     var fixedNumberOfExercises = view.fixedNumberOfExercises;
-    var proportionOfExercises = view.proportionOfExercises;
+    var percentageOfExercises = view.percentageOfExercises;
     var choiceModeValue = view.choiceMode;
     var firstOffset = view.firstOffset;
     var intervalSize = view.intervalSize;
@@ -603,7 +584,7 @@ view.interaction = {
       numExercises = fixedNumberOfExercises * partExercises;
     }
     else if (fixedOrPercentageValue == 1) {
-      numExercises = proportionOfExercises * hitList.length;
+      numExercises = percentageOfExercises * hitList.length;
     }
     else {
       // we should never get here
