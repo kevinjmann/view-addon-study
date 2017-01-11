@@ -72,6 +72,17 @@ module.exports = function(grunt) {
           "../viewWE/options/*.js": ["coverage"],
           "**/options.html": ["html2js"]
         }
+      },
+      view: {
+        files: {
+          src: [
+            "../viewWE/content_scripts/js/view.js",
+            "test/unit/content_scripts/view.test.js"
+          ]
+        },
+        preprocessors: {
+          "../viewWE/content_scripts/js/view.js": ["coverage"]
+        }
       }
     }
   });
