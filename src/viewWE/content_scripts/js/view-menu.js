@@ -1,7 +1,7 @@
 view.VIEWmenu = {
   add: function() {
     // get the url of the about page
-    var menuViewHTML = chrome.extension.getURL("content_scripts/view-menu.html");
+    var menuViewHTML = chrome.extension.getURL("content_scripts/html/view-menu.html");
 
     // create and open the about dialog
     var $menuView = $("<div>");

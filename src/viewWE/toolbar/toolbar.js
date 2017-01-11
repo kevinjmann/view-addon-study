@@ -578,10 +578,6 @@ function processMessageForToolbar(request) {
       break;
     case "call signOut":
       toolbar.signOut();
-      break;
-    default:// TODO: remove eventually
-      console.log("There was an unhandled Message!\n" +
-        "The message was:" + request.msg);
   }
 }
 

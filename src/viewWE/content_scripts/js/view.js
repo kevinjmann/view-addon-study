@@ -128,18 +128,3 @@ var view = {
     });
   }
 };
-
-/*
- * Processes all messages received from background.js.
- * Sends requests to backround.js or handles requests here.
- */
-function processMessageForView(request, sender, sendResponse) {
-  switch (request.msg) {
-    case "call startToEnhance":
-      console.log("startToEnhance: received '" + request.msg + "'");
-      // initialize the user options and save them globally
-      view.startToEnhance();
-  }
-}
-
-chrome.runtime.onMessage.addListener(processMessageForView);

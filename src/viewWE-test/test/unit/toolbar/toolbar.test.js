@@ -1030,19 +1030,6 @@ describe("toolbar.js", function() {
       expect($(request.selector).is(":hidden")).to.be.true;
     });
 
-    it("should enter the default case and print a console log", function() {
-      const consoleLogSpy = sandbox.spy(console, "log");
-
-      const request = {msg: "some unhandled message"};
-
-      chrome.runtime.onMessage.trigger(request);
-
-      sinon.assert.calledOnce(consoleLogSpy);
-      sinon.assert.calledWithExactly(consoleLogSpy,
-        "There was an unhandled Message!\n" +
-        "The message was:" + request.msg);
-    });
-
     describe("signIn", function() {
       it("should process the message \"call signIn\"", function() {
         const signInSpy = sandbox.spy(toolbar, "signIn");
