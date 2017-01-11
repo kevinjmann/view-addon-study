@@ -89,7 +89,7 @@ const view = {
    * @param id the user id
    */
   setEmailAndId: function(email, id) {
-    if (id == undefined) {
+    if (id === undefined) {
       chrome.storage.local.set({
         userEmail: view.userEmail,
         userid: view.userid
@@ -107,7 +107,7 @@ const view = {
    * @param enabled true if the page should be auto enhanced, false otherwise
    */
   setAutoEnhance: function(enabled) {
-    if (enabled == undefined) {
+    if (enabled === undefined) {
       chrome.storage.local.set({enabled: view.enabled});
     }
   },
