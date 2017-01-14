@@ -79,16 +79,28 @@ const toolbar = {
   },
 
   /**
+   * Init the open and hide view menu handlers.
+   */
+  initViewMenu: function() {
+    toolbar.initOpenViewMenu();
+    toolbar.initHideViewMenu();
+  },
+
+  /**
    * Init the view menu handler. Toggle between hiding and showing
    * the drop down content on click.
    */
-  initViewMenu: function() {
-    const viewMenuSelector = "#wertiview-VIEW-menu-btn";
-    toolbar.$cache.get(viewMenuSelector).on("click",
+  initOpenViewMenu: function() {
+    toolbar.$cache.get("#wertiview-VIEW-menu-btn").on("click",
       toolbar.requestToToggleViewMenu);
+  },
 
+  /**
+   * Hide the view menu when anything but the view menu button was clicked.
+   */
+  initHideViewMenu: function() {
     toolbar.$cache.get(window).on("click", function(event) {
-      if (!$(event.target).closest(viewMenuSelector).length) {
+      if (!$(event.target).closest("#wertiview-VIEW-menu-btn").length) {
         toolbar.requestToHideViewMenu();
       }
     });
