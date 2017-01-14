@@ -1,46 +1,85 @@
 view.VIEWmenu = {
+  selectorStart : "#view-VIEW-menu-",
+
   add: function() {
-    // get the url of the about page
-    var menuViewHTML = chrome.extension.getURL("content_scripts/html/view-menu.html");
+    const viewMenuHTML = chrome.extension.getURL("content_scripts/html/view-menu.html");
 
-    // create and open the about dialog
-    var $menuView = $("<div>");
+    const $ViewMenu = $("<div>");
 
-    // load the about page and append the view icon
-    $menuView.load(menuViewHTML, function() {
-      // Close the dropdown menu if the user clicks outside of it
-      $(window).on("click", function() {
-        var $menuViewContent = $("#view-VIEW-menu-content");
-        if ($menuViewContent.is(":visible")) {
-          $menuViewContent.hide();
-        }
-      });
+    $ViewMenu.load(viewMenuHTML, view.VIEWmenu.init);
 
-      // open the option page when in the toolbar "options" was clicked
-      $("#view-VIEW-menu-options").on("click", function() {
-        console.log("click on options:  request 'open options page'");
-        chrome.runtime.sendMessage({
-          msg: "call openOptionsPage"
-        });
-      });
+    $("body").prepend($ViewMenu);
+  },
 
-      // open the help page when in the toolbar "help" was clicked
-      $("#view-VIEW-menu-help").on("click", function() {
-        console.log("click on help: open help page");
-        chrome.runtime.sendMessage({
-          msg: "open help page"
-        });
-      });
+  /**
+   * Init the handlers for the view menu.
+   */
+  init: function() {
+    view.VIEWmenu.initHideMenuHandler();
 
-      // on clicking "about", send a request to the background page in the active tab
-      $("#view-VIEW-menu-about").on("click", function() {
-        console.log("click on about: request 'open about dialog'");
-        chrome.runtime.sendMessage({
-          msg: "open about dialog"
-        });
-      });
-    });
+    view.VIEWmenu.initOpenOptionsPageHandler();
 
-    $("body").prepend($menuView);
+    view.VIEWmenu.initOpenHelpPageHandler();
+
+    view.VIEWmenu.initOpenAboutDialogHandler();
+  },
+
+  /**
+   * Close the dropdown menu if the user clicks outside of it.
+   */
+  initHideMenuHandler: function() {
+    $(window).on("click", view.VIEWmenu.hide);
+  },
+
+  /**
+   * Hide the view menu.
+   */
+  hide: function() {
+    $(view.VIEWmenu.selectorStart + "content").hide();
+  },
+
+  /**
+   * Open the option page when in the toolbar "options" was clicked.
+   */
+  initOpenOptionsPageHandler: function() {
+    $(view.VIEWmenu.selectorStart + "options").on("click",
+      view.VIEWmenu.requestToCallOpenOptionsPage);
+  },
+
+  /**
+   * Send a request to the background script to call openOptionsPage().
+   */
+  requestToCallOpenOptionsPage: function() {
+    chrome.runtime.sendMessage({msg: "call openOptionsPage"});
+  },
+
+  /**
+   * Open the help page when in the toolbar "help" was clicked.
+   */
+  initOpenHelpPageHandler: function() {
+    $(view.VIEWmenu.selectorStart + "help").on("click",
+      view.VIEWmenu.requestToOpenHelpPage);
+  },
+
+  /**
+   * Send a request to the background script to open the help page.
+   */
+  requestToOpenHelpPage: function() {
+    chrome.runtime.sendMessage({msg: "open help page"});
+  },
+
+  /**
+   * On clicking "about", open the about dialog.
+   */
+  initOpenAboutDialogHandler: function() {
+    $(view.VIEWmenu.selectorStart + "about").on("click",
+      view.about.open);
+  },
+
+  /**
+   * Toggle the VIEW menu.
+   */
+  toggle: function() {
+    $(view.VIEWmenu.selectorStart + "content").toggle();
   }
 };

@@ -25,7 +25,6 @@ function Selector_Cache() {
   return {get: get_from_cache};
 }
 
-
 const toolbar = {
   topics: {},
 
@@ -84,16 +83,31 @@ const toolbar = {
    * the drop down content on click.
    */
   initViewMenu: function() {
-    toolbar.$cache.get("#wertiview-VIEW-menu-btn").on("click",
-      toolbar.requestToToggleMenuView);
+    const viewMenuSelector = "#wertiview-VIEW-menu-btn";
+    toolbar.$cache.get(viewMenuSelector).on("click",
+      toolbar.requestToToggleViewMenu);
+
+    toolbar.$cache.get(window).on("click", function(event) {
+      if (!$(event.target).closest(viewMenuSelector).length) {
+        toolbar.requestToHideViewMenu();
+      }
+    });
   },
 
   /**
    * Send a request to the background script to pass on the message to
    * toggle the VIEW menu.
    */
-  requestToToggleMenuView: function() {
-    chrome.runtime.sendMessage({msg: "toggle Menu VIEW"}, toolbar.noResponse);
+  requestToToggleViewMenu: function() {
+    chrome.runtime.sendMessage({msg: "toggle VIEW Menu"}, toolbar.noResponse);
+  },
+
+  /**
+   * Send a request to the background script to pass on the message to
+   * hide the VIEW menu.
+   */
+  requestToHideViewMenu: function() {
+    chrome.runtime.sendMessage({msg: "hide VIEW Menu"}, toolbar.noResponse);
   },
 
   /**
@@ -225,7 +239,7 @@ const toolbar = {
    * @returns {Object} all activity selectors
    */
   fillActivitySelectors: function() {
-    let activitySelectors = {};
+    const activitySelectors = {};
 
     toolbar.$cache.get(toolbar.selectorStart + "activity-menu").find("option[value]").each(function() {
       const currentActivity = $(this).val();

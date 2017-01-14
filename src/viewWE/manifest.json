@@ -53,6 +53,7 @@
       "js": [
         "lib/jquery-3.1.1.min.js",
         "lib/jquery-ui.min.js",
+        "content_scripts/js/selector-cache.js",
         "content_scripts/js/view.js",
         "content_scripts/js/interaction.js",
         "content_scripts/js/view-menu.js",
