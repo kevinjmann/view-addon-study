@@ -21,6 +21,7 @@ describe("toolbar.js", function() {
     chrome.runtime.sendMessage.reset();
     chrome.storage.local.set.reset();
     chrome.storage.local.get.reset();
+    $(window).off();
     fixture.cleanup();
   });
 
@@ -185,34 +186,90 @@ describe("toolbar.js", function() {
     });
 
     describe("initViewMenu", function() {
-      it("should initialize the VIEW menu handler", function() {
-        const selectorSpy = sandbox.spy(toolbar.$cache, "get");
-        const eventSpy = sandbox.spy($.fn, "on");
+      it("should call initOpenViewMenu() and initHideViewMenu()", function() {
+        const initOpenViewMenuSpy = sandbox.spy(toolbar, "initOpenViewMenu");
+        const initHideViewMenuSpy = sandbox.spy(toolbar, "initHideViewMenu");
 
         toolbar.initViewMenu();
 
-        sinon.assert.calledOnce(selectorSpy);
-        sinon.assert.calledWithExactly(selectorSpy, "#wertiview-VIEW-menu-btn");
+        sinon.assert.calledOnce(initOpenViewMenuSpy);
 
-        sinon.assert.calledOnce(eventSpy);
-        sinon.assert.calledWith(eventSpy, "click");
+        sinon.assert.calledOnce(initHideViewMenuSpy);
       });
 
-      it("should call requestToToggleViewMenu() on click", function() {
-        const requestToToggleMenuViewSpy = sandbox.spy(toolbar, "requestToToggleViewMenu");
+      describe("initOpenViewMenu", function() {
+        it("should initialize the open VIEW menu handler", function() {
+          const selectorSpy = sandbox.spy(toolbar.$cache, "get");
+          const eventSpy = sandbox.spy($.fn, "on");
 
-        toolbar.initViewMenu();
+          toolbar.initOpenViewMenu();
 
-        $("#wertiview-VIEW-menu-btn").trigger("click");
+          sinon.assert.calledOnce(selectorSpy);
+          sinon.assert.calledWithExactly(selectorSpy, "#wertiview-VIEW-menu-btn");
 
-        sinon.assert.calledOnce(requestToToggleMenuViewSpy);
+          sinon.assert.calledOnce(eventSpy);
+          sinon.assert.calledWith(eventSpy, "click");
+        });
+
+        it("should call requestToToggleViewMenu() on click", function() {
+          const requestToToggleMenuViewSpy = sandbox.spy(toolbar, "requestToToggleViewMenu");
+
+          toolbar.initOpenViewMenu();
+
+          $("#wertiview-VIEW-menu-btn").trigger("click");
+
+          sinon.assert.calledOnce(requestToToggleMenuViewSpy);
+        });
+
+        it("should request to toggle the VIEW menu", function() {
+          toolbar.requestToToggleViewMenu();
+
+          sinon.assert.calledOnce(chrome.runtime.sendMessage);
+          sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "toggle VIEW Menu"});
+        });
       });
 
-      it("should request to toggle the VIEW menu", function() {
-        toolbar.requestToToggleViewMenu();
+      describe("initHideViewMenu", function() {
+        it("should initialize the hide VIEW menu handler", function() {
+          const selectorSpy = sandbox.spy(toolbar.$cache, "get");
+          const eventSpy = sandbox.spy($.fn, "on");
 
-        sinon.assert.calledOnce(chrome.runtime.sendMessage);
-        sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "toggle VIEW Menu"});
+          toolbar.initHideViewMenu();
+
+          sinon.assert.calledOnce(selectorSpy);
+          sinon.assert.calledWithExactly(selectorSpy, window);
+
+          sinon.assert.calledOnce(eventSpy);
+          sinon.assert.calledWith(eventSpy, "click");
+        });
+
+        it("should call requestToHideViewMenu(), as the toolbar body was clicked", function() {
+          const requestToHideViewMenuSpy = sandbox.spy(toolbar, "requestToHideViewMenu");
+
+          toolbar.initHideViewMenu();
+
+          // anything but the view menu button can be the trigger here
+          $("body").trigger("click");
+
+          sinon.assert.calledOnce(requestToHideViewMenuSpy);
+        });
+
+        it("should not call requestToHideViewMenu(), as the view menu button was clicked", function() {
+          const requestToHideViewMenuSpy = sandbox.spy(toolbar, "requestToHideViewMenu");
+
+          toolbar.initHideViewMenu();
+
+          $("#wertiview-VIEW-menu-btn").trigger("click");
+
+          sinon.assert.notCalled(requestToHideViewMenuSpy);
+        });
+
+        it("should request to hide the VIEW menu", function() {
+          toolbar.requestToHideViewMenu();
+
+          sinon.assert.calledOnce(chrome.runtime.sendMessage);
+          sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "hide VIEW Menu"});
+        });
       });
     });
 
