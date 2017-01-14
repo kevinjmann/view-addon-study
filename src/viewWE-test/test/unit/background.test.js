@@ -208,8 +208,8 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message \"toggle Menu VIEW\"", function() {
-      const toggleMenuVIEWSpy = sandbox.spy(background, "toggle");
+    it("should process the message \"toggle VIEW Menu\"", function() {
+      const toggleMenuVIEWSpy = sandbox.spy(background, "toggleVIEWMenu");
 
       const request = {msg: "toggle VIEW Menu"};
       const sender = {tab: {id: 5}};
@@ -217,6 +217,20 @@ describe("background.js", function() {
       chrome.runtime.onMessage.trigger(request, sender);
 
       sinon.assert.calledOnce(toggleMenuVIEWSpy);
+
+      sinon.assert.calledOnce(chrome.tabs.sendMessage);
+      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
+    });
+
+    it("should process the message \"hide VIEW Menu\"", function() {
+      const hideVIEWMenuSpy = sandbox.spy(background, "hideVIEWMenu");
+
+      const request = {msg: "hide VIEW Menu"};
+      const sender = {tab: {id: 5}};
+
+      chrome.runtime.onMessage.trigger(request, sender);
+
+      sinon.assert.calledOnce(hideVIEWMenuSpy);
 
       sinon.assert.calledOnce(chrome.tabs.sendMessage);
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
@@ -356,7 +370,7 @@ describe("background.js", function() {
     });
 
     it("should process the message \"call openOptionsPage\"", function() {
-      const callOpenOptionsPageSpy = sandbox.spy(background, "requestToCallOpenOptionsPage");
+      const callOpenOptionsPageSpy = sandbox.spy(background, "callOpenOptionsPage");
 
       const request = {msg: "call openOptionsPage"};
       const sender = {tab: {id: 5}};
@@ -381,20 +395,6 @@ describe("background.js", function() {
       sinon.assert.calledOnce(chrome.tabs.create);
       sinon.assert.calledWithExactly(chrome.tabs.create,
         {url: "http://sifnos.sfs.uni-tuebingen.de/VIEW/index.jsp?content=activities"});
-    });
-
-    it("should process the message \"open about dialog\"", function() {
-      const openAboutDialogSpy = sandbox.spy(background, "openAboutDialog");
-
-      const request = {msg: "open about dialog"};
-      const sender = {tab: {id: 5}};
-
-      chrome.runtime.onMessage.trigger(request, sender);
-
-      sinon.assert.calledOnce(openAboutDialogSpy);
-
-      sinon.assert.calledOnce(chrome.tabs.sendMessage);
-      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
     it("should enter the default case and create the \"unhandled-message-notification\"", function() {
