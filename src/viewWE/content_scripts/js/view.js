@@ -1,4 +1,6 @@
 const view = {
+  $cache: new Selector_Cache(),
+
   // General options
   serverURL: "https://view.aleks.bg",
   servletURL: "https://view.aleks.bg/view",

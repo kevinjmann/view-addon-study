@@ -3,13 +3,15 @@
  * Sends requests to backround.js or handles requests here.
  */
 function processMessage(request) {
-  console.log(request);
   switch (request.msg) {
     case "toggle toolbar":
       view.interaction.toggleToolbar(request);
       break;
-    case "toggle Menu VIEW":
-      view.interaction.callToggleMenuVIEW();
+    case "toggle VIEW Menu":
+      view.VIEWmenu.toggle();
+      break;
+    case "hide VIEW Menu":
+      view.VIEWmenu.hide();
       break;
     case "call startToEnhance":
       view.startToEnhance();
@@ -28,9 +30,6 @@ function processMessage(request) {
       break;
     case "call restoreToOriginal":
       view.interaction.callRestoreToOriginal(request);
-      break;
-    case "open about dialog":
-      view.about.open();
       break;
     case "call signOut":
       view.interaction.signOutUser(request);

@@ -198,8 +198,8 @@ describe("toolbar.js", function() {
         sinon.assert.calledWith(eventSpy, "click");
       });
 
-      it("should call requestToToggleMenuView() on click", function() {
-        const requestToToggleMenuViewSpy = sandbox.spy(toolbar, "requestToToggleMenuView");
+      it("should call requestToToggleViewMenu() on click", function() {
+        const requestToToggleMenuViewSpy = sandbox.spy(toolbar, "requestToToggleViewMenu");
 
         toolbar.initViewMenu();
 
@@ -209,10 +209,10 @@ describe("toolbar.js", function() {
       });
 
       it("should request to toggle the VIEW menu", function() {
-        toolbar.requestToToggleMenuView();
+        toolbar.requestToToggleViewMenu();
 
         sinon.assert.calledOnce(chrome.runtime.sendMessage);
-        sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "toggle Menu VIEW"});
+        sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "toggle VIEW Menu"});
       });
     });
 

@@ -76,12 +76,29 @@ module.exports = function(grunt) {
       view: {
         files: {
           src: [
+            "../viewWE/content_scripts/js/selector-cache.js",
             "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/lib.js",
+            "../viewWE/content_scripts/js/interaction.js",
             "test/unit/content_scripts/view.test.js"
           ]
         },
+        preprocessors: {"../viewWE/content_scripts/js/view.js": ["coverage"]}
+      },
+      viewMenu: {
+        files: {
+          src: [
+            "../viewWE/content_scripts/js/selector-cache.js",
+            "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/lib.js",
+            "../viewWE/content_scripts/js/about.js",
+            "../viewWE/content_scripts/js/view-menu.js",
+            "test/unit/content_scripts/view-menu.test.js"
+          ]
+        },
         preprocessors: {
-          "../viewWE/content_scripts/js/view.js": ["coverage"]
+          "../viewWE/content_scripts/js/view-menu.js": ["coverage"],
+          "**/view-menu.html": ["html2js"]
         }
       }
     }

@@ -35,6 +35,7 @@ view.interaction = {
   /*
    * Toggle the toolbar directly if it already exists,
    * initialize it otherwise.
+   * Hide the view menu in case it is still open.
    */
   toggleToolbar: function(request) {
     console.log("toggle toolbar: received '" + request.msg + "'");
@@ -48,19 +49,13 @@ view.interaction = {
         $bodyContainer.addClass("down");
       }
       else {
+        view.VIEWmenu.hide();
         $bodyContainer.removeClass("down");
       }
     } else {
       view.saveGeneralOptions();
       view.interaction.initToolbar();
     }
-  },
-
-  /*
-   * Toggle the menu VIEW.
-   */
-  callToggleMenuVIEW: function() {
-    $("#view-VIEW-menu-content").toggle();
   },
 
   isAborted: false,
@@ -103,7 +98,7 @@ view.interaction = {
     chrome.runtime.sendMessage({
       msg: "show element",
       selector: "#wertiview-toolbar-abort-button"
-    });
+    }, view.lib.noResponse);
 
     // create the activity data from the copy with the spans in it
     view.interaction.createActivityData(contextDoc);
@@ -231,7 +226,7 @@ view.interaction = {
       activityData: activityData,
       ajaxTimeout: view.ajaxTimeout,
       servletURL: view.servletURL
-    });
+    }, view.lib.noResponse);
   },
 
   /*
@@ -747,7 +742,7 @@ view.interaction = {
     chrome.runtime.sendMessage({
       msg: "hide element",
       selector: "#wertiview-toolbar-restore-button"
-    });
+    }, view.lib.noResponse);
 
     view.notification.remove();
     view.blur.remove();

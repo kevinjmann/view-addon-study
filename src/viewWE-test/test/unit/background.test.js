@@ -209,9 +209,9 @@ describe("background.js", function() {
     });
 
     it("should process the message \"toggle Menu VIEW\"", function() {
-      const toggleMenuVIEWSpy = sandbox.spy(background, "callToggleMenuVIEW");
+      const toggleMenuVIEWSpy = sandbox.spy(background, "toggle");
 
-      const request = {msg: "toggle Menu VIEW"};
+      const request = {msg: "toggle VIEW Menu"};
       const sender = {tab: {id: 5}};
 
       chrome.runtime.onMessage.trigger(request, sender);
@@ -356,7 +356,7 @@ describe("background.js", function() {
     });
 
     it("should process the message \"call openOptionsPage\"", function() {
-      const callOpenOptionsPageSpy = sandbox.spy(background, "callOpenOptionsPage");
+      const callOpenOptionsPageSpy = sandbox.spy(background, "requestToCallOpenOptionsPage");
 
       const request = {msg: "call openOptionsPage"};
       const sender = {tab: {id: 5}};

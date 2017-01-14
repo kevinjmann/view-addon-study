@@ -100,7 +100,7 @@ const background = {
   },
 
   /**
-   * The toolbar ui send the message to toggle the toolbar.
+   * There was a request to toggle the toolbar.
    * Pass it on to interaction.js.
    */
   toggleToolbar: function() {
@@ -108,11 +108,19 @@ const background = {
   },
 
   /**
-   * The toolbar ui send the message to toggle the menu VIEW.
+   * The toolbar ui send the message to toggle the VIEW menu.
    * Pass it on to interaction.js.
    */
-  callToggleMenuVIEW: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {msg: "toggle Menu VIEW"});
+  toggleVIEWMenu: function() {
+    chrome.tabs.sendMessage(background.currentTabId, {msg: "toggle VIEW Menu"});
+  },
+
+  /**
+   * The toolbar ui send the message to hide the VIEW menu.
+   * Pass it on to interaction.js.
+   */
+  hideVIEWMenu: function() {
+    chrome.tabs.sendMessage(background.currentTabId, {msg: "hide VIEW Menu"});
   },
 
   /**
@@ -185,14 +193,6 @@ const background = {
   openHelpPage: function() {
     const url = "http://sifnos.sfs.uni-tuebingen.de/VIEW/index.jsp?content=activities";
     chrome.tabs.create({url: url});
-  },
-
-  /**
-   * The toolbar ui send the message to open the about dialog.
-   * Pass it on to about.js.
-   */
-  openAboutDialog: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {msg: "open about dialog"});
   },
 
   /**
@@ -485,16 +485,17 @@ chrome.browserAction.onClicked.addListener(function(tab) {
  * when you have a response
  */
 function processMessage(request, sender, sendResponse) {
-  console.log(request);
-  console.log(sender.tab.id);
   background.currentTabId = sender.tab.id;
 
   switch (request.msg) {
     case "toggle toolbar":
       background.toggleToolbar();
       break;
-    case "toggle Menu VIEW":
-      background.callToggleMenuVIEW();
+    case "toggle VIEW Menu":
+      background.toggleVIEWMenu();
+      break;
+    case "hide VIEW Menu":
+      background.hideVIEWMenu();
       break;
     case "create unselectedNotification":
       background.createBasicNotification(
@@ -527,9 +528,6 @@ function processMessage(request, sender, sendResponse) {
       break;
     case "open help page":
       background.openHelpPage();
-      break;
-    case "open about dialog":
-      background.openAboutDialog();
       break;
     case "send activityData":
       background.sendActivityData(request);

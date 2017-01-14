@@ -1,4 +1,10 @@
 view.lib = {
+  /**
+   * A function that is supposed to be a placeholder for a response callback.
+   */
+  noResponse: function() {
+    // This is intentional
+  },
   /*
    * Get random numbers up to the variable "max".
    */

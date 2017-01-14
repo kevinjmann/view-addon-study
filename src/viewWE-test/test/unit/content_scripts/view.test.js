@@ -138,27 +138,10 @@ describe("view.js", function() {
     it("should call saveUserOptions(storageItems), saveSelections(storageItems) and enhance()", function() {
       const saveUserOptionsSpy = sandbox.spy(view, "saveUserOptions");
       const saveSelectionsSpy = sandbox.spy(view, "saveSelections");
-
-      const storageItems = {topic: "articles"};
-
-      // its not important what enhance does // TODO review when view.interaction is included
-      view.interaction = {
-        enhance: function() {},
-        getTopicName: function(topic) {
-          let topicName = topic.toLowerCase();
-
-          // exceptions:
-          //  - e.g. Arts and Dets and Preps use the 'pos' topic
-          switch (topic) {
-            case "articles":
-            case "determiners":
-              topicName = "pos";
-          }
-          return topicName;
-        }
-      };
       const enhanceSpy = sandbox.spy(view.interaction, "enhance");
       const getTopicNameSpy = sandbox.spy(view.interaction, "getTopicName");
+
+      const storageItems = {topic: "articles"};
 
       chrome.storage.local.get.yields(storageItems);
 
