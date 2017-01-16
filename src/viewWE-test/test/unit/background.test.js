@@ -75,78 +75,64 @@ describe("background.js", function() {
     });
 
     it("should init all topics", function() {
-      expect(background.topics.en).to.not.exist;
-      expect(background.topics.de).to.not.exist;
+      expect(background.topics.articles).to.not.exist;
+      expect(background.topics.determiners).to.not.exist;
 
       background.initTopics();
 
-      expect(Object.keys(background.topics.en).length).to.equal(2);
-      expect(Object.keys(background.topics.de).length).to.equal(1);
-
-      expect(background.topics.en.determiners).to.exist;
-      expect(background.topics.en.articles).to.exist;
-      expect(background.topics.de.determiners).to.exist;
+      expect(background.topics.articles).to.exist;
+      expect(background.topics.determiners).to.exist;
     });
 
     it("should get and set all topic urls", function() {
       background.initTopics();
       background.getAndSetTopicURLs();
 
-      sinon.assert.callCount(chrome.extension.getURL, 3);
-      sinon.assert.calledWithExactly(chrome.extension.getURL.getCall(0), "topics/en/articles.json");
-      sinon.assert.calledWithExactly(chrome.extension.getURL.getCall(1), "topics/en/determiners.json");
-      sinon.assert.calledWithExactly(chrome.extension.getURL.getCall(2), "topics/de/determiners.json");
+      sinon.assert.callCount(chrome.extension.getURL, 2);
+      sinon.assert.calledWithExactly(chrome.extension.getURL.getCall(0), "topics/articles.json");
+      sinon.assert.calledWithExactly(chrome.extension.getURL.getCall(1), "topics/determiners.json");
     });
 
     it("should call for all topic json objects, store activity data and proceed to set", function() {
       const getJSONStub = sandbox.stub($, "getJSON");
       const setAndToggleSpy = sandbox.spy(background, "proceedToSetAndToggleToolbar");
 
-      const jsonData = {activities: "some json data"};
+      const jsonData = fixture.load("fixtures/json/articles.json");
 
-      getJSONStub.yields(jsonData);
+      getJSONStub.yields(jsonData); // make $.getJSON synchronous
 
-      background.setTopics(); // stub on $.getJSON makes setTopics synchronous
+      background.setTopics();
 
-      sinon.assert.callCount(getJSONStub, 3);
+      sinon.assert.callCount(getJSONStub, 2);
 
-      expect(background.topics.en.articles).to.include(jsonData);
+      expect(background.topics.articles).to.include(jsonData);
 
       sinon.assert.calledOnce(setAndToggleSpy);
+
+      fixture.cleanup();
     });
 
     it("should proceed to set topics and toggle the toolbar", function() {
-      const jsonData = {
-        activities: "some json data",
-        url: "some url to json data"
-      };
+      const jsonData = fixture.load("fixtures/json/articles.json");
 
-      chrome.storage.local.set.yields();
+      chrome.storage.local.set.yields(); // make chrome.storage.local.set synchronous
 
       background.initTopics();
 
       // fill with fake data
-      background.topics.en.articles = jsonData;
-      background.topics.en.determiners = jsonData;
-      background.topics.de.determiners = jsonData;
+      background.topics.articles = jsonData;
 
       background.currentTabId = 5;
 
       background.proceedToSetAndToggleToolbar();
 
       sinon.assert.calledOnce(chrome.storage.local.set);
-      sinon.assert.calledWithMatch(chrome.storage.local.set, {
-        topics: {
-          en: {
-            articles: jsonData,
-            determiners: jsonData
-          },
-          de: {determiners: jsonData}
-        }
-      });
+      sinon.assert.calledWithMatch(chrome.storage.local.set, {topics: background.topics});
 
       sinon.assert.calledOnce(chrome.tabs.sendMessage);
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {msg: "toggle toolbar"});
+
+      fixture.cleanup();
     });
 
     it("should fail to get the topic json objects", function(done) {
