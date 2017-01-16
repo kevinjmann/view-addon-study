@@ -101,7 +101,8 @@
     "icons/view-128.png",
     "icons/loading.gif",
     "topics/articles.json",
-    "topics/determiners.json"
+    "topics/determiners.json",
+    "topics/nouns.json"
   ]  
 
 }
