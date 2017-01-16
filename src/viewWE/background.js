@@ -57,10 +57,7 @@ const background = {
    */
   proceedToSetAndToggleToolbar : function(){
     chrome.storage.local.set({
-      topics: {
-        articles: background.topics.articles,
-        determiners: background.topics.determiners
-      }
+      topics: background.topics
     }, function() {
       background.toggleToolbar();
     });
