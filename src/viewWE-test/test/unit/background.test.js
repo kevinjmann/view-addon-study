@@ -77,11 +77,15 @@ describe("background.js", function() {
     it("should init all topics", function() {
       expect(background.topics.articles).to.not.exist;
       expect(background.topics.determiners).to.not.exist;
+      expect(background.topics.rusnouns).to.not.exist;
 
       background.initTopics();
 
+      expect(Object.keys(background.topics).length).to.equal(3);
+
       expect(background.topics.articles).to.exist;
       expect(background.topics.determiners).to.exist;
+      expect(background.topics.rusnouns).to.exist;
     });
 
     it("should get and set all topic urls", function() {
