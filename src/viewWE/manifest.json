@@ -100,7 +100,7 @@
     "content_scripts/html/view-menu.html",
     "icons/view-128.png",
     "icons/loading.gif",
-    "topics/en/articles.json",
+    "topics/articles.json",
     "topics/en/determiners.json",
     "topics/de/determiners.json"
   ]  
