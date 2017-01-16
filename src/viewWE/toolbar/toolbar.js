@@ -236,8 +236,8 @@ const toolbar = {
     if (
       language == unselected ||
       topic.startsWith(unselected) ||
-      typeof toolbar.topics[language] && toolbar.topics[topic] === undefinedType ||
-      typeof toolbar.topics[language][topic] && toolbar.topics[topic][language] === undefinedType) {
+      typeof toolbar.topics[topic] === undefinedType ||
+      typeof toolbar.topics[topic][language] === undefinedType) {
       activitySelectors[unselected].next().hide();
     }
     else {
