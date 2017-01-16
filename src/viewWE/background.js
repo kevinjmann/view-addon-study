@@ -18,11 +18,8 @@ const background = {
       $.getJSON(background.topics.articles.url, function(data) {
         background.topics.articles = data;
       }),
-      $.getJSON(background.topics.en.determiners.url, function(data) {
-        background.topics.en.determiners.activities = data.activities;
-      }),
-      $.getJSON(background.topics.de.determiners.url, function(data) {
-        background.topics.de.determiners.activities = data.activities;
+      $.getJSON(background.topics.determiners.url, function(data) {
+        background.topics.determiners = data;
       })
     )
     .done(function() {
@@ -41,15 +38,9 @@ const background = {
    * Initiate topics object, so that it can be filled.
    */
   initTopics: function(){
-    background.topics.en = {};
-
-    background.topics.de = {};
-
     background.topics.articles = {};
 
-    background.topics.en.determiners = {};
-
-    background.topics.de.determiners = {};
+    background.topics.determiners = {};
   },
 
   /**
@@ -58,9 +49,7 @@ const background = {
   getAndSetTopicURLs: function(){
     background.topics.articles.url = chrome.extension.getURL("topics/articles.json");
 
-    background.topics.en.determiners.url = chrome.extension.getURL("topics/en/determiners.json");
-
-    background.topics.de.determiners.url = chrome.extension.getURL("topics/de/determiners.json");
+    background.topics.determiners.url = chrome.extension.getURL("topics/determiners.json");
   },
 
   /**
@@ -70,12 +59,7 @@ const background = {
     chrome.storage.local.set({
       topics: {
         articles: background.topics.articles,
-        en: {
-          determiners: background.topics.en.determiners
-        },
-        de: {
-          determiners: background.topics.de.determiners
-        }
+        determiners: background.topics.determiners
       }
     }, function() {
       background.toggleToolbar();
