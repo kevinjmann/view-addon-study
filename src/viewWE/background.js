@@ -15,8 +15,8 @@ const background = {
     background.getAndSetTopicURLs();
 
     $.when(
-      $.getJSON(background.topics.en.articles.url, function(data) {
-        background.topics.en.articles.activities = data.activities;
+      $.getJSON(background.topics.articles.url, function(data) {
+        background.topics.articles = data;
       }),
       $.getJSON(background.topics.en.determiners.url, function(data) {
         background.topics.en.determiners.activities = data.activities;
@@ -45,7 +45,7 @@ const background = {
 
     background.topics.de = {};
 
-    background.topics.en.articles = {};
+    background.topics.articles = {};
 
     background.topics.en.determiners = {};
 
@@ -56,7 +56,7 @@ const background = {
    * Get the URLs of all topic json objects and set them.
    */
   getAndSetTopicURLs: function(){
-    background.topics.en.articles.url = chrome.extension.getURL("topics/en/articles.json");
+    background.topics.articles.url = chrome.extension.getURL("topics/articles.json");
 
     background.topics.en.determiners.url = chrome.extension.getURL("topics/en/determiners.json");
 
@@ -69,8 +69,8 @@ const background = {
   proceedToSetAndToggleToolbar : function(){
     chrome.storage.local.set({
       topics: {
+        articles: background.topics.articles,
         en: {
-          articles: background.topics.en.articles,
           determiners: background.topics.en.determiners
         },
         de: {
