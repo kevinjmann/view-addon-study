@@ -236,8 +236,8 @@ const toolbar = {
     if (
       language == unselected ||
       topic.startsWith(unselected) ||
-      typeof toolbar.topics[language] === undefinedType ||
-      typeof toolbar.topics[language][topic] === undefinedType) {
+      typeof toolbar.topics[language] && toolbar.topics[topic] === undefinedType ||
+      typeof toolbar.topics[language][topic] && toolbar.topics[topic][language] === undefinedType) {
       activitySelectors[unselected].next().hide();
     }
     else {
@@ -273,11 +273,11 @@ const toolbar = {
   enableAndShowActivities: function(language, topic, activitySelectors) {
     activitySelectors["unselected"].next().show();
 
-    const availableActivities = toolbar.topics[language][topic].activities;
+    const availableActivities = toolbar.topics[topic][language].activities;
 
-    for (let i = 0; i < availableActivities.length; i++) {
-      activitySelectors[availableActivities[i].activity].prop("disabled", false).show();
-    }
+    $.each(availableActivities, function(activity) {
+      activitySelectors[activity].prop("disabled", false).show();
+    });
   },
 
   /**
