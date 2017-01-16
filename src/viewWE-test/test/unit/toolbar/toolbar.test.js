@@ -76,6 +76,8 @@ describe("toolbar.js", function() {
       // the expectations below don't need to be tested in other tests again
       // the selectors below can be freely used in the tests without problems
 
+      console.log($("body"));
+
       expect($("#wertiview-VIEW-menu-btn")).to.exist;
 
       expect($(toolbar.selectorStart + "enabled")).to.exist;
@@ -84,6 +86,7 @@ describe("toolbar.js", function() {
       expect($(toolbar.selectorStart + "language-menu")).to.exist;
       expect($(toolbar.selectorStart + "language-unselected").val()).to.equal("unselected");
       expect($(toolbar.selectorStart + "language-en").val()).to.equal("en");
+      expect($(toolbar.selectorStart + "language-ru").val()).to.equal("ru");
 
       expect($(toolbar.selectorStart + "topic-menu-unselected")).to.exist;
       expect($(toolbar.selectorStart + "topic-unselected").val()).to.equal("unselected");
@@ -92,6 +95,10 @@ describe("toolbar.js", function() {
       expect($(toolbar.selectorStart + "topic-unselected-en").val()).to.equal("unselected-en");
       expect($(toolbar.selectorStart + "topic-articles").val()).to.equal("articles");
       expect($(toolbar.selectorStart + "topic-determiners-en").val()).to.equal("determiners");
+
+      expect($(toolbar.selectorStart + "topic-menu-ru")).to.exist;
+      expect($(toolbar.selectorStart + "topic-unselected-ru").val()).to.equal("unselected-ru");
+      expect($(toolbar.selectorStart + "topic-RusNouns").val()).to.equal("RusNouns");
 
       expect($(toolbar.selectorStart + "activity-menu")).to.exist;
       expect($(toolbar.selectorStart + "activity-unselected").val()).to.equal("unselected");
@@ -386,10 +393,11 @@ describe("toolbar.js", function() {
 
         sinon.assert.calledWithExactly(findSpy.getCall(0), "option");
 
-        sinon.assert.callCount(toggleTopicMenuSpy, 3);
+        sinon.assert.callCount(toggleTopicMenuSpy, 4);
         sinon.assert.calledWithExactly(toggleTopicMenuSpy.getCall(0), language, "unselected");
         sinon.assert.calledWithExactly(toggleTopicMenuSpy.getCall(1), language, "──────────");
         sinon.assert.calledWithExactly(toggleTopicMenuSpy.getCall(2), language, "en");
+        sinon.assert.calledWithExactly(toggleTopicMenuSpy.getCall(3), language, "ru");
       });
 
       describe("toggleTopicMenu", function() {
