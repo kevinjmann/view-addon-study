@@ -183,18 +183,9 @@ view.interaction = {
 
     var activity = view.activity;
 
-    var activities = topics[language][topic].activities;
+    var activities = topics[topic][language].activities;
 
-    var activitiesLength = activities.length;
-
-    var instruction = "";
-
-    // TODO: Optimal would be an activities object instead of an array and "instruction" instead of "description"
-    for (var i = 0; i < activitiesLength; i++) {
-      if (activities[i].activity === activity) {
-        instruction = activities[i].description.text;
-      }
-    }
+    var instruction = activities[activity].description.text;
 
     if (instruction !== "") {
       // construct the instruction for the given topic and activity, can also be avoided by the user
