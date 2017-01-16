@@ -513,7 +513,7 @@ describe("toolbar.js", function() {
           const language = "en";
           const topic = "articles";
 
-          toolbar.topics = {en: {articles: {activities: jsonData.activities}}};
+          toolbar.topics = {articles: jsonData};
 
           toolbar.updateActivities(language, topic);
 
@@ -531,19 +531,19 @@ describe("toolbar.js", function() {
           const language = "en";
           const topic = "articles";
 
-          toolbar.topics = {en: {articles: {activities: jsonData.activities}}};
+          toolbar.topics = {articles: jsonData};
 
           toolbar.updateActivities(language, topic);
 
           expect($(toolbar.selectorStart + "activity-unselected").next().is(":visible")).to.be.true;
 
-          const availableActivities = toolbar.topics[language][topic].activities;
+          const availableActivities = toolbar.topics[topic][language].activities;
           const activitySelectors = enableAndShowActivitiesSpy.firstCall.args[2];
 
-          for (let i = 0; i < availableActivities.length; i++) {
-            expect(activitySelectors[availableActivities[i].activity].prop("disabled")).to.be.false;
-            expect(activitySelectors[availableActivities[i].activity].is(":visible")).to.be.true;
-          }
+          $.each(availableActivities, function(activity) {
+            expect(activitySelectors[activity].prop("disabled")).to.be.false;
+            expect(activitySelectors[activity].is(":visible")).to.be.true;
+          });
         });
       });
     });
