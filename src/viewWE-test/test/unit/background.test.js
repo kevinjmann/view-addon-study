@@ -77,7 +77,7 @@ describe("background.js", function() {
     it("should init all topics", function() {
       expect(background.topics.articles).to.not.exist;
       expect(background.topics.determiners).to.not.exist;
-      expect(background.topics.rusnouns).to.not.exist;
+      expect(background.topics.nouns).to.not.exist;
 
       background.initTopics();
 
@@ -85,16 +85,17 @@ describe("background.js", function() {
 
       expect(background.topics.articles).to.exist;
       expect(background.topics.determiners).to.exist;
-      expect(background.topics.rusnouns).to.exist;
+      expect(background.topics.nouns).to.exist;
     });
 
     it("should get and set all topic urls", function() {
       background.initTopics();
       background.getAndSetTopicURLs();
 
-      sinon.assert.callCount(chrome.extension.getURL, 2);
+      sinon.assert.callCount(chrome.extension.getURL, 3);
       sinon.assert.calledWithExactly(chrome.extension.getURL.getCall(0), "topics/articles.json");
       sinon.assert.calledWithExactly(chrome.extension.getURL.getCall(1), "topics/determiners.json");
+      sinon.assert.calledWithExactly(chrome.extension.getURL.getCall(2), "topics/nouns.json");
     });
 
     it("should call for all topic json objects, store activity data and proceed to set", function() {
@@ -107,7 +108,7 @@ describe("background.js", function() {
 
       background.setTopics();
 
-      sinon.assert.callCount(getJSONStub, 2);
+      sinon.assert.callCount(getJSONStub, 3);
 
       expect(background.topics.articles).to.include(jsonData);
 

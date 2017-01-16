@@ -20,6 +20,9 @@ const background = {
       }),
       $.getJSON(background.topics.determiners.url, function(data) {
         background.topics.determiners = data;
+      }),
+      $.getJSON(background.topics.nouns.url, function(data) {
+        background.topics.nouns = data;
       })
     )
     .done(function() {
@@ -41,6 +44,8 @@ const background = {
     background.topics.articles = {};
 
     background.topics.determiners = {};
+
+    background.topics.nouns = {};
   },
 
   /**
@@ -50,6 +55,8 @@ const background = {
     background.topics.articles.url = chrome.extension.getURL("topics/articles.json");
 
     background.topics.determiners.url = chrome.extension.getURL("topics/determiners.json");
+
+    background.topics.nouns.url = chrome.extension.getURL("topics/nouns.json");
   },
 
   /**
