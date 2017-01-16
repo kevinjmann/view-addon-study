@@ -102,7 +102,7 @@ view.rusnouns = {
     $("body").off("change", "input.viewinput");
     $("body").off("click", "viewhint");
 
-    $(".viewbaseform").remove();
+    $("viewbaseform").remove();
     $("viewhint").remove();
   },
 
@@ -299,9 +299,8 @@ view.rusnouns = {
    */
   addBaseform: function($hit, capType) {
     // create baseform info
-    const $baseform = $("<viewenhancement>");
+    const $baseform = $("<viewbaseform>");
     $baseform.addClass("clozeStyleBaseform");
-    $baseform.addClass("viewbaseform");
     const lemmaform = $hit.data("lemma");
     if (lemmaform) {
       $baseform.text(" (" + lemmaform + ")");
