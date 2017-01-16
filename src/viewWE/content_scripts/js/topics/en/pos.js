@@ -1,6 +1,6 @@
 view.pos = {
   // candidates for mc options presented to user
-  types: [],
+  distractors: [],
 
   /*
    * Run the colorize activity.
@@ -9,7 +9,16 @@ view.pos = {
   colorize: function(topicCSS) {
     console.log("colorize()");
 
-    $("viewenhancement").addClass("colorizeStyle" + topicCSS);
+    const $Enhancements =
+      $("viewenhancement[data-type='hit'], " +
+      "viewenhancement[data-type='ambiguity']");
+
+    $Enhancements.each(function() {
+      const $Enhancement = $(this);
+      $Enhancement.data("vieworiginaltext", $Enhancement.text());
+
+      $Enhancement.addClass("colorizeStyle" + topicCSS);
+    });
   },
 
   /*
@@ -21,11 +30,16 @@ view.pos = {
   click: function() {
     console.log("click()");
 
-    // change all wertiviewtoken spans to mouseover pointer
-    $("viewtoken").addClass("clickStylePointer");
+    const $Enhancements = $("viewenhancement");
+    $Enhancements.each(function() {
+      const $Enhancement = $(this);
+      $Enhancement.data("vieworiginaltext", $Enhancement.text());
+
+      $Enhancement.addClass("clickStylePointer");
+    });
 
     // handle click
-    $("body").on("click", "viewtoken", view[view.topicName].clickHandler);
+    $("body").on("click", "viewenhancement", view[view.topicName].clickHandler);
   },
 
   /*
@@ -36,18 +50,21 @@ view.pos = {
     console.log("mc()");
 
     // get potential spans
-    var $hits = $("span.wertiviewhit");
+    const $Hits = $("viewenhancement[data-type='hit']");
 
-    var hitList = [];
-    var tokens = [];
-    view[view.topicName].types = [];
-    $hits.each(function() {
-      hitList.push($(this));
-      tokens[$(this).text().toLowerCase()] = 1;
+    const hitList = [];
+    const tokens = [];
+    view[view.topicName].distractors = [];
+    $Hits.each(function() {
+      const $Hit = $(this);
+      $Hit.data("vieworiginaltext", $Hit.text());
+
+      hitList.push($Hit);
+      tokens[$Hit.text().toLowerCase()] = 1;
     });
 
-    for (word in tokens) {
-      view[view.topicName].types.push(word);
+    for (let word in tokens) {
+      view[view.topicName].distractors.push(word);
     }
 
     view.interaction.mcHandler(hitList,
@@ -64,11 +81,14 @@ view.pos = {
   cloze: function() {
     console.log("cloze()");
     // get potential spans
-    var $hits = $("viewenhancement");
+    const $Hits = $("viewenhancement[data-type='hit']");
 
-    var hitList = [];
-    $hits.each(function() {
-      hitList.push($(this));
+    const hitList = [];
+    $Hits.each(function() {
+      const $Hit = $(this);
+      $Hit.data("vieworiginaltext", $Hit.text());
+
+      hitList.push($Hit);
     });
 
     view.interaction.clozeHandler(hitList,
@@ -84,16 +104,11 @@ view.pos = {
   restore: function() {
     console.log("restore()");
 
-    $("body").off("click", "viewtoken");
+    $("body").off("click", "viewenhancement");
     $("body").off("change", "select.viewinput");
     $("body").off("click", "viewhint");
     $("body").off("change", "input.viewinput");
     $("body").off("click", "viewhint");
-
-    // replace the input spans with the original text
-    $("input.viewinput").each(function() {
-      $(this).replaceWith($(this).data("vieworiginaltext"));
-    });
 
     $("viewhint").remove();
   },
@@ -102,11 +117,10 @@ view.pos = {
    * Turn correctly clicked hits green and incorrect ones red
    */
   clickHandler: function(event) {
-    var countsAsCorrect = false;
-    var element = this;
-    var infos = {};
+    let countsAsCorrect = false;
+    const element = this;
 
-    if ($(element).children().is("viewenhancement")) {
+    if ($(element).is("[data-type='hit']")) {
       countsAsCorrect = true;
       $(element).addClass("clickStyleCorrect");
     } else {
@@ -118,14 +132,14 @@ view.pos = {
 
     if (view.userid) {	// if the user is logged in (userid is not null)
       // collect info data before page update
-      infos = view.interaction.collectInfoData(
+      const infos = view.interaction.collectInfoData(
         element,
         false, // usedHint: only true when hint handler
         view.interaction.collectInputData,
         view.interaction.collectAnswerData);
 
-      var info = infos.info;
-      var elementInfo = infos.elementInfo;
+      const info = infos.info;
+      const elementInfo = infos.elementInfo;
 
       // collect and send interaction data after page update
       view.interaction.collectInteractionData(
@@ -143,12 +157,12 @@ view.pos = {
    * Deals with the input in the mc and cloze activities.
    */
   inputHandler: function(event) {
-    var countsAsCorrect = false;
-    var element = this;
-    var inputId = $(".viewinput").index(this);
+    let countsAsCorrect = false;
+    const element = this;
+    const inputId = $(".viewinput").index(this);
 
-    var userid = view.userid;
-    var infos = {};
+    const userid = view.userid;
+    let infos = {};
 
     if (userid) {	// if the user is logged in (userid is not null)
       // collect info data before page update
@@ -162,9 +176,12 @@ view.pos = {
     // if the answer is correct, turn into text, else color text within input
     if ($(element).val().toLowerCase() == $(element).data("viewanswer").toLowerCase()) {
       countsAsCorrect = true;
-      $text = $("<viewenhancement>");
+      const $text = $("<viewenhancement>");
       $text.addClass("clozeStyleCorrect");
       $text.text($(element).data("viewanswer"));
+      // save the original text in a hidden field
+      $text.data("vieworiginaltext", $(element).data("vieworiginaltext"));
+
       view.lib.replaceInput($(element).parent(), $text);
 
       view[view.topicName].jumpTo(inputId);
@@ -181,8 +198,8 @@ view.pos = {
     }
 
     if (userid) {	// if the user is logged in (userid is not null)	
-      var info = infos.info;
-      var elementInfo = infos.elementInfo;
+      const info = infos.info;
+      const elementInfo = infos.elementInfo;
 
       // collect and send interaction data after page update
       view.interaction.collectInteractionData(
@@ -200,11 +217,11 @@ view.pos = {
    * Deals with the hint in the mc and cloze activities.
    */
   hintHandler: function(event) {
-    var element = this;
-    var inputId = $(".viewinput").index(this);
+    const element = this;
+    const inputId = $(".viewinput").index($(element).prev());
 
-    var userid = view.userid;
-    var infos = {};
+    const userid = view.userid;
+    let infos = {};
 
     if (userid) {	// if the user is logged in (userid is not null)
       // collect info data before page update
@@ -216,16 +233,19 @@ view.pos = {
     }
 
     // fill in the answer by replacing input with text
-    $text = $("<viewenhancement>");
+    const $text = $("<viewenhancement>");
     $text.addClass("clozeStyleProvided");
     $text.text($(element).prev().data("viewanswer"));
+    // save the original text in a hidden field
+    $text.data("vieworiginaltext", $(element).prev().data("vieworiginaltext"));
+
     view.lib.replaceInput($(element).parent(), $text);
 
     view[view.topicName].jumpTo(inputId);
 
     if (userid) {	// if the user is logged in (userid is not null)	
-      var info = infos.info;
-      var elementInfo = infos.elementInfo;
+      const info = infos.info;
+      const elementInfo = infos.elementInfo;
 
       // collect and send interaction data after page update
       view.interaction.collectInteractionData(
@@ -240,19 +260,19 @@ view.pos = {
   },
 
   /*
-   * Gets the options provided by the variable types.
+   * Gets the options provided by the variable distractors.
    */
   getOptions: function($hit, capType) {
-    var options = [];
-    var j = 0;
+    const options = [];
+    let j = 0;
 
     // Get the list of distractors for the given hit 
-    var types = view[view.topicName].types;
+    const distractors = view[view.topicName].distractors;
 
     // Add the distractor forms to the options list:
-    while (j < types.length && options.length < 4) {
-      if (types[j].toLowerCase() != $hit.text().toLowerCase() && types[j] != "") {
-        options.push(view.lib.matchCapitalization(types[j], capType));
+    while (j < distractors.length && options.length < 4) {
+      if (distractors[j].toLowerCase() != $hit.text().toLowerCase() && distractors[j] != "") {
+        options.push(view.lib.matchCapitalization(distractors[j], capType));
       }
       j++;
     }
@@ -275,8 +295,8 @@ view.pos = {
    * - previous input element if it exists
    */
   jumpTo: function(inputId) {
-    var input = ".viewinput:eq(" + inputId + ")";
-    var prevInput = ".viewinput:eq(" + (inputId - 1) + ")";
+    const input = ".viewinput:eq(" + inputId + ")";
+    const prevInput = ".viewinput:eq(" + (inputId - 1) + ")";
     if ($(input).length) {
       $(input).focus();
       // Scroll to the middle of the viewport

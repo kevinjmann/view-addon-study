@@ -118,7 +118,7 @@ view.gerunds = {
       $(this).replaceWith($(this).data("wertiviewanswer"));
     });
 
-    $("span.wertiviewbaseform").remove();
+    $("span.viewbaseform").remove();
     $(".wertiviewhint").remove();
   },
 
@@ -309,7 +309,7 @@ view.gerunds = {
     // create baseform info
     var $baseform = $("<span>");
     $baseform.addClass("clozeStyleBaseform");
-    $baseform.addClass("wertiviewbaseform");
+    $baseform.addClass("viewbaseform");
     var verbforms = $hit.attr("title").split(";");
     $baseform.text(" (" + verbforms[0] + ")");
     $hit.append($baseform);

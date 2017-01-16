@@ -6,7 +6,16 @@ view.rusnouns = {
   colorize: function(topicCSS) {
     console.log("colorize()");
 
-    $("span.wertiviewhit").addClass("colorizeStyle" + topicCSS);
+    const $Enhancements =
+      $("viewenhancement[data-type='hit'], " +
+        "viewenhancement[data-type='ambiguity']");
+
+    $Enhancements.each(function() {
+      const $Enhancement = $(this);
+      $Enhancement.data("vieworiginaltext", $Enhancement.text());
+
+      $Enhancement.addClass("colorizeStyle" + topicCSS);
+    });
   },
 
   /*
@@ -18,14 +27,16 @@ view.rusnouns = {
   click: function() {
     console.log("click()");
 
-    // exclude the tokens in instruction dialogs
-    $("#wertiview-inst-notification span.wertiviewtoken").removeAttr("class");
+    const $Enhancements = $("viewenhancement");
+    $Enhancements.each(function() {
+      const $Enhancement = $(this);
+      $Enhancement.data("vieworiginaltext", $Enhancement.text());
 
-    // change all wertiviewtoken spans to mouseover pointer
-    $("span.wertiviewtoken").addClass("clickStylePointer");
+      $Enhancement.addClass("clickStylePointer");
+    });
 
     // handle click
-    $("body").on("click", "span.wertiviewtoken", view[view.topicName].clickHandler);
+    $("body").on("click", "viewenhancement", view[view.topicName].clickHandler);
   },
 
   /*
@@ -36,12 +47,15 @@ view.rusnouns = {
     console.log("mc()");
 
     // get potential spans
-    var $hits = $("span.wertiviewhit");
+    const $Hits = $("viewenhancement[data-type='hit']");
 
-    var hitList = [];
+    const hitList = [];
 
-    $hits.each(function() {
-      hitList.push($(this));
+    $Hits.each(function() {
+      const $Hit = $(this);
+      $Hit.data("vieworiginaltext", $Hit.text());
+
+      hitList.push($Hit);
     });
 
     view.interaction.mcHandler(hitList,
@@ -58,10 +72,13 @@ view.rusnouns = {
   cloze: function() {
     console.log("cloze()");
     // get potential spans
-    var $hits = $("span.wertiviewhit");
+    const $Hits = $("viewenhancement[data-type='hit']");
 
-    var hitList = [];
-    $hits.each(function() {
+    const hitList = [];
+    $Hits.each(function() {
+      const $Hit = $(this);
+      $Hit.data("vieworiginaltext", $Hit.text());
+
       hitList.push($(this));
     });
 
@@ -79,45 +96,24 @@ view.rusnouns = {
   restore: function() {
     console.log("restore()");
 
-    $("body").off("click", "span.wertiviewtoken");
-    $("body").off("change", "select.wertiviewinput");
-    $("body").off("click", "span.wertiviewhint");
-    $("body").off("change", "input.wertiviewinput");
-    $("body").off("click", "input.wertiviewhint");
+    $("body").off("click", "viewenhancement");
+    $("body").off("change", "select.viewinput");
+    $("body").off("click", "viewhint");
+    $("body").off("change", "input.viewinput");
+    $("body").off("click", "viewhint");
 
-    // replace the input spans with the original text
-    $(".wertiviewinput").each(function() {
-      $(this).replaceWith($(this).data("wertivieworiginaltext"));
-    });
-
-    // replace the correct forms correctly answered by the user with the original text
-    $(".clozeStyleCorrect").each(function() {
-      $(this).replaceWith($(this).data("wertivieworiginaltext"));
-    });
-
-    // replace the correct forms answered by the hint with the original text
-    $(".clozeStyleProvided").each(function() {
-      $(this).replaceWith($(this).data("wertivieworiginaltext"));
-    });
-
-    // replace the correct forms with the original text
-    $(".correctForm").each(function() {
-      $(this).replaceWith($(this).data("wertivieworiginaltext"));
-    });
-
-    $("span.wertiviewbaseform").remove();
-    $(".wertiviewhint").remove();
+    $(".viewbaseform").remove();
+    $("viewhint").remove();
   },
 
   /*
    * Turn correctly clicked hits green and incorrect ones red
    */
   clickHandler: function(event) {
-    var countsAsCorrect = false;
-    var element = this;
-    var infos = {};
+    let countsAsCorrect = false;
+    const element = this;
 
-    if ($(element).hasClass("wertiviewhit")) {
+    if ($(element).is("[data-type='hit']")) {
       countsAsCorrect = true;
       $(element).addClass("clickStyleCorrect");
     } else {
@@ -129,14 +125,14 @@ view.rusnouns = {
 
     if (view.userid) {	// if the user is logged in (userid is not null)
       // collect info data before page update
-      infos = view.interaction.collectInfoData(
+      const infos = view.interaction.collectInfoData(
         element,
         false, // usedHint: only true when hint handler
         view.interaction.collectInputData,
         view.interaction.collectAnswerData);
 
-      var info = infos.info;
-      var elementInfo = infos.elementInfo;
+      const info = infos.info;
+      const elementInfo = infos.elementInfo;
 
       // collect and send interaction data after page update
       view.interaction.collectInteractionData(
@@ -154,12 +150,13 @@ view.rusnouns = {
    * Deals with the input in the mc and cloze activities.
    */
   inputHandler: function(event) {
-    var nextInput;
-    var countsAsCorrect = false;
-    var element = this;
+    let countsAsCorrect = false;
+    const element = this;
+    const inputId = $(".viewinput").index(this);
+    const clueid = $(element).data("clueid");
 
-    var userid = view.userid;
-    var infos = {};
+    const userid = view.userid;
+    let infos = {};
 
     if (userid) {	// if the user is logged in (userid is not null)
       // collect info data before page update
@@ -171,24 +168,23 @@ view.rusnouns = {
     }
 
     // if the answer is correct, turn into text, else color text within input
-    if ($(element).val().toLowerCase() == $(element).data("wertiviewanswer").toLowerCase()) {
+    if ($(element).val().toLowerCase() == $(element).data("viewanswer").toLowerCase()) {
       countsAsCorrect = true;
       // return the clue tag color to what it was originally
-      $("#" + $(element).parent().attr("clueid")).css("color", "inherit");
-      $text = $("<span>");
-      $text.addClass("wertiview");
+      $("#" + clueid).css("color", "inherit");
+      const $text = $("<viewenhancement>");
       $text.addClass("clozeStyleCorrect");
-      $text.text($(element).data("wertiviewanswer"));
+      $text.text($(element).data("viewanswer"));
       // save the original text in a hidden field
-      $text.data("wertivieworiginaltext", $(element).data("wertivieworiginaltext"));
-      if ($(element).data("wertiviewnexthit")) {
-        nextInput = $(element).data("wertiviewnexthit");
-      }
+      $text.data("vieworiginaltext", $(element).data("vieworiginaltext"));
+
       view.lib.replaceInput($(element).parent(), $text);
+
+      view[view.topicName].jumpTo(inputId);
 
     } else {
       // give the clue tag a color if the student guessed wrong
-      $("#" + $(element).parent().attr("clueid")).css("color", "red");
+      $("#" + clueid).css("color", "red");
       // turns all options, the topmost element after selection included, as red
       $(element).addClass("clozeStyleIncorrect");
       // remove assigned classes to all options from previous selections
@@ -200,8 +196,8 @@ view.rusnouns = {
     }
 
     if (userid) {	// if the user is logged in (userid is not null)
-      var info = infos.info;
-      var elementInfo = infos.elementInfo;
+      const info = infos.info;
+      const elementInfo = infos.elementInfo;
 
       // collect and send interaction data after page update
       view.interaction.collectInteractionData(
@@ -219,11 +215,12 @@ view.rusnouns = {
    * Deals with the hint in the mc and cloze activities.
    */
   hintHandler: function(event) {
-    var nextInput;
-    var element = this;
+    const element = this;
+    const inputId = $(".viewinput").index($(element).prev());
+    const clueid = $(element).data("clueid");
 
-    var userid = view.userid;
-    var infos = {};
+    const userid = view.userid;
+    let infos = {};
 
     if (userid) {	// if the user is logged in (userid is not null)
       // collect info data before page update
@@ -235,23 +232,22 @@ view.rusnouns = {
     }
 
     // return the clue tag color to what it was originally
-    $("#" + $(element).parent().attr("clueid")).css("color", "inherit");
+    $("#" + clueid).css("color", "inherit");
 
     // fill in the answer by replacing input with text
-    $text = $("<span>");
-    $text.addClass("wertiview");
+    const $text = $("<viewenhancement>");
     $text.addClass("clozeStyleProvided");
-    $text.text($(element).prev().data("wertiviewanswer"));
+    $text.text($(element).prev().data("viewanswer"));
     // save the original text in a hidden field
-    $text.data("wertivieworiginaltext", $(element).prev().data("wertivieworiginaltext"));
-    if ($(element).prev().data("wertiviewnexthit")) {
-      nextInput = $(element).prev().data("wertiviewnexthit");
-    }
+    $text.data("vieworiginaltext", $(element).prev().data("vieworiginaltext"));
+
     view.lib.replaceInput($(element).parent(), $text);
 
+    view[view.topicName].jumpTo(inputId);
+
     if (userid) {	// if the user is logged in (userid is not null)
-      var info = infos.info;
-      var elementInfo = infos.elementInfo;
+      const info = infos.info;
+      const elementInfo = infos.elementInfo;
 
       // collect and send interaction data after page update
       view.interaction.collectInteractionData(
@@ -269,23 +265,23 @@ view.rusnouns = {
    * Gets the options provided by the server in the distractors attribute.
    */
   getOptions: function($hit, capType) {
-    var options = [];
-    var j = 0;
+    const options = [];
+    let j = 0;
 
     // Get the list of distractors for the given hit
     // (they are saved as a space-separated list in the attribute "distractors" of the wertiview span tag):
-    var types = $hit.attr("distractors").split(" ");
+    const distractors = $hit.data("distractors").split(" ");
 
     // Add the distractor forms to the options list:
-    while (j < types.length && options.length < 4) {
+    while (j < distractors.length && options.length < 4) {
       // The forms that are homonymous to the correct form are excluded from the list of options:
-      if (types[j].toLowerCase() != $hit.attr("correctForm").toLowerCase() && types[j] != "") {
-        options.push(view.lib.matchCapitalization(types[j], capType));
+      if (distractors[j].toLowerCase() != $hit.data("correctform").toLowerCase() && distractors[j] != "") {
+        options.push(view.lib.matchCapitalization(distractors[j], capType));
       }
       j++;
     }
 
-    options.push(view.lib.matchCapitalization($hit.attr("correctForm"), capType));
+    options.push(view.lib.matchCapitalization($hit.data("correctform"), capType));
     view.lib.shuffleList(options);
     return options;
   },
@@ -294,7 +290,7 @@ view.rusnouns = {
    * Get the correct answer for the mc and cloze activities.
    */
   getCorrectAnswer: function($hit, capType) {
-    return view.lib.matchCapitalization($hit.attr("correctForm"), capType);
+    return $hit.data("correctform");
   },
 
   /*
@@ -303,13 +299,33 @@ view.rusnouns = {
    */
   addBaseform: function($hit, capType) {
     // create baseform info
-    var $baseform = $("<span>");
+    const $baseform = $("<viewenhancement>");
     $baseform.addClass("clozeStyleBaseform");
-    $baseform.addClass("wertiviewbaseform");
-    var lemmaform = $hit.attr("lemma");
+    $baseform.addClass("viewbaseform");
+    const lemmaform = $hit.data("lemma");
     if (lemmaform) {
       $baseform.text(" (" + lemmaform + ")");
       $hit.append($baseform);
+    }
+  },
+
+  /*
+   * Jump to the
+   * - input element if it exists
+   * - previous input element if it exists
+   */
+  jumpTo: function(inputId) {
+    const input = ".viewinput:eq(" + inputId + ")";
+    const prevInput = ".viewinput:eq(" + (inputId - 1) + ")";
+    if ($(input).length) {
+      $(input).focus();
+      // Scroll to the middle of the viewport
+      $(window).scrollTop($(input).offset().top - ($(window).height() / 2));
+    }
+    else if ($(prevInput).length) {
+      $(prevInput).focus();
+      // Scroll to the middle of the viewport
+      $(window).scrollTop($(prevInput).offset().top - ($(window).height() / 2));
     }
   }
 };

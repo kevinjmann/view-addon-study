@@ -603,7 +603,6 @@ view.interaction = {
 
     // generate the exercises
     for (; numExercises > 0 && i < hitList.length; i += inc) {
-
       var $hit = hitList[i];
 
       var capType = view.lib.detectCapitalization($hit.text());
@@ -719,12 +718,8 @@ view.interaction = {
     // remove topic specific markup
     view[topicName].restore();
 
-    $("viewtoken").each(function() {
-      $(this).replaceWith($(this).text());
-    });
-
     $("viewenhancement").each(function() {
-      $(this).replaceWith($(this).text());
+      $(this).replaceWith($(this).data("vieworiginaltext"));
     });
 
     $("body").off("click", "a", view.lib.clickDisableLink);
