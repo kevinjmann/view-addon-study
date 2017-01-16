@@ -87,7 +87,7 @@ view.rusverbaspect = {
       $(this).replaceWith($(this).data("wertivieworiginaltext"));
     });
 
-    $("span.wertiviewbaseform").remove();
+    $("span.viewbaseform").remove();
     $(".wertiviewhint").remove();
   },
 
@@ -239,7 +239,7 @@ view.rusverbaspect = {
     // create baseform info
     var $baseform = $("<span>");
     $baseform.addClass("clozeStyleBaseform");
-    $baseform.addClass("wertiviewbaseform");
+    $baseform.addClass("viewbaseform");
     var lemmaform = $hit.attr("aspectPairLemmas");
     if (lemmaform) {
       $baseform.text(" (" + lemmaform + ")");

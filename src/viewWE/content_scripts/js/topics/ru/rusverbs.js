@@ -105,7 +105,7 @@ view.rusverbs = {
       $(this).replaceWith($(this).data("wertivieworiginaltext"));
     });
 
-    $("span.wertiviewbaseform").remove();
+    $("span.viewbaseform").remove();
     $(".wertiviewhint").remove();
   },
 
@@ -298,7 +298,7 @@ view.rusverbs = {
     // create baseform info
     var $baseform = $("<span>");
     $baseform.addClass("clozeStyleBaseform");
-    $baseform.addClass("wertiviewbaseform");
+    $baseform.addClass("viewbaseform");
     var lemmaform = $hit.attr("lemma");
     if (lemmaform.length) {
       $baseform.text(" (" + lemmaform + ")");

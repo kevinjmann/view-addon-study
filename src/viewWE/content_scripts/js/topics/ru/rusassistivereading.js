@@ -121,7 +121,7 @@ view.rusassistivereading = {
     // remove the tooltips
     $("#tooltip-container").remove();
 
-    $("span.wertiviewbaseform").remove();
+    $("span.viewbaseform").remove();
     $(".wertiviewhint").remove();
 
     // remove the sidebar
