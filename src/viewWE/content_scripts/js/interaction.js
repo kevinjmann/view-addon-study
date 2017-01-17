@@ -268,10 +268,9 @@ view.interaction = {
         view.notification.add("VIEW Colorize Activity Ready");
         break;
       case "click":
-        // remove click from all links
         $("body").on("click", "a", view.lib.clickDisableLink);
 
-        view[topic].click();
+        view.click.run();
 
         view.notification.add("VIEW Click Activity Ready");
 
