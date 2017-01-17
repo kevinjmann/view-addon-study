@@ -605,8 +605,9 @@ view.interaction = {
     // generate the exercises
     for (; numExercises > 0 && i < hitList.length; i += inc) {
       var $hit = hitList[i];
+      const hitText = $hit.text().trim();
 
-      var capType = view.lib.detectCapitalization($hit.text());
+      var capType = view.lib.detectCapitalization(hitText);
 
       // correct choice
       var answer = getCorrectAnswerCallback($hit, capType);
@@ -614,7 +615,7 @@ view.interaction = {
       // create input box
       var $input = $("<input>");
       // save original text/answer
-      $input.data("vieworiginaltext", $hit.text());
+      $input.data("vieworiginaltext", hitText);
       $input.attr("type", "text");
       // average of 10 px per letter (can fit 10 x "м" with a width of 110)
       $input.css("width", (answer.length * 10) + "px");
