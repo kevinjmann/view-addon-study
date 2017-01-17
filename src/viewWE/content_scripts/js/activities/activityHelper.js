@@ -33,7 +33,7 @@ view.activityHelper = {
 
       view.lib.replaceInput($(element).parent(), $text);
 
-      view.lib.jumpTo(inputId);
+      view.activityHelper.jumpTo(inputId);
 
     } else {
       // give the clue tag a color if the student guessed wrong
@@ -96,7 +96,7 @@ view.activityHelper = {
 
     view.lib.replaceInput($(element).parent(), $text);
 
-    view.lib.jumpTo(inputId);
+    view.activityHelper.jumpTo(inputId);
 
     if (userid) {	// if the user is logged in (userid is not null)
       const info = infos.info;
@@ -115,13 +115,33 @@ view.activityHelper = {
   },
 
   /**
+   * Jump to the
+   * - input element if it exists
+   * - previous input element if it exists
+   */
+  jumpTo: function(inputId) {
+    const input = ".viewinput:eq(" + inputId + ")";
+    const prevInput = ".viewinput:eq(" + (inputId - 1) + ")";
+    if ($(input).length) {
+      $(input).focus();
+      // Scroll to the middle of the viewport
+      $(window).scrollTop($(input).offset().top - ($(window).height() / 2));
+    }
+    else if ($(prevInput).length) {
+      $(prevInput).focus();
+      // Scroll to the middle of the viewport
+      $(window).scrollTop($(prevInput).offset().top - ($(window).height() / 2));
+    }
+  },
+
+  /**
    * Get the correct answer for the mc and cloze activities.
    */
   getCorrectAnswer: function($hit) {
     if (view.language === "ru") {
       return $hit.data("correctform");
     }
-    else{
+    else {
       return $hit.text().trim();
     }
   },
