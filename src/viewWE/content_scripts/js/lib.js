@@ -141,5 +141,39 @@ view.lib = {
       sample[key] = value;
     }
     return sample;
+  },
+
+  /*
+   * Illegal value for a preference (e.g., user edited about:config)
+   */
+  prefError: function(message) {
+    view.interaction.initialInteractionState();
+
+    if (message) {
+      alert(message);
+    }
+    else {
+      alert("The preferences have illegal values. Please go to 'Options > Addons' and change the VIEW preferences.");
+    }
+  },
+
+  /**
+   * Jump to the
+   * - input element if it exists
+   * - previous input element if it exists
+   */
+  jumpTo: function(inputId) {
+    const input = ".viewinput:eq(" + inputId + ")";
+    const prevInput = ".viewinput:eq(" + (inputId - 1) + ")";
+    if ($(input).length) {
+      $(input).focus();
+      // Scroll to the middle of the viewport
+      $(window).scrollTop($(input).offset().top - ($(window).height() / 2));
+    }
+    else if ($(prevInput).length) {
+      $(prevInput).focus();
+      // Scroll to the middle of the viewport
+      $(window).scrollTop($(prevInput).offset().top - ($(window).height() / 2));
+    }
   }
 };
