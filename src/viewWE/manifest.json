@@ -1,5 +1,4 @@
 {
-
   "description": "VIEW is an intelligent computer-assisted language learning (ICALL) system designed to provide language learning activity resources.",
   "homepage_url": "http://sifnos.sfs.uni-tuebingen.de/VIEW",
   "manifest_version": 2,
@@ -67,7 +66,6 @@
         "content_scripts/js/activities/click.js",
         "content_scripts/js/activities/mc.js",
         "content_scripts/js/activities/cloze.js",
-        "content_scripts/js/topics/ru/rusnouns.js",
         "content_scripts/js/topics/ru/rusadjectives.js",
         "content_scripts/js/topics/ru/rusverbs.js",
         "content_scripts/js/topics/ru/rusverbaspect.js",
@@ -75,7 +73,6 @@
         "content_scripts/js/topics/ru/ruswordstress.js",
         "content_scripts/js/topics/ru/rusassistivereading.js",
         "content_scripts/js/topics/es/serestar.js",
-        "content_scripts/js/topics/en/pos.js",
         "content_scripts/js/topics/en/gerunds.js",
         "content_scripts/js/topics/en/nouncountability.js",
         "content_scripts/js/topics/en/phrasalverbs.js",
@@ -108,6 +105,5 @@
     "topics/articles.json",
     "topics/determiners.json",
     "topics/nouns.json"
-  ]  
-
+  ]
 }
