@@ -263,15 +263,14 @@ view.interaction = {
     switch (view.activity) {
       case "color":
 
-        view[topic].colorize(view.topic);
+        view.color.run(view.topic);
 
         view.notification.add("VIEW Colorize Activity Ready");
         break;
       case "click":
-        // remove click from all links
         $("body").on("click", "a", view.lib.clickDisableLink);
 
-        view[topic].click();
+        view.click.run();
 
         view.notification.add("VIEW Click Activity Ready");
 
@@ -280,7 +279,7 @@ view.interaction = {
         // no link disabling because the drop-down boxes are prevented
         // from showing up with links because they act strange in links
 
-        view[topic].mc();
+        view.mc.run();
 
         view.notification.add("VIEW Multiple Choice Activity Ready");
         break;
@@ -288,14 +287,13 @@ view.interaction = {
         // remove click from all links that contain input boxes
         $("body").on("click", "a", view.lib.clozeDisableLink);
 
-        view[topic].cloze();
+        view.cloze.run();
 
         view.notification.add("VIEW Practice Activity Ready");
         view.blur.remove();
         break;
       default:
         view.blur.remove();
-        // we should never get here
         alert("Invalid activity");
     }
   },
@@ -398,253 +396,6 @@ view.interaction = {
   },
 
   /*
-   * Generate multiple choice exercises.
-   *
-   * @param hitList list of hits that could be turned into exercises, unwanted instance must be removed in advance
-   * @param getOptionsCallback a function that returns an array of choices to be presented to the user
-   * @param getCorrectAnswerCallback a function that returns the correct answer choice for a given hit
-   * @param addProcCallback a function that is called for every exercise (default: wertiview.lib.doNothing)
-   * @param emptyHit if true, the hit text will be erased (default: true)
-   * @param partExercises decimal by which the number of exercises to generate is multiplied in 'fixed number' mode (default: 1.0)
-   */
-  mcHandler: function(hitList, inputHandler, hintHandler,
-                      getOptionsCallback, getCorrectAnswerCallback, addProcCallback,
-                      emptyHit, partExercises) {
-    console.log("mcHandler(hitList, inputHandler, hintHandler," +
-      "getOptionsCallback, getCorrectAnswerCallback, addProcCallback, " +
-      "emptyHit, partExercises)");
-
-    var fixedOrPercentageValue = view.fixedOrPercentage;
-    var fixedNumberOfExercises = view.fixedNumberOfExercises;
-    var percentageOfExercises = view.percentageOfExercises;
-    var choiceModeValue = view.choiceMode;
-    var firstOffset = view.firstOffset;
-    var intervalSize = view.intervalSize;
-
-    if (typeof addProcCallback == "undefined") {
-      addProcCallback = view.lib.doNothing;
-    }
-    if (typeof emptyHit == "undefined") {
-      emptyHit = true;
-    }
-    if (typeof partExercises == "undefined") {
-      partExercises = 1.0;
-    }
-
-    // calculate the number of hits to turn into exercises
-    var numExercises = 0;
-    if (fixedOrPercentageValue == 0) {
-      numExercises = fixedNumberOfExercises * partExercises;
-    }
-    else if (fixedOrPercentageValue == 1) {
-      numExercises = percentageOfExercises * hitList.length;
-    }
-    else {
-      // we should never get here
-      view.interaction.prefError();
-    }
-
-    // choose which hits to turn into exercises
-    var i = 0;
-    var inc = 1;
-    if (choiceModeValue == 0) {
-      view.lib.shuffleList(hitList);
-    }
-    else if (choiceModeValue == 1) {
-      i = firstOffset;
-    }
-    else if (choiceModeValue == 2) {
-      inc = intervalSize;
-    }
-    else {
-      // we should never get here
-      view.interaction.prefError();
-    }
-
-    // generate the exercises
-    for (; numExercises > 0 && i < hitList.length; i += inc) {
-      var $hit = hitList[i];
-      const hitText = $hit.text().trim();
-
-      // if the span is inside a link, skip (drop-down boxes are weirder
-      // than text input boxes, need to investigate further)
-      if ($hit.parents("a").length > 0) {
-        continue;
-      }
-
-      var capType = view.lib.detectCapitalization(hitText);
-
-      // choices for the user
-      var options = getOptionsCallback($hit, capType);
-      // correct choice
-      var answer = getCorrectAnswerCallback($hit, capType);
-
-
-      // create select box
-      var $input = $("<select>");
-      $input.addClass("viewinput");
-      var $option = $("<option>");
-      $option.html(" ");
-      $input.append($option);
-      for (var j = 0; j < options.length; j++) {
-        $option = $("<option>");
-        $option.text(options[j]);
-        $input.append($option);
-      }
-
-      // save original text/answer
-      $input.data("vieworiginaltext", hitText);
-      $input.data("viewanswer", answer);
-
-      if (emptyHit) {
-        $hit.empty();
-      }
-      $hit.append($input);
-
-      // create hint ? button
-      var $hint = $("<viewhint>");
-      $hint.text("?");
-      $hit.append($hint);
-
-      // e.g., phrasalverbs needs to add colorization to the verb
-      // NEW add rephrase for participles
-      addProcCallback($hit, capType);
-
-      // count down numExercises until we're finished
-      numExercises--;
-    }
-
-    $("body").on("change", "select.viewinput", inputHandler);
-    $("body").on("click", "viewhint", hintHandler);
-  },
-
-  /*
-   * Illegal value for a preference (e.g., user edited about:config)
-   */
-  prefError: function(message) {
-    view.interaction.initialInteractionState();
-
-    if (message) {
-      alert(message);
-    }
-    else {
-      alert("The preferences have illegal values. Please go to 'Options > Addons' and change the VIEW preferences.");
-    }
-  },
-
-  /*
-   * Generate cloze exercises. TODO BUG: When typing an answer into the input field and then pressing on the
-   * hint right away, both the typed answer and the hint event are triggered at the same time and send to the server.
-   * @param hitList list of hits that could be turned into exercises, unwanted instance must be removed in advance
-   * @param getCorrectAnswerCallback a function that returns the correct answer choice for a given hit
-   * @param addProcCallback a function that is called for every exercise (default: wertiview.lib.doNothing)
-   * @param emptyHit if true, the hit text will be erased (default: true)
-   * @param partExercises decimal by which the number of exercises to generate is multiplied in 'fixed number' mode (default: 1.0)
-   */
-  clozeHandler: function(hitList, inputHandler, hintHandler,
-                         getCorrectAnswerCallback, addProcCallback,
-                         emptyHit, partExercises) {
-    console.log("clozeHandler(hitList, inputHandler, hintHandler," +
-      "getCorrectAnswerCallback, addProcCallback, " +
-      "emptyHit, partExercises)");
-
-    var fixedOrPercentageValue = view.fixedOrPercentage;
-    var fixedNumberOfExercises = view.fixedNumberOfExercises;
-    var percentageOfExercises = view.percentageOfExercises;
-    var choiceModeValue = view.choiceMode;
-    var firstOffset = view.firstOffset;
-    var intervalSize = view.intervalSize;
-
-    if (typeof addProcCallback == "undefined") {
-      addProcCallback = view.lib.doNothing;
-    }
-    if (typeof emptyHit == "undefined") {
-      emptyHit = true;
-    }
-    if (typeof partExercises == "undefined") {
-      partExercises = 1.0;
-    }
-
-    // calculate the number of hits to turn into exercises
-    var numExercises = 0;
-    if (fixedOrPercentageValue == 0) {
-      numExercises = fixedNumberOfExercises * partExercises;
-    }
-    else if (fixedOrPercentageValue == 1) {
-      numExercises = percentageOfExercises * hitList.length;
-    }
-    else {
-      // we should never get here
-      view.interaction.prefError();
-    }
-
-    // choose which hits to turn into exercises
-    var i = 0;
-    var inc = 1;
-    if (choiceModeValue == 0) {
-      view.lib.shuffleList(hitList);
-    }
-    else if (choiceModeValue == 1) {
-      i = firstOffset;
-    }
-    else if (choiceModeValue == 2) {
-      inc = intervalSize;
-    }
-    else {
-      // we should never get here
-      view.interaction.prefError();
-    }
-
-    // override preferences for Konjunktiv
-    if ($("body").data("wertiview-topic") == "Konjunktiv") {
-      numExercises = hitList.length;
-      i = 0;
-      inc = 1;
-    }
-
-    // generate the exercises
-    for (; numExercises > 0 && i < hitList.length; i += inc) {
-      var $hit = hitList[i];
-      const hitText = $hit.text().trim();
-
-      var capType = view.lib.detectCapitalization(hitText);
-
-      // correct choice
-      var answer = getCorrectAnswerCallback($hit, capType);
-
-      // create input box
-      var $input = $("<input>");
-      // save original text/answer
-      $input.data("vieworiginaltext", hitText);
-      $input.attr("type", "text");
-      // average of 10 px per letter (can fit 10 x "м" with a width of 110)
-      $input.css("width", (answer.length * 10) + "px");
-      $input.addClass("clozeStyleInput");
-      $input.addClass("viewinput");
-      $input.data("viewanswer", answer);
-      if (emptyHit) {
-        $hit.empty();
-      }
-      $hit.append($input);
-
-      // create hint ? button
-      var $hint = $("<viewhint>");
-      $hint.text("?");
-      $hit.append($hint);
-
-      // e.g., phrasalverbs needs to add colorization to the verb
-      // and gerunds needs to display the base form
-      addProcCallback($hit, capType);
-
-      // count down numExercises until we"re finished
-      numExercises--;
-    }
-
-    $("body").on("change", "input.viewinput", inputHandler);
-    $("body").on("click", "viewhint", hintHandler);
-  },
-
-  /*
    * The extension send the message to call abort().
    */
   callAbort: function(request) {
@@ -717,8 +468,8 @@ view.interaction = {
       return;
     }
 
-    // remove topic specific markup
-    view[topicName].restore();
+    // remove activity specific markup
+    view.activityHelper.restore();
 
     $("viewenhancement").each(function() {
       $(this).replaceWith($(this).data("vieworiginaltext"));

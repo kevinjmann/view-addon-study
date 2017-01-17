@@ -141,5 +141,19 @@ view.lib = {
       sample[key] = value;
     }
     return sample;
+  },
+
+  /*
+   * Illegal value for a preference (e.g., user edited about:config)
+   */
+  prefError: function(message) {
+    view.interaction.initialInteractionState();
+
+    if (message) {
+      alert(message);
+    }
+    else {
+      alert("The preferences have illegal values. Please go to 'Options > Addons' and change the VIEW preferences.");
+    }
   }
 };
