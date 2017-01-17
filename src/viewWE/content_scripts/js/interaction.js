@@ -464,6 +464,7 @@ view.interaction = {
     // generate the exercises
     for (; numExercises > 0 && i < hitList.length; i += inc) {
       var $hit = hitList[i];
+      const hitText = $hit.text().trim();
 
       // if the span is inside a link, skip (drop-down boxes are weirder
       // than text input boxes, need to investigate further)
@@ -471,7 +472,7 @@ view.interaction = {
         continue;
       }
 
-      var capType = view.lib.detectCapitalization($hit.text());
+      var capType = view.lib.detectCapitalization(hitText);
 
       // choices for the user
       var options = getOptionsCallback($hit, capType);
@@ -492,7 +493,7 @@ view.interaction = {
       }
 
       // save original text/answer
-      $input.data("vieworiginaltext", $hit.text());
+      $input.data("vieworiginaltext", hitText);
       $input.data("viewanswer", answer);
 
       if (emptyHit) {

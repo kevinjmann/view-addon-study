@@ -12,7 +12,7 @@ view.rusnouns = {
 
     $Enhancements.each(function() {
       const $Enhancement = $(this);
-      $Enhancement.data("vieworiginaltext", $Enhancement.text());
+      $Enhancement.data("vieworiginaltext", $Enhancement.text().trim());
 
       $Enhancement.addClass("colorizeStyle" + topicCSS);
     });
@@ -30,7 +30,7 @@ view.rusnouns = {
     const $Enhancements = $("viewenhancement");
     $Enhancements.each(function() {
       const $Enhancement = $(this);
-      $Enhancement.data("vieworiginaltext", $Enhancement.text());
+      $Enhancement.data("vieworiginaltext", $Enhancement.text().trim());
 
       $Enhancement.addClass("clickStylePointer");
     });
@@ -53,7 +53,7 @@ view.rusnouns = {
 
     $Hits.each(function() {
       const $Hit = $(this);
-      $Hit.data("vieworiginaltext", $Hit.text());
+      $Hit.data("vieworiginaltext", $Hit.text().trim());
 
       hitList.push($Hit);
     });
@@ -77,7 +77,7 @@ view.rusnouns = {
     const hitList = [];
     $Hits.each(function() {
       const $Hit = $(this);
-      $Hit.data("vieworiginaltext", $Hit.text());
+      $Hit.data("vieworiginaltext", $Hit.text().trim());
 
       hitList.push($(this));
     });
