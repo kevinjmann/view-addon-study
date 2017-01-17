@@ -15,7 +15,7 @@ view.pos = {
 
     $Enhancements.each(function() {
       const $Enhancement = $(this);
-      $Enhancement.data("vieworiginaltext", $Enhancement.text());
+      $Enhancement.data("vieworiginaltext", $Enhancement.text().trim());
 
       $Enhancement.addClass("colorizeStyle" + topicCSS);
     });
@@ -33,7 +33,7 @@ view.pos = {
     const $Enhancements = $("viewenhancement");
     $Enhancements.each(function() {
       const $Enhancement = $(this);
-      $Enhancement.data("vieworiginaltext", $Enhancement.text());
+      $Enhancement.data("vieworiginaltext", $Enhancement.text().trim());
 
       $Enhancement.addClass("clickStylePointer");
     });
@@ -57,7 +57,7 @@ view.pos = {
     view[view.topicName].distractors = [];
     $Hits.each(function() {
       const $Hit = $(this);
-      $Hit.data("vieworiginaltext", $Hit.text());
+      $Hit.data("vieworiginaltext", $Hit.text().trim());
 
       hitList.push($Hit);
       tokens[$Hit.text().toLowerCase()] = 1;
@@ -86,7 +86,7 @@ view.pos = {
     const hitList = [];
     $Hits.each(function() {
       const $Hit = $(this);
-      $Hit.data("vieworiginaltext", $Hit.text());
+      $Hit.data("vieworiginaltext", $Hit.text().trim());
 
       hitList.push($Hit);
     });
