@@ -122,10 +122,9 @@ view.mc = {
     const options = [];
     let j = 0;
 
-    if (view.language === "ru") {
-      // Get the list of distractors for the given hit
-      const distractors = $hit.data("distractors").split(" ");
+    const distractors = $hit.data("distractors").split(";");
 
+    if (view.language === "ru") {
       // Add the distractor forms to the options list:
       while (j < distractors.length && options.length < 4) {
         // The forms that are homonymous to the correct form are excluded from the list of options:
@@ -134,11 +133,9 @@ view.mc = {
         }
         j++;
       }
+      options.push(view.lib.matchCapitalization($hit.data("correctform"), capType));
     }
     else {
-      // Get the list of distractors for the given hit
-      const distractors = $hit.data("data-distractors");
-
       // Add the distractor forms to the options list:
       while (j < distractors.length && options.length < 4) {
         if (distractors[j].toLowerCase() != $hit.text().toLowerCase() && distractors[j] != "") {
@@ -146,10 +143,11 @@ view.mc = {
         }
         j++;
       }
+      options.push(view.lib.matchCapitalization($hit.text(), capType));
     }
-
-    options.push(view.lib.matchCapitalization($hit.data("correctform"), capType));
+    
     view.lib.shuffleList(options);
+
     return options;
   }
 };
