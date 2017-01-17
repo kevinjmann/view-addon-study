@@ -263,7 +263,7 @@ view.interaction = {
     switch (view.activity) {
       case "color":
 
-        view[topic].colorize(view.topic);
+        view.color.run(view.topic);
 
         view.notification.add("VIEW Colorize Activity Ready");
         break;
