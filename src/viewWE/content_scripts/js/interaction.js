@@ -375,7 +375,7 @@ view.interaction = {
     view.activityHelper.restore();
 
     $("viewenhancement").each(function() {
-      $(this).replaceWith($(this).data("vieworiginaltext"));
+      $(this).replaceWith($(this).data("view-original-text"));
     });
 
     $("body").off("click", "a", view.lib.clickDisableLink);

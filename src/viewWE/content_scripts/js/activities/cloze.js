@@ -11,7 +11,7 @@ view.cloze = {
     const hitList = [];
     $Hits.each(function() {
       const $Hit = $(this);
-      $Hit.data("vieworiginaltext", $Hit.text().trim());
+      $Hit.data("view-original-text", $Hit.text().trim());
 
       hitList.push($(this));
     });
@@ -80,13 +80,13 @@ view.cloze = {
 
       // create input box
       const $input = $("<input>");
-      $input.data("vieworiginaltext", hitText);
+      $input.data("view-original-text", hitText);
       $input.attr("type", "text");
       // average of 10 px per letter (can fit 10 x "м" with a width of 110)
       $input.css("width", (answer.length * 10) + "px");
       $input.addClass("clozeStyleInput");
       $input.addClass("viewinput");
-      $input.data("viewanswer", answer);
+      $input.data("view-answer", answer);
 
       $hit.empty();
       $hit.append($input);

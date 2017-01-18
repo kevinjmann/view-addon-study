@@ -10,7 +10,7 @@ view.click = {
 
     $("viewenhancement").each(function() {
       const $Enhancement = $(this);
-      $Enhancement.data("vieworiginaltext", $Enhancement.text().trim());
+      $Enhancement.data("view-original-text", $Enhancement.text().trim());
 
       $Enhancement.addClass("clickStylePointer");
     });
@@ -47,7 +47,7 @@ view.click = {
         infos.elementInfo,
         countsAsCorrect,
         false
-      ); // usedHint: only true when hint handler
+      );
     }
 
     // prevent execution of further event listeners

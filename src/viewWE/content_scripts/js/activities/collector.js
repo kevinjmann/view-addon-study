@@ -2,13 +2,12 @@ view.collector = {
   /**
    * Collects information available before the user interaction updates the page.
    *
-   * @param {object} element the element the user is currently working with
+   * @param {object} $Element the element the user is currently working with
    * @param usedHint true if a hint was used, false otherwise
    */
-  collectInfoData: function(element, usedHint) {
+  collectInfoData: function($Element, usedHint) {
     const info = {};
     const elementInfo = {};
-    const $Element = $(element);
 
     info["url"] = document.baseURI;
     info["language"] = view.language;
@@ -33,21 +32,21 @@ view.collector = {
   /**
    * Returns the input.
    *
-   * @param {object} element the element to collect input data from
+   * @param {object} $Element the element to collect input data from
    * @param {boolean} usedHint true if a hint was used, false otherwise
    * @param {boolean} isClick true if it is the click activity, false otherwise
    * @returns {string} the text inside the element
    */
-  collectInputData: function(element, usedHint, isClick) {
+  collectInputData: function($Element, usedHint, isClick) {
     if (usedHint) {
-      element = element.prev();
+      $Element = $Element.prev();
     }
     if (isClick) {
-      return element.text();
+      return $Element.text();
     }
     else {
-      if(element.val() !== ""){
-        return element.val();
+      if($Element.val() !== ""){
+        return $Element.val();
       }
       else{
         return "no input";
@@ -58,15 +57,15 @@ view.collector = {
   /**
    * Returns the correct answer.
    *
-   * @param {object} element the element to collect input data from
+   * @param {object} $Element the element to collect input data from
    * @param {boolean} usedHint true if a hint was used, false otherwise
    * @returns {string} the text inside the element
    */
-  collectAnswerData: function(element, usedHint) {
+  collectAnswerData: function($Element, usedHint) {
     if (usedHint) {
-      element = element.prev();
+      $Element = $Element.prev();
     }
-    return element.data("viewanswer");
+    return $Element.data("view-answer");
   },
 
   /**

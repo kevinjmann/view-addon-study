@@ -4,60 +4,39 @@ view.activityHelper = {
    */
   inputHandler: function() {
     let countsAsCorrect = false;
-    const element = this;
-    const inputId = $(".viewinput").index(this);
-    const clueid = $(element).data("clueid");
+    const $Element = $(this);
 
     const userid = view.userid;
     let infos = {};
 
-    if (userid) {	// if the user is logged in (userid is not null)
+    if (userid) {
       // collect info data before page update
-      infos = view.interaction.collectInfoData(
-        element,
-        false, // usedHint: only true when hint handler
-        view.interaction.collectInputData,
-        view.interaction.collectAnswerData);
+      infos = view.collector.collectInfoData(
+        $Element,
+        false
+      );
     }
 
     // if the answer is correct, turn into text, else color text within input
-    if ($(element).val().toLowerCase() == $(element).data("viewanswer").toLowerCase()) {
+    if ($Element.val().toLowerCase() == $Element.data("view-answer").toLowerCase()) {
       countsAsCorrect = true;
-      // return the clue tag color to what it was originally
-      $("#" + clueid).css("color", "inherit");
-      const $text = $("<viewenhancement>");
-      $text.addClass("clozeStyleCorrect");
-      $text.text($(element).data("viewanswer"));
-      // save the original text in a hidden field
-      $text.data("vieworiginaltext", $(element).data("vieworiginaltext"));
-
-      view.lib.replaceInput($(element).parent(), $text);
-
-      view.activityHelper.jumpTo(inputId);
+      view.activityHelper.processCorrect($Element, "Correct");
 
     } else {
-      // give the clue tag a color if the student guessed wrong
-      $("#" + clueid).css("color", "red");
-      // turns all options, the topmost element after selection included, as red
-      $(element).addClass("clozeStyleIncorrect");
-      // remove assigned classes to all options from previous selections
-      $(element).find("option").removeAttr("class");
-      // turn the selected option red
-      $(element).find("option:selected").addClass("clozeStyleIncorrect");
-      // turn the not selected options black
-      $(element).find("option:not(:selected)").addClass("clozeStyleNeutral");
+      view.activityHelper.processIncorrect($Element);
     }
 
-    if (userid) {	// if the user is logged in (userid is not null)
+    if (userid) {
       const info = infos.info;
       const elementInfo = infos.elementInfo;
 
       // collect and send interaction data after page update
-      view.interaction.collectInteractionData(
+      view.collector.collectInteractionData(
         info,
         elementInfo,
         countsAsCorrect,
-        false); // usedHint: only true when hint handler
+        false
+      );
     }
 
     // prevent execution of further event listeners
@@ -65,49 +44,77 @@ view.activityHelper = {
   },
 
   /**
+   * Process the correct input.
+   *
+   * @param {object} $Element the element the input came from
+   * @param {string} clozeStyleType either "Correct" or "Provided"
+   */
+  processCorrect: function($Element, clozeStyleType) {
+    const inputId = $(".viewinput").index($Element);
+
+    // return the clue tag color to what it was originally
+    $("#" + $Element.data("clueid")).css("color", "inherit");
+
+    const $text = $("<viewenhancement>");
+    $text.addClass("clozeStyle" + clozeStyleType);
+    $text.text($Element.data("view-answer"));
+    // save the original text in a hidden field
+    $text.data("view-original-text", $Element.data("view-original-text"));
+
+    view.lib.replaceInput($Element.parent(), $text);
+
+    view.activityHelper.jumpTo(inputId);
+  },
+
+  /**
+   * Process the incorrect input.
+   *
+   * @param {object} $Element the element the input came from
+   */
+  processIncorrect: function($Element) {
+    // give the clue tag a color if the student guessed wrong
+    $("#" + $Element.data("clueid")).css("color", "red");
+
+    // turns all options, the topmost element after selection included, as red
+    $Element.addClass("clozeStyleIncorrect");
+    // remove assigned classes to all options from previous selections
+    $Element.find("option").removeAttr("class");
+    // turn the selected option red
+    $Element.find("option:selected").addClass("clozeStyleIncorrect");
+    // turn the not selected options black
+    $Element.find("option:not(:selected)").addClass("clozeStyleNeutral");
+  },
+
+  /**
    * Deals with the hint in the mc and cloze activities.
    */
   hintHandler: function() {
-    const element = this;
-    const inputId = $(".viewinput").index($(element).prev());
-    const clueid = $(element).data("clueid");
+    const $Element = $(this);
 
     const userid = view.userid;
     let infos = {};
 
     if (userid) {	// if the user is logged in (userid is not null)
       // collect info data before page update
-      infos = view.interaction.collectInfoData(
-        element,
-        true, // usedHint: only true when hint handler
-        view.interaction.collectInputData,
-        view.interaction.collectAnswerData);
+      infos = view.collector.collectInfoData(
+        $Element,
+        true
+      );
     }
 
-    // return the clue tag color to what it was originally
-    $("#" + clueid).css("color", "inherit");
-
-    // fill in the answer by replacing input with text
-    const $text = $("<viewenhancement>");
-    $text.addClass("clozeStyleProvided");
-    $text.text($(element).prev().data("viewanswer"));
-    // save the original text in a hidden field
-    $text.data("vieworiginaltext", $(element).prev().data("vieworiginaltext"));
-
-    view.lib.replaceInput($(element).parent(), $text);
-
-    view.activityHelper.jumpTo(inputId);
+    view.activityHelper.processCorrect($Element.prev(), "Provided");
 
     if (userid) {	// if the user is logged in (userid is not null)
       const info = infos.info;
       const elementInfo = infos.elementInfo;
 
       // collect and send interaction data after page update
-      view.interaction.collectInteractionData(
+      view.collector.collectInteractionData(
         info,
         elementInfo,
-        true, // if the user used a hint, then it is definitely a correct answer
-        true); // usedHint: only true when hint handler
+        true,
+        true
+      );
     }
 
     // prevent execution of further event listeners
@@ -117,21 +124,33 @@ view.activityHelper = {
   /**
    * Jump to the
    * - input element if it exists
-   * - previous input element if it exists
+   * - first input element if it exists
+   *
+   * @param {number} inputId the input id we currently at
    */
   jumpTo: function(inputId) {
-    const input = ".viewinput:eq(" + inputId + ")";
-    const prevInput = ".viewinput:eq(" + (inputId - 1) + ")";
-    if ($(input).length) {
-      $(input).focus();
-      // Scroll to the middle of the viewport
-      $(window).scrollTop($(input).offset().top - ($(window).height() / 2));
+    const $Input = $(".viewinput:eq(" + inputId + ")");
+    const $FirstInput = $(".viewinput:eq(0)");
+
+    if ($Input.length) {
+      view.activityHelper.scrollToCenter($Input);
     }
-    else if ($(prevInput).length) {
-      $(prevInput).focus();
-      // Scroll to the middle of the viewport
-      $(window).scrollTop($(prevInput).offset().top - ($(window).height() / 2));
+    else if ($FirstInput.length) {
+      view.activityHelper.scrollToCenter($FirstInput);
     }
+  },
+
+  /**
+   * Scroll to the middle of the viewport relative to the element.
+   *
+   * @param $Element the element in focus and center
+   */
+  scrollToCenter: function($Element) {
+    const $Window = $(window);
+
+    $Element.focus();
+
+    $Window.scrollTop($Element.offset().top - ($Window.height() / 2));
   },
 
   /**

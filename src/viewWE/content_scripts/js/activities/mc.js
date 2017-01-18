@@ -13,7 +13,7 @@ view.mc = {
 
     $Hits.each(function() {
       const $Hit = $(this);
-      $Hit.data("vieworiginaltext", $Hit.text().trim());
+      $Hit.data("view-original-text", $Hit.text().trim());
 
       hitList.push($Hit);
     });
@@ -95,8 +95,8 @@ view.mc = {
         $input.append($option);
       }
 
-      $input.data("vieworiginaltext", hitText);
-      $input.data("viewanswer", answer);
+      $input.data("view-original-text", hitText);
+      $input.data("view-answer", answer);
 
       $hit.empty();
       $hit.append($input);
