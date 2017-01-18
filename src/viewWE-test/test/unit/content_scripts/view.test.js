@@ -135,13 +135,22 @@ describe("view.js", function() {
   });
 
   describe("startToEnhance", function() {
-    it("should call saveUserOptions(storageItems), saveSelections(storageItems) and enhance()", function() {
+    it("should call saveUserOptions(storageItems), setEmailAndId(email, id), saveSelections(storageItems) and enhance()", function() {
       const saveUserOptionsSpy = sandbox.spy(view, "saveUserOptions");
+      const setEmailAndIdSpy = sandbox.spy(view, "setEmailAndId");
       const saveSelectionsSpy = sandbox.spy(view, "saveSelections");
       const enhanceSpy = sandbox.spy(view.interaction, "enhance");
       const getTopicNameSpy = sandbox.spy(view.interaction, "getTopicName");
 
-      const storageItems = {topic: "articles"};
+      const topic = "articles";
+      const userEmail = "some.email";
+      const userid = "someid";
+
+      const storageItems = {
+        topic,
+        userEmail,
+        userid
+      };
 
       chrome.storage.local.get.yields(storageItems);
 
@@ -149,6 +158,9 @@ describe("view.js", function() {
 
       sinon.assert.calledOnce(saveUserOptionsSpy);
       sinon.assert.calledWithExactly(saveUserOptionsSpy, storageItems);
+
+      sinon.assert.calledOnce(setEmailAndIdSpy);
+      sinon.assert.calledWithExactly(setEmailAndIdSpy, userEmail, userid);
 
       sinon.assert.calledOnce(saveSelectionsSpy);
       sinon.assert.calledWithExactly(saveSelectionsSpy, storageItems);
