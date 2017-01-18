@@ -5,35 +5,22 @@ view.activityHelper = {
   inputHandler: function() {
     let countsAsCorrect = false;
     const $Element = $(this);
-
-    const userid = view.userid;
-    let infos = {};
-
-    if (userid) {
-      // collect info data before page update
-      infos = view.collector.collectInfoData(
-        $Element,
-        false
-      );
-    }
+    const $Enhancement = $Element.parent();
+    const input = $Element.val();
 
     // if the answer is correct, turn into text, else color text within input
-    if ($Element.val().toLowerCase() == $Element.data("view-answer").toLowerCase()) {
+    if ($Element.val().toLowerCase() === $Element.data("view-answer").toLowerCase()) {
       countsAsCorrect = true;
       view.activityHelper.processCorrect($Element, "Correct");
-
-    } else {
+    }
+    else {
       view.activityHelper.processIncorrect($Element);
     }
 
-    if (userid) {
-      const info = infos.info;
-      const elementInfo = infos.elementInfo;
-
-      // collect and send interaction data after page update
-      view.collector.collectInteractionData(
-        info,
-        elementInfo,
+    if (view.userid) {
+      view.collector.collectAndSendData(
+        $Enhancement,
+        input,
         countsAsCorrect,
         false
       );
@@ -50,18 +37,14 @@ view.activityHelper = {
    * @param {string} clozeStyleType either "Correct" or "Provided"
    */
   processCorrect: function($Element, clozeStyleType) {
+    const $Enhancement = $Element.parent();
     const inputId = $(".viewinput").index($Element);
 
     // return the clue tag color to what it was originally
     $("#" + $Element.data("clueid")).css("color", "inherit");
 
-    const $text = $("<viewenhancement>");
-    $text.addClass("clozeStyle" + clozeStyleType);
-    $text.text($Element.data("view-answer"));
-    // save the original text in a hidden field
-    $text.data("view-original-text", $Element.data("view-original-text"));
-
-    view.lib.replaceInput($Element.parent(), $text);
+    $Enhancement.addClass("clozeStyle" + clozeStyleType);
+    $Enhancement.html($Element.data("view-answer"));
 
     view.activityHelper.jumpTo(inputId);
   },
@@ -89,34 +72,19 @@ view.activityHelper = {
    * Deals with the hint in the mc and cloze activities.
    */
   hintHandler: function() {
-    const $Element = $(this);
+    const $Element = $(this).prev();
+    const $Enhancement = $Element.parent();
 
-    const userid = view.userid;
-    let infos = {};
+    view.activityHelper.processCorrect($Element, "Provided");
 
-    if (userid) {	// if the user is logged in (userid is not null)
-      // collect info data before page update
-      infos = view.collector.collectInfoData(
-        $Element,
-        true
-      );
-    }
-
-    view.activityHelper.processCorrect($Element.prev(), "Provided");
-
-    if (userid) {	// if the user is logged in (userid is not null)
-      const info = infos.info;
-      const elementInfo = infos.elementInfo;
-
-      // collect and send interaction data after page update
-      view.collector.collectInteractionData(
-        info,
-        elementInfo,
+    if (view.userid) {
+      view.collector.collectAndSendData(
+        $Enhancement,
+        "no input",
         true,
         true
       );
     }
-
     // prevent execution of further event listeners
     return false;
   },
@@ -169,8 +137,6 @@ view.activityHelper = {
    * Remove activity specific markup.
    */
   restore: function() {
-    console.log("restore()");
-
     const $Body = $("body");
 
     // click

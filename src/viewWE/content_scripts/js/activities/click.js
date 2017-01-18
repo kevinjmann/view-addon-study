@@ -23,28 +23,21 @@ view.click = {
    */
   handler: function() {
     let countsAsCorrect = false;
-    const element = this;
+    const $Element = $(this);
 
-    if ($(element).is("[data-type='hit']")) {
+    if ($Element.is("[data-type='hit']")) {
       countsAsCorrect = true;
-      $(element).addClass("clickStyleCorrect");
+      $Element.addClass("clickStyleCorrect");
     } else {
-      $(element).addClass("clickStyleIncorrect");
+      $Element.addClass("clickStyleIncorrect");
     }
 
-    $(element).removeClass("clickStylePointer");
+    $Element.removeClass("clickStylePointer");
 
     if (view.userid) {
-      // collect info data before page update
-      const infos = view.collector.collectInfoData(
-        element,
-        false
-      );
-
-      // collect and send interaction data after page update
-      view.collector.collectInteractionData(
-        infos.info,
-        infos.elementInfo,
+      view.collector.collectAndSendData(
+        $Element,
+        $Element.text().trim(),
         countsAsCorrect,
         false
       );
