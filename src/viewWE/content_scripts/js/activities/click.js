@@ -1,16 +1,13 @@
 view.click = {
   /**
    * Run the click activity.
-   * Ignore instruction dialogs.
-   * Add css attribute cursor: pointer to each span marked as token.
-   * Call the click handler when the span marked as token was clicked.
    */
   run: function() {
     console.log("click()");
 
     $("viewenhancement").each(function() {
       const $Enhancement = $(this);
-      $Enhancement.data("vieworiginaltext", $Enhancement.text().trim());
+      $Enhancement.data("view-original-text", $Enhancement.text().trim());
 
       $Enhancement.addClass("clickStylePointer");
     });
@@ -23,34 +20,24 @@ view.click = {
    */
   handler: function() {
     let countsAsCorrect = false;
-    const element = this;
+    const $Element = $(this);
 
-    if ($(element).is("[data-type='hit']")) {
+    if ($Element.is("[data-type='hit']")) {
       countsAsCorrect = true;
-      $(element).addClass("clickStyleCorrect");
+      $Element.addClass("clickStyleCorrect");
     } else {
-      $(element).addClass("clickStyleIncorrect");
+      $Element.addClass("clickStyleIncorrect");
     }
 
-    $(element).removeClass("clickStylePointer");
+    $Element.removeClass("clickStylePointer");
 
     if (view.userid) {
-      // collect info data before page update
-      const infos = view.interaction.collectInfoData(
-        element,
-        false, // usedHint: only true when hint handler
-        view.interaction.collectInputData,
-        view.interaction.collectAnswerData);
-
-      const info = infos.info;
-      const elementInfo = infos.elementInfo;
-
-      // collect and send interaction data after page update
-      view.interaction.collectInteractionData(
-        info,
-        elementInfo,
+      view.collector.collectAndSendData(
+        $Element,
+        $Element.text().trim(),
         countsAsCorrect,
-        false); // usedHint: only true when hint handler
+        false
+      );
     }
 
     // prevent execution of further event listeners

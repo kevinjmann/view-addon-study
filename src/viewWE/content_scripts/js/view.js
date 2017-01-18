@@ -127,12 +127,16 @@ const view = {
       "firstOffset",
       "intervalSize",
       "showInst",
+      "userEmail",
+      "userid",
       "enabled",
       "language",
       "topic",
       "activity"
     ], function(storageItems) {
       view.saveUserOptions(storageItems);
+
+      view.setEmailAndId(storageItems.userEmail, storageItems.userid);
 
       view.saveSelections(storageItems);
 
