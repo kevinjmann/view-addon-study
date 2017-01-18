@@ -61,6 +61,7 @@
         "content_scripts/js/notification.js",
         "content_scripts/js/lib.js",
         "content_scripts/js/sidebar.js",
+        "content_scripts/js/activities/collector.js",
         "content_scripts/js/activities/activityHelper.js",
         "content_scripts/js/activities/color.js",
         "content_scripts/js/activities/click.js",

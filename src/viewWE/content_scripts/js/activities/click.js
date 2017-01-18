@@ -36,21 +36,18 @@ view.click = {
 
     if (view.userid) {
       // collect info data before page update
-      const infos = view.interaction.collectInfoData(
+      const infos = view.collector.collectInfoData(
         element,
-        false, // usedHint: only true when hint handler
-        view.interaction.collectInputData,
-        view.interaction.collectAnswerData);
-
-      const info = infos.info;
-      const elementInfo = infos.elementInfo;
+        false
+      );
 
       // collect and send interaction data after page update
-      view.interaction.collectInteractionData(
-        info,
-        elementInfo,
+      view.collector.collectInteractionData(
+        infos.info,
+        infos.elementInfo,
         countsAsCorrect,
-        false); // usedHint: only true when hint handler
+        false
+      ); // usedHint: only true when hint handler
     }
 
     // prevent execution of further event listeners
