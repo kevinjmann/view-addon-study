@@ -1,9 +1,6 @@
 view.click = {
   /**
    * Run the click activity.
-   * Ignore instruction dialogs.
-   * Add css attribute cursor: pointer to each span marked as token.
-   * Call the click handler when the span marked as token was clicked.
    */
   run: function() {
     console.log("click()");

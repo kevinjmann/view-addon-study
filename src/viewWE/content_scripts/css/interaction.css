@@ -99,23 +99,23 @@ viewhint {
     color: grey;
 }
 
-.clozeStyleCorrect {
-    color: green;
-    cursor: text;
-    font-weight: bold;
-}
-
-.clozeStyleProvided {
+.inputStyleProvided {
     color: black;
     cursor: text;
     font-weight: bold;
 }
 
-.clozeStyleIncorrect {
+.inputStyleCorrect {
+    color: green;
+    cursor: text;
+    font-weight: bold;
+}
+
+.inputStyleIncorrect {
     color: red;
 }
 
-.clozeStyleNeutral {
+.inputStyleNeutral {
     color: black;
 }
 

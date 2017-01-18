@@ -1,7 +1,6 @@
 view.color = {
   /**
    * Run the colorize activity.
-   * Add css attribute color to span marked as hit.
    */
   run: function(topicCSS) {
     console.log("color()");

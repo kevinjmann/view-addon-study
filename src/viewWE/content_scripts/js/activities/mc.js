@@ -1,22 +1,11 @@
 view.mc = {
   /**
    * Run the multiple choice activity.
-   * Get all potential spans and call the mcHandler.
    */
   run: function() {
     console.log("mc()");
 
-    // get potential spans
-    const $Hits = $("viewenhancement[data-type='hit']");
-
-    const hitList = [];
-
-    $Hits.each(function() {
-      const $Hit = $(this);
-      $Hit.data("view-original-text", $Hit.text().trim());
-
-      hitList.push($Hit);
-    });
+    const hitList = view.activityHelper.createHitList();
 
     view.mc.handler(hitList);
   },
@@ -24,49 +13,34 @@ view.mc = {
   /**
    * Generate multiple choice exercises.
    *
-   * @param hitList list of hits that could be turned into exercises,
-   * unwanted instance must be removed in advance
+   * @param {Array} hitList list of hits that could be turned into exercises
    */
   handler: function(hitList) {
     console.log("handler(hitList)");
 
-    const fixedOrPercentageValue = view.fixedOrPercentage;
-    const fixedNumberOfExercises = view.fixedNumberOfExercises;
-    const percentageOfExercises = view.percentageOfExercises;
-    const choiceModeValue = view.choiceMode;
-    const firstOffset = view.firstOffset;
-    const intervalSize = view.intervalSize;
+    const numExercises = view.activityHelper.calculateNumberOfExercises(hitList);
 
-    // calculate the number of hits to turn into exercises
-    let numExercises = 0;
-    if (fixedOrPercentageValue == 0) {
-      numExercises = fixedNumberOfExercises;
-    }
-    else if (fixedOrPercentageValue == 1) {
-      numExercises = percentageOfExercises * hitList.length;
-    }
-    else {
-      view.lib.prefError();
-    }
+    const exercises = view.activityHelper.chooseWhichExercises(hitList);
 
-    // choose which hits to turn into exercises
-    let i = 0;
-    let inc = 1;
-    if (choiceModeValue == 0) {
-      view.lib.shuffleList(hitList);
-    }
-    else if (choiceModeValue == 1) {
-      i = firstOffset;
-    }
-    else if (choiceModeValue == 2) {
-      inc = intervalSize;
-    }
-    else {
-      view.lib.prefError();
-    }
+    view.mc.createExercises(numExercises, exercises, hitList);
 
-    // generate the exercises
-    for (; numExercises > 0 && i < hitList.length; i += inc) {
+    const $Body = $("body");
+
+    $Body.on("change", "select.viewinput", view.activityHelper.inputHandler);
+    $Body.on("click", "viewhint", view.activityHelper.hintHandler);
+  },
+
+  /**
+   * Create exercises for the activity.
+   *
+   * @param {number} numExercises the number of exercises
+   * @param {object} exercises first offset and interval size values
+   * @param {Array} hitList list of hits that could be turned into exercises
+   */
+  createExercises: function(numExercises, exercises, hitList) {
+    let i = exercises.firstOffset;
+
+    for (; numExercises > 0 && i < hitList.length; i += exercises.intervalSize) {
       const $hit = hitList[i];
       const hitText = $hit.text().trim();
 
@@ -79,40 +53,15 @@ view.mc = {
       const capType = view.lib.detectCapitalization(hitText);
 
       const options = view.mc.getOptions($hit, capType);
-      
+
       const answer = view.activityHelper.getCorrectAnswer($hit);
 
+      view.mc.createSelectBox(options, hitText, answer, $hit);
 
-      // create select box
-      const $input = $("<select>");
-      $input.addClass("viewinput");
-      let $option = $("<option>");
-      $option.html(" ");
-      $input.append($option);
-      for (let j = 0; j < options.length; j++) {
-        $option = $("<option>");
-        $option.text(options[j]);
-        $input.append($option);
-      }
-
-      $input.data("view-original-text", hitText);
-      $input.data("view-answer", answer);
-
-      $hit.empty();
-      $hit.append($input);
-
-      // create hint ? button
-      const $hint = $("<viewhint>");
-      $hint.text("?");
-      $hit.append($hint);
+      view.activityHelper.createHint($hit);
 
       numExercises--;
     }
-
-    const $Body = $("body");
-
-    $Body.on("change", "select.viewinput", view.activityHelper.inputHandler);
-    $Body.on("click", "viewhint", view.activityHelper.hintHandler);
   },
 
   /**
@@ -151,5 +100,32 @@ view.mc = {
     options.push(view.lib.matchCapitalization($hit.data("correctform"), capType));
     view.lib.shuffleList(options);
     return options;
+  },
+
+  /**
+   * Create the select box with distractors as options.
+   *
+   * @param {Array} options the selection options
+   * @param {string} hitText the original text of the enhancement tag
+   * @param {string} answer the correct answer
+   * @param {object} $hit the enhancement tag the select box is designed for
+   */
+  createSelectBox: function(options, hitText, answer, $hit) {
+    const $SelectBox = $("<select>");
+    $SelectBox.addClass("viewinput");
+    let $option = $("<option>");
+    $option.html(" ");
+    $SelectBox.append($option);
+    for (let j = 0; j < options.length; j++) {
+      $option = $("<option>");
+      $option.text(options[j]);
+      $SelectBox.append($option);
+    }
+
+    $SelectBox.data("view-original-text", hitText);
+    $SelectBox.data("view-answer", answer);
+
+    $hit.empty();
+    $hit.append($SelectBox);
   }
 };

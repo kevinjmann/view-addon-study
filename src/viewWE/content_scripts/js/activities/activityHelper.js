@@ -1,5 +1,89 @@
 view.activityHelper = {
   /**
+   * Create a hit list from all enhancements.
+   */
+  createHitList: function() {
+    const $Hits = $("viewenhancement[data-type='hit']");
+
+    const hitList = [];
+
+    $Hits.each(function() {
+      const $Hit = $(this);
+      $Hit.data("view-original-text", $Hit.text().trim());
+
+      hitList.push($Hit);
+    });
+
+    return hitList;
+  },
+
+  /**
+   * Calculate the number of hits to turn into exercises
+   *
+   * @param {Array} hitList list of hits that could be turned into exercises
+   * @returns {number} the number of exercises
+   */
+  calculateNumberOfExercises: function(hitList) {
+    if (view.fixedOrPercentage === "0") {
+      return view.fixedNumberOfExercises;
+    }
+    else {
+      return view.percentageOfExercises / 100 * hitList.length;
+    }
+  },
+
+  /**
+   * Choose which hits to turn into exercises.
+   *
+   * @param {Array} hitList list of hits that could be turned into exercises
+   * @returns {object} first offset and interval size values
+   */
+  chooseWhichExercises: function(hitList) {
+    const choiceModeValue = view.choiceMode;
+
+    const exercises = {};
+
+    // defaults
+    exercises.firstOffset = 0;
+    exercises.intervalSize = 1;
+
+    if (choiceModeValue === "0") {
+      view.lib.shuffleList(hitList);
+    }
+    else if (choiceModeValue === "1") {
+      exercises.firstOffset = view.firstOffset;
+    }
+    else {
+      exercises.intervalSize = view.intervalSize;
+    }
+
+    return exercises;
+  },
+
+  /**
+   * Get the correct answer for the mc and cloze activities.
+   */
+  getCorrectAnswer: function($hit) {
+    if (view.language === "ru") {
+      return $hit.data("correctform");
+    }
+    else {
+      return $hit.text().trim();
+    }
+  },
+
+  /**
+   * Create the hint visible as "?".
+   *
+   * @param {object} $hit the enhancement tag the select box is designed for
+   */
+  createHint: function($hit) {
+    const $hint = $("<viewhint>");
+    $hint.text("?");
+    $hit.append($hint);
+  },
+
+  /**
    * Deals with the input in the mc and cloze activities.
    */
   inputHandler: function() {
@@ -34,16 +118,16 @@ view.activityHelper = {
    * Process the correct input.
    *
    * @param {object} $Element the element the input came from
-   * @param {string} clozeStyleType either "Correct" or "Provided"
+   * @param {string} inputStyleType either "Correct" or "Provided"
    */
-  processCorrect: function($Element, clozeStyleType) {
+  processCorrect: function($Element, inputStyleType) {
     const $Enhancement = $Element.parent();
     const inputId = $(".viewinput").index($Element);
 
     // return the clue tag color to what it was originally
     $("#" + $Element.data("clueid")).css("color", "inherit");
 
-    $Enhancement.addClass("clozeStyle" + clozeStyleType);
+    $Enhancement.addClass("inputStyle" + inputStyleType);
     $Enhancement.html($Element.data("view-answer"));
 
     view.activityHelper.jumpTo(inputId);
@@ -59,13 +143,13 @@ view.activityHelper = {
     $("#" + $Element.data("clueid")).css("color", "red");
 
     // turns all options, the topmost element after selection included, as red
-    $Element.addClass("clozeStyleIncorrect");
+    $Element.addClass("inputStyleIncorrect");
     // remove assigned classes to all options from previous selections
     $Element.find("option").removeAttr("class");
     // turn the selected option red
-    $Element.find("option:selected").addClass("clozeStyleIncorrect");
+    $Element.find("option:selected").addClass("inputStyleIncorrect");
     // turn the not selected options black
-    $Element.find("option:not(:selected)").addClass("clozeStyleNeutral");
+    $Element.find("option:not(:selected)").addClass("inputStyleNeutral");
   },
 
   /**
@@ -119,18 +203,6 @@ view.activityHelper = {
     $Element.focus();
 
     $Window.scrollTop($Element.offset().top - ($Window.height() / 2));
-  },
-
-  /**
-   * Get the correct answer for the mc and cloze activities.
-   */
-  getCorrectAnswer: function($hit) {
-    if (view.language === "ru") {
-      return $hit.data("correctform");
-    }
-    else {
-      return $hit.text().trim();
-    }
   },
 
   /**
