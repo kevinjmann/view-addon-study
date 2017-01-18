@@ -31,7 +31,7 @@ view.collector = {
     elementData["countsascorrect"] = usedHint || countsAsCorrect;
     interactionData["element"] = JSON.stringify(elementData);
 
-    view.activityHelper.requestToSendInteractionData(interactionData);
+    view.collector.requestToSendInteractionData(interactionData);
   },
 
   /**
