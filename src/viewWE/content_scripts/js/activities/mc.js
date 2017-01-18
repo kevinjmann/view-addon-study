@@ -52,9 +52,9 @@ view.mc = {
 
       const capType = view.lib.detectCapitalization(hitText);
 
-      const options = view.mc.getOptions($hit, capType);
-
       const answer = view.activityHelper.getCorrectAnswer($hit);
+
+      const options = view.mc.getOptions($hit, answer, capType);
 
       view.mc.createSelectBox(options, hitText, answer, $hit);
 
@@ -66,39 +66,44 @@ view.mc = {
 
   /**
    * Gets the options provided by the server in the distractors attribute.
+   *
+   * @param {object} $hit the enhancement tag the select box is designed for
+   * @param {string} answer the correct answer
+   * @param {number} capType the capitalization type
+   * @returns {Array} the options
    */
-  getOptions: function($hit, capType) {
+  getOptions: function($hit, answer, capType) {
+    if (view.language === "ru") {
+      const distractors = $hit.data("distractors").split(" ");
+
+      return view.mc.fillOptions(distractors, answer, capType);
+    }
+    else {
+      const distractors = $hit.data("data-distractors");
+
+      return view.mc.fillOptions(distractors, answer, capType);
+    }
+  },
+
+  /**
+   * Add the distractor forms to the options.
+   * @param {Array} distractors the distractor forms
+   * @param {string} answer the correct answer
+   * @param {number} capType the capitalization type
+   */
+  fillOptions: function(distractors, answer, capType) {
     const options = [];
     let j = 0;
 
-    if (view.language === "ru") {
-      // Get the list of distractors for the given hit
-      const distractors = $hit.data("distractors").split(" ");
-
-      // Add the distractor forms to the options list:
-      while (j < distractors.length && options.length < 4) {
-        // The forms that are homonymous to the correct form are excluded from the list of options:
-        if (distractors[j].toLowerCase() != $hit.data("correctform").toLowerCase() && distractors[j] != "") {
-          options.push(view.lib.matchCapitalization(distractors[j], capType));
-        }
-        j++;
+    while (j < distractors.length && options.length < 4) {
+      if (distractors[j].toLowerCase() != answer.toLowerCase() && distractors[j] != "") {
+        options.push(view.lib.matchCapitalization(distractors[j], capType));
       }
+      j++;
     }
-    else {
-      // Get the list of distractors for the given hit
-      const distractors = $hit.data("data-distractors");
-
-      // Add the distractor forms to the options list:
-      while (j < distractors.length && options.length < 4) {
-        if (distractors[j].toLowerCase() != $hit.text().toLowerCase() && distractors[j] != "") {
-          options.push(view.lib.matchCapitalization(distractors[j], capType));
-        }
-        j++;
-      }
-    }
-
-    options.push(view.lib.matchCapitalization($hit.data("correctform"), capType));
+    options.push(view.lib.matchCapitalization(answer, capType));
     view.lib.shuffleList(options);
+
     return options;
   },
 

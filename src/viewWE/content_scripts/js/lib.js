@@ -66,13 +66,15 @@ view.lib = {
    * 2 = first letter capitalized
    */
   detectCapitalization: function(word) {
-    type = 0;
     if (word == word.toUpperCase()) {
-      type = 1;
-    } else if (word == word.substr(0, 1).toUpperCase() + word.substr(1)) {
-      type = 2;
+      return 1;
     }
-    return type;
+    else if (word == word.substr(0, 1).toUpperCase() + word.substr(1)) {
+      return 2;
+    }
+    else{
+      return 0;
+    }
   },
 
   /*
