@@ -4,6 +4,7 @@ view.activityHelper = {
    */
   createHitList: function() {
     const $Hits = $("viewenhancement[data-type='hit']");
+    const $Clues = $("viewenhancement[data-type='clue']");
 
     const hitList = [];
 
@@ -12,6 +13,11 @@ view.activityHelper = {
       $Hit.data("view-original-text", $Hit.text().trim());
 
       hitList.push($Hit);
+    });
+
+    $Clues.each(function() {
+      const $Clue = $(this);
+      $Clue.data("view-original-text", $Clue.text().trim());
     });
 
     return hitList;
