@@ -20,9 +20,9 @@ view.mc = {
 
     const numExercises = view.activityHelper.calculateNumberOfExercises(hitList);
 
-    const exercises = view.activityHelper.chooseWhichExercises(hitList);
+    const exerciseOptions = view.activityHelper.chooseWhichExercises(hitList);
 
-    view.mc.createExercises(numExercises, exercises, hitList);
+    view.mc.createExercises(numExercises, exerciseOptions, hitList);
 
     const $Body = $("body");
 
@@ -34,13 +34,13 @@ view.mc = {
    * Create exercises for the activity.
    *
    * @param {number} numExercises the number of exercises
-   * @param {object} exercises first offset and interval size values
+   * @param {object} exerciseOptions first offset and interval size values
    * @param {Array} hitList list of hits that could be turned into exercises
    */
-  createExercises: function(numExercises, exercises, hitList) {
-    let i = exercises.firstOffset;
+  createExercises: function(numExercises, exerciseOptions, hitList) {
+    let i = exerciseOptions.firstOffset;
 
-    for (; numExercises > 0 && i < hitList.length; i += exercises.intervalSize) {
+    for (; numExercises > 0 && i < hitList.length; i += exerciseOptions.intervalSize) {
       const $hit = hitList[i];
       const hitText = $hit.text().trim();
 
@@ -96,7 +96,7 @@ view.mc = {
     let j = 0;
 
     while (j < distractors.length && options.length < 4) {
-      if (distractors[j].toLowerCase() != answer.toLowerCase() && distractors[j] != "") {
+      if (distractors[j].toLowerCase() != answer.toLowerCase()) {
         options.push(view.lib.matchCapitalization(distractors[j], capType));
       }
       j++;

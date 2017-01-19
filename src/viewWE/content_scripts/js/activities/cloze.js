@@ -19,9 +19,9 @@ view.cloze = {
 
     const numExercises = view.activityHelper.calculateNumberOfExercises(hitList);
 
-    const exercises = view.activityHelper.chooseWhichExercises(hitList);
+    const exerciseOptions = view.activityHelper.chooseWhichExercises(hitList);
 
-    view.cloze.createExercises(numExercises, exercises, hitList);
+    view.cloze.createExercises(numExercises, exerciseOptions, hitList);
 
     const $Body = $("body");
 
@@ -33,13 +33,13 @@ view.cloze = {
    * Create exercises for the activity.
    *
    * @param {number} numExercises the number of exercises
-   * @param {object} exercises first offset and interval size values
+   * @param {object} exerciseOptions first offset and interval size values
    * @param {Array} hitList list of hits that could be turned into exercises
    */
-  createExercises: function(numExercises, exercises, hitList) {
-    let i = exercises.firstOffset;
+  createExercises: function(numExercises, exerciseOptions, hitList) {
+    let i = exerciseOptions.firstOffset;
 
-    for (; numExercises > 0 && i < hitList.length; i += exercises.intervalSize) {
+    for (; numExercises > 0 && i < hitList.length; i += exerciseOptions.intervalSize) {
       const $hit = hitList[i];
 
       const answer = view.activityHelper.getCorrectAnswer($hit);
