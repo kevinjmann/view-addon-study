@@ -22,7 +22,7 @@ view.click = {
     let countsAsCorrect = false;
     const $Element = $(this);
 
-    if ($Element.is("[data-type='hit']")) {
+    if ($Element.is("[data-type!='miss']")) {
       countsAsCorrect = true;
       $Element.addClass("clickStyleCorrect");
     } else {
