@@ -329,7 +329,7 @@ const toolbar = {
    */
   setSelectionsAndPrepareToEnhance: function() {
     const language = toolbar.$cache.get(toolbar.selectorStart + "language-menu").val();
-    const topic = toolbar.$cache.get(".selected-toolbar-topic-menu").val();
+    const topic = $(".selected-toolbar-topic-menu").val();
     const activity = toolbar.$cache.get(toolbar.selectorStart + "activity-menu").val();
     const unselected = "unselected";
 
