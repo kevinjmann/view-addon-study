@@ -42,7 +42,9 @@ view.cloze = {
     for (; numExercises > 0 && i < hitList.length; i += exerciseOptions.intervalSize) {
       const $hit = hitList[i];
 
-      const answer = view.activityHelper.getCorrectAnswer($hit);
+      const capType = view.lib.detectCapitalization($hit.text().trim());
+
+      const answer = view.activityHelper.getCorrectAnswer($hit, capType);
 
       view.cloze.createInputBox(answer, $hit);
 

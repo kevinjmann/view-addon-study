@@ -68,10 +68,13 @@ view.activityHelper = {
 
   /**
    * Get the correct answer for the mc and cloze activities.
+   *
+   * @param {object} $hit the enhancement tag the select box is designed for
+   * @param {number} capType the capitalization type
    */
-  getCorrectAnswer: function($hit) {
+  getCorrectAnswer: function($hit, capType) {
     if (view.language === "ru") {
-      return $hit.data("correctform");
+      return view.lib.matchCapitalization($hit.data("correctform"), capType);
     }
     else {
       return $hit.text().trim();
