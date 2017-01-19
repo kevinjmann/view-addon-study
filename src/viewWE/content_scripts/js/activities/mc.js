@@ -52,7 +52,7 @@ view.mc = {
 
       const capType = view.lib.detectCapitalization(hitText);
 
-      const answer = view.activityHelper.getCorrectAnswer($hit);
+      const answer = view.activityHelper.getCorrectAnswer($hit, capType);
 
       const options = view.mc.getOptions($hit, answer, capType);
 
