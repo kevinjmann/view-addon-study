@@ -93,7 +93,7 @@ view.activityHelper = {
     const input = $Element.val();
 
     // if the answer is correct, turn into text, else color text within input
-    if ($Element.val().toLowerCase() === $Element.data("view-answer").toLowerCase()) {
+    if (input.toLowerCase() === $Element.data("view-answer").toLowerCase()) {
       countsAsCorrect = true;
       view.activityHelper.processCorrect($Element, "Correct");
     }
@@ -125,7 +125,7 @@ view.activityHelper = {
     const inputId = $(".viewinput").index($Element);
 
     // return the clue tag color to what it was originally
-    $("#" + $Element.data("clueid")).css("color", "inherit");
+    $("[data-id='" + $Enhancement.data("clueid") + "']").css("color", "inherit");
 
     $Enhancement.addClass("inputStyle" + inputStyleType);
     $Enhancement.html($Element.data("view-answer"));
@@ -140,7 +140,7 @@ view.activityHelper = {
    */
   processIncorrect: function($Element) {
     // give the clue tag a color if the student guessed wrong
-    $("#" + $Element.data("clueid")).css("color", "red");
+    $("[data-id='" + $Element.parent().data("clueid") + "']").css("color", "red");
 
     // turns all options, the topmost element after selection included, as red
     $Element.addClass("inputStyleIncorrect");
