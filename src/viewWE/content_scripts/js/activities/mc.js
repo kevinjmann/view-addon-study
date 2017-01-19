@@ -74,7 +74,7 @@ view.mc = {
    */
   getOptions: function($hit, answer, capType) {
     if (view.language === "ru") {
-      const distractors = $hit.data("distractors").split(" ");
+      const distractors = $hit.data("distractors").split(";");
 
       return view.mc.fillOptions(distractors, answer, capType);
     }
