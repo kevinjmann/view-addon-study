@@ -76,8 +76,6 @@ describe("toolbar.js", function() {
       // the expectations below don't need to be tested in other tests again
       // the selectors below can be freely used in the tests without problems
 
-      console.log($("body"));
-
       expect($("#wertiview-VIEW-menu-btn")).to.exist;
 
       expect($(toolbar.selectorStart + "enabled")).to.exist;
