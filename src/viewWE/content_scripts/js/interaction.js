@@ -266,7 +266,7 @@ view.interaction = {
         view.notification.add("VIEW Colorize Activity Ready");
         break;
       case "click":
-        $("body").on("click", "a", view.lib.clickDisableLink);
+        view.lib.disableAnchors();
 
         view.click.run();
 
@@ -274,16 +274,14 @@ view.interaction = {
 
         break;
       case "mc":
-        // no link disabling because the drop-down boxes are prevented
-        // from showing up with links because they act strange in links
+        view.lib.disableAnchors();
 
         view.mc.run();
 
         view.notification.add("VIEW Multiple Choice Activity Ready");
         break;
       case "cloze":
-        // remove click from all links that contain input boxes
-        $("body").on("click", "a", view.lib.clozeDisableLink);
+        view.lib.disableAnchors();
 
         view.cloze.run();
 
@@ -376,8 +374,7 @@ view.interaction = {
       $(this).replaceWith($(this).data("view-original-text"));
     });
 
-    $("body").off("click", "a", view.lib.clickDisableLink);
-    $("body").off("click keydown", "a", view.lib.clozeDisableLink);
+    view.lib.enableAnchors();
 
     chrome.runtime.sendMessage({
       msg: "hide element",
