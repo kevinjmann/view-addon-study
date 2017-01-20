@@ -114,6 +114,20 @@ module.exports = function(grunt) {
           "../viewWE/content_scripts/js/activities/color.js": ["coverage"],
           "**/ru-nouns-color.html": ["html2js"]
         }
+      },
+      activityClick: {
+        files: {
+          src: [
+            "../viewWE/content_scripts/js/selector-cache.js",
+            "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/activities/click.js",
+            "test/unit/content_scripts/activities/click.test.js"
+          ]
+        },
+        preprocessors: {
+          "../viewWE/content_scripts/js/activities/click.js": ["coverage"],
+          "**/ru-nouns-click.html": ["html2js"]
+        }
       }
     }
   });
