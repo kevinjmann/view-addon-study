@@ -131,6 +131,23 @@ module.exports = function(grunt) {
           "../viewWE/content_scripts/js/activities/click.js": ["coverage"],
           "**/ru-nouns-click.html": ["html2js"]
         }
+      },
+      activityMc: {
+        files: {
+          src: [
+            "../viewWE/content_scripts/js/selector-cache.js",
+            "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/lib.js",
+            "../viewWE/content_scripts/js/activities/collector.js",
+            "../viewWE/content_scripts/js/activities/activityHelper.js",
+            "../viewWE/content_scripts/js/activities/mc.js",
+            "test/unit/content_scripts/activities/mc.test.js"
+          ]
+        },
+        preprocessors: {
+          "../viewWE/content_scripts/js/activities/mc.js": ["coverage"],
+          "**/ru-nouns-mc-and-cloze.html": ["html2js"]
+        }
       }
     }
   });
