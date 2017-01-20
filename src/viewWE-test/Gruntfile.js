@@ -100,6 +100,18 @@ module.exports = function(grunt) {
           "../viewWE/content_scripts/js/view-menu.js": ["coverage"],
           "**/view-menu.html": ["html2js"]
         }
+      },
+      activityColor: {
+        files: {
+          src: [
+            "../viewWE/content_scripts/js/activities/color.js",
+            "test/unit/content_scripts/activities/color.test.js"
+          ]
+        },
+        preprocessors: {
+          "../viewWE/content_scripts/js/activities/color.js": ["coverage"],
+          "**/ru-nouns-color.html": ["html2js"]
+        }
       }
     }
   });
