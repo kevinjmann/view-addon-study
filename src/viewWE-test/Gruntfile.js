@@ -120,6 +120,9 @@ module.exports = function(grunt) {
           src: [
             "../viewWE/content_scripts/js/selector-cache.js",
             "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/lib.js",
+            "../viewWE/content_scripts/js/activities/collector.js",
+            "../viewWE/content_scripts/js/activities/activityHelper.js",
             "../viewWE/content_scripts/js/activities/click.js",
             "test/unit/content_scripts/activities/click.test.js"
           ]

@@ -3,8 +3,6 @@ view.click = {
    * Run the click activity.
    */
   run: function() {
-    console.log("click()");
-
     $("viewenhancement").each(function() {
       const $Enhancement = $(this);
       $Enhancement.data("view-original-text", $Enhancement.text().trim());
