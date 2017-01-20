@@ -119,9 +119,9 @@ view.interaction = {
       case "Preps":
         topicName = "pos";
         break;
-      case "RusNounSingular":
-      case "RusNounPlural":
-        topicName = "rusnouns";
+      case "nouns-singular":
+      case "nouns-plural":
+        topicName = "nouns";
         break;
       case "RusAdjectiveFeminine":
       case "RusAdjectiveMasculine":

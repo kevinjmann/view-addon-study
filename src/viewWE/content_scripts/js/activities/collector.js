@@ -24,7 +24,8 @@ view.collector = {
     elementData["userinput"] = input;
 
     if (!isClick) {
-      elementData["correctanswer"] = view.activityHelper.getCorrectAnswer($Enhancement);
+      const capType = view.lib.detectCapitalization($Enhancement.text().trim());
+      elementData["correctanswer"] = view.activityHelper.getCorrectAnswer($Enhancement, capType);
       elementData["usedhint"] = usedHint;
     }
 

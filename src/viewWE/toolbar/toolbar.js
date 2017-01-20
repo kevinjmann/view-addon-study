@@ -233,10 +233,6 @@ const toolbar = {
 
     activitySelectors[unselected].prop("disabled", false).prop("selected", true).show();
 
-    if(topic.startsWith("Rus")){
-      topic = topic.substr(3).toLowerCase();
-    }
-
     if (
       language == unselected ||
       topic.startsWith(unselected) ||

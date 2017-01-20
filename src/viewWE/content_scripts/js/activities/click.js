@@ -9,7 +9,7 @@ view.click = {
       const $Enhancement = $(this);
       $Enhancement.data("view-original-text", $Enhancement.text().trim());
 
-      $Enhancement.addClass("clickStylePointer");
+      $Enhancement.addClass("click-style-pointer");
     });
 
     $("body").on("click", "viewenhancement", view.click.handler);
@@ -24,12 +24,12 @@ view.click = {
 
     if ($Element.is("[data-type!='miss']")) {
       countsAsCorrect = true;
-      $Element.addClass("clickStyleCorrect");
+      $Element.addClass("click-style-correct");
     } else {
-      $Element.addClass("clickStyleIncorrect");
+      $Element.addClass("click-style-incorrect");
     }
 
-    $Element.removeClass("clickStylePointer");
+    $Element.removeClass("click-style-pointer");
 
     if (view.userid) {
       view.collector.collectAndSendData(

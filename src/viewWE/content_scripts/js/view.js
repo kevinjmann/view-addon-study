@@ -27,7 +27,7 @@ const view = {
   activity: "unselected",
 
   // the topic name which is used to call the topic modules
-  // e.g. topic = "RusNouns", topic name = "rusnouns"
+  // e.g. topic = "articles", topic name = "pos"
   topicName: "unselected",
 
   /**
