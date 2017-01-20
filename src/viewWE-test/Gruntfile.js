@@ -104,6 +104,8 @@ module.exports = function(grunt) {
       activityColor: {
         files: {
           src: [
+            "../viewWE/content_scripts/js/selector-cache.js",
+            "../viewWE/content_scripts/js/view.js",
             "../viewWE/content_scripts/js/activities/color.js",
             "test/unit/content_scripts/activities/color.test.js"
           ]

@@ -258,8 +258,6 @@ view.interaction = {
   runActivity: function() {
     console.log("runActivity()");
 
-    var topic = view.topicName;
-
     switch (view.activity) {
       case "color":
 
