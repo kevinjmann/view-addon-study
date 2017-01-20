@@ -9,7 +9,7 @@ view.color = {
       const $Enhancement = $(this);
       $Enhancement.data("view-original-text", $Enhancement.text().trim());
 
-      $Enhancement.addClass("colorizeStyle" + topicCSS);
+      $Enhancement.addClass("colorize-style-" + topicCSS);
     });
   }
 };

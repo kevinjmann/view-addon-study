@@ -69,7 +69,7 @@ view.cloze = {
     $input.attr("type", "text");
     // average of 10 px per letter (can fit 10 x "м" with a width of 110)
     $input.css("width", (answer.length * 10) + "px");
-    $input.addClass("clozeStyleInput");
+    $input.addClass("cloze-style-input");
     $input.addClass("viewinput");
     $input.data("view-answer", answer);
 
@@ -83,7 +83,7 @@ view.cloze = {
    */
   addBaseform: function($hit) {
     const $baseform = $("<viewbaseform>");
-    $baseform.addClass("clozeStyleBaseform");
+    $baseform.addClass("cloze-style-baseform");
     const lemmaform = $hit.data("lemma");
     if (lemmaform) {
       $baseform.text(" (" + lemmaform + ")");

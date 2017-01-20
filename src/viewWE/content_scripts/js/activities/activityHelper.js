@@ -88,6 +88,7 @@ view.activityHelper = {
    */
   createHint: function($hit) {
     const $hint = $("<viewhint>");
+    $hint.addClass("view-style-hint");
     $hint.text("?");
     $hit.append($hint);
   },
@@ -104,7 +105,7 @@ view.activityHelper = {
     // if the answer is correct, turn into text, else color text within input
     if (input.toLowerCase() === $Element.data("view-answer").toLowerCase()) {
       countsAsCorrect = true;
-      view.activityHelper.processCorrect($Element, "Correct");
+      view.activityHelper.processCorrect($Element, "correct");
     }
     else {
       view.activityHelper.processIncorrect($Element);
@@ -127,7 +128,7 @@ view.activityHelper = {
    * Process the correct input.
    *
    * @param {object} $Element the element the input came from
-   * @param {string} inputStyleType either "Correct" or "Provided"
+   * @param {string} inputStyleType either "correct" or "provided"
    */
   processCorrect: function($Element, inputStyleType) {
     const $Enhancement = $Element.parent();
@@ -136,7 +137,7 @@ view.activityHelper = {
     // return the clue tag color to what it was originally
     $("[data-id='" + $Enhancement.data("clueid") + "']").css("color", "inherit");
 
-    $Enhancement.addClass("inputStyle" + inputStyleType);
+    $Enhancement.addClass("input-style-" + inputStyleType);
     $Enhancement.html($Element.data("view-answer"));
 
     view.activityHelper.jumpTo(inputId);
@@ -152,13 +153,13 @@ view.activityHelper = {
     $("[data-id='" + $Element.parent().data("clueid") + "']").css("color", "red");
 
     // turns all options, the topmost element after selection included, as red
-    $Element.addClass("inputStyleIncorrect");
+    $Element.addClass("input-style-incorrect");
     // remove assigned classes to all options from previous selections
     $Element.find("option").removeAttr("class");
     // turn the selected option red
-    $Element.find("option:selected").addClass("inputStyleIncorrect");
+    $Element.find("option:selected").addClass("input-style-incorrect");
     // turn the not selected options black
-    $Element.find("option:not(:selected)").addClass("inputStyleNeutral");
+    $Element.find("option:not(:selected)").addClass("input-style-neutral");
   },
 
   /**
@@ -168,7 +169,7 @@ view.activityHelper = {
     const $Element = $(this).prev();
     const $Enhancement = $Element.parent();
 
-    view.activityHelper.processCorrect($Element, "Provided");
+    view.activityHelper.processCorrect($Element, "provided");
 
     if (view.userid) {
       view.collector.collectAndSendData(

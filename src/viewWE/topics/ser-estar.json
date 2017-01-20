@@ -16,13 +16,13 @@
       "mc": {
         "description": {
           "title": "Multiple Choice",
-          "text": "Choose the form of <b><i>ser</i></b> or <b><i>estar</i></b> from the drop-down list and VIEW will show you whether you guessed <font color='green'><b>right</b></font> or <font color='red'><b>wrong</b></font>. You can get help by clicking on <span class='clozeStyleHint'>?</span>."
+          "text": "Choose the form of <b><i>ser</i></b> or <b><i>estar</i></b> from the drop-down list and VIEW will show you whether you guessed <font color='green'><b>right</b></font> or <font color='red'><b>wrong</b></font>. You can get help by clicking on <span class='view-style-hint'>?</span>."
         }
       },
       "cloze": {
         "description": {
           "title": "Fill in the blanks",
-          "text": "Fill in the blanks with the <font color='green'><b>correctly</b></font> conjugated form of <b><i>ser</i></b> or <b><i>estar</i></b>.  If you guessed <font color='red'><b>wrong</b></font> or you find it too difficult you can get help by clicking on <span class='clozeStyleHint'>?</span>."
+          "text": "Fill in the blanks with the <font color='green'><b>correctly</b></font> conjugated form of <b><i>ser</i></b> or <b><i>estar</i></b>.  If you guessed <font color='red'><b>wrong</b></font> or you find it too difficult you can get help by clicking on <span class='view-style-hint'>?</span>."
         }
       }
     }

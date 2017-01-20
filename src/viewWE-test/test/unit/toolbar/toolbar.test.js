@@ -98,7 +98,7 @@ describe("toolbar.js", function() {
 
       expect($(toolbar.selectorStart + "topic-menu-ru")).to.exist;
       expect($(toolbar.selectorStart + "topic-unselected-ru").val()).to.equal("unselected-ru");
-      expect($(toolbar.selectorStart + "topic-RusNouns").val()).to.equal("RusNouns");
+      expect($(toolbar.selectorStart + "topic-nouns").val()).to.equal("nouns");
 
       expect($(toolbar.selectorStart + "activity-menu")).to.exist;
       expect($(toolbar.selectorStart + "activity-unselected").val()).to.equal("unselected");

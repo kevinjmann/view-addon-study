@@ -46,51 +46,45 @@
     cursor: pointer;
 }
 
-/* general */
-span.wertiviewtoken {
-    float: none;
-    margin: 0;
-}
-
-.clickStyleCorrect {
+.click-style-correct {
     color: green;
     font-weight: bold;
     cursor: text;
 }
 
-.clickStyleIncorrect {
+.click-style-incorrect {
     color: red;
     font-weight: bold;
     cursor: text;
 }
 
-.clickStylePointer {
+.click-style-pointer {
     cursor: pointer;
 }
 
-.clozeStyleInput {
+.cloze-style-input {
     width: 50px;
     font-size: 15px;
     border: 1px solid grey;
     font-weight: bold;
 }
 
-.clozeStyleInputAdjust {
+.cloze-style-input-adjust {
     width: 70px;
     font-size: 15px;
     font-weight: bold;
 }
 
-.clozeStyleInputUnknown {
+.cloze-style-input-unknown {
     border: 1px solid gray;
     color: black;
 }
 
-.clozeStyleInputIncorrect {
+.cloze-style-input-incorrect {
     color: red;
 }
 
-viewhint {
+.view-style-hint {
     margin-left: 2px;
     margin-right: 2px;
     vertical-align: middle;
@@ -99,298 +93,298 @@ viewhint {
     color: grey;
 }
 
-.inputStyleProvided {
+.input-style-provided {
     color: black;
     cursor: text;
     font-weight: bold;
 }
 
-.inputStyleCorrect {
+.input-style-correct {
     color: green;
     cursor: text;
     font-weight: bold;
 }
 
-.inputStyleIncorrect {
+.input-style-incorrect {
     color: red;
 }
 
-.inputStyleNeutral {
+.input-style-neutral {
     color: black;
 }
 
 /* gerunds */
-.colorizeStyleGER {
+.colorize-style-GER {
     color: #FF8200;
     font-weight: bold;
 }
 
-.colorizeStyleINF {
+.colorize-style-INF {
     color: #9331C4;
     font-weight: bold;
 }
 
-.colorizeStyleINFSPLIT {
+.colorize-style-INFSPLIT {
     color: black;
     font-weight: bold;
 }
 
-.colorizeStyleCLU {
+.colorize-style-CLU {
     color: #2756E3;
     font-weight: bold;
 }
 
-.clozeStyleBaseform {
+.cloze-style-baseform {
     font-style: italic;
 }
 
 /* Used for the topic Russian Participles */
-.clozeStyleRephrase {
+.cloze-style-rephrase {
     font-style: italic;
 }
 
 /* nouncountability */
-.colorizeStyleCount {
+.colorize-style-count {
     color: #2756E3;
     font-weight: bold;
 }
 
-.colorizeStyleNoncount {
+.colorize-style-noncount {
     color: #FF8200;
     font-weight: bold;
 }
 
-.colorizeStyleBoth {
+.colorize-style-both {
     color: #9331C4;
     font-weight: bold;
 }
 
-.mcStyleHighlight {
+.mc-style-Hhighlight {
     font-weight: bold;
 }
 
-.mcStyleAnswer {
+.mc-style-answer {
     font-weight: normal;
     font-style: italic;
 }
 
 /* passives */
-.colorizeStylePassives {
+.colorize-style-passives {
     color: #FF8200;
     font-weight: bold;
 }
 
-.clozeStylePassiveConversion {
+.cloze-style-passive-conversion {
     font-style: italic;
 }
 
 /* konjunktiv */
-.colorizeStyleKonjunktivMain {
+.colorize-style-konjunktivMain {
     color: #9331C4;
     font-weight: bold;
 }
 
-.colorizeStyleKonjunktivHaben {
+.colorize-style-konjunktivHaben {
     color: #9331C4;
     font-weight: bold;
 }
 
-.colorizeStyleKonjunktivWuerden {
+.colorize-style-konjunktivWuerden {
     color: #2756E3;
     font-weight: bold;
 }
 
 /* phrasal verbs */
-.colorizeStyleVerb {
+.colorize-style-verb {
     color: #FF8200;
     font-weight: bold;
 }
 
-.colorizeStyleParticle {
+.colorize-style-particle {
     color: #2756E3;
     font-weight: bold;
 }
 
 /* pos */
-.colorizeStylearticles {
+.colorize-style-articles {
     color: #ff8200;
     font-weight: bold;
 }
 
-.colorizeStyledeterminers {
+.colorize-style-determiners {
     color: #2222FF;
     font-weight: bold;
 }
 
-.colorizeStylePreps {
+.colorize-style-preps {
     color: #A020F0;
     font-weight: bold;
 }
 
 /* ser vs. estar */
-.colorizeStyleSer {
+.colorize-style-ser {
     color: #FF8200;
     font-weight: bold;
 }
 
-.colorizeStyleEstar {
+.colorize-style-estar {
     color: #2756E3;
     font-weight: bold;
 }
 
 /* whquestions */
-.colorizeStyleWHS {
+.colorize-style-WHS {
     color: #9331C4;
     font-weight: bold;
 }
 
-.colorizeStyleWH {
+.colorize-style-WH {
     color: #2756E3;
     font-weight: bold;
 }
 
-.colorizeStyleSUBJ {
+.colorize-style-SUBJ {
     color: #8B0000;
     font-weight: bold;
 }
 
-.colorizeStyleMVERB {
+.colorize-style-MVERB {
     color: #FF8200;
     font-weight: bold;
 }
 
-.colorizeStyleNFIN {
+.colorize-style-NFIN {
     color: #FF8200;
     font-weight: bold;
 }
 
-.colorizeStyleAUX {
+.colorize-style-AUX {
     color: #FF8200;
     font-weight: bold;
 }
 
-.clickStyleWHS {
+.click-style-WHS {
     border: 2px solid #1E90FF;
 }
 
-.clickStyleWH {
+.click-style-WH {
     border: 2px solid #0000FF;
 }
 
-.clickStyleSUBJ {
+.click-style-SUBJ {
     border: 2px solid #8B0000;
 }
 
-.clickStyleMVERB {
+.click-style-MVERB {
     border: 2px solid #FF4500;
 }
 
-.clickStyleNFIN {
+.click-style-NFIN {
     border: 2px solid #FF4500;
 }
 
-.clickStyleAUX {
+.click-style-AUX {
     border: 2px solid #FF4500;
 }
 
-.clozeStyleNode {
+.cloze-style-node {
     text-decoration: underline;
     padding: 4px;
     cursor: pointer;
 }
 
 /* Russian Nouns */
-.colorizeStyleRusNouns {
+.colorize-style-nouns {
     color: #FF8200;
     font-weight: bold;
 }
 
 /* Russian Singular Nouns */
-.colorizeStyleRusNounSingular {
+.colorize-style-nouns-singular {
     color: #FF8200;
     font-weight: bold;
 }
 
 /* Russian Plural Nouns */
-.colorizeStyleRusNounPlural {
+.colorize-style-nouns-plural {
     color: #FF8200;
     font-weight: bold;
 }
 
 /* Russian Participles */
-.colorizeStyleRusParticiples {
+.colorize-style-participles {
     color: #FF8200;
     font-weight: bold;
 }
 
 /* Russian Verbs perfective Aspect */
-.colorizeStyleRusVerbPerfectiveAspect {
+.colorize-style-verb-perfective-aspect {
     color: #FF8200;
     font-weight: bold;
 }
 
 /* Russian Verbs imperfective Aspect */
-.colorizeStyleRusVerbImperfectiveAspect {
+.colorize-style-verb-imperfective-aspect {
     color: #A020F0;
     font-weight: bold;
 }
 
 /* Russian Perfective Verbs */
-.colorizeStyleRusVerbPerfective {
+.colorize-style-verb-perfective {
     color: #FF8200;
     font-weight: bold;
 }
 
 /* Russian Imperfective Verbs */
-.colorizeStyleRusVerbImperfective {
+.colorize-style-verb-imperfective {
     color: #FF8200;
     font-weight: bold;
 }
 
 /* Russian Word Stress */
-.colorizeStyleRusWordStress {
+.colorize-style-word-stress {
     color: #FF8200;
     font-weight: bold;
 }
 
 /* Russian Past Tense Verbs */
-.colorizeStyleRusVerbPastTense {
+.colorize-style-verb-past-tense {
     color: #FF8200;
     font-weight: bold;
 }
 
 /* Russian Present Tense Verbs */
-.colorizeStyleRusVerbPresentTense {
+.colorize-style-verb-present-tense {
     color: #FF8200;
     font-weight: bold;
 }
 
 /* Russian Masculine Adjectives */
-.colorizeStyleRusAdjectiveMasculine {
+.colorize-style-adjective-masculine {
     color: #FF8200;
     font-weight: bold;
 }
 
 /* Russian Feminine Adjectives */
-.colorizeStyleRusAdjectiveFeminine {
+.colorize-style-adjective-feminine {
     color: #FF8200;
     font-weight: bold;
 }
 
 /* Russian Neutral Adjectives */
-.colorizeStyleRusAdjectiveNeutral {
+.colorize-style-adjective-neutral {
     color: #FF8200;
     font-weight: bold;
 }
 
 /* Russian Assistive Reading */
-.colorizeStyleRusAssistiveReading {
+.colorize-style-assistive-reading {
     color: #FF8200;
     font-weight: bold;
 }
 
 /* Conditionals (en) */
-.colorizeStyleConditionals {
+.colorize-style-conditionals {
     color: green;
     font-weight: bold;
 }
