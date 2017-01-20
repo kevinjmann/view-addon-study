@@ -35,12 +35,17 @@ describe("options.js", function() {
   describe("run", function() {
     it("should add the color class to all viewenhancement tags", function() {
       const topic = "nouns";
+      const colorizeStyleClass = "colorize-style-nouns";
+      const $Enhancement = $("viewenhancement");
 
-      expect($("viewenhancement").hasClass("colorize-style-nouns")).to.be.false;
+      expect($Enhancement.hasClass(colorizeStyleClass)).to.be.false;
 
       view.color.run(topic);
 
-      expect($("viewenhancement").hasClass("colorize-style-nouns")).to.be.true;
+      $Enhancement.each(function() {
+        expect($(this).data("view-original-text")).to.exist;
+        expect($(this).hasClass(colorizeStyleClass)).to.be.true;
+      });
     });
   });
 });
