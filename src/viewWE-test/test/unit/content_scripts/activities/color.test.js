@@ -28,7 +28,9 @@ describe("options.js", function() {
       // the expectations below don't need to be tested in other tests again
       // the selectors below can be freely used in the tests without problems
 
-      expect($("viewenhancement")).to.exist;
+      expect($("viewenhancement").length).to.be.above(0);
+      expect($("[data-type='hit']").length).to.be.above(0);
+      expect($("[data-type='ambiguity']").length).to.be.above(0);
     });
   });
 
