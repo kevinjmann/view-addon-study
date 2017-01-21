@@ -1,12 +1,12 @@
 /**
- * Tests for the options.js file of the VIEW add-on.
+ * Tests for the view-menu.js file of the VIEW add-on.
  *
- * Created by eduard on 06.01.17.
+ * Created by eduard on 14.01.17.
  */
 
 "use strict";
 
-describe("options.js", function() {
+describe("view-menu.js", function() {
   let sandbox;
 
   beforeEach(function() {

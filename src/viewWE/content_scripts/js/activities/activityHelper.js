@@ -3,19 +3,16 @@ view.activityHelper = {
    * Create a hit list from all enhancements.
    */
   createHitList: function() {
-    const $Hits = $("viewenhancement[data-type='hit']");
-    const $Clues = $("viewenhancement[data-type='clue']");
-
     const hitList = [];
 
-    $Hits.each(function() {
+    $("viewenhancement[data-type='hit']").each(function() {
       const $Hit = $(this);
       $Hit.data("view-original-text", $Hit.text().trim());
 
       hitList.push($Hit);
     });
 
-    $Clues.each(function() {
+    $("viewenhancement[data-type='clue']").each(function() {
       const $Clue = $(this);
       $Clue.data("view-original-text", $Clue.text().trim());
     });
@@ -67,10 +64,29 @@ view.activityHelper = {
   },
 
   /**
+   * Create exercises for the activity.
+   *
+   * @param {number} numExercises the number of exercises
+   * @param {object} exerciseOptions first offset and interval size values
+   * @param {Array} hitList list of hits that could be turned into exercises
+   * @param {function} createExercise the function to call to create an
+   * exercise for the current activity
+   */
+  createExercises: function(numExercises, exerciseOptions, hitList, createExercise) {
+    let exerciseNumber = exerciseOptions.firstOffset;
+
+    for (; numExercises > 0 && exerciseNumber < hitList.length; exerciseNumber += exerciseOptions.intervalSize) {
+      const $hit = hitList[exerciseNumber];
+      createExercise($hit);
+      numExercises--;
+    }
+  },
+
+  /**
    * Get the correct answer for the mc and cloze activities.
    *
-   * @param {object} $hit the enhancement tag the select box is designed for
-   * @param {number} capType the capitalization type
+   * @param {object} $hit the enhancement element
+   * @param {number} capType the capitalization type of the original word
    */
   getCorrectAnswer: function($hit, capType) {
     if (view.language === "ru") {
@@ -134,7 +150,6 @@ view.activityHelper = {
     const $Enhancement = $Element.parent();
     const inputId = $(".viewinput").index($Element);
 
-    // return the clue tag color to what it was originally
     $("[data-id='" + $Enhancement.data("clueid") + "']").css("color", "inherit");
 
     $Enhancement.addClass("input-style-" + inputStyleType);

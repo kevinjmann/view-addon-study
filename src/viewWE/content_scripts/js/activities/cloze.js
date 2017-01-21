@@ -21,7 +21,12 @@ view.cloze = {
 
     const exerciseOptions = view.activityHelper.chooseWhichExercises(hitList);
 
-    view.cloze.createExercises(numExercises, exerciseOptions, hitList);
+    view.activityHelper.createExercises(
+      numExercises,
+      exerciseOptions,
+      hitList,
+      view.cloze.createExercise
+    );
 
     const $Body = $("body");
 
@@ -30,30 +35,21 @@ view.cloze = {
   },
 
   /**
-   * Create exercises for the activity.
+   * Create an exercise for the enhancement element.
    *
-   * @param {number} numExercises the number of exercises
-   * @param {object} exerciseOptions first offset and interval size values
-   * @param {Array} hitList list of hits that could be turned into exercises
+   * @param {object} $hit the enhancement element the exercise is created for
    */
-  createExercises: function(numExercises, exerciseOptions, hitList) {
-    let i = exerciseOptions.firstOffset;
+  createExercise: function($hit) {
 
-    for (; numExercises > 0 && i < hitList.length; i += exerciseOptions.intervalSize) {
-      const $hit = hitList[i];
+    const capType = view.lib.detectCapitalization($hit.text().trim());
 
-      const capType = view.lib.detectCapitalization($hit.text().trim());
+    const answer = view.activityHelper.getCorrectAnswer($hit, capType);
 
-      const answer = view.activityHelper.getCorrectAnswer($hit, capType);
+    view.cloze.createInputBox(answer, $hit);
 
-      view.cloze.createInputBox(answer, $hit);
+    view.activityHelper.createHint($hit);
 
-      view.activityHelper.createHint($hit);
-
-      view.cloze.addBaseform($hit);
-
-      numExercises--;
-    }
+    view.cloze.addBaseform($hit);
   },
 
   /**
@@ -65,7 +61,6 @@ view.cloze = {
   createInputBox: function(answer, $hit) {
     // create input box
     const $input = $("<input>");
-    $input.data("view-original-text", $hit.text().trim());
     $input.attr("type", "text");
     // average of 10 px per letter (can fit 10 x "м" with a width of 110)
     $input.css("width", (answer.length * 10) + "px");
