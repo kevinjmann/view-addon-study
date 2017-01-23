@@ -40,22 +40,13 @@ describe("mc.js", function() {
       const createHitListSpy = sandbox.spy(view.activityHelper, "createHitList");
       const exerciseHandlerSpy = sandbox.spy(view.activityHelper, "exerciseHandler");
 
-      const hitList = [];
-
-      $("viewenhancement[data-type='hit']").each(function() {
-        hitList.push($(this));
-      });
-
       view.mc.run();
 
       sinon.assert.calledOnce(createHitListSpy);
 
-      expect(createHitListSpy.firstCall.returnValue)
-      .to.eql(hitList);
-
       sinon.assert.calledOnce(exerciseHandlerSpy);
       sinon.assert.calledWithExactly(exerciseHandlerSpy,
-        hitList,
+        createHitListSpy.firstCall.returnValue,
         view.mc.createExercise
       );
     });
