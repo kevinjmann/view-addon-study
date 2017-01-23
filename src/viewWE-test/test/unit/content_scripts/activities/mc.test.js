@@ -36,9 +36,9 @@ describe("mc.js", function() {
   });
 
   describe("run", function() {
-    it("should create a hitlist and pass it on to the handler", function() {
+    it("should create a hitlist and pass it on to the exerciseHandler", function() {
       const createHitListSpy = sandbox.spy(view.activityHelper, "createHitList");
-      const handlerSpy = sandbox.spy(view.mc, "handler");
+      const exerciseHandlerSpy = sandbox.spy(view.activityHelper, "exerciseHandler");
 
       const hitList = [];
 
@@ -53,299 +53,241 @@ describe("mc.js", function() {
       expect(createHitListSpy.firstCall.returnValue)
       .to.eql(hitList);
 
-      sinon.assert.calledOnce(handlerSpy);
-      sinon.assert.calledWithExactly(handlerSpy, hitList);
+      sinon.assert.calledOnce(exerciseHandlerSpy);
+      sinon.assert.calledWithExactly(exerciseHandlerSpy,
+        hitList,
+        view.mc.createExercise
+      );
     });
 
-    describe("handler", function() {
-      it("should call calculateNumberOfExercises(hitList)", function() {
-        const calculateNumberOfExercisesSpy = sandbox.spy(view.activityHelper, "calculateNumberOfExercises");
+    describe("createExercise", function() {
+      it("should call detectCapitalization(hitText)", function() {
+        const detectCapitalizationSpy = sandbox.spy(view.lib, "detectCapitalization");
 
-        const hitList = view.activityHelper.createHitList();
+        const $hit = $("[data-type='hit']").first();
+        const hitText = $hit.text().trim();
 
-        view.mc.handler(hitList);
+        view.mc.createExercise($hit);
 
-        sinon.assert.calledOnce(calculateNumberOfExercisesSpy);
-        sinon.assert.calledWithExactly(calculateNumberOfExercisesSpy, hitList);
+        sinon.assert.calledOnce(detectCapitalizationSpy);
+        sinon.assert.calledWithExactly(detectCapitalizationSpy, hitText);
+
+        expect(detectCapitalizationSpy.firstCall.returnValue).to.equal(2);
       });
 
-      it("should call chooseWhichExercises(hitList)", function() {
-        const chooseWhichExercisesSpy = sandbox.spy(view.activityHelper, "chooseWhichExercises");
+      it("should call getCorrectAnswer($hit, capType)", function() {
+        const getCorrectAnswerSpy = sandbox.spy(view.activityHelper, "getCorrectAnswer");
 
-        const hitList = view.activityHelper.createHitList();
+        const $hit = $("[data-type='hit']").first();
 
-        view.mc.handler(hitList);
+        view.mc.createExercise($hit);
 
-        sinon.assert.calledOnce(chooseWhichExercisesSpy);
-        sinon.assert.calledWithExactly(chooseWhichExercisesSpy, hitList);
+        sinon.assert.calledOnce(getCorrectAnswerSpy);
+        sinon.assert.calledWithExactly(getCorrectAnswerSpy,
+          $hit,
+          2
+        );
+
+        expect(getCorrectAnswerSpy.firstCall.returnValue).to.equal("Усвоение");
       });
 
-      it("should call createExercises(numExercises, exerciseOptions, hitList, createExercise)", function() {
-        const createExercisesSpy = sandbox.spy(view.activityHelper, "createExercises");
+      it("should call getOptions($hit, answer, capType)", function() {
+        const getOptionsSpy = sandbox.spy(view.mc, "getOptions");
 
-        const hitList = view.activityHelper.createHitList();
+        const $hit = $("[data-type='hit']").first();
+        const capType = 2;
+        const answer = view.activityHelper.getCorrectAnswer($hit, capType);
 
-        view.mc.handler(hitList);
+        view.mc.createExercise($hit);
 
-        sinon.assert.calledOnce(createExercisesSpy);
-        sinon.assert.calledWithExactly(createExercisesSpy,
-          18,
-          {
-            firstOffset: 0,
-            intervalSize: 1
-          },
-          hitList,
-          view.mc.createExercise
+        sinon.assert.calledOnce(getOptionsSpy);
+        sinon.assert.calledWithExactly(getOptionsSpy,
+          $hit,
+          answer,
+          capType
+        );
+
+        expect(getOptionsSpy.firstCall.returnValue)
+        .to.have.members(["Усвоение","Усвоении","Усвоению","Усвоением","Усвоения"]);
+      });// HERE
+
+      it("should call createSelectBox(options, hitText, answer, $hit)", function() {
+        const getOptionsSpy = sandbox.spy(view.mc, "getOptions");
+        const createSelectBoxSpy = sandbox.spy(view.mc, "createSelectBox");
+
+        const $hit = $("[data-type='hit']").first();
+        const hitText = $hit.text().trim();
+        const capType = 2;
+        const answer = view.activityHelper.getCorrectAnswer($hit, capType);
+
+        view.mc.createExercise($hit);
+
+        sinon.assert.calledOnce(createSelectBoxSpy);
+        sinon.assert.calledWithExactly(createSelectBoxSpy,
+          getOptionsSpy.firstCall.returnValue,
+          hitText,
+          answer,
+          $hit
         );
       });
 
-      it("should initialize an input and hint handler", function() {
-        const eventSpy = sandbox.spy($.fn, "on");
+      it("should call createHint($hit)", function() {
+        const createHintSpy = sandbox.spy(view.activityHelper, "createHint");
 
-        const hitList = view.activityHelper.createHitList();
+        const $hit = $("[data-type='hit']").first();
 
-        view.mc.handler(hitList);
+        view.mc.createExercise($hit);
 
-        sinon.assert.calledTwice(eventSpy);
-        sinon.assert.calledWith(eventSpy.firstCall,
-          "change",
-          "select.viewinput"
-        );
-        sinon.assert.calledWith(eventSpy.secondCall,
-          "click",
-          "viewhint"
-        );
+        sinon.assert.calledOnce(createHintSpy);
+        sinon.assert.calledWithExactly(createHintSpy, $hit);
       });
 
-      describe("createExercise", function() {
-        it("should call detectCapitalization(hitText)", function() {
-          const detectCapitalizationSpy = sandbox.spy(view.lib, "detectCapitalization");
+      describe("getOptions", function() {
+        it("should call fillOptions(distractors, answer, capType)", function() {
+          const fillOptionsSpy = sandbox.spy(view.mc, "fillOptions");
 
           const $hit = $("[data-type='hit']").first();
-          const hitText = $hit.text().trim();
-
-          view.mc.createExercise($hit);
-
-          sinon.assert.calledOnce(detectCapitalizationSpy);
-          sinon.assert.calledWithExactly(detectCapitalizationSpy, hitText);
-
-          expect(detectCapitalizationSpy.firstCall.returnValue).to.equal(2);
-        });
-
-        it("should call getCorrectAnswer($hit, capType)", function() {
-          const getCorrectAnswerSpy = sandbox.spy(view.activityHelper, "getCorrectAnswer");
-
-          const $hit = $("[data-type='hit']").first();
-
-          view.mc.createExercise($hit);
-
-          sinon.assert.calledOnce(getCorrectAnswerSpy);
-          sinon.assert.calledWithExactly(getCorrectAnswerSpy,
-            $hit,
-            2
-          );
-
-          expect(getCorrectAnswerSpy.firstCall.returnValue).to.equal("Усвоение");
-        });
-
-        it("should call getOptions($hit, answer, capType)", function() {
-          const getOptionsSpy = sandbox.spy(view.mc, "getOptions");
-
-          const $hit = $("[data-type='hit']").first();
+          const distractors = $hit.data("distractors").split(";");
           const capType = 2;
           const answer = view.activityHelper.getCorrectAnswer($hit, capType);
 
-          view.mc.createExercise($hit);
+          view.mc.getOptions($hit, answer, capType);
 
-          sinon.assert.calledOnce(getOptionsSpy);
-          sinon.assert.calledWithExactly(getOptionsSpy,
-            $hit,
+          sinon.assert.calledOnce(fillOptionsSpy);
+          sinon.assert.calledWithExactly(fillOptionsSpy,
+            distractors,
             answer,
             capType
           );
 
-          expect(getOptionsSpy.firstCall.returnValue)
+          expect(distractors)
+          .to.eql(["усвоению","усвоения","усвоением","усвоение","усвоении"]);
+
+          expect(fillOptionsSpy.firstCall.returnValue)
           .to.have.members(["Усвоение","Усвоении","Усвоению","Усвоением","Усвоения"]);
-        });// HERE
+        });
 
-        it("should call createSelectBox(options, hitText, answer, $hit)", function() {
-          const getOptionsSpy = sandbox.spy(view.mc, "getOptions");
-          const createSelectBoxSpy = sandbox.spy(view.mc, "createSelectBox");
+        describe("fillOptions", function() {
+          it("should call addOption(options, distractor, capType) only 5 times, options length is limit", function() {
+            const addOptionSpy = sandbox.spy(view.mc, "addOption");
 
+            const distractors = [
+              "видит",
+              "видят",
+              "вижу",
+              "видим",
+              "видите",
+              "видишь"
+            ];
+
+            view.mc.fillOptions(distractors, "видят", 0);
+
+            sinon.assert.callCount(addOptionSpy, 5);
+
+            expect(addOptionSpy.getCall(4).args[1]).to.equal("видят");
+          });
+
+          it("should call addOption(options, distractor, capType) 3 times, distractor length is limit", function() {
+            const addOptionSpy = sandbox.spy(view.mc, "addOption");
+
+            const distractors = [
+              "роль",
+              "роли",
+              "ролью"
+            ];
+
+            view.mc.fillOptions(distractors, "роли", 0);
+
+            sinon.assert.callCount(addOptionSpy, 3);
+
+            expect(addOptionSpy.getCall(2).args[1]).to.equal("роли");
+          });
+
+          it("should add an option to all options", function() {
+            const options = [];
+
+            view.mc.addOption(options, "усвоение", 2);
+
+            expect(options).to.eql(["Усвоение"]);
+          });
+
+          it("should call shuffleList(options)", function() {
+            const shuffleListSpy = sandbox.spy(view.lib, "shuffleList");
+
+            const distractors = [
+              "роль",
+              "роли",
+              "ролью"
+            ];
+
+            view.mc.fillOptions(distractors, "роли", 0);
+
+            sinon.assert.calledOnce(shuffleListSpy);
+            expect(shuffleListSpy.firstCall.args[0]).to.have.members(distractors);
+          });
+        });
+      });
+
+      describe("createSelectBox", function() {
+        it("should find a select box with the class 'viewinput' inside the hit", function() {
+          const options = ["Усвоение","Усвоении","Усвоению","Усвоением","Усвоения"];
           const $hit = $("[data-type='hit']").first();
           const hitText = $hit.text().trim();
-          const capType = 2;
-          const answer = view.activityHelper.getCorrectAnswer($hit, capType);
+          const answer = "Усвоение";
 
-          view.mc.createExercise($hit);
+          view.mc.createSelectBox(options, hitText, answer, $hit);
 
-          sinon.assert.calledOnce(createSelectBoxSpy);
-          sinon.assert.calledWithExactly(createSelectBoxSpy,
-            getOptionsSpy.firstCall.returnValue,
-            hitText,
-            answer,
-            $hit
-          );
+          expect($hit.find("select.viewinput").length).to.be.above(0);
         });
 
-        it("should call createHint($hit)", function() {
-          const createHintSpy = sandbox.spy(view.activityHelper, "createHint");
-
+        it("should have all options inside the select box", function() {
+          const options = ["Усвоение","Усвоении","Усвоению","Усвоением","Усвоения"];
           const $hit = $("[data-type='hit']").first();
+          const hitText = $hit.text().trim();
+          const answer = "Усвоение";
 
-          view.mc.createExercise($hit);
+          view.mc.createSelectBox(options, hitText, answer, $hit);
 
-          sinon.assert.calledOnce(createHintSpy);
-          sinon.assert.calledWithExactly(createHintSpy, $hit);
+          const selectBoxOptions = [];
+          $hit.find("option").each(function() {
+            selectBoxOptions.push($(this).text());
+          });
+
+          expect(selectBoxOptions[0]).to.equal(" ");
+          expect(selectBoxOptions).to.include.members(options);
         });
 
-        describe("getOptions", function() {
-          it("should call fillOptions(distractors, answer, capType)", function() {
-            const fillOptionsSpy = sandbox.spy(view.mc, "fillOptions");
+        it("should find the data 'view-answer' in the select box", function() {
+          const options = ["Усвоение","Усвоении","Усвоению","Усвоением","Усвоения"];
+          const $hit = $("[data-type='hit']").first();
+          const hitText = $hit.text().trim();
+          const answer = "Усвоение";
 
-            const $hit = $("[data-type='hit']").first();
-            const distractors = $hit.data("distractors").split(";");
-            const capType = 2;
-            const answer = view.activityHelper.getCorrectAnswer($hit, capType);
+          view.mc.createSelectBox(options, hitText, answer, $hit);
 
-            view.mc.getOptions($hit, answer, capType);
+          const $SelectBox = $hit.find("select.viewinput");
 
-            sinon.assert.calledOnce(fillOptionsSpy);
-            sinon.assert.calledWithExactly(fillOptionsSpy,
-              distractors,
-              answer,
-              capType
-            );
-
-            expect(distractors)
-            .to.eql(["усвоению","усвоения","усвоением","усвоение","усвоении"]);
-
-            expect(fillOptionsSpy.firstCall.returnValue)
-            .to.have.members(["Усвоение","Усвоении","Усвоению","Усвоением","Усвоения"]);
-          });
-
-          describe("fillOptions", function() {
-            it("should call addOption(options, distractor, capType) only 5 times, options length is limit", function() {
-              const addOptionSpy = sandbox.spy(view.mc, "addOption");
-
-              const distractors = [
-                "видит",
-                "видят",
-                "вижу",
-                "видим",
-                "видите",
-                "видишь"
-              ];
-
-              view.mc.fillOptions(distractors, "видят", 0);
-
-              sinon.assert.callCount(addOptionSpy, 5);
-
-              expect(addOptionSpy.getCall(4).args[1]).to.equal("видят");
-            });
-
-            it("should call addOption(options, distractor, capType) 3 times, distractor length is limit", function() {
-              const addOptionSpy = sandbox.spy(view.mc, "addOption");
-
-              const distractors = [
-                "роль",
-                "роли",
-                "ролью"
-              ];
-
-              view.mc.fillOptions(distractors, "роли", 0);
-
-              sinon.assert.callCount(addOptionSpy, 3);
-
-              expect(addOptionSpy.getCall(2).args[1]).to.equal("роли");
-            });
-
-            it("should add an option to all options", function() {
-              const options = [];
-
-              view.mc.addOption(options, "усвоение", 2);
-
-              expect(options).to.eql(["Усвоение"]);
-            });
-
-            it("should call shuffleList(options)", function() {
-              const shuffleListSpy = sandbox.spy(view.lib, "shuffleList");
-
-              const distractors = [
-                "роль",
-                "роли",
-                "ролью"
-              ];
-
-              view.mc.fillOptions(distractors, "роли", 0);
-
-              sinon.assert.calledOnce(shuffleListSpy);
-              expect(shuffleListSpy.firstCall.args[0]).to.have.members(distractors);
-            });
-          });
+          expect($SelectBox.data("view-answer")).to.equal(answer);
         });
 
-        describe("createSelectBox", function() {
-          it("should find a select box with the class 'viewinput' inside the hit", function() {
-            const options = ["Усвоение","Усвоении","Усвоению","Усвоением","Усвоения"];
-            const $hit = $("[data-type='hit']").first();
-            const hitText = $hit.text().trim();
-            const answer = "Усвоение";
+        it("should call empty() before append($SelectBox)", function() {
+          const emptySpy = sandbox.spy($.fn, "empty");
+          const appendSpy = sandbox.spy($.fn, "append");
 
-            view.mc.createSelectBox(options, hitText, answer, $hit);
+          const options = ["Усвоение","Усвоении","Усвоению","Усвоением","Усвоения"];
+          const $hit = $("[data-type='hit']").first();
+          const hitText = $hit.text().trim();
+          const answer = "Усвоение";
 
-            expect($hit.find("select.viewinput").length).to.be.above(0);
-          });
+          view.mc.createSelectBox(options, hitText, answer, $hit);
 
-          it("should have all options inside the select box", function() {
-            const options = ["Усвоение","Усвоении","Усвоению","Усвоением","Усвоения"];
-            const $hit = $("[data-type='hit']").first();
-            const hitText = $hit.text().trim();
-            const answer = "Усвоение";
+          sinon.assert.called(emptySpy); // unexpectedly called 6 times
 
-            view.mc.createSelectBox(options, hitText, answer, $hit);
+          sinon.assert.called(appendSpy); // unexpectedly called 7 times
 
-            const selectBoxOptions = [];
-            $hit.find("option").each(function() {
-              selectBoxOptions.push($(this).text());
-            });
-
-            expect(selectBoxOptions[0]).to.equal(" ");
-            expect(selectBoxOptions).to.include.members(options);
-          });
-
-          it("should find the data 'view-answer' in the select box", function() {
-            const options = ["Усвоение","Усвоении","Усвоению","Усвоением","Усвоения"];
-            const $hit = $("[data-type='hit']").first();
-            const hitText = $hit.text().trim();
-            const answer = "Усвоение";
-
-            view.mc.createSelectBox(options, hitText, answer, $hit);
-
-            const $SelectBox = $hit.find("select.viewinput");
-
-            expect($SelectBox.data("view-answer")).to.equal(answer);
-          });
-
-          it("should call empty() before append($SelectBox)", function() {
-            const emptySpy = sandbox.spy($.fn, "empty");
-            const appendSpy = sandbox.spy($.fn, "append");
-
-            const options = ["Усвоение","Усвоении","Усвоению","Усвоением","Усвоения"];
-            const $hit = $("[data-type='hit']").first();
-            const hitText = $hit.text().trim();
-            const answer = "Усвоение";
-
-            view.mc.createSelectBox(options, hitText, answer, $hit);
-
-            sinon.assert.called(emptySpy); // unexpectedly called 6 times
-
-            sinon.assert.called(appendSpy); // unexpectedly called 7 times
-
-            sinon.assert.callOrder(emptySpy, appendSpy);
-          });
-        })
-      });
+          sinon.assert.callOrder(emptySpy, appendSpy);
+        });
+      })
     });
   });
 });
