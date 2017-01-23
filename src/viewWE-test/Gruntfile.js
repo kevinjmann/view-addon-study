@@ -174,11 +174,12 @@ module.exports = function(grunt) {
             "../viewWE/content_scripts/js/lib.js",
             "../viewWE/content_scripts/js/activities/collector.js",
             "../viewWE/content_scripts/js/activities/activityHelper.js",
+            "test/unit/content_scripts/activities/activityHelper.test.js",
             "../viewWE/content_scripts/js/activities/mc.js"
           ]
         },
         preprocessors: {
-          "../viewWE/content_scripts/js/activities/activityHelper.test.js": ["coverage"],
+          "../viewWE/content_scripts/js/activities/activityHelper.js": ["coverage"],
           "**/ru-nouns-mc-and-cloze.html": ["html2js"]
         }
       }
