@@ -94,18 +94,26 @@ view.mc = {
   createSelectBox: function(options, hitText, answer, $hit) {
     const $SelectBox = $("<select>");
     $SelectBox.addClass("viewinput");
-    let $option = $("<option>");
-    $option.html(" ");
-    $SelectBox.append($option);
+
+    view.mc.addSelectOption($SelectBox, " ");
+
     for (let j = 0; j < options.length; j++) {
-      $option = $("<option>");
-      $option.text(options[j]);
-      $SelectBox.append($option);
+      view.mc.addSelectOption($SelectBox, options[j]);
     }
 
     $SelectBox.data("view-answer", answer);
 
     $hit.empty();
     $hit.append($SelectBox);
+  },
+
+  /**
+   * Add an option to the select box.
+   *
+   * @param {object} $SelectBox the select box to update
+   * @param {string} optionText the text of the option to add
+   */
+  addSelectOption: function($SelectBox, optionText) {
+    $SelectBox.append($("<option>").text(optionText));
   }
 };
