@@ -41,7 +41,7 @@ view.activityHelper = {
 
     const $Body = $("body");
 
-    $Body.on("change", "select.viewinput", view.activityHelper.inputHandler);
+    $Body.on("change", ".viewinput", view.activityHelper.inputHandler);
     $Body.on("click", "viewhint", view.activityHelper.hintHandler);
   },
 
@@ -264,12 +264,9 @@ view.activityHelper = {
     // click
     $Body.off("click", "viewenhancement");
 
-    // mc
-    $Body.off("change", "select.viewinput");
+    // mc and cloze
+    $Body.off("change", ".viewinput");
     $Body.off("click", "viewhint");
-
-    // cloze
-    $Body.off("change", "input.viewinput");
 
     // cloze
     $("viewbaseform").remove();
