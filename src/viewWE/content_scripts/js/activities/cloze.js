@@ -7,31 +7,7 @@ view.cloze = {
 
     const hitList = view.activityHelper.createHitList();
 
-    view.cloze.handler(hitList);
-  },
-
-  /**
-   * Generate cloze exercises. TODO BUG: When typing an answer into the input field and then pressing on the
-   * hint right away, both the typed answer and the hint event are triggered at the same time and send to the server.
-   */
-  handler: function(hitList) {
-    console.log("handler(hitList)");
-
-    const numExercises = view.activityHelper.calculateNumberOfExercises(hitList);
-
-    const exerciseOptions = view.activityHelper.chooseWhichExercises(hitList);
-
-    view.activityHelper.createExercises(
-      numExercises,
-      exerciseOptions,
-      hitList,
-      view.cloze.createExercise
-    );
-
-    const $Body = $("body");
-
-    $Body.on("change", "input.viewinput", view.activityHelper.inputHandler);
-    $Body.on("click", "viewhint", view.activityHelper.hintHandler);
+    view.activityHelper.exerciseHandler(hitList, view.cloze.createExercise);
   },
 
   /**

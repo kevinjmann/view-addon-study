@@ -21,6 +21,31 @@ view.activityHelper = {
   },
 
   /**
+   * Generate multiple choice or cloze exercises.
+   *
+   * @param {Array} hitList list of hits that could be turned into exercises
+   * @param {function} createExercise either the mc or cloze createExercise
+   * function.
+   */
+  exerciseHandler: function(hitList, createExercise) {
+    const numExercises = view.activityHelper.calculateNumberOfExercises(hitList);
+
+    const exerciseOptions = view.activityHelper.chooseWhichExercises(hitList);
+
+    view.activityHelper.createExercises(
+      numExercises,
+      exerciseOptions,
+      hitList,
+      createExercise
+    );
+
+    const $Body = $("body");
+
+    $Body.on("change", "select.viewinput", view.activityHelper.inputHandler);
+    $Body.on("click", "viewhint", view.activityHelper.hintHandler);
+  },
+
+  /**
    * Calculate the number of hits to turn into exercises
    *
    * @param {Array} hitList list of hits that could be turned into exercises

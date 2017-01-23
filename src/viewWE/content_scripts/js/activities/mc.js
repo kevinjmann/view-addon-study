@@ -5,30 +5,7 @@ view.mc = {
   run: function() {
     const hitList = view.activityHelper.createHitList();
 
-    view.mc.handler(hitList);
-  },
-
-  /**
-   * Generate multiple choice exercises.
-   *
-   * @param {Array} hitList list of hits that could be turned into exercises
-   */
-  handler: function(hitList) {
-    const numExercises = view.activityHelper.calculateNumberOfExercises(hitList);
-
-    const exerciseOptions = view.activityHelper.chooseWhichExercises(hitList);
-
-    view.activityHelper.createExercises(
-      numExercises,
-      exerciseOptions,
-      hitList,
-      view.mc.createExercise
-    );
-
-    const $Body = $("body");
-
-    $Body.on("change", "select.viewinput", view.activityHelper.inputHandler);
-    $Body.on("click", "viewhint", view.activityHelper.hintHandler);
+    view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
   },
 
   /**
