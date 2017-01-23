@@ -31,7 +31,7 @@ view.mc = {
   /**
    * Gets the options provided by the server in the distractors attribute.
    *
-   * @param {object} $hit the enhancement element the select box is designed for
+   * @param {object} $hit the enhancement element
    * @param {string} answer the correct answer
    * @param {number} capType the capitalization type of the original word
    * @returns {Array} the options
@@ -89,7 +89,7 @@ view.mc = {
    * @param {Array} options the selection options
    * @param {string} hitText the original text of the enhancement tag
    * @param {string} answer the correct answer
-   * @param {object} $hit the enhancement element the select box is designed for
+   * @param {object} $hit the enhancement element the input box is appended to
    */
   createSelectBox: function(options, hitText, answer, $hit) {
     const $SelectBox = $("<select>");

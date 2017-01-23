@@ -3,8 +3,6 @@ view.cloze = {
    * Run the cloze activity.
    */
   run: function() {
-    console.log("cloze()");
-
     const hitList = view.activityHelper.createHitList();
 
     view.activityHelper.exerciseHandler(hitList, view.cloze.createExercise);
@@ -32,25 +30,28 @@ view.cloze = {
    * Create the input box.
    *
    * @param {string} answer the correct answer
-   * @param {object} $hit the enhancement tag the select box is designed for
+   * @param {object} $hit the enhancement element the input box is appended to
    */
   createInputBox: function(answer, $hit) {
     // create input box
-    const $input = $("<input>");
-    $input.attr("type", "text");
+    const $InputBox = $("<input>");
+    $InputBox.addClass("viewinput");
+    $InputBox.addClass("cloze-style-input");
+
+    $InputBox.attr("type", "text");
     // average of 10 px per letter (can fit 10 x "м" with a width of 110)
-    $input.css("width", (answer.length * 10) + "px");
-    $input.addClass("cloze-style-input");
-    $input.addClass("viewinput");
-    $input.data("view-answer", answer);
+    $InputBox.css("width", (answer.length * 10) + "px");
+
+    $InputBox.data("view-answer", answer);
 
     $hit.empty();
-    $hit.append($input);
+    $hit.append($InputBox);
   },
 
   /**
-   * Add the baseform (lemma) next to
-   * the input field.
+   * Add the baseform (lemma) next to the input box.
+   *
+   * @param {object} $hit the enhancement element containing the input box
    */
   addBaseform: function($hit) {
     const $baseform = $("<viewbaseform>");

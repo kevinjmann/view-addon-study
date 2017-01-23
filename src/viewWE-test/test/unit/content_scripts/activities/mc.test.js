@@ -226,7 +226,7 @@ describe("mc.js", function() {
       });
 
       describe("createSelectBox", function() {
-        it("should find a select box with the class 'viewinput' inside the hit", function() {
+        it("should find inside the hit a select box with the class 'viewinput'", function() {
           const options = ["Усвоение","Усвоении","Усвоению","Усвоением","Усвоения"];
           const $hit = $("[data-type='hit']").first();
           const hitText = $hit.text().trim();
