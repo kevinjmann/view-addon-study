@@ -175,6 +175,7 @@ module.exports = function(grunt) {
             "../viewWE/content_scripts/js/activities/collector.js",
             "../viewWE/content_scripts/js/activities/activityHelper.js",
             "test/unit/content_scripts/activities/activityHelper.test.js",
+            "../viewWE/content_scripts/js/activities/click.js",
             "../viewWE/content_scripts/js/activities/mc.js",
             "../viewWE/content_scripts/js/activities/cloze.js"
           ]
