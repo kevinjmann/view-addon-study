@@ -7,14 +7,14 @@ view.activityHelper = {
 
     $("viewenhancement[data-type='hit']").each(function() {
       const $Hit = $(this);
-      $Hit.data("view-original-text", $Hit.text().trim());
+      $Hit.data("view-original-text", $Hit.text());
 
       hitList.push($Hit);
     });
 
     $("viewenhancement[data-type='clue']").each(function() {
       const $Clue = $(this);
-      $Clue.data("view-original-text", $Clue.text().trim());
+      $Clue.data("view-original-text", $Clue.text());
     });
 
     return hitList;
@@ -247,7 +247,7 @@ view.activityHelper = {
       return view.lib.matchCapitalization($hit.data("correctform"), capType);
     }
     else {
-      return $hit.text().trim();
+      return $hit.text();
     }
   },
 

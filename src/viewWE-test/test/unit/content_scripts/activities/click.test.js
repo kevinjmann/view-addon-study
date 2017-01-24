@@ -129,7 +129,7 @@ describe("click.js", function() {
         sinon.assert.calledOnce(collectAndSendDataSpy);
         sinon.assert.calledWithExactly(collectAndSendDataSpy,
           $EnhancementElement,
-          $EnhancementElement.text().trim(),
+          $EnhancementElement.text(),
           countAsCorrect,
           usedHint
         );

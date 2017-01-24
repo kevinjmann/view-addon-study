@@ -15,7 +15,7 @@ view.mc = {
    */
   createExercise: function($hit) {
 
-    const hitText = $hit.text().trim();
+    const hitText = $hit.text();
 
     const capType = view.lib.detectCapitalization(hitText);
 

@@ -57,7 +57,7 @@ describe("cloze.js", function() {
         const detectCapitalizationSpy = sandbox.spy(view.lib, "detectCapitalization");
 
         const $hit = $("[data-type='hit']").first();
-        const hitText = $hit.text().trim();
+        const hitText = $hit.text();
 
         view.cloze.createExercise($hit);
 
