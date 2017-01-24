@@ -52,10 +52,7 @@ describe("click.js", function() {
       });
 
       sinon.assert.calledOnce(eventSpy);
-      sinon.assert.calledWith(eventSpy,
-        "click",
-        "viewenhancement"
-      );
+      sinon.assert.calledWith(eventSpy, "click");
     });
 
     it("should call the handler on click", function() {

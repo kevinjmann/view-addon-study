@@ -52,11 +52,11 @@ view.activityHelper = {
    * @returns {number} the number of exercises
    */
   calculateNumberOfExercises: function(hitList) {
-    if (view.fixedOrPercentage === "0") {
+    if (view.fixedOrPercentage === 0) {
       return view.fixedNumberOfExercises;
     }
     else {
-      return view.percentageOfExercises / 100 * hitList.length;
+      return Math.round(view.percentageOfExercises / 100 * hitList.length);
     }
   },
 
@@ -75,10 +75,10 @@ view.activityHelper = {
     exercises.firstOffset = 0;
     exercises.intervalSize = 1;
 
-    if (choiceModeValue === "0") {
+    if (choiceModeValue === 0) {
       view.lib.shuffleList(hitList);
     }
-    else if (choiceModeValue === "1") {
+    else if (choiceModeValue === 1) {
       exercises.firstOffset = view.firstOffset;
     }
     else {
@@ -108,6 +108,137 @@ view.activityHelper = {
   },
 
   /**
+   * Deals with the input in the mc and cloze activities.
+   */
+  inputHandler: function() {
+    let countsAsCorrect = false;
+    const $ElementBox = $(this);
+    const $EnhancementElement = $ElementBox.parent();
+    const input = $ElementBox.val();
+    const usedHint = false;
+
+    if (input.toLowerCase() === $ElementBox.data("view-answer").toLowerCase()) {
+      countsAsCorrect = true;
+      view.activityHelper.processCorrect($ElementBox, "correct");
+    }
+    else {
+      view.activityHelper.processIncorrect($ElementBox);
+    }
+
+    if (view.userid) {
+      view.collector.collectAndSendData(
+        $EnhancementElement,
+        input,
+        countsAsCorrect,
+        usedHint
+      );
+    }
+
+    // prevent execution of further event listeners
+    return false;
+  },
+
+  /**
+   * Process the correct input.
+   *
+   * @param {object} $ElementBox the select or input box
+   * @param {string} inputStyleType either "correct" or "provided"
+   */
+  processCorrect: function($ElementBox, inputStyleType) {
+    const $EnhancementElement = $ElementBox.parent();
+    const elementId = $(".viewinput").index($ElementBox);
+
+    view.activityHelper.colorClue($EnhancementElement.data("clueid"), "inherit");
+
+    $EnhancementElement.addClass("input-style-" + inputStyleType);
+    $EnhancementElement.html($ElementBox.data("view-answer"));
+
+    view.activityHelper.jumpTo(elementId);
+  },
+
+  /**
+   * Color the clue accordingly.
+   *
+   * @param {string} clueId the id of the clue to be colored
+   * @param {string} clueStyleColor the color to use, either "inherit" or "red"
+   */
+  colorClue: function(clueId, clueStyleColor) {
+    $("[data-id='" + clueId + "']").css("color", clueStyleColor);
+  },
+
+  /**
+   * Jump to the element if it exists and to the first element otherwise.
+   *
+   * @param {number} elementId the element id we currently at
+   */
+  jumpTo: function(elementId) {
+    const $ElementBoxes = $(".viewinput");
+    const $Element = $ElementBoxes.eq(elementId);
+    const $FirstElement = $ElementBoxes.eq(0);
+
+    if ($Element.length) {
+      view.activityHelper.scrollToCenter($Element);
+    }
+    else {
+      view.activityHelper.scrollToCenter($FirstElement);
+    }
+  },
+
+  /**
+   * Scroll to the middle of the viewport relative to the element.
+   *
+   * @param $Element the element to focus and center onto
+   */
+  scrollToCenter: function($Element) {
+    const $Window = $(window);
+
+    $Element.focus();
+
+    $Window.scrollTop($Element.offset().top - ($Window.height() / 2));
+  },
+
+  /**
+   * Process the incorrect input.
+   *
+   * @param {object} $ElementBox the select or input box
+   */
+  processIncorrect: function($ElementBox) {
+    view.activityHelper.colorClue($ElementBox.parent().data("clueid"), "red");
+
+    // turns all options, the topmost element after selection included, as red
+    $ElementBox.addClass("input-style-incorrect");
+    // remove assigned classes to all options from previous selections
+    $ElementBox.find("option").removeAttr("class");
+    // turn the selected option red
+    $ElementBox.find("option:selected").addClass("input-style-incorrect");
+    // turn the not selected options black
+    $ElementBox.find("option:not(:selected)").addClass("input-style-neutral");
+  },
+
+  /**
+   * Deals with the hint in the mc and cloze activities.
+   */
+  hintHandler: function() {
+    const $ElementBox = $(this).prev();
+    const $EnhancementElement = $ElementBox.parent();
+    const countAsCorrect = true;
+    const usedHint = true;
+
+    view.activityHelper.processCorrect($ElementBox, "provided");
+
+    if (view.userid) {
+      view.collector.collectAndSendData(
+        $EnhancementElement,
+        "no input",
+        countAsCorrect,
+        usedHint
+      );
+    }
+    // prevent execution of further event listeners
+    return false;
+  },
+
+  /**
    * Get the correct answer for the mc and cloze activities.
    *
    * @param {object} $hit the enhancement element
@@ -125,134 +256,13 @@ view.activityHelper = {
   /**
    * Create the hint visible as "?".
    *
-   * @param {object} $hit the enhancement tag the select box is designed for
+   * @param {object} $hit the enhancement element the select box is designed for
    */
   createHint: function($hit) {
     const $hint = $("<viewhint>");
     $hint.addClass("view-style-hint");
     $hint.text("?");
     $hit.append($hint);
-  },
-
-  /**
-   * Deals with the input in the mc and cloze activities.
-   */
-  inputHandler: function() {
-    let countsAsCorrect = false;
-    const $Element = $(this);
-    const $Enhancement = $Element.parent();
-    const input = $Element.val();
-
-    // if the answer is correct, turn into text, else color text within input
-    if (input.toLowerCase() === $Element.data("view-answer").toLowerCase()) {
-      countsAsCorrect = true;
-      view.activityHelper.processCorrect($Element, "correct");
-    }
-    else {
-      view.activityHelper.processIncorrect($Element);
-    }
-
-    if (view.userid) {
-      view.collector.collectAndSendData(
-        $Enhancement,
-        input,
-        countsAsCorrect,
-        false
-      );
-    }
-
-    // prevent execution of further event listeners
-    return false;
-  },
-
-  /**
-   * Process the correct input.
-   *
-   * @param {object} $Element the element the input came from
-   * @param {string} inputStyleType either "correct" or "provided"
-   */
-  processCorrect: function($Element, inputStyleType) {
-    const $Enhancement = $Element.parent();
-    const inputId = $(".viewinput").index($Element);
-
-    $("[data-id='" + $Enhancement.data("clueid") + "']").css("color", "inherit");
-
-    $Enhancement.addClass("input-style-" + inputStyleType);
-    $Enhancement.html($Element.data("view-answer"));
-
-    view.activityHelper.jumpTo(inputId);
-  },
-
-  /**
-   * Process the incorrect input.
-   *
-   * @param {object} $Element the element the input came from
-   */
-  processIncorrect: function($Element) {
-    // give the clue tag a color if the student guessed wrong
-    $("[data-id='" + $Element.parent().data("clueid") + "']").css("color", "red");
-
-    // turns all options, the topmost element after selection included, as red
-    $Element.addClass("input-style-incorrect");
-    // remove assigned classes to all options from previous selections
-    $Element.find("option").removeAttr("class");
-    // turn the selected option red
-    $Element.find("option:selected").addClass("input-style-incorrect");
-    // turn the not selected options black
-    $Element.find("option:not(:selected)").addClass("input-style-neutral");
-  },
-
-  /**
-   * Deals with the hint in the mc and cloze activities.
-   */
-  hintHandler: function() {
-    const $Element = $(this).prev();
-    const $Enhancement = $Element.parent();
-
-    view.activityHelper.processCorrect($Element, "provided");
-
-    if (view.userid) {
-      view.collector.collectAndSendData(
-        $Enhancement,
-        "no input",
-        true,
-        true
-      );
-    }
-    // prevent execution of further event listeners
-    return false;
-  },
-
-  /**
-   * Jump to the
-   * - input element if it exists
-   * - first input element if it exists
-   *
-   * @param {number} inputId the input id we currently at
-   */
-  jumpTo: function(inputId) {
-    const $Input = $(".viewinput:eq(" + inputId + ")");
-    const $FirstInput = $(".viewinput:eq(0)");
-
-    if ($Input.length) {
-      view.activityHelper.scrollToCenter($Input);
-    }
-    else if ($FirstInput.length) {
-      view.activityHelper.scrollToCenter($FirstInput);
-    }
-  },
-
-  /**
-   * Scroll to the middle of the viewport relative to the element.
-   *
-   * @param $Element the element in focus and center
-   */
-  scrollToCenter: function($Element) {
-    const $Window = $(window);
-
-    $Element.focus();
-
-    $Window.scrollTop($Element.offset().top - ($Window.height() / 2));
   },
 
   /**

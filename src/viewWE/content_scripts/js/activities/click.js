@@ -10,7 +10,7 @@ view.click = {
       $EnhancementElement.addClass("click-style-pointer");
     });
 
-    $("body").on("click", "viewenhancement", view.click.handler);
+    $("viewenhancement").on("click", view.click.handler);
   },
 
   /**
