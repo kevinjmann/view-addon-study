@@ -17,7 +17,7 @@ describe("click.js", function() {
   afterEach(function() {
     sandbox.restore();
     fixture.cleanup();
-    $("body").off("click", "viewenhancement");
+    view.activityHelper.restore();
   });
 
   describe("jquery selectors", function() {

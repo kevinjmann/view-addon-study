@@ -18,6 +18,7 @@ describe("cloze.js", function() {
   afterEach(function() {
     sandbox.restore();
     fixture.cleanup();
+    view.activityHelper.restore();
   });
 
   describe("jquery selectors", function() {
