@@ -289,12 +289,10 @@ describe("activityHelper.js", function() {
       sinon.assert.calledTwice(eventSpy);
       sinon.assert.calledWithExactly(eventSpy.firstCall,
         "change",
-        ".viewinput",
         view.activityHelper.inputHandler
       );
       sinon.assert.calledWithExactly(eventSpy.secondCall,
         "click",
-        "viewhint",
         view.activityHelper.hintHandler
       );
     });
@@ -771,8 +769,61 @@ describe("activityHelper.js", function() {
 
   describe("restore", function() {
     it("should remove the click handler", function() {
+      const $FirstEnhancementElement = $("viewenhancement").get(0);
+
+      expect($._data($FirstEnhancementElement, "events")).to.be.undefined;
+
       view.click.run();
-      console.log($._data( $("body").get(0), "events" ));
-    })
+
+      expect($._data($FirstEnhancementElement, "events")).to.exist;
+
+      view.activityHelper.restore();
+
+      expect($._data($FirstEnhancementElement, "events")).to.be.undefined;
+    });
+
+    it("should remove the input handler", function() {
+      view.mc.run();
+
+      const $FirstElementBox = $(".viewinput").get(0);
+
+      expect($._data($FirstElementBox, "events")).to.exist;
+
+      view.activityHelper.restore();
+
+      expect($._data($FirstElementBox, "events")).to.be.undefined;
+    });
+
+    it("should remove the hint handler", function() {
+      view.mc.run();
+
+      const $FirstHint = $("viewhint").get(0);
+
+      expect($._data($FirstHint, "events")).to.exist;
+
+      view.activityHelper.restore();
+
+      expect($._data($FirstHint, "events")).to.be.undefined;
+    });
+
+    it("should remove the hint", function() {
+      view.mc.run();
+
+      expect($("viewhint").get(0)).to.exist;
+
+      view.activityHelper.restore();
+
+      expect($("viewhint").get(0)).to.be.undefined;
+    });
+
+    it("should remove the baseform", function() {
+      view.cloze.run();
+
+      expect($("viewbaseform").get(0)).to.exist;
+
+      view.activityHelper.restore();
+
+      expect($("viewbaseform").get(0)).to.be.undefined;
+    });
   })
 });
