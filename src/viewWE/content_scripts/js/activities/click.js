@@ -5,7 +5,7 @@ view.click = {
   run: function() {
     $("viewenhancement").each(function() {
       const $EnhancementElement = $(this);
-      $EnhancementElement.data("view-original-text", $EnhancementElement.text().trim());
+      $EnhancementElement.data("view-original-text", $EnhancementElement.text());
 
       $EnhancementElement.addClass("click-style-pointer");
     });
@@ -33,7 +33,7 @@ view.click = {
     if (view.userid) {
       view.collector.collectAndSendData(
         $EnhancementElement,
-        $EnhancementElement.text().trim(),
+        $EnhancementElement.text(),
         countsAsCorrect,
         usedHint
       );

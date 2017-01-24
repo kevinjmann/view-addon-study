@@ -15,7 +15,7 @@ view.cloze = {
    */
   createExercise: function($hit) {
 
-    const capType = view.lib.detectCapitalization($hit.text().trim());
+    const capType = view.lib.detectCapitalization($hit.text());
 
     const answer = view.activityHelper.getCorrectAnswer($hit, capType);
 

@@ -57,7 +57,7 @@ describe("mc.js", function() {
         const detectCapitalizationSpy = sandbox.spy(view.lib, "detectCapitalization");
 
         const $hit = $("[data-type='hit']").first();
-        const hitText = $hit.text().trim();
+        const hitText = $hit.text();
 
         view.mc.createExercise($hit);
 
@@ -107,7 +107,7 @@ describe("mc.js", function() {
         const createSelectBoxSpy = sandbox.spy(view.mc, "createSelectBox");
 
         const $hit = $("[data-type='hit']").first();
-        const hitText = $hit.text().trim();
+        const hitText = $hit.text();
         const answer = "Усвоение";
 
         view.mc.createExercise($hit);
@@ -221,7 +221,7 @@ describe("mc.js", function() {
         it("should find inside the hit a select box with the class 'viewinput'", function() {
           const options = ["Усвоение","Усвоении","Усвоению","Усвоением","Усвоения"];
           const $hit = $("[data-type='hit']").first();
-          const hitText = $hit.text().trim();
+          const hitText = $hit.text();
           const answer = "Усвоение";
 
           view.mc.createSelectBox(options, hitText, answer, $hit);
@@ -234,7 +234,7 @@ describe("mc.js", function() {
 
           const options = ["Усвоение","Усвоении","Усвоению","Усвоением","Усвоения"];
           const $hit = $("[data-type='hit']").first();
-          const hitText = $hit.text().trim();
+          const hitText = $hit.text();
           const answer = "Усвоение";
 
           view.mc.createSelectBox(options, hitText, answer, $hit);
@@ -255,7 +255,7 @@ describe("mc.js", function() {
         it("should have all options inside the select box", function() {
           const options = ["Усвоение","Усвоении","Усвоению","Усвоением","Усвоения"];
           const $hit = $("[data-type='hit']").first();
-          const hitText = $hit.text().trim();
+          const hitText = $hit.text();
           const answer = "Усвоение";
 
           view.mc.createSelectBox(options, hitText, answer, $hit);
@@ -272,7 +272,7 @@ describe("mc.js", function() {
         it("should find the data 'view-answer' in the select box", function() {
           const options = ["Усвоение","Усвоении","Усвоению","Усвоением","Усвоения"];
           const $hit = $("[data-type='hit']").first();
-          const hitText = $hit.text().trim();
+          const hitText = $hit.text();
           const answer = "Усвоение";
 
           view.mc.createSelectBox(options, hitText, answer, $hit);
@@ -288,7 +288,7 @@ describe("mc.js", function() {
 
           const options = ["Усвоение","Усвоении","Усвоению","Усвоением","Усвоения"];
           const $hit = $("[data-type='hit']").first();
-          const hitText = $hit.text().trim();
+          const hitText = $hit.text();
           const answer = "Усвоение";
 
           view.mc.createSelectBox(options, hitText, answer, $hit);
