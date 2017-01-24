@@ -45,11 +45,11 @@ describe("options.js", function() {
       expect($(viewOptions.selectorStart + "interval-size").val()).to.equal("2");
       expect($(viewOptions.selectorStart + "interval-size-value").val()).to.equal("1");
 
-      expect($(viewOptions.selectorStart + "show-instructions")).to.exist;
+      expect($(viewOptions.selectorStart + "show-instructions").length).to.be.above(0);
 
-      expect($(viewOptions.selectorStart + "save-options")).to.exist;
+      expect($(viewOptions.selectorStart + "save-options").length).to.be.above(0);
 
-      expect($(viewOptions.selectorStart + "options-saved")).to.exist;
+      expect($(viewOptions.selectorStart + "options-saved").length).to.be.above(0);
     });
   });
 
@@ -272,12 +272,12 @@ describe("options.js", function() {
       it("should set all user options and then call showSavedMessage()", function() {
         const showSavedMessageSpy = sandbox.spy(viewOptions, "showSavedMessage");
 
-        const fixedOrPercentage = "0";
-        const fixedNumberOfExercises = "30";
-        const percentageOfExercises = "90";
-        const choiceMode = "1";
-        const firstOffset = "5";
-        const intervalSize = "1";
+        const fixedOrPercentage = 0;
+        const fixedNumberOfExercises = 30;
+        const percentageOfExercises = 90;
+        const choiceMode = 1;
+        const firstOffset = 5;
+        const intervalSize = 1;
         const showInst = false;
 
         chrome.storage.local.set.yields(); // make set synchronous
@@ -333,12 +333,12 @@ describe("options.js", function() {
         const restoreHowToChooseExercisesSpy = sandbox.spy(viewOptions, "restoreHowToChooseExercises");
         const restoreIfToShowInstructionsSpy = sandbox.spy(viewOptions, "restoreIfToShowInstructions");
 
-        const fixedOrPercentage = "0";
-        const fixedNumberOfExercises = "25";
-        const percentageOfExercises = "100";
-        const choiceMode = "0";
-        const firstOffset = "0";
-        const intervalSize = "1";
+        const fixedOrPercentage = 0;
+        const fixedNumberOfExercises = 25;
+        const percentageOfExercises = 100;
+        const choiceMode = 0;
+        const firstOffset = 0;
+        const intervalSize = 1;
         const showInst = false;
 
         chrome.storage.local.get.yields({});
@@ -374,12 +374,12 @@ describe("options.js", function() {
         const restoreHowToChooseExercisesSpy = sandbox.spy(viewOptions, "restoreHowToChooseExercises");
         const restoreIfToShowInstructionsSpy = sandbox.spy(viewOptions, "restoreIfToShowInstructions");
 
-        const fixedOrPercentage = "1";
-        const fixedNumberOfExercises = "30";
-        const percentageOfExercises = "90";
-        const choiceMode = "1";
-        const firstOffset = "5";
-        const intervalSize = "3";
+        const fixedOrPercentage = 1;
+        const fixedNumberOfExercises = 30;
+        const percentageOfExercises = 90;
+        const choiceMode = 1;
+        const firstOffset = 5;
+        const intervalSize = 3;
         const showInst = true;
 
         chrome.storage.local.get.yields({
@@ -418,20 +418,20 @@ describe("options.js", function() {
     });
 
     describe("chooseHowManyExercises", function() {
-      it("should check fixed number of exercises and call chooseFixedNumber(), as the argument is \"0\"", function() {
+      it("should check fixed number of exercises and call chooseFixedNumber(), as the argument is 0", function() {
         const chooseFixedNumberSpy = sandbox.spy(viewOptions, "chooseFixedNumber");
 
-        viewOptions.chooseHowManyExercises("0");
+        viewOptions.chooseHowManyExercises(0);
 
         expect($(viewOptions.selectorStart + "fixed-number-of-exercises").prop("checked")).to.be.true;
 
         sinon.assert.calledOnce(chooseFixedNumberSpy);
       });
 
-      it("should check percentage of exercises and call choosePercentage(), as the argument is \"1\"", function() {
+      it("should check percentage of exercises and call choosePercentage(), as the argument is 1", function() {
         const choosePercentageSpy = sandbox.spy(viewOptions, "choosePercentage");
 
-        viewOptions.chooseHowManyExercises("1");
+        viewOptions.chooseHowManyExercises(1);
 
         expect($(viewOptions.selectorStart + "percentage-of-exercises").prop("checked")).to.be.true;
 
@@ -441,44 +441,44 @@ describe("options.js", function() {
 
     describe("restoreHowManyExercises", function() {
       it("should restore the values of the fixed number and percentage of exercises", function() {
-        const fixedNumberOfExercises = "25";
-        const percentageOfExercises = "100";
+        const fixedNumberOfExercises = 25;
+        const percentageOfExercises = 100;
 
         viewOptions.restoreHowManyExercises(
           fixedNumberOfExercises,
           percentageOfExercises
         );
 
-        expect($(viewOptions.selectorStart + "fixed-number-of-exercises-value").val()).to.equal(fixedNumberOfExercises);
-        expect($(viewOptions.selectorStart + "percentage-of-exercises-value").val()).to.equal(percentageOfExercises);
+        expect($(viewOptions.selectorStart + "fixed-number-of-exercises-value").val()).to.equal(fixedNumberOfExercises+"");
+        expect($(viewOptions.selectorStart + "percentage-of-exercises-value").val()).to.equal(percentageOfExercises+"");
       });
     });
 
     describe("chooseHowToChooseExercises", function() {
-      it("should check random choice and call chooseRandom(), as the argument is \"0\"", function() {
+      it("should check random choice and call chooseRandom(), as the argument is 0", function() {
         const chooseRandomSpy = sandbox.spy(viewOptions, "chooseRandom");
 
-        viewOptions.chooseHowToChooseExercises("0");
+        viewOptions.chooseHowToChooseExercises(0);
 
         expect($(viewOptions.selectorStart + "random").prop("checked")).to.be.true;
 
         sinon.assert.calledOnce(chooseRandomSpy);
       });
 
-      it("should check first offset and call chooseFirstOffset(), as the argument is \"1\"", function() {
+      it("should check first offset and call chooseFirstOffset(), as the argument is 1", function() {
         const chooseFirstOffsetSpy = sandbox.spy(viewOptions, "chooseFirstOffset");
 
-        viewOptions.chooseHowToChooseExercises("1");
+        viewOptions.chooseHowToChooseExercises(1);
 
         expect($(viewOptions.selectorStart + "first-offset").prop("checked")).to.be.true;
 
         sinon.assert.calledOnce(chooseFirstOffsetSpy);
       });
 
-      it("should check interval size and call chooseIntervalSize(), as the argument is \"2\"", function() {
+      it("should check interval size and call chooseIntervalSize(), as the argument is 2", function() {
         const chooseIntervalSizeSpy = sandbox.spy(viewOptions, "chooseIntervalSize");
 
-        viewOptions.chooseHowToChooseExercises("2");
+        viewOptions.chooseHowToChooseExercises(2);
 
         expect($(viewOptions.selectorStart + "interval-size").prop("checked")).to.be.true;
 
@@ -488,16 +488,16 @@ describe("options.js", function() {
 
     describe("restoreHowToChooseExercises", function() {
       it("should restore the values of how exercises should be chosen", function() {
-        const firstOffset = "5";
-        const intervalSize = "3";
+        const firstOffset = 5;
+        const intervalSize = 3;
 
         viewOptions.restoreHowToChooseExercises(
           firstOffset,
           intervalSize
         );
 
-        expect($(viewOptions.selectorStart + "first-offset-value").val()).to.equal(firstOffset);
-        expect($(viewOptions.selectorStart + "interval-size-value").val()).to.equal(intervalSize);
+        expect($(viewOptions.selectorStart + "first-offset-value").val()).to.equal(firstOffset+"");
+        expect($(viewOptions.selectorStart + "interval-size-value").val()).to.equal(intervalSize+"");
       });
     });
 

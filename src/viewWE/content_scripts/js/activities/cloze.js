@@ -3,83 +3,55 @@ view.cloze = {
    * Run the cloze activity.
    */
   run: function() {
-    console.log("cloze()");
-
     const hitList = view.activityHelper.createHitList();
 
-    view.cloze.handler(hitList);
+    view.activityHelper.exerciseHandler(hitList, view.cloze.createExercise);
   },
 
   /**
-   * Generate cloze exercises. TODO BUG: When typing an answer into the input field and then pressing on the
-   * hint right away, both the typed answer and the hint event are triggered at the same time and send to the server.
-   */
-  handler: function(hitList) {
-    console.log("handler(hitList)");
-
-    const numExercises = view.activityHelper.calculateNumberOfExercises(hitList);
-
-    const exerciseOptions = view.activityHelper.chooseWhichExercises(hitList);
-
-    view.cloze.createExercises(numExercises, exerciseOptions, hitList);
-
-    const $Body = $("body");
-
-    $Body.on("change", "input.viewinput", view.activityHelper.inputHandler);
-    $Body.on("click", "viewhint", view.activityHelper.hintHandler);
-  },
-
-  /**
-   * Create exercises for the activity.
+   * Create an exercise for the enhancement element.
    *
-   * @param {number} numExercises the number of exercises
-   * @param {object} exerciseOptions first offset and interval size values
-   * @param {Array} hitList list of hits that could be turned into exercises
+   * @param {object} $hit the enhancement element the exercise is created for
    */
-  createExercises: function(numExercises, exerciseOptions, hitList) {
-    let i = exerciseOptions.firstOffset;
+  createExercise: function($hit) {
 
-    for (; numExercises > 0 && i < hitList.length; i += exerciseOptions.intervalSize) {
-      const $hit = hitList[i];
+    const capType = view.lib.detectCapitalization($hit.text().trim());
 
-      const capType = view.lib.detectCapitalization($hit.text().trim());
+    const answer = view.activityHelper.getCorrectAnswer($hit, capType);
 
-      const answer = view.activityHelper.getCorrectAnswer($hit, capType);
+    view.cloze.createInputBox(answer, $hit);
 
-      view.cloze.createInputBox(answer, $hit);
+    view.activityHelper.createHint($hit);
 
-      view.activityHelper.createHint($hit);
-
-      view.cloze.addBaseform($hit);
-
-      numExercises--;
-    }
+    view.cloze.addBaseform($hit);
   },
 
   /**
    * Create the input box.
    *
    * @param {string} answer the correct answer
-   * @param {object} $hit the enhancement tag the select box is designed for
+   * @param {object} $hit the enhancement element the input box is appended to
    */
   createInputBox: function(answer, $hit) {
     // create input box
-    const $input = $("<input>");
-    $input.data("view-original-text", $hit.text().trim());
-    $input.attr("type", "text");
+    const $InputBox = $("<input>");
+    $InputBox.addClass("viewinput");
+    $InputBox.addClass("cloze-style-input");
+
+    $InputBox.attr("type", "text");
     // average of 10 px per letter (can fit 10 x "м" with a width of 110)
-    $input.css("width", (answer.length * 10) + "px");
-    $input.addClass("cloze-style-input");
-    $input.addClass("viewinput");
-    $input.data("view-answer", answer);
+    $InputBox.css("width", (answer.length * 10) + "px");
+
+    $InputBox.data("view-answer", answer);
 
     $hit.empty();
-    $hit.append($input);
+    $hit.append($InputBox);
   },
 
   /**
-   * Add the baseform (lemma) next to
-   * the input field.
+   * Add the baseform (lemma) next to the input box.
+   *
+   * @param {object} $hit the enhancement element containing the input box
    */
   addBaseform: function($hit) {
     const $baseform = $("<viewbaseform>");

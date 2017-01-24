@@ -100,6 +100,106 @@ module.exports = function(grunt) {
           "../viewWE/content_scripts/js/view-menu.js": ["coverage"],
           "**/view-menu.html": ["html2js"]
         }
+      },
+      activityColor: {
+        files: {
+          src: [
+            "../viewWE/content_scripts/js/selector-cache.js",
+            "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/activities/color.js",
+            "test/unit/content_scripts/activities/color.test.js"
+          ]
+        },
+        preprocessors: {
+          "../viewWE/content_scripts/js/activities/color.js": ["coverage"],
+          "**/ru-nouns-color.html": ["html2js"]
+        }
+      },
+      activityClick: {
+        files: {
+          src: [
+            "../viewWE/content_scripts/js/selector-cache.js",
+            "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/lib.js",
+            "../viewWE/content_scripts/js/activities/collector.js",
+            "../viewWE/content_scripts/js/activities/activityHelper.js",
+            "../viewWE/content_scripts/js/activities/click.js",
+            "test/unit/content_scripts/activities/click.test.js"
+          ]
+        },
+        preprocessors: {
+          "../viewWE/content_scripts/js/activities/click.js": ["coverage"],
+          "**/ru-nouns-click.html": ["html2js"]
+        }
+      },
+      activityMc: {
+        files: {
+          src: [
+            "../viewWE/content_scripts/js/selector-cache.js",
+            "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/lib.js",
+            "../viewWE/content_scripts/js/activities/collector.js",
+            "../viewWE/content_scripts/js/activities/activityHelper.js",
+            "../viewWE/content_scripts/js/activities/mc.js",
+            "test/unit/content_scripts/activities/mc.test.js"
+          ]
+        },
+        preprocessors: {
+          "../viewWE/content_scripts/js/activities/mc.js": ["coverage"],
+          "**/ru-nouns-mc-and-cloze.html": ["html2js"]
+        }
+      },
+      activityCloze: {
+        files: {
+          src: [
+            "../viewWE/content_scripts/js/selector-cache.js",
+            "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/lib.js",
+            "../viewWE/content_scripts/js/activities/collector.js",
+            "../viewWE/content_scripts/js/activities/activityHelper.js",
+            "../viewWE/content_scripts/js/activities/cloze.js",
+            "test/unit/content_scripts/activities/cloze.test.js"
+          ]
+        },
+        preprocessors: {
+          "../viewWE/content_scripts/js/activities/cloze.js": ["coverage"],
+          "**/ru-nouns-mc-and-cloze.html": ["html2js"]
+        }
+      },
+      activityHelper: {
+        files: {
+          src: [
+            "../viewWE/content_scripts/js/selector-cache.js",
+            "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/lib.js",
+            "../viewWE/content_scripts/js/activities/collector.js",
+            "../viewWE/content_scripts/js/activities/activityHelper.js",
+            "test/unit/content_scripts/activities/activityHelper.test.js",
+            "../viewWE/content_scripts/js/activities/click.js",
+            "../viewWE/content_scripts/js/activities/mc.js",
+            "../viewWE/content_scripts/js/activities/cloze.js"
+          ]
+        },
+        preprocessors: {
+          "../viewWE/content_scripts/js/activities/activityHelper.js": ["coverage"],
+          "**/ru-nouns-mc-and-cloze.html": ["html2js"]
+        }
+      },
+      collector: {
+        files: {
+          src: [
+            "../viewWE/content_scripts/js/selector-cache.js",
+            "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/lib.js",
+            "../viewWE/content_scripts/js/activities/collector.js",
+            "test/unit/content_scripts/activities/collector.test.js",
+            "../viewWE/content_scripts/js/activities/activityHelper.js"
+          ]
+        },
+        preprocessors: {
+          "../viewWE/content_scripts/js/activities/collector.js": ["coverage"],
+          "**/ru-nouns-mc-and-cloze.html": ["html2js"]
+        }
       }
     }
   });

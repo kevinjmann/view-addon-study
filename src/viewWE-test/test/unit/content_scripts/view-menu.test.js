@@ -1,12 +1,12 @@
 /**
- * Tests for the options.js file of the VIEW add-on.
+ * Tests for the view-menu.js file of the VIEW add-on.
  *
- * Created by eduard on 06.01.17.
+ * Created by eduard on 14.01.17.
  */
 
 "use strict";
 
-describe("options.js", function() {
+describe("view-menu.js", function() {
   let sandbox;
 
   beforeEach(function() {
@@ -29,10 +29,10 @@ describe("options.js", function() {
       // the expectations below don't need to be tested in other tests again
       // the selectors below can be freely used in the tests without problems
 
-      expect($(view.VIEWmenu.selectorStart + "content")).to.exist;
-      expect($(view.VIEWmenu.selectorStart + "options")).to.exist;
-      expect($(view.VIEWmenu.selectorStart + "help")).to.exist;
-      expect($(view.VIEWmenu.selectorStart + "about")).to.exist;
+      expect($(view.VIEWmenu.selectorStart + "content").length).to.be.above(0);
+      expect($(view.VIEWmenu.selectorStart + "options").length).to.be.above(0);
+      expect($(view.VIEWmenu.selectorStart + "help").length).to.be.above(0);
+      expect($(view.VIEWmenu.selectorStart + "about").length).to.be.above(0);
     });
   });
 

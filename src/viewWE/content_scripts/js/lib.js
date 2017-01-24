@@ -5,44 +5,31 @@ view.lib = {
   noResponse: function() {
     // This is intentional
   },
+
   /*
    * Get random numbers up to the variable "max".
    */
   getRandom: function(max) {
     return Math.floor(Math.random() * (max + 1));
   },
-  /*
-   * This function is supposed to do nothing
+
+  /**
+   * Disable all anchors, so that links can't be followed.
    */
-  doNothing: function() {
-    // intentionally empty here
+  disableAnchors: function() {
+    $("a").each(function() {
+      $(this).data("href", $(this).attr("href"));
+      $(this).removeAttr("href");
+    });
   },
 
-  /*
-   * Handler for disabling click on <a> elements in click activities
+  /**
+   * Enable all anchors, so that links can be followed again.
    */
-  clickDisableLink: function() {
-    return false;
-  },
-
-  /*
-   * Handler for disabling click/submit within <a> elements in cloze activities
-   */
-  clozeDisableLink: function() {
-
-    // if there is an input box in the link, disable
-    if ($(this).find(".wertiviewinput").length > 0) {
-      return false;
-    }
-
-    // if the input box was just removed, remove flag and only disable for this click
-    if ($(this).data("wertiview-disableclick")) {
-      $(this).removeData("wertiview-disableclick");
-      return false;
-    }
-
-    // enable link
-    return true;
+  enableAnchors: function() {
+    $("a").each(function() {
+      $(this).attr("href", $(this).data("href"));
+    });
   },
 
   /*

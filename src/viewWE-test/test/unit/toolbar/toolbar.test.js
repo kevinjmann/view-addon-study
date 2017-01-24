@@ -76,31 +76,29 @@ describe("toolbar.js", function() {
       // the expectations below don't need to be tested in other tests again
       // the selectors below can be freely used in the tests without problems
 
-      console.log($("body"));
+      expect($("#wertiview-VIEW-menu-btn").length).to.be.above(0);
 
-      expect($("#wertiview-VIEW-menu-btn")).to.exist;
+      expect($(toolbar.selectorStart + "enabled").length).to.be.above(0);
+      expect($(toolbar.selectorStart + "disabled").length).to.be.above(0);
 
-      expect($(toolbar.selectorStart + "enabled")).to.exist;
-      expect($(toolbar.selectorStart + "disabled")).to.exist;
-
-      expect($(toolbar.selectorStart + "language-menu")).to.exist;
+      expect($(toolbar.selectorStart + "language-menu").length).to.be.above(0);
       expect($(toolbar.selectorStart + "language-unselected").val()).to.equal("unselected");
       expect($(toolbar.selectorStart + "language-en").val()).to.equal("en");
       expect($(toolbar.selectorStart + "language-ru").val()).to.equal("ru");
 
-      expect($(toolbar.selectorStart + "topic-menu-unselected")).to.exist;
+      expect($(toolbar.selectorStart + "topic-menu-unselected").length).to.be.above(0);
       expect($(toolbar.selectorStart + "topic-unselected").val()).to.equal("unselected");
 
-      expect($(toolbar.selectorStart + "topic-menu-en")).to.exist;
+      expect($(toolbar.selectorStart + "topic-menu-en").length).to.be.above(0);
       expect($(toolbar.selectorStart + "topic-unselected-en").val()).to.equal("unselected-en");
       expect($(toolbar.selectorStart + "topic-articles").val()).to.equal("articles");
       expect($(toolbar.selectorStart + "topic-determiners-en").val()).to.equal("determiners");
 
-      expect($(toolbar.selectorStart + "topic-menu-ru")).to.exist;
+      expect($(toolbar.selectorStart + "topic-menu-ru").length).to.be.above(0);
       expect($(toolbar.selectorStart + "topic-unselected-ru").val()).to.equal("unselected-ru");
       expect($(toolbar.selectorStart + "topic-nouns").val()).to.equal("nouns");
 
-      expect($(toolbar.selectorStart + "activity-menu")).to.exist;
+      expect($(toolbar.selectorStart + "activity-menu").length).to.be.above(0);
       expect($(toolbar.selectorStart + "activity-unselected").val()).to.equal("unselected");
       expect($(toolbar.selectorStart + "activity-unselected").next().text()).to.equal("──────────");
       expect($(toolbar.selectorStart + "activity-color").val()).to.equal("color");
@@ -108,21 +106,21 @@ describe("toolbar.js", function() {
       expect($(toolbar.selectorStart + "activity-mc").val()).to.equal("mc");
       expect($(toolbar.selectorStart + "activity-cloze").val()).to.equal("cloze");
 
-      expect($(toolbar.selectorStart + "enhance-button")).to.exist;
-      expect($(toolbar.selectorStart + "restore-button")).to.exist;
-      expect($(toolbar.selectorStart + "abort-button")).to.exist;
-      expect($(toolbar.selectorStart + "loading-image")).to.exist;
+      expect($(toolbar.selectorStart + "enhance-button").length).to.be.above(0);
+      expect($(toolbar.selectorStart + "restore-button").length).to.be.above(0);
+      expect($(toolbar.selectorStart + "abort-button").length).to.be.above(0);
+      expect($(toolbar.selectorStart + "loading-image").length).to.be.above(0);
 
       toolbar.initSignInOutInterfaces(); // adds the link attribute
 
       expect($(identityIdStart + "signinlink").attr("link"))
       .to.equal("http://sifnos.sfs.uni-tuebingen.de/VIEW/openid/authenticator.html");
-      expect($(identityIdStart + "signedinstatus")).to.exist;
-      expect($(identityIdStart + "signedinuseremail")).to.exist;
+      expect($(identityIdStart + "signedinstatus").length).to.be.above(0);
+      expect($(identityIdStart + "signedinuseremail").length).to.be.above(0);
       expect($(identityIdStart + "signoutlink").attr("link"))
       .to.equal("http://sifnos.sfs.uni-tuebingen.de/VIEW/openid/authenticator.html");
 
-      expect($(toolbar.selectorStart + "toggle-button")).to.exist;
+      expect($(toolbar.selectorStart + "toggle-button").length).to.be.above(0);
     });
   });
 

@@ -3,14 +3,14 @@ view.collector = {
    * Collects data from the user-interaction with the activity and sends
    * it to the server for tracking.
    *
-   * @param {object} $Enhancement the current enhancement element the user
-   * is interacting with
+   * @param {object} $EnhancementElement the current enhancement element the
+   * user is interacting with
    * @param {string} input the input obtained from the user action
    * @param {boolean} countsAsCorrect true if the answer is correct,
    * false otherwise
    * @param usedHint true if a hint was used, false otherwise
    */
-  collectAndSendData: function($Enhancement, input, countsAsCorrect, usedHint) {
+  collectAndSendData: function($EnhancementElement, input, countsAsCorrect, usedHint) {
     const interactionData = {};
     const elementData = {};
 
@@ -20,16 +20,16 @@ view.collector = {
     interactionData["activity"] = view.activity;
 
     const isClick = (interactionData["activity"] === "click");
-    elementData["viewenhancementid"] = $Enhancement.data("id");
+    elementData["viewenhancementid"] = $EnhancementElement.attr("id");
     elementData["userinput"] = input;
 
     if (!isClick) {
-      const capType = view.lib.detectCapitalization($Enhancement.text().trim());
-      elementData["correctanswer"] = view.activityHelper.getCorrectAnswer($Enhancement, capType);
+      const capType = view.lib.detectCapitalization($EnhancementElement.text().trim());
+      elementData["correctanswer"] = view.activityHelper.getCorrectAnswer($EnhancementElement, capType);
       elementData["usedhint"] = usedHint;
     }
 
-    elementData["countsascorrect"] = usedHint || countsAsCorrect;
+    elementData["countsascorrect"] = countsAsCorrect;
     interactionData["element"] = JSON.stringify(elementData);
 
     view.collector.requestToSendInteractionData(interactionData);
