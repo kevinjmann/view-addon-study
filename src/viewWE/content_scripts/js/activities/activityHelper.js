@@ -39,10 +39,8 @@ view.activityHelper = {
       createExercise
     );
 
-    const $Body = $("body");
-
-    $Body.on("change", ".viewinput", view.activityHelper.inputHandler);
-    $Body.on("click", "viewhint", view.activityHelper.hintHandler);
+    $(".viewinput").on("change", view.activityHelper.inputHandler);
+    $("viewhint").on("click", view.activityHelper.hintHandler);
   },
 
   /**
@@ -269,19 +267,17 @@ view.activityHelper = {
    * Remove activity specific markup.
    */
   restore: function() {
-    const $Body = $("body");
+    const $Hint = $("viewhint");
 
     // click
-    $Body.off("click", "viewenhancement");
+    $("viewenhancement").off("click");
 
     // mc and cloze
-    $Body.off("change", ".viewinput");
-    $Body.off("click", "viewhint");
+    $(".viewinput").off("change");
+    $Hint.off("click");
+    $Hint.remove();
 
     // cloze
     $("viewbaseform").remove();
-
-    // mc and cloze
-    $("viewhint").remove();
   }
 };
