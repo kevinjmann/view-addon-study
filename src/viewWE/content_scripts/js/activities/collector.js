@@ -20,7 +20,7 @@ view.collector = {
     interactionData["activity"] = view.activity;
 
     const isClick = (interactionData["activity"] === "click");
-    elementData["viewenhancementid"] = $EnhancementElement.data("id");
+    elementData["viewenhancementid"] = $EnhancementElement.attr("id");
     elementData["userinput"] = input;
 
     if (!isClick) {
@@ -29,7 +29,7 @@ view.collector = {
       elementData["usedhint"] = usedHint;
     }
 
-    elementData["countsascorrect"] = usedHint || countsAsCorrect;
+    elementData["countsascorrect"] = countsAsCorrect;
     interactionData["element"] = JSON.stringify(elementData);
 
     view.collector.requestToSendInteractionData(interactionData);
