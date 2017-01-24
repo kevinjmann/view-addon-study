@@ -401,21 +401,23 @@ describe("activityHelper.js", function() {
           sinon.assert.calledWithExactly(colorClueSpy, clueId, "inherit");
         });
 
-        // it("should color a clue with 'red' and 'inherit'", function() {
-        //   const clueId = "VIEW-Pr-5";
-        //   const $Clue = $("[data-id='" + clueId + "']");
-        //   let clueStyleColor = "red";
-        //
-        //   view.activityHelper.colorClue(clueId, clueStyleColor);
-        //
-        //   expect($Clue.css("color")).to.equal(clueStyleColor);
-        //
-        //   clueStyleColor = "inherit";
-        //
-        //   view.activityHelper.colorClue(clueId, clueStyleColor);
-        //
-        //   expect($Clue.css("color")).to.equal(clueStyleColor);
-        // });
+        it("should color a clue with 'red' and 'inherit'", function() {
+          const clueId = "VIEW-Pr-5";
+          const $Clue = $("#" + clueId);
+          let clueStyleColor = "red";
+
+          view.activityHelper.colorClue(clueId, clueStyleColor);
+
+          // for some reason red is represented like this
+          expect($Clue.css("color")).to.equal("rgb(255, 0, 0)");
+
+          clueStyleColor = "inherit";
+
+          view.activityHelper.colorClue(clueId, clueStyleColor);
+
+          // for some reason inherit is represented like this
+          expect($Clue.css("color")).to.equal("rgb(0, 0, 0)");
+        });
 
         it("should have the class 'input-style-correct' in the enhancement element", function() {
           view.mc.run();
