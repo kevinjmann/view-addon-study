@@ -209,7 +209,7 @@ const viewOptions = {
   /**
    * Choice between a fixed number or percentage of exercises.
    *
-   * @param {number} fixedOrPercentageValue "0" if fixed, percentage otherwise
+   * @param {number} fixedOrPercentageValue 0 if fixed, percentage otherwise
    */
   chooseHowManyExercises: function(fixedOrPercentageValue) {
     if (fixedOrPercentageValue === 0) {
@@ -237,7 +237,7 @@ const viewOptions = {
   /**
    * Choice how exercises should be chosen.
    *
-   * @param {number} choiceModeValue "0" if random, "1" if first offset, interval
+   * @param {number} choiceModeValue 0 if random, 1 if first offset, interval
    * size otherwise
    */
   chooseHowToChooseExercises: function(choiceModeValue) {
