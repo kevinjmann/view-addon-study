@@ -38,14 +38,13 @@ describe("color.js", function() {
     it("should add the color class to all viewenhancement tags", function() {
       const topic = "nouns";
       const colorizeStyleClass = "colorize-style-nouns";
-      const $Enhancement = $("viewenhancement");
+      const $Enhancements = $("viewenhancement");
 
-      expect($Enhancement.hasClass(colorizeStyleClass)).to.be.false;
+      expect($Enhancements.hasClass(colorizeStyleClass)).to.be.false;
 
       view.color.run(topic);
 
-      $Enhancement.each(function() {
-        expect($(this).data("view-original-text")).to.exist;
+      $Enhancements.each(function() {
         expect($(this).hasClass(colorizeStyleClass)).to.be.true;
       });
     });

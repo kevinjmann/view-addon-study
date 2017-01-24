@@ -41,14 +41,13 @@ describe("click.js", function() {
       const eventSpy = sandbox.spy($.fn, "on");
 
       const clickStyleClass = "click-style-pointer";
-      const $Enhancement = $("viewenhancement");
+      const $Enhancements = $("viewenhancement");
 
-      expect($Enhancement.hasClass(clickStyleClass)).to.be.false;
+      expect($Enhancements.hasClass(clickStyleClass)).to.be.false;
 
       view.click.run();
 
-      $Enhancement.each(function() {
-        expect($(this).data("view-original-text")).to.exist;
+      $Enhancements.each(function() {
         expect($(this).hasClass(clickStyleClass)).to.be.true;
       });
 
@@ -62,84 +61,91 @@ describe("click.js", function() {
     it("should call the handler on click", function() {
       const handlerSpy = sandbox.spy(view.click, "handler");
 
-      const $Element = $("[data-type='hit']").first();
+      const $EnhancementElement = $("[data-type='hit']").first();
 
       view.click.run();
 
-      $Element.trigger("click");
+      $EnhancementElement.trigger("click");
 
       sinon.assert.calledOnce(handlerSpy);
     });
 
     describe("handler", function() {
       it("should add class for a correct click on an element of type 'hit'", function() {
-        const $Element = $("[data-type='hit']").first();
+        const $EnhancementElement = $("[data-type='hit']").first();
 
         view.click.run();
 
-        $Element.trigger("click");
+        $EnhancementElement.trigger("click");
 
-        expect($Element.hasClass("click-style-correct")).to.be.true;
+        expect($EnhancementElement.hasClass("click-style-correct")).to.be.true;
       });
 
       it("should add class for a correct click on an element of type 'ambiguity'", function() {
-        const $Element = $("[data-type='ambiguity']").first();
+        const $EnhancementElement = $("[data-type='ambiguity']").first();
 
         view.click.run();
 
-        $Element.trigger("click");
+        $EnhancementElement.trigger("click");
 
-        expect($Element.hasClass("click-style-correct")).to.be.true;
+        expect($EnhancementElement.hasClass("click-style-correct")).to.be.true;
       });
 
       it("should add class for a incorrect click on an element of type 'miss'", function() {
-        const $Element = $("[data-type='miss']").first();
+        const $EnhancementElement = $("[data-type='miss']").first();
 
         view.click.run();
 
-        $Element.trigger("click");
+        $EnhancementElement.trigger("click");
 
-        expect($Element.hasClass("click-style-incorrect")).to.be.true;
+        expect($EnhancementElement.hasClass("click-style-incorrect")).to.be.true;
       });
 
       it("should remove the click style pointer in any case", function() {
-        const $Element = $("viewenhancement").first();
+        const $EnhancementElement = $("viewenhancement").first();
         const clickStylePointer = "click-style-pointer";
 
         view.click.run();
 
-        expect($Element.hasClass(clickStylePointer)).to.be.true;
+        expect($EnhancementElement.hasClass(clickStylePointer)).to.be.true;
 
-        $Element.trigger("click");
+        $EnhancementElement.trigger("click");
 
-        expect($Element.hasClass(clickStylePointer)).to.be.false;
+        expect($EnhancementElement.hasClass(clickStylePointer)).to.be.false;
       });
 
       it("should call collectAndSendData($Enhancement, input, countsAsCorrect, usedHint), as the user is logged in", function() {
         const collectAndSendDataSpy = sandbox.spy(view.collector, "collectAndSendData");
 
-        const $Element = $("[data-type='hit']").first();
+        const $EnhancementElement = $("[data-type='hit']").first();
+        const countAsCorrect = true;
+        const usedHint = false;
 
         view.userid = "someid";
 
         view.click.run();
 
-        $Element.trigger("click");
+        $EnhancementElement.trigger("click");
+
+        delete $EnhancementElement.prevObject;
 
         sinon.assert.calledOnce(collectAndSendDataSpy);
-        expect(collectAndSendDataSpy.firstCall.args[1]).to.equal($Element.text().trim());
-        expect(collectAndSendDataSpy.firstCall.args[2]).to.be.true;
-        expect(collectAndSendDataSpy.firstCall.args[3]).to.be.false;
+        sinon.assert.calledWithExactly(collectAndSendDataSpy,
+          $EnhancementElement,
+          $EnhancementElement.text().trim(),
+          countAsCorrect,
+          usedHint
+        );
       });
 
       it("should return false in any case", function() {
         const handlerSpy = sandbox.spy(view.click, "handler");
 
-        const $Element = $("viewenhancement").first();
+        const $EnhancementElement = $("viewenhancement").first();
 
         view.click.run();
 
-        $Element.trigger("click");
+        $EnhancementElement.trigger("click");
 
         sinon.assert.calledOnce(handlerSpy);
         expect(handlerSpy.firstCall.returnValue).to.be.false;

@@ -4,10 +4,10 @@ view.click = {
    */
   run: function() {
     $("viewenhancement").each(function() {
-      const $Enhancement = $(this);
-      $Enhancement.data("view-original-text", $Enhancement.text().trim());
+      const $EnhancementElement = $(this);
+      $EnhancementElement.data("view-original-text", $EnhancementElement.text().trim());
 
-      $Enhancement.addClass("click-style-pointer");
+      $EnhancementElement.addClass("click-style-pointer");
     });
 
     $("body").on("click", "viewenhancement", view.click.handler);
@@ -18,23 +18,24 @@ view.click = {
    */
   handler: function() {
     let countsAsCorrect = false;
-    const $Element = $(this);
+    const $EnhancementElement = $(this);
+    const usedHint = false;
 
-    if ($Element.is("[data-type!='miss']")) {
+    if ($EnhancementElement.is("[data-type!='miss']")) {
       countsAsCorrect = true;
-      $Element.addClass("click-style-correct");
+      $EnhancementElement.addClass("click-style-correct");
     } else {
-      $Element.addClass("click-style-incorrect");
+      $EnhancementElement.addClass("click-style-incorrect");
     }
 
-    $Element.removeClass("click-style-pointer");
+    $EnhancementElement.removeClass("click-style-pointer");
 
     if (view.userid) {
       view.collector.collectAndSendData(
-        $Element,
-        $Element.text().trim(),
+        $EnhancementElement,
+        $EnhancementElement.text().trim(),
         countsAsCorrect,
-        false
+        usedHint
       );
     }
 
