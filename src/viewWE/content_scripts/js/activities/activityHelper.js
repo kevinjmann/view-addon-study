@@ -161,7 +161,7 @@ view.activityHelper = {
    * @param {string} clueStyleColor the color to use, either "inherit" or "red"
    */
   colorClue: function(clueId, clueStyleColor) {
-    $("[data-id='" + clueId + "']").css("color", clueStyleColor);
+    $("#" + clueId).css("color", clueStyleColor);
   },
 
   /**
