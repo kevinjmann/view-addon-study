@@ -153,13 +153,11 @@ describe("activityHelper.js", function() {
     it("should call createExercises(numExercises, exerciseOptions, hitList, createExercise)", function() {
       const createExercisesSpy = sandbox.spy(view.activityHelper, "createExercises");
 
-      const hitList = view.activityHelper.createHitList();
-
       view.fixedOrPercentage = 1;
 
       view.percentageOfExercises = 100;
 
-      view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+      view.mc.run();
 
       sinon.assert.calledOnce(createExercisesSpy);
       sinon.assert.calledWith(createExercisesSpy,
@@ -282,9 +280,7 @@ describe("activityHelper.js", function() {
     it("should initialize the input and hint handler", function() {
       const eventSpy = sandbox.spy($.fn, "on");
 
-      const hitList = view.activityHelper.createHitList();
-
-      view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+      view.mc.run();
 
       sinon.assert.calledTwice(eventSpy);
       sinon.assert.calledWithExactly(eventSpy.firstCall,
@@ -300,9 +296,7 @@ describe("activityHelper.js", function() {
     it("should call the input handler on change", function() {
       const inputHandlerSpy = sandbox.spy(view.activityHelper, "inputHandler");
 
-      const hitList = view.activityHelper.createHitList();
-
-      view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+      view.mc.run();
 
       const $ElementBox = $(".viewinput").first();
       const $Option = $ElementBox.find("option").eq(1);
@@ -316,9 +310,7 @@ describe("activityHelper.js", function() {
       it("should call processCorrect($ElementBox, 'correct'), as the correct option was selected", function() {
         const processCorrectSpy = sandbox.spy(view.activityHelper, "processCorrect");
 
-        const hitList = view.activityHelper.createHitList();
-
-        view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+        view.mc.run();
 
         const $ElementBox = $(".viewinput").first();
         const answer = $ElementBox.data("view-answer");
@@ -337,9 +329,7 @@ describe("activityHelper.js", function() {
       it("should call processIncorrect($ElementBox), as the incorrect option was selected", function() {
         const processIncorrectSpy = sandbox.spy(view.activityHelper, "processIncorrect");
 
-        const hitList = view.activityHelper.createHitList();
-
-        view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+        view.mc.run();
 
         const $ElementBox = $(".viewinput").first();
         const answer = $ElementBox.data("view-answer");
@@ -359,9 +349,7 @@ describe("activityHelper.js", function() {
       it("should call collectAndSendData($Enhancement, input, countsAsCorrect, usedHint), as the userid is defined", function() {
         const collectAndSendDataSpy = sandbox.spy(view.collector, "collectAndSendData");
 
-        const hitList = view.activityHelper.createHitList();
-
-        view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+        view.mc.run();
 
         const $ElementBox = $(".viewinput").first();
         const $EnhancementElement = $ElementBox.parent();
@@ -387,9 +375,7 @@ describe("activityHelper.js", function() {
       it("should return false in any case", function() {
         const inputHandlerSpy = sandbox.spy(view.activityHelper, "inputHandler");
 
-        const hitList = view.activityHelper.createHitList();
-
-        view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+        view.mc.run();
 
         const $ElementBox = $(".viewinput").first();
         const answer = $ElementBox.data("view-answer");
@@ -403,9 +389,7 @@ describe("activityHelper.js", function() {
         it("should call colorClue(clueId, clueStyleColor)", function() {
           const colorClueSpy = sandbox.spy(view.activityHelper, "colorClue");
 
-          const hitList = view.activityHelper.createHitList();
-
-          view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+          view.mc.run();
 
           const $ElementBox = $(".viewinput").first();
           const $EnhancementElement = $ElementBox.parent();
@@ -434,9 +418,7 @@ describe("activityHelper.js", function() {
         // });
 
         it("should have the class 'input-style-correct' in the enhancement element", function() {
-          const hitList = view.activityHelper.createHitList();
-
-          view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+          view.mc.run();
 
           const $ElementBox = $(".viewinput").first();
           const $EnhancementElement = $ElementBox.parent();
@@ -447,9 +429,7 @@ describe("activityHelper.js", function() {
         });
 
         it("should have the answer as html in the enhancement element", function() {
-          const hitList = view.activityHelper.createHitList();
-
-          view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+          view.mc.run();
 
           const $ElementBox = $(".viewinput").first();
           const $EnhancementElement = $ElementBox.parent();
@@ -463,9 +443,7 @@ describe("activityHelper.js", function() {
         it("should call jumpTo(elementId)", function() {
           const jumpToSpy = sandbox.spy(view.activityHelper, "jumpTo");
 
-          const hitList = view.activityHelper.createHitList();
-
-          view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+          view.mc.run();
 
           const $ElementBox = $(".viewinput").first();
 
@@ -479,9 +457,7 @@ describe("activityHelper.js", function() {
           it("should call scrollToCenter($Element) and jump to the given element id, as it exists", function() {
             const scrollToCenterSpy = sandbox.spy(view.activityHelper, "scrollToCenter");
 
-            const hitList = view.activityHelper.createHitList();
-
-            view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+            view.mc.run();
 
             const elementId = 1;
             const $Element = $(".viewinput").eq(elementId);
@@ -495,9 +471,7 @@ describe("activityHelper.js", function() {
           it("should call scrollToCenter($FirstInput) and jump to the first element, as the element id does not exist", function() {
             const scrollToCenterSpy = sandbox.spy(view.activityHelper, "scrollToCenter");
 
-            const hitList = view.activityHelper.createHitList();
-
-            view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+            view.mc.run();
 
             const elementId = 100;
             const $FirstElement = $(".viewinput").eq(0);
@@ -510,9 +484,7 @@ describe("activityHelper.js", function() {
 
           describe("scrollToCenter", function() {
             it("should have focus on the element", function() {
-              const hitList = view.activityHelper.createHitList();
-
-              view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+              view.mc.run();
 
               const elementId = 1;
               const $Element = $(".viewinput").eq(elementId);
@@ -527,9 +499,7 @@ describe("activityHelper.js", function() {
             it("should scroll to the center of the viewport", function() {
               const scrollTopSpy = sandbox.spy($.fn, "scrollTop");
 
-              const hitList = view.activityHelper.createHitList();
-
-              view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+              view.mc.run();
 
               const elementId = 1;
               const $Element = $(".viewinput").eq(elementId);
@@ -548,9 +518,7 @@ describe("activityHelper.js", function() {
         it("should call colorClue(clueId, clueStyleColor)", function() {
           const colorClueSpy = sandbox.spy(view.activityHelper, "colorClue");
 
-          const hitList = view.activityHelper.createHitList();
-
-          view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+          view.mc.run();
 
           const $ElementBox = $(".viewinput").first();
           const $EnhancementElement = $ElementBox.parent();
@@ -563,9 +531,7 @@ describe("activityHelper.js", function() {
         });
 
         it("should have the class 'input-style-incorrect' in the element box", function() {
-          const hitList = view.activityHelper.createHitList();
-
-          view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+          view.mc.run();
 
           const $ElementBox = $(".viewinput").first();
 
@@ -577,9 +543,7 @@ describe("activityHelper.js", function() {
         it("should call removeAttr('class')", function() {
           const removeAttrSpy = sandbox.spy($.fn, "removeAttr");
 
-          const hitList = view.activityHelper.createHitList();
-
-          view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+          view.mc.run();
 
           const $ElementBox = $(".viewinput").first();
           const answer = $ElementBox.data("view-answer");
@@ -597,9 +561,7 @@ describe("activityHelper.js", function() {
         });
 
         it("should add class 'input-style-incorrect' to the incorrectly selected option", function() {
-          const hitList = view.activityHelper.createHitList();
-
-          view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+          view.mc.run();
 
           const $ElementBox = $(".viewinput").first();
           const answer = $ElementBox.data("view-answer");
@@ -616,9 +578,7 @@ describe("activityHelper.js", function() {
         });
 
         it("should add class 'input-style-neutral' to the unselected options", function() {
-          const hitList = view.activityHelper.createHitList();
-
-          view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+          view.mc.run();
 
           const $ElementBox = $(".viewinput").first();
           const answer = $ElementBox.data("view-answer");
@@ -641,9 +601,7 @@ describe("activityHelper.js", function() {
     it("should call the hint handler on click", function() {
       const hintHandlerSpy = sandbox.spy(view.activityHelper, "hintHandler");
 
-      const hitList = view.activityHelper.createHitList();
-
-      view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+      view.mc.run();
 
       $("viewhint").first().trigger("click");
 
@@ -654,9 +612,7 @@ describe("activityHelper.js", function() {
       it("should call processCorrect($ElementBox, 'provided')", function() {
         const processCorrectSpy = sandbox.spy(view.activityHelper, "processCorrect");
 
-        const hitList = view.activityHelper.createHitList();
-
-        view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+        view.mc.run();
 
         const $Hint = $("viewhint").first();
         const $ElementBox = $Hint.prev();
@@ -675,9 +631,7 @@ describe("activityHelper.js", function() {
       it("should call collectAndSendData($Enhancement, input, countsAsCorrect, usedHint), as the userid is defined", function() {
         const collectAndSendDataSpy = sandbox.spy(view.collector, "collectAndSendData");
 
-        const hitList = view.activityHelper.createHitList();
-
-        view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+        view.mc.run();
 
         const $Hint = $("viewhint").first();
         const $ElementBox = $Hint.prev();
@@ -703,9 +657,7 @@ describe("activityHelper.js", function() {
       it("should return false in any case", function() {
         const hintHandlerSpy = sandbox.spy(view.activityHelper, "hintHandler");
 
-        const hitList = view.activityHelper.createHitList();
-
-        view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+        view.mc.run();
 
         const $Hint = $("viewhint").first();
 
