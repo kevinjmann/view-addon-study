@@ -45,11 +45,11 @@ describe("options.js", function() {
       expect($(viewOptions.selectorStart + "interval-size").val()).to.equal("2");
       expect($(viewOptions.selectorStart + "interval-size-value").val()).to.equal("1");
 
-      expect($(viewOptions.selectorStart + "show-instructions")).to.exist;
+      expect($(viewOptions.selectorStart + "show-instructions").length).to.be.above(0);
 
-      expect($(viewOptions.selectorStart + "save-options")).to.exist;
+      expect($(viewOptions.selectorStart + "save-options").length).to.be.above(0);
 
-      expect($(viewOptions.selectorStart + "options-saved")).to.exist;
+      expect($(viewOptions.selectorStart + "options-saved").length).to.be.above(0);
     });
   });
 

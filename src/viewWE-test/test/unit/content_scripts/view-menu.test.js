@@ -29,10 +29,10 @@ describe("view-menu.js", function() {
       // the expectations below don't need to be tested in other tests again
       // the selectors below can be freely used in the tests without problems
 
-      expect($(view.VIEWmenu.selectorStart + "content")).to.exist;
-      expect($(view.VIEWmenu.selectorStart + "options")).to.exist;
-      expect($(view.VIEWmenu.selectorStart + "help")).to.exist;
-      expect($(view.VIEWmenu.selectorStart + "about")).to.exist;
+      expect($(view.VIEWmenu.selectorStart + "content").length).to.be.above(0);
+      expect($(view.VIEWmenu.selectorStart + "options").length).to.be.above(0);
+      expect($(view.VIEWmenu.selectorStart + "help").length).to.be.above(0);
+      expect($(view.VIEWmenu.selectorStart + "about").length).to.be.above(0);
     });
   });
 
