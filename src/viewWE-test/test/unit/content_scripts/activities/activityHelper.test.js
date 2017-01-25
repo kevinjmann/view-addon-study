@@ -277,327 +277,17 @@ describe("activityHelper.js", function() {
       });
     });
 
-    it("should initialize the input and hint handler", function() {
+    it("should initialize the hint handler", function() {
       const eventSpy = sandbox.spy($.fn, "on");
 
       view.mc.run();
 
+      // first with viewhint and second with input.viewinput or select.viewinput
       sinon.assert.calledTwice(eventSpy);
       sinon.assert.calledWithExactly(eventSpy.firstCall,
-        "change",
-        view.activityHelper.inputHandler
-      );
-      sinon.assert.calledWithExactly(eventSpy.secondCall,
         "click",
         view.activityHelper.hintHandler
       );
-    });
-
-    it("should call the input handler on change", function() {
-      const inputHandlerSpy = sandbox.spy(view.activityHelper, "inputHandler");
-
-      view.mc.run();
-
-      const $ElementBox = $(".viewinput").first();
-      const $Option = $ElementBox.find("option").eq(1);
-
-      $ElementBox.val($Option.text()).trigger("change");
-
-      sinon.assert.calledOnce(inputHandlerSpy);
-    });
-
-    describe("inputHandler", function() {
-      it("should call processCorrect($ElementBox, 'correct'), as the correct option was selected", function() {
-        const processCorrectSpy = sandbox.spy(view.activityHelper, "processCorrect");
-
-        view.mc.run();
-
-        const $ElementBox = $(".viewinput").first();
-        const answer = $ElementBox.data("view-answer");
-
-        $ElementBox.val(answer).trigger("change");
-
-        delete $ElementBox.prevObject;
-
-        sinon.assert.calledOnce(processCorrectSpy);
-        sinon.assert.calledWithExactly(processCorrectSpy,
-          $ElementBox,
-          "correct"
-        );
-      });
-
-      it("should call processIncorrect($ElementBox), as the incorrect option was selected", function() {
-        const processIncorrectSpy = sandbox.spy(view.activityHelper, "processIncorrect");
-
-        view.mc.run();
-
-        const $ElementBox = $(".viewinput").first();
-        const answer = $ElementBox.data("view-answer");
-
-        const $IncorrectOptions = $ElementBox.find("option").filter(function(){
-          return $(this).text().toLowerCase() !== answer.toLowerCase();
-        });
-
-        $ElementBox.val($IncorrectOptions.eq(1).text()).trigger("change");
-
-        delete $ElementBox.prevObject;
-
-        sinon.assert.calledOnce(processIncorrectSpy);
-        sinon.assert.calledWithExactly(processIncorrectSpy, $ElementBox);
-      });
-
-      it("should call collectAndSendData($Enhancement, input, countsAsCorrect, usedHint), as the userid is defined", function() {
-        const collectAndSendDataSpy = sandbox.spy(view.collector, "collectAndSendData");
-
-        view.mc.run();
-
-        const $ElementBox = $(".viewinput").first();
-        const $EnhancementElement = $ElementBox.parent();
-        const answer = $ElementBox.data("view-answer");
-        const countAsCorrect = true;
-        const usedHint = false;
-
-        view.userid = "someid";
-
-        $ElementBox.val(answer).trigger("change");
-
-        delete $ElementBox.prevObject;
-
-        sinon.assert.calledOnce(collectAndSendDataSpy);
-        sinon.assert.calledWithExactly(collectAndSendDataSpy,
-          $EnhancementElement,
-          answer,
-          countAsCorrect,
-          usedHint
-        );
-      });
-
-      it("should return false in any case", function() {
-        const inputHandlerSpy = sandbox.spy(view.activityHelper, "inputHandler");
-
-        view.mc.run();
-
-        const $ElementBox = $(".viewinput").first();
-        const answer = $ElementBox.data("view-answer");
-
-        $ElementBox.val(answer).trigger("change");
-
-        expect(inputHandlerSpy.firstCall.returnValue).to.be.false;
-      });
-
-      describe("processCorrect", function() {
-        it("should call colorClue(clueId, clueStyleColor)", function() {
-          const colorClueSpy = sandbox.spy(view.activityHelper, "colorClue");
-
-          view.mc.run();
-
-          const $ElementBox = $(".viewinput").first();
-          const $EnhancementElement = $ElementBox.parent();
-          const clueId = $EnhancementElement.data("clueId");
-
-          view.activityHelper.processCorrect($ElementBox, "correct");
-
-          sinon.assert.calledOnce(colorClueSpy);
-          sinon.assert.calledWithExactly(colorClueSpy, clueId, "inherit");
-        });
-
-        it("should color a clue with 'red' and 'inherit'", function() {
-          const clueId = "VIEW-Pr-5";
-          const $Clue = $("#" + clueId);
-          let clueStyleColor = "red";
-
-          view.activityHelper.colorClue(clueId, clueStyleColor);
-
-          // for some reason red is represented like this
-          expect($Clue.css("color")).to.equal("rgb(255, 0, 0)");
-
-          clueStyleColor = "inherit";
-
-          view.activityHelper.colorClue(clueId, clueStyleColor);
-
-          // for some reason inherit is represented like this
-          expect($Clue.css("color")).to.equal("rgb(0, 0, 0)");
-        });
-
-        it("should have the class 'input-style-correct' in the enhancement element", function() {
-          view.mc.run();
-
-          const $ElementBox = $(".viewinput").first();
-          const $EnhancementElement = $ElementBox.parent();
-
-          view.activityHelper.processCorrect($ElementBox, "correct");
-
-          expect($EnhancementElement.hasClass("input-style-correct")).to.be.true;
-        });
-
-        it("should have the answer as html in the enhancement element", function() {
-          view.mc.run();
-
-          const $ElementBox = $(".viewinput").first();
-          const $EnhancementElement = $ElementBox.parent();
-          const answer = $ElementBox.data("view-answer");
-
-          view.activityHelper.processCorrect($ElementBox, "correct");
-
-          expect($EnhancementElement.html()).to.equal(answer);
-        });
-
-        it("should call jumpTo(elementId)", function() {
-          const jumpToSpy = sandbox.spy(view.activityHelper, "jumpTo");
-
-          view.mc.run();
-
-          const $ElementBox = $(".viewinput").first();
-
-          view.activityHelper.processCorrect($ElementBox, "correct");
-
-          sinon.assert.calledOnce(jumpToSpy);
-          sinon.assert.calledWithExactly(jumpToSpy, 0);
-        });
-        
-        describe("jumpTo", function() {
-          it("should call scrollToCenter($Element) and jump to the given element id, as it exists", function() {
-            const scrollToCenterSpy = sandbox.spy(view.activityHelper, "scrollToCenter");
-
-            view.mc.run();
-
-            const elementId = 1;
-            const $Element = $(".viewinput").eq(elementId);
-
-            view.activityHelper.jumpTo(elementId);
-
-            sinon.assert.calledOnce(scrollToCenterSpy);
-            sinon.assert.calledWithExactly(scrollToCenterSpy, $Element);
-          });
-
-          it("should call scrollToCenter($FirstInput) and jump to the first element, as the element id does not exist", function() {
-            const scrollToCenterSpy = sandbox.spy(view.activityHelper, "scrollToCenter");
-
-            view.mc.run();
-
-            const elementId = 100;
-            const $FirstElement = $(".viewinput").eq(0);
-
-            view.activityHelper.jumpTo(elementId);
-
-            sinon.assert.calledOnce(scrollToCenterSpy);
-            sinon.assert.calledWithExactly(scrollToCenterSpy, $FirstElement);
-          });
-
-          describe("scrollToCenter", function() {
-            it("should have focus on the element", function() {
-              view.mc.run();
-
-              const elementId = 1;
-              const $Element = $(".viewinput").eq(elementId);
-
-              expect($Element.is(":focus")).to.be.false;
-
-              view.activityHelper.scrollToCenter($Element);
-
-              expect($Element.is(":focus")).to.be.true;
-            });
-
-            it("should scroll to the center of the viewport", function() {
-              const scrollTopSpy = sandbox.spy($.fn, "scrollTop");
-
-              view.mc.run();
-
-              const elementId = 1;
-              const $Element = $(".viewinput").eq(elementId);
-              const $Window = $(window);
-
-              view.activityHelper.scrollToCenter($Element);
-
-              sinon.assert.calledOnce(scrollTopSpy);
-              sinon.assert.calledWithExactly(scrollTopSpy, $Element.offset().top - ($Window.height() / 2));
-            });
-          });
-        });
-      });
-
-      describe("processIncorrect", function() {
-        it("should call colorClue(clueId, clueStyleColor)", function() {
-          const colorClueSpy = sandbox.spy(view.activityHelper, "colorClue");
-
-          view.mc.run();
-
-          const $ElementBox = $(".viewinput").first();
-          const $EnhancementElement = $ElementBox.parent();
-          const clueId = $EnhancementElement.data("clueId");
-
-          view.activityHelper.processIncorrect($ElementBox);
-
-          sinon.assert.calledOnce(colorClueSpy);
-          sinon.assert.calledWithExactly(colorClueSpy, clueId, "red");
-        });
-
-        it("should have the class 'input-style-incorrect' in the element box", function() {
-          view.mc.run();
-
-          const $ElementBox = $(".viewinput").first();
-
-          view.activityHelper.processIncorrect($ElementBox);
-
-          expect($ElementBox.hasClass("input-style-incorrect")).to.be.true;
-        });
-
-        it("should call removeAttr('class')", function() {
-          const removeAttrSpy = sandbox.spy($.fn, "removeAttr");
-
-          view.mc.run();
-
-          const $ElementBox = $(".viewinput").first();
-          const answer = $ElementBox.data("view-answer");
-
-          const $IncorrectOptions = $ElementBox.find("option").filter(function(){
-            return $(this).text().toLowerCase() !== answer.toLowerCase();
-          });
-
-          $IncorrectOptions.eq(1).prop("selected", true);
-
-          view.activityHelper.processIncorrect($ElementBox);
-
-          sinon.assert.calledOnce(removeAttrSpy);
-          sinon.assert.calledWithExactly(removeAttrSpy, "class");
-        });
-
-        it("should add class 'input-style-incorrect' to the incorrectly selected option", function() {
-          view.mc.run();
-
-          const $ElementBox = $(".viewinput").first();
-          const answer = $ElementBox.data("view-answer");
-
-          const $IncorrectOptions = $ElementBox.find("option").filter(function(){
-            return $(this).text().toLowerCase() !== answer.toLowerCase();
-          });
-
-          $IncorrectOptions.eq(1).prop("selected", true);
-
-          view.activityHelper.processIncorrect($ElementBox);
-
-          expect($ElementBox.find("option:selected").attr("class")).to.equal("input-style-incorrect");
-        });
-
-        it("should add class 'input-style-neutral' to the unselected options", function() {
-          view.mc.run();
-
-          const $ElementBox = $(".viewinput").first();
-          const answer = $ElementBox.data("view-answer");
-
-          const $IncorrectOptions = $ElementBox.find("option").filter(function(){
-            return $(this).text().toLowerCase() !== answer.toLowerCase();
-          });
-
-          $IncorrectOptions.eq(1).prop("selected", true);
-
-          view.activityHelper.processIncorrect($ElementBox);
-
-          $ElementBox.find("option:not(:selected)").each(function() {
-            expect($(this).attr("class")).to.equal("input-style-neutral");
-          });
-        });
-      });
     });
 
     it("should call the hint handler on click", function() {
@@ -630,14 +320,58 @@ describe("activityHelper.js", function() {
         );
       });
 
-      it("should call collectAndSendData($Enhancement, input, countsAsCorrect, usedHint), as the userid is defined", function() {
+      it("should not call collectAndSendData, as the userid is undefined", function() {
         const collectAndSendDataSpy = sandbox.spy(view.collector, "collectAndSendData");
 
-        view.mc.run();
+        view.cloze.run();
+
+        const $Hint = $("viewhint").first();
+
+        view.userid = "";
+
+        $Hint.trigger("click");
+
+        sinon.assert.notCalled(collectAndSendDataSpy);
+      });
+
+      it("should call collectAndSendData, as the userid is defined, the element box had some value", function() {
+        const collectAndSendDataSpy = sandbox.spy(view.collector, "collectAndSendData");
+
+        view.cloze.run();
 
         const $Hint = $("viewhint").first();
         const $ElementBox = $Hint.prev();
         const $EnhancementElement = $ElementBox.parent();
+        const input = "some value";
+        const countAsCorrect = true;
+        const usedHint = true;
+
+        $ElementBox.val(input);
+
+        view.userid = "someid";
+
+        $Hint.trigger("click");
+
+        delete $Hint.prevObject;
+
+        sinon.assert.calledOnce(collectAndSendDataSpy);
+        sinon.assert.calledWithExactly(collectAndSendDataSpy,
+          $EnhancementElement,
+          input,
+          countAsCorrect,
+          usedHint
+        );
+      });
+
+      it("should call collectAndSendData, as the userid is defined, the element box had no value", function() {
+        const collectAndSendDataSpy = sandbox.spy(view.collector, "collectAndSendData");
+
+        view.cloze.run();
+
+        const $Hint = $("viewhint").first();
+        const $ElementBox = $Hint.prev();
+        const $EnhancementElement = $ElementBox.parent();
+        const input = "no input";
         const countAsCorrect = true;
         const usedHint = true;
 
@@ -650,22 +384,306 @@ describe("activityHelper.js", function() {
         sinon.assert.calledOnce(collectAndSendDataSpy);
         sinon.assert.calledWithExactly(collectAndSendDataSpy,
           $EnhancementElement,
-          "no input",
+          input,
           countAsCorrect,
           usedHint
         );
       });
+    });
+  });
 
-      it("should return false in any case", function() {
-        const hintHandlerSpy = sandbox.spy(view.activityHelper, "hintHandler");
+  describe("inputHandler", function() {
+    it("should call processCorrect($ElementBox, 'correct'), as the correct option was selected", function() {
+      const processCorrectSpy = sandbox.spy(view.activityHelper, "processCorrect");
+
+      view.mc.run();
+
+      const $ElementBox = $(".viewinput").first();
+      const answer = $ElementBox.data("view-answer");
+
+      $ElementBox.val(answer).trigger("change");
+
+      delete $ElementBox.prevObject;
+
+      sinon.assert.calledOnce(processCorrectSpy);
+      sinon.assert.calledWithExactly(processCorrectSpy,
+        $ElementBox,
+        "correct"
+      );
+    });
+
+    it("should call processIncorrect($ElementBox), as the incorrect option was selected", function() {
+      const processIncorrectSpy = sandbox.spy(view.activityHelper, "processIncorrect");
+
+      view.mc.run();
+
+      const $ElementBox = $(".viewinput").first();
+      const answer = $ElementBox.data("view-answer");
+
+      const $IncorrectOptions = $ElementBox.find("option").filter(function(){
+        return $(this).text().toLowerCase() !== answer.toLowerCase();
+      });
+
+      $ElementBox.val($IncorrectOptions.eq(1).text()).trigger("change");
+
+      delete $ElementBox.prevObject;
+
+      sinon.assert.calledOnce(processIncorrectSpy);
+      sinon.assert.calledWithExactly(processIncorrectSpy, $ElementBox);
+    });
+
+    it("should not call collectAndSendData, as the userid is undefined", function() {
+      const collectAndSendDataSpy = sandbox.spy(view.collector, "collectAndSendData");
+
+      view.mc.run();
+
+      const $ElementBox = $(".viewinput").first();
+      const answer = $ElementBox.data("view-answer");
+
+      view.userid = "";
+
+      $ElementBox.val(answer).trigger("change");
+
+      sinon.assert.notCalled(collectAndSendDataSpy);
+    });
+
+    it("should call collectAndSendData($Enhancement, input, countsAsCorrect, usedHint), as the userid is defined", function() {
+      const collectAndSendDataSpy = sandbox.spy(view.collector, "collectAndSendData");
+
+      view.mc.run();
+
+      const $ElementBox = $(".viewinput").first();
+      const $EnhancementElement = $ElementBox.parent();
+      const answer = $ElementBox.data("view-answer");
+      const countAsCorrect = true;
+      const usedHint = false;
+
+      view.userid = "someid";
+
+      $ElementBox.val(answer).trigger("change");
+
+      delete $ElementBox.prevObject;
+
+      sinon.assert.calledOnce(collectAndSendDataSpy);
+      sinon.assert.calledWithExactly(collectAndSendDataSpy,
+        $EnhancementElement,
+        answer,
+        countAsCorrect,
+        usedHint
+      );
+    });
+
+    describe("processCorrect", function() {
+      it("should call colorClue(clueId, clueStyleColor)", function() {
+        const colorClueSpy = sandbox.spy(view.activityHelper, "colorClue");
 
         view.mc.run();
 
-        const $Hint = $("viewhint").first();
+        const $ElementBox = $(".viewinput").first();
+        const $EnhancementElement = $ElementBox.parent();
+        const clueId = $EnhancementElement.data("clueId");
 
-        $Hint.trigger("click");
+        view.activityHelper.processCorrect($ElementBox, "correct");
 
-        expect(hintHandlerSpy.firstCall.returnValue).to.be.false;
+        sinon.assert.calledOnce(colorClueSpy);
+        sinon.assert.calledWithExactly(colorClueSpy, clueId, "inherit");
+      });
+
+      it("should color a clue with 'red' and 'inherit'", function() {
+        const clueId = "VIEW-Pr-5";
+        const $Clue = $("#" + clueId);
+        let clueStyleColor = "red";
+
+        view.activityHelper.colorClue(clueId, clueStyleColor);
+
+        // for some reason red is represented like this
+        expect($Clue.css("color")).to.equal("rgb(255, 0, 0)");
+
+        clueStyleColor = "inherit";
+
+        view.activityHelper.colorClue(clueId, clueStyleColor);
+
+        // for some reason inherit is represented like this
+        expect($Clue.css("color")).to.equal("rgb(0, 0, 0)");
+      });
+
+      it("should have the class 'input-style-correct' in the enhancement element", function() {
+        view.mc.run();
+
+        const $ElementBox = $(".viewinput").first();
+        const $EnhancementElement = $ElementBox.parent();
+
+        view.activityHelper.processCorrect($ElementBox, "correct");
+
+        expect($EnhancementElement.hasClass("input-style-correct")).to.be.true;
+      });
+
+      it("should have the answer as html in the enhancement element", function() {
+        view.mc.run();
+
+        const $ElementBox = $(".viewinput").first();
+        const $EnhancementElement = $ElementBox.parent();
+        const answer = $ElementBox.data("view-answer");
+
+        view.activityHelper.processCorrect($ElementBox, "correct");
+
+        expect($EnhancementElement.html()).to.equal(answer);
+      });
+
+      it("should call jumpTo(elementId)", function() {
+        const jumpToSpy = sandbox.spy(view.activityHelper, "jumpTo");
+
+        view.mc.run();
+
+        const $ElementBox = $(".viewinput").first();
+
+        view.activityHelper.processCorrect($ElementBox, "correct");
+
+        sinon.assert.calledOnce(jumpToSpy);
+        sinon.assert.calledWithExactly(jumpToSpy, 0);
+      });
+
+      describe("jumpTo", function() {
+        it("should call scrollToCenter($Element) and jump to the given element id, as it exists", function() {
+          const scrollToCenterSpy = sandbox.spy(view.activityHelper, "scrollToCenter");
+
+          view.mc.run();
+
+          const elementId = 1;
+          const $Element = $(".viewinput").eq(elementId);
+
+          view.activityHelper.jumpTo(elementId);
+
+          sinon.assert.calledOnce(scrollToCenterSpy);
+          sinon.assert.calledWithExactly(scrollToCenterSpy, $Element);
+        });
+
+        it("should call scrollToCenter($FirstInput) and jump to the first element, as the element id does not exist", function() {
+          const scrollToCenterSpy = sandbox.spy(view.activityHelper, "scrollToCenter");
+
+          view.mc.run();
+
+          const elementId = 100;
+          const $FirstElement = $(".viewinput").eq(0);
+
+          view.activityHelper.jumpTo(elementId);
+
+          sinon.assert.calledOnce(scrollToCenterSpy);
+          sinon.assert.calledWithExactly(scrollToCenterSpy, $FirstElement);
+        });
+
+        describe("scrollToCenter", function() {
+          it("should have focus on the element", function() {
+            view.mc.run();
+
+            const elementId = 1;
+            const $Element = $(".viewinput").eq(elementId);
+
+            expect($Element.is(":focus")).to.be.false;
+
+            view.activityHelper.scrollToCenter($Element);
+
+            expect($Element.is(":focus")).to.be.true;
+          });
+
+          it("should scroll to the center of the viewport", function() {
+            const scrollTopSpy = sandbox.spy($.fn, "scrollTop");
+
+            view.mc.run();
+
+            const elementId = 1;
+            const $Element = $(".viewinput").eq(elementId);
+            const $Window = $(window);
+
+            view.activityHelper.scrollToCenter($Element);
+
+            sinon.assert.calledOnce(scrollTopSpy);
+            sinon.assert.calledWithExactly(scrollTopSpy, $Element.offset().top - ($Window.height() / 2));
+          });
+        });
+      });
+    });
+
+    describe("processIncorrect", function() {
+      it("should call colorClue(clueId, clueStyleColor)", function() {
+        const colorClueSpy = sandbox.spy(view.activityHelper, "colorClue");
+
+        view.mc.run();
+
+        const $ElementBox = $(".viewinput").first();
+        const $EnhancementElement = $ElementBox.parent();
+        const clueId = $EnhancementElement.data("clueId");
+
+        view.activityHelper.processIncorrect($ElementBox);
+
+        sinon.assert.calledOnce(colorClueSpy);
+        sinon.assert.calledWithExactly(colorClueSpy, clueId, "red");
+      });
+
+      it("should have the class 'input-style-incorrect' in the element box", function() {
+        view.mc.run();
+
+        const $ElementBox = $(".viewinput").first();
+
+        view.activityHelper.processIncorrect($ElementBox);
+
+        expect($ElementBox.hasClass("input-style-incorrect")).to.be.true;
+      });
+
+      it("should call removeAttr('class')", function() {
+        const removeAttrSpy = sandbox.spy($.fn, "removeAttr");
+
+        view.mc.run();
+
+        const $ElementBox = $(".viewinput").first();
+        const answer = $ElementBox.data("view-answer");
+
+        const $IncorrectOptions = $ElementBox.find("option").filter(function(){
+          return $(this).text().toLowerCase() !== answer.toLowerCase();
+        });
+
+        $IncorrectOptions.eq(1).prop("selected", true);
+
+        view.activityHelper.processIncorrect($ElementBox);
+
+        sinon.assert.calledOnce(removeAttrSpy);
+        sinon.assert.calledWithExactly(removeAttrSpy, "class");
+      });
+
+      it("should add class 'input-style-incorrect' to the incorrectly selected option", function() {
+        view.mc.run();
+
+        const $ElementBox = $(".viewinput").first();
+        const answer = $ElementBox.data("view-answer");
+
+        const $IncorrectOptions = $ElementBox.find("option").filter(function(){
+          return $(this).text().toLowerCase() !== answer.toLowerCase();
+        });
+
+        $IncorrectOptions.eq(1).prop("selected", true);
+
+        view.activityHelper.processIncorrect($ElementBox);
+
+        expect($ElementBox.find("option:selected").attr("class")).to.equal("input-style-incorrect");
+      });
+
+      it("should add class 'input-style-neutral' to the unselected options", function() {
+        view.mc.run();
+
+        const $ElementBox = $(".viewinput").first();
+        const answer = $ElementBox.data("view-answer");
+
+        const $IncorrectOptions = $ElementBox.find("option").filter(function(){
+          return $(this).text().toLowerCase() !== answer.toLowerCase();
+        });
+
+        $IncorrectOptions.eq(1).prop("selected", true);
+
+        view.activityHelper.processIncorrect($ElementBox);
+
+        $ElementBox.find("option:not(:selected)").each(function() {
+          expect($(this).attr("class")).to.equal("input-style-neutral");
+        });
       });
     });
   });
@@ -738,6 +756,18 @@ describe("activityHelper.js", function() {
 
     it("should remove the input handler", function() {
       view.mc.run();
+
+      const $FirstElementBox = $(".viewinput").get(0);
+
+      expect($._data($FirstElementBox, "events")).to.exist;
+
+      view.activityHelper.restore();
+
+      expect($._data($FirstElementBox, "events")).to.be.undefined;
+    });
+
+    it("should remove the cloze handler", function() {
+      view.cloze.run();
 
       const $FirstElementBox = $(".viewinput").get(0);
 

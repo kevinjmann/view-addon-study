@@ -236,5 +236,68 @@ describe("cloze.js", function() {
         });
       })
     });
+
+
+    it("should initialize the cloze handler", function() {
+      const eventSpy = sandbox.spy($.fn, "on");
+
+      view.cloze.run();
+
+      // first with viewhint and second with input.viewinput
+      sinon.assert.calledTwice(eventSpy);
+      sinon.assert.calledWithExactly(eventSpy.getCall(1),
+        "keyup",
+        view.cloze.clozeHandler
+      );
+    });
+
+    it("should call clozeHandler(e) on keyup", function() {
+      const clozeHandlerSpy = sandbox.spy(view.cloze, "clozeHandler");
+
+      view.cloze.run();
+
+      const $ElementBox = $(".viewinput").first();
+      const e = $.Event("keyup");
+
+      e.which = 65; // Character "A"
+
+      $ElementBox.trigger(e);
+
+      sinon.assert.calledOnce(clozeHandlerSpy);
+      sinon.assert.calledWithExactly(clozeHandlerSpy, e);
+    });
+
+    describe("clozeHandler", function() {
+      it("should call inputHandler(e), as they enter key was released", function() {
+        const inputHandlerSpy = sandbox.spy(view.activityHelper, "inputHandler");
+
+        view.cloze.run();
+
+        const $ElementBox = $(".viewinput").first();
+        const e = $.Event("keyup");
+
+        e.which = 13; // enter key
+
+        $ElementBox.trigger(e);
+
+        sinon.assert.calledOnce(inputHandlerSpy);
+        sinon.assert.calledWithExactly(inputHandlerSpy, e);
+      });
+
+      it("should not call inputHandler(e), as they enter key was not released", function() {
+        const inputHandlerSpy = sandbox.spy(view.activityHelper, "inputHandler");
+
+        view.cloze.run();
+
+        const $ElementBox = $(".viewinput").first();
+        const e = $.Event("keyup");
+
+        e.which = 65; // Character "A"
+
+        $ElementBox.trigger(e);
+
+        sinon.assert.notCalled(inputHandlerSpy);
+      });
+    });
   });
 });
