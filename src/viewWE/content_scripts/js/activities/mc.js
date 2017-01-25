@@ -6,6 +6,8 @@ view.mc = {
     const hitList = view.activityHelper.createHitList();
 
     view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+
+    $(".viewinput").on("change", view.activityHelper.inputHandler);
   },
 
   /**

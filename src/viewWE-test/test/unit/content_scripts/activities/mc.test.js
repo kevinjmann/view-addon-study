@@ -301,5 +301,31 @@ describe("mc.js", function() {
         });
       })
     });
+
+    it("should initialize the input handler", function() {
+      const eventSpy = sandbox.spy($.fn, "on");
+
+      view.mc.run();
+
+      // first with viewhint and second with select.viewinput
+      sinon.assert.calledTwice(eventSpy);
+      sinon.assert.calledWithExactly(eventSpy.getCall(1),
+        "change",
+        view.activityHelper.inputHandler
+      );
+    });
+
+    it("should call inputHandler(e) on change", function() {
+      const inputHandlerSpy = sandbox.spy(view.activityHelper, "inputHandler");
+
+      view.mc.run();
+
+      const $ElementBox = $(".viewinput").first();
+      const $Option = $ElementBox.find("option").eq(1);
+
+      $ElementBox.val($Option.text()).trigger("change");
+
+      sinon.assert.calledOnce(inputHandlerSpy);
+    });
   });
 });

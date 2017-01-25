@@ -39,7 +39,6 @@ view.activityHelper = {
       createExercise
     );
 
-    $(".viewinput").on("change", view.activityHelper.inputHandler);
     $("viewhint").on("click", view.activityHelper.hintHandler);
   },
 
@@ -106,11 +105,35 @@ view.activityHelper = {
   },
 
   /**
-   * Deals with the input in the mc and cloze activities.
+   * Deals with the hint in the mc and cloze activities.
    */
-  inputHandler: function() {
+  hintHandler: function() {
+    const $ElementBox = $(this).prev();
+    const $EnhancementElement = $ElementBox.parent();
+    const input = $ElementBox.val() || "no input";
+    const countAsCorrect = true;
+    const usedHint = true;
+
+    view.activityHelper.processCorrect($ElementBox, "provided");
+
+    if (view.userid) {
+      view.collector.collectAndSendData(
+        $EnhancementElement,
+        input,
+        countAsCorrect,
+        usedHint
+      );
+    }
+  },
+
+  /**
+   * Deals with the input in the mc and cloze activities.
+   *
+   * @param {object} e the triggered event
+   */
+  inputHandler: function(e) {
     let countsAsCorrect = false;
-    const $ElementBox = $(this);
+    const $ElementBox = $(e.target);
     const $EnhancementElement = $ElementBox.parent();
     const input = $ElementBox.val();
     const usedHint = false;
@@ -131,9 +154,6 @@ view.activityHelper = {
         usedHint
       );
     }
-
-    // prevent execution of further event listeners
-    return false;
   },
 
   /**
@@ -214,29 +234,6 @@ view.activityHelper = {
   },
 
   /**
-   * Deals with the hint in the mc and cloze activities.
-   */
-  hintHandler: function() {
-    const $ElementBox = $(this).prev();
-    const $EnhancementElement = $ElementBox.parent();
-    const countAsCorrect = true;
-    const usedHint = true;
-
-    view.activityHelper.processCorrect($ElementBox, "provided");
-
-    if (view.userid) {
-      view.collector.collectAndSendData(
-        $EnhancementElement,
-        "no input",
-        countAsCorrect,
-        usedHint
-      );
-    }
-    // prevent execution of further event listeners
-    return false;
-  },
-
-  /**
    * Get the correct answer for the mc and cloze activities.
    *
    * @param {object} $hit the enhancement element
@@ -273,7 +270,7 @@ view.activityHelper = {
     $("viewenhancement").off("click");
 
     // mc and cloze
-    $(".viewinput").off("change");
+    $(".viewinput").off("change keyup");
     $Hint.off("click");
     $Hint.remove();
 
