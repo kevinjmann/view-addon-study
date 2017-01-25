@@ -7,7 +7,7 @@ view.cloze = {
 
     view.activityHelper.exerciseHandler(hitList, view.cloze.createExercise);
 
-    $(".viewinput").on("keyup", view.cloze.clozeHandler);
+    $(".viewinput").on("keyup", view.cloze.handler);
   },
 
   /**
@@ -70,7 +70,7 @@ view.cloze = {
    *
    * @param {object} e the triggered event
    */
-  clozeHandler: function(e) {
+  handler: function(e) {
     const code = e.which;
     if(code === 13) {
       view.activityHelper.inputHandler(e);

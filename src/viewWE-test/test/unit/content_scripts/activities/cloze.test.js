@@ -247,12 +247,12 @@ describe("cloze.js", function() {
       sinon.assert.calledTwice(eventSpy);
       sinon.assert.calledWithExactly(eventSpy.getCall(1),
         "keyup",
-        view.cloze.clozeHandler
+        view.cloze.handler
       );
     });
 
-    it("should call clozeHandler(e) on keyup", function() {
-      const clozeHandlerSpy = sandbox.spy(view.cloze, "clozeHandler");
+    it("should call handler(e) on keyup", function() {
+      const handlerSpy = sandbox.spy(view.cloze, "handler");
 
       view.cloze.run();
 
@@ -263,12 +263,12 @@ describe("cloze.js", function() {
 
       $ElementBox.trigger(e);
 
-      sinon.assert.calledOnce(clozeHandlerSpy);
-      sinon.assert.calledWithExactly(clozeHandlerSpy, e);
+      sinon.assert.calledOnce(handlerSpy);
+      sinon.assert.calledWithExactly(handlerSpy, e);
     });
 
-    describe("clozeHandler", function() {
-      it("should call inputHandler(e), as they enter key was released", function() {
+    describe("handler", function() {
+      it("should call inputHandler(e), as the enter key was released", function() {
         const inputHandlerSpy = sandbox.spy(view.activityHelper, "inputHandler");
 
         view.cloze.run();
@@ -284,7 +284,7 @@ describe("cloze.js", function() {
         sinon.assert.calledWithExactly(inputHandlerSpy, e);
       });
 
-      it("should not call inputHandler(e), as they enter key was not released", function() {
+      it("should not call inputHandler(e), as the enter key was not released", function() {
         const inputHandlerSpy = sandbox.spy(view.activityHelper, "inputHandler");
 
         view.cloze.run();
