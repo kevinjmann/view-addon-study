@@ -39,6 +39,8 @@ view.activityHelper = {
       createExercise
     );
 
+    view.requestToGetSessionId();
+
     $("viewhint").on("click", view.activityHelper.hintHandler);
   },
 
@@ -97,11 +99,16 @@ view.activityHelper = {
   createExercises: function(numExercises, exerciseOptions, hitList, createExercise) {
     let exerciseNumber = exerciseOptions.firstOffset;
 
+    let actualNumberOfExercises = 0;
+
     for (; numExercises > 0 && exerciseNumber < hitList.length; exerciseNumber += exerciseOptions.intervalSize) {
       const $hit = hitList[exerciseNumber];
       createExercise($hit);
       numExercises--;
+      actualNumberOfExercises++;
     }
+
+    view.saveNumberOfExercises(actualNumberOfExercises);
   },
 
   /**
