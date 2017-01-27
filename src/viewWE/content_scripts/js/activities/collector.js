@@ -12,25 +12,22 @@ view.collector = {
    */
   collectAndSendData: function($EnhancementElement, input, countsAsCorrect, usedHint) {
     const interactionData = {};
-    const elementData = {};
 
-    interactionData["url"] = view.url;
-    interactionData["language"] = view.language;
-    interactionData["topic"] = view.topic;
-    interactionData["activity"] = view.activity;
+    interactionData["user"] = view.user;
+    interactionData["token"] = view.token;
+    interactionData["session-id"] = view.sessionid;
+    interactionData["enhancement-id"] = $EnhancementElement.attr("id");
+    interactionData["submission"] = input;
+    interactionData["correct"] = countsAsCorrect;
+    interactionData["timestamp"] = view.timestamp;
 
-    const isClick = (interactionData["activity"] === "click");
-    elementData["viewenhancementid"] = $EnhancementElement.attr("id");
-    elementData["userinput"] = input;
+    const isClick = (view.activity === "click");
 
     if (!isClick) {
       const capType = view.lib.detectCapitalization($EnhancementElement.text());
-      elementData["correctanswer"] = view.activityHelper.getCorrectAnswer($EnhancementElement, capType);
-      elementData["usedhint"] = usedHint;
+      interactionData["correct-answer"] = view.activityHelper.getCorrectAnswer($EnhancementElement, capType);
+      interactionData["used-hint"] = usedHint;
     }
-
-    elementData["countsascorrect"] = countsAsCorrect;
-    interactionData["element"] = JSON.stringify(elementData);
 
     view.collector.requestToSendInteractionData(interactionData);
   },
