@@ -324,6 +324,7 @@ const toolbar = {
    * Otherwise create a unselected notification for the user.
    */
   setSelectionsAndPrepareToEnhance: function() {
+    const timestamp = Date.now();
     const language = toolbar.$cache.get(toolbar.selectorStart + "language-menu").val();
     const topic = $(".selected-toolbar-topic-menu").val();
     const activity = toolbar.$cache.get(toolbar.selectorStart + "activity-menu").val();
@@ -338,7 +339,8 @@ const toolbar = {
       chrome.storage.local.set({
         language: language,
         topic: topic,
-        activity: activity
+        activity: activity,
+        timestamp: timestamp
       }, toolbar.prepareToEnhance);
     }
   },
