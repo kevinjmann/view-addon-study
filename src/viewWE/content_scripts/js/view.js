@@ -11,6 +11,14 @@ const view = {
   userEmail: "",
   userid: "",
 
+  // session data
+  user: "",
+  token: "",
+  url: document.baseURI,
+  timestamp: "",
+  numberOfEnhancements: 0,
+  sessionid: "",
+
   // user options (defaults)
   fixedOrPercentage: 0,
   fixedNumberOfExercises: 25,
@@ -87,8 +95,8 @@ const view = {
   /**
    * Set user email and id.
    *
-   * @param email the email address from the user
-   * @param id the user id
+   * @param {string} email the email address from the user
+   * @param {string} id the user id
    */
   setEmailAndId: function(email, id) {
     if (id === undefined) {
@@ -129,6 +137,9 @@ const view = {
       "showInst",
       "userEmail",
       "userid",
+      "user",
+      "token",
+      "timestamp",
       "enabled",
       "language",
       "topic",
@@ -141,6 +152,10 @@ const view = {
       view.saveSelections(storageItems);
 
       view.topicName = view.interaction.getTopicName(view.topic);
+
+      view.saveUserAndToken(storageItems.user, storageItems.token);
+
+      view.saveTimestamp(storageItems.timestamp);
 
       view.interaction.enhance();
     });
@@ -173,5 +188,68 @@ const view = {
     view.language = storageItems.language;
     view.topic = storageItems.topic;
     view.activity = storageItems.activity;
+  },
+
+  /**
+   * Save user name and authentication token.
+   *
+   * @param {string} user the current user name
+   * @param {string} token the authentication token of the user
+   */
+  saveUserAndToken: function(user, token) {
+    view.user = user;
+    view.token = token;
+  },
+
+  /**
+   * Save the timestamp.
+   *
+   * @param {string} timestamp the time stamp
+   */
+  saveTimestamp: function(timestamp) {
+    view.timestamp = timestamp;
+  },
+
+  /**
+   * Save the number of enhancements.
+   *
+   * @param {number} numberOfEnhancements the number of enhancements
+   */
+  saveNumberOfEnhancements: function(numberOfEnhancements) {
+    view.numberOfEnhancements = numberOfEnhancements;
+  },
+
+  /**
+   * Send a request to the background script to send session data
+   * and get the session id.
+   */
+  requestToGetSessionId: function() {
+    const sessionData = view.createSessionData();
+
+    chrome.runtime.sendMessage({
+      msg: "get sessionid",
+      sessionData: sessionData,
+      servletURL: view.servletURL
+    }, function(response) {
+      view.sessionid = response.sessionid;
+    });
+  },
+
+  /**
+   * Create session data to be send to the server.
+   *
+   * @returns {object} the data of the current session
+   */
+  createSessionData: function() {
+    return {
+      user: view.user,
+      token: view.token,
+      url: view.url,
+      language: view.language,
+      topic: view.topic,
+      activity: view.activity,
+      timestamp: view.timestamp,
+      numberOfEnhancements: view.numberOfEnhancements
+    };
   }
 };
