@@ -16,7 +16,7 @@ const view = {
   token: "",
   url: document.baseURI,
   timestamp: "",
-  numberOfEnhancements: 0,
+  numberOfExercises: 0,
   sessionid: "",
 
   // user options (defaults)
@@ -211,12 +211,12 @@ const view = {
   },
 
   /**
-   * Save the number of enhancements.
+   * Save the number of exercises.
    *
-   * @param {number} numberOfEnhancements the number of enhancements
+   * @param {number} numberOfExercises the number of exercises
    */
-  saveNumberOfEnhancements: function(numberOfEnhancements) {
-    view.numberOfEnhancements = numberOfEnhancements;
+  saveNumberOfExercises: function(numberOfExercises) {
+    view.numberOfExercises = numberOfExercises;
   },
 
   /**
