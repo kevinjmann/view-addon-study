@@ -39,7 +39,7 @@ view.activityHelper = {
       createExercise
     );
 
-    view.requestToGetSessionId();
+    view.activityHelper.getNumberOfExercisesAndRequestSessionId(".viewinput");
 
     $("viewhint").on("click", view.activityHelper.hintHandler);
   },
@@ -99,16 +99,25 @@ view.activityHelper = {
   createExercises: function(numExercises, exerciseOptions, hitList, createExercise) {
     let exerciseNumber = exerciseOptions.firstOffset;
 
-    let actualNumberOfExercises = 0;
-
     for (; numExercises > 0 && exerciseNumber < hitList.length; exerciseNumber += exerciseOptions.intervalSize) {
       const $hit = hitList[exerciseNumber];
       createExercise($hit);
       numExercises--;
-      actualNumberOfExercises++;
     }
+  },
 
-    view.saveNumberOfExercises(actualNumberOfExercises);
+  /**
+   * Use the selector to retrieve the number of exercises, save
+   * the number and request the session id from the server.
+   *
+   * @param {string} selector the selector to get the length of
+   */
+  getNumberOfExercisesAndRequestSessionId: function(selector) {
+    const numberOfExercises = $(selector).length;
+
+    view.saveNumberOfExercises(numberOfExercises);
+
+    view.requestToGetSessionId();
   },
 
   /**

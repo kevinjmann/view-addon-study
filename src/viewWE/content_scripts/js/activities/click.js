@@ -10,11 +10,7 @@ view.click = {
       $EnhancementElement.addClass("click-style-pointer");
     });
 
-    const numberOfExercises = $("viewenhancement[data-type!='miss']").length;
-
-    view.saveNumberOfExercises(numberOfExercises);
-
-    view.requestToGetSessionId();
+    view.activityHelper.getNumberOfExercisesAndRequestSessionId("viewenhancement[data-type!='miss']");
 
     $("viewenhancement").on("click", view.click.handler);
   },
