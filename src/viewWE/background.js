@@ -132,8 +132,7 @@ const background = {
    * toolbar.js/view.js is ready to receive the topics. Send them to it.
    *
    * @callback sendResponseCallback
-   * @param {sendResponseCallback} sendResponse function to call (at most once)
-   * when you have a response
+   * @param {sendResponseCallback} sendResponse function to call as response
    */
   sendTopics: function(sendResponse) {
     sendResponse({topics: background.topics});
@@ -238,6 +237,31 @@ const background = {
   },
 
   /**
+   * Send the session data from view.js to the
+   * server for processing.
+   * If successful, send as response the session id to view.js
+   *
+   * @param {*} request the message sent by the calling script
+   * @callback sendResponseCallback
+   * @param {sendResponseCallback} sendResponse function to call as response
+   */
+  sendSessionDataAndGetSessionId: function(request, sendResponse){
+    background.ajaxPost(request.servletURL,
+      request.sessionData,
+      10000)
+    .done(function(data, textStatus, xhr) {
+      if (data) {
+        sendResponse(data);
+      } else {
+        background.ajaxError(xhr, "no-session-id");
+      }
+    })
+    .fail(function(xhr, textStatus) {
+      background.ajaxError(xhr, textStatus);
+    });
+  },
+
+  /**
    * Send the interaction data from interaction.js to the
    * server for processing.
    *
@@ -300,14 +324,21 @@ const background = {
         background.createBasicNotification(
           "nodata-notification",
           "No data!",
-          "The VIEW server is taking too long to respond."
+          "The VIEW server did not send any data."
+        );
+        break;
+      case "no-session-id":
+        background.createBasicNotification(
+          "no-session-id-notification",
+          "No session id!",
+          "The VIEW server did not send the session id."
         );
         break;
       case "timeout":
         background.createBasicNotification(
           "timeout-notification",
           "Timeout!",
-          "The VIEW server is currently unavailable."
+          "The VIEW server is taking too long to respond."
         );
         // when the add-on has timed out, tell the server to stop
         background.callAbortEnhancement();
@@ -465,8 +496,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
  * @param {*} request the message sent by the calling script
  * @param {Object} sender the MessageSender Object containing sender info
  * @callback sendResponseCallback
- * @param {sendResponseCallback} sendResponse function to call (at most once)
- * when you have a response
+ * @param {sendResponseCallback} sendResponse function to call as response
  */
 function processMessage(request, sender, sendResponse) {
   background.currentTabId = sender.tab.id;
@@ -515,6 +545,9 @@ function processMessage(request, sender, sendResponse) {
       break;
     case "send activityData":
       background.sendActivityData(request);
+      break;
+    case "get sessionid":
+      background.sendSessionDataAndGetSessionId(request, sendResponse);
       break;
     case "send interactionData":
       background.sendInteractionData(request);
