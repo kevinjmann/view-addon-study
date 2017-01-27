@@ -204,7 +204,7 @@ view.interaction = {
     console.log("createActivityData(contextDoc)");
 
     var activityData = {};
-    activityData["url"] = contextDoc.baseURI;
+    activityData["url"] = view.url;
     activityData["language"] = view.language;
     activityData["topic"] = view.topic;
     activityData["activity"] = view.activity;
@@ -312,7 +312,7 @@ view.interaction = {
     var enhId = $("body").data("wertiview-enhId");
 
     var requestData = {};
-    requestData["url"] = document.baseURI;
+    requestData["url"] = view.url;
     requestData["language"] = view.language;
     requestData["topic"] = view.topic;
     requestData["activity"] = view.activity;

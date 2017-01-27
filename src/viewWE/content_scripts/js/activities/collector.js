@@ -14,7 +14,7 @@ view.collector = {
     const interactionData = {};
     const elementData = {};
 
-    interactionData["url"] = document.baseURI;
+    interactionData["url"] = view.url;
     interactionData["language"] = view.language;
     interactionData["topic"] = view.topic;
     interactionData["activity"] = view.activity;

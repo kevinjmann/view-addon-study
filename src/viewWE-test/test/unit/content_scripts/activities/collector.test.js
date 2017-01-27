@@ -102,7 +102,7 @@ describe("collector.js", function() {
       };
 
       const interactionData = {
-        url: document.baseURI,
+        url: view.url,
         language: language,
         topic: topic,
         activity: activity,
@@ -144,7 +144,7 @@ describe("collector.js", function() {
       };
 
       const interactionData = {
-        url: document.baseURI,
+        url: view.url,
         language: language,
         topic: topic,
         activity: activity,
