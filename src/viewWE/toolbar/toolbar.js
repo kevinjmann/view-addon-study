@@ -319,7 +319,8 @@ const toolbar = {
   },
 
   /**
-   * Set language, topic and activity, if none of them are "unselected".
+   * Set language, topic, activity and timestamp if none of the activities
+   * are "unselected".
    * Afterwards prepare to enhance the page.
    * Otherwise create a unselected notification for the user.
    */
