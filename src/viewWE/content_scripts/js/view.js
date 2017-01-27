@@ -249,7 +249,7 @@ const view = {
       topic: view.topic,
       activity: view.activity,
       timestamp: view.timestamp,
-      numberOfEnhancements: view.numberOfEnhancements
+      numberOfExercises: view.numberOfExercises
     };
   }
 };
