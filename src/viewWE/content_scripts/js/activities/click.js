@@ -19,6 +19,9 @@ view.click = {
    * Turn correctly clicked hits green and incorrect ones red.
    */
   handler: function() {
+    const timestamp = Date.now();
+    view.saveTimestamp(timestamp);
+
     let countsAsCorrect = false;
     const $EnhancementElement = $(this);
     const usedHint = false;

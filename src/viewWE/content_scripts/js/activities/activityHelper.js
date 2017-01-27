@@ -124,6 +124,9 @@ view.activityHelper = {
    * Deals with the hint in the mc and cloze activities.
    */
   hintHandler: function() {
+    const timestamp = Date.now();
+    view.saveTimestamp(timestamp);
+
     const $ElementBox = $(this).prev();
     const $EnhancementElement = $ElementBox.parent();
     const input = $ElementBox.val() || "no input";
@@ -148,6 +151,9 @@ view.activityHelper = {
    * @param {object} e the triggered event
    */
   inputHandler: function(e) {
+    const timestamp = Date.now();
+    view.saveTimestamp(timestamp);
+
     let countsAsCorrect = false;
     const $ElementBox = $(e.target);
     const $EnhancementElement = $ElementBox.parent();

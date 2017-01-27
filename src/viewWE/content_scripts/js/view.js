@@ -204,7 +204,7 @@ const view = {
   /**
    * Save the timestamp.
    *
-   * @param {string} timestamp the time stamp
+   * @param {number} timestamp the time stamp
    */
   saveTimestamp: function(timestamp) {
     view.timestamp = timestamp;
