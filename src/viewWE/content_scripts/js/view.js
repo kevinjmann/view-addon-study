@@ -223,11 +223,11 @@ const view = {
    * Send a request to the background script to send session data
    * and get the session id.
    */
-  requestToGetSessionId: function() {
+  requestToSendSessionDataAndGetSessionId: function() {
     const sessionData = view.createSessionData();
 
     chrome.runtime.sendMessage({
-      msg: "get sessionid",
+      msg: "send sessionData and get sessionId",
       sessionData: sessionData,
       servletURL: view.servletURL
     }, function(response) {

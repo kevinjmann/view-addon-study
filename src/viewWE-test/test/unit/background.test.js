@@ -185,7 +185,7 @@ describe("background.js", function() {
       sinon.assert.calledOnce(chrome.runtime.onMessage.addListener);
     });
 
-    it("should process the message \"toggle toolbar\"", function() {
+    it("should process the message 'toggle toolbar'", function() {
       const toggleToolbarSpy = sandbox.spy(background, "toggleToolbar");
 
       const request = {msg: "toggle toolbar"};
@@ -199,7 +199,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message \"toggle VIEW Menu\"", function() {
+    it("should process the message 'toggle VIEW Menu'", function() {
       const toggleMenuVIEWSpy = sandbox.spy(background, "toggleVIEWMenu");
 
       const request = {msg: "toggle VIEW Menu"};
@@ -213,7 +213,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message \"hide VIEW Menu\"", function() {
+    it("should process the message 'hide VIEW Menu'", function() {
       const hideVIEWMenuSpy = sandbox.spy(background, "hideVIEWMenu");
 
       const request = {msg: "hide VIEW Menu"};
@@ -227,7 +227,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message \"create unselectedNotification\"", function() {
+    it("should process the message 'create unselectedNotification'", function() {
       const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
 
       const id = "unselected-notification";
@@ -243,7 +243,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
     });
 
-    it("should process the message \"call startToEnhance\"", function() {
+    it("should process the message 'call startToEnhance'", function() {
       const callStartToEnhanceSpy = sandbox.spy(background, "callStartToEnhance");
 
       const request = {msg: "call startToEnhance"};
@@ -257,7 +257,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message \"show element\"", function() {
+    it("should process the message 'show element'", function() {
       const showHideElementSpy = sandbox.spy(background, "showHideElement");
 
       const request = {
@@ -275,7 +275,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message \"hide element\"", function() {
+    it("should process the message 'hide element'", function() {
       const showHideElementSpy = sandbox.spy(background, "showHideElement");
 
       const request = {
@@ -293,7 +293,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message \"call sendTopics\"", function() {
+    it("should process the message 'call sendTopics'", function() {
       const sendTopicsSpy = sandbox.spy(background, "sendTopics");
 
       const request = {msg: "call sendTopics"};
@@ -314,7 +314,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(sendResponse, {topics: articlesData});
     });
 
-    it("should process the message \"call abort\"", function() {
+    it("should process the message 'call abort'", function() {
       const callAbortSpy = sandbox.spy(background, "callAbort");
 
       const request = {msg: "call abort"};
@@ -328,7 +328,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message \"call restoreToOriginal\"", function() {
+    it("should process the message 'call restoreToOriginal'", function() {
       const callRestoreToOriginalSpy = sandbox.spy(background, "callRestoreToOriginal");
 
       const request = {msg: "call restoreToOriginal"};
@@ -342,7 +342,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message \"redirect to link\"", function() {
+    it("should process the message 'redirect to link'", function() {
       const redirectSpy = sandbox.spy(background, "redirect");
 
       const request = {
@@ -360,7 +360,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.create, {url: request.link});
     });
 
-    it("should process the message \"call openOptionsPage\"", function() {
+    it("should process the message 'call openOptionsPage'", function() {
       const callOpenOptionsPageSpy = sandbox.spy(background, "callOpenOptionsPage");
 
       const request = {msg: "call openOptionsPage"};
@@ -373,7 +373,7 @@ describe("background.js", function() {
       sinon.assert.calledOnce(chrome.runtime.openOptionsPage);
     });
 
-    it("should process the message \"open help page\"", function() {
+    it("should process the message 'open help page'", function() {
       const openHelpPageSpy = sandbox.spy(background, "openHelpPage");
 
       const request = {msg: "open help page"};
@@ -388,7 +388,7 @@ describe("background.js", function() {
         {url: "http://sifnos.sfs.uni-tuebingen.de/VIEW/index.jsp?content=activities"});
     });
 
-    it("should enter the default case and create the \"unhandled-message-notification\"", function() {
+    it("should enter the default case and create the 'unhandled-message-notification'", function() {
       const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
 
       const id = "unhandled-message-notification";
@@ -425,7 +425,7 @@ describe("background.js", function() {
       });
 
       describe("sendActivityData", function() {
-        it("should process the message \"send activityData\"", function() {
+        it("should process the message 'send activityData'", function() {
           const sendActivityDataSpy = sandbox.spy(background, "sendActivityData");
 
           const request = {
@@ -531,8 +531,102 @@ describe("background.js", function() {
         });
       });
 
+      describe("sendSessionDataAndGetSessionId", function() {
+        it("should process the message 'send sessionData and get sessionId'", function() {
+          const sendSessionDataAndGetSessionIdSpy = sandbox.spy(background, "sendSessionDataAndGetSessionId");
+
+          const request = {
+            msg: "send sessionData and get sessionId",
+            sessionData: "some session data",
+            servletURL: "https://some.url",
+          };
+          const sender = {tab: {id: 5}};
+          const sendResponse = sandbox.spy();
+
+          chrome.runtime.onMessage.trigger(request, sender, sendResponse);
+
+          sinon.assert.calledOnce(sendSessionDataAndGetSessionIdSpy);
+          sinon.assert.calledWithExactly(sendSessionDataAndGetSessionIdSpy,
+            request,
+            sendResponse
+          );
+        });
+
+        it("should succeed to send session data, get the session id and call sendResponse(data)", function() {
+          const request = {
+            msg: "send sessionData and get sessionId",
+            sessionData: "some session data",
+            servletURL: "https://some.url",
+          };
+          const sendResponse = sandbox.spy();
+
+          sandbox.useFakeServer();
+
+          const serverURL = "https://some.url";
+          const serverData = "some server data";
+
+          sandbox.server.respondWith("POST", serverURL,
+            [200, {"Content-Type": "text"}, serverData]);
+
+          background.sendSessionDataAndGetSessionId(request, sendResponse);
+
+          sandbox.server.respond();
+
+          sinon.assert.calledOnce(sendResponse);
+          sinon.assert.calledWithExactly(sendResponse, serverData);
+        });
+
+        it("should succeed to send session data, but fail to receive data from the server", function() {
+          const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
+
+          const request = {
+            msg: "send sessionData and get sessionId",
+            sessionData: "some session data",
+            servletURL: "https://some.url",
+          };
+          const sendResponse = sandbox.spy();
+
+          sandbox.useFakeServer();
+
+          const serverURL = "https://some.url";
+
+          sandbox.server.respondWith("POST", serverURL,
+            [200, {"Content-Type": "text"}, ""]);
+
+          background.sendSessionDataAndGetSessionId(request, sendResponse);
+
+          sandbox.server.respond();
+
+          sinon.assert.calledOnce(ajaxErrorSpy);
+          expect(ajaxErrorSpy.firstCall.args[1]).to.equal("no-session-id");
+        });
+
+        it("should fail to send session data", function() {
+          const request = {
+            msg: "send sessionData and get sessionId",
+            sessionData: "some session data",
+            servletURL: "https://some.url",
+          };
+          const sendResponse = sandbox.spy();
+
+          sandbox.useFakeServer();
+
+          const serverURL = "https://some.url";
+
+          sandbox.server.respondWith("POST", serverURL,
+            [404, {}, ""]);
+
+          background.sendSessionDataAndGetSessionId(request, sendResponse);
+
+          sandbox.server.respond();
+
+          sinon.assert.calledOnce(sendResponse);
+          sinon.assert.calledWithExactly(sendResponse, "fake-session-id");
+        });
+      });
+
       describe("sendInteractionData", function() {
-        it("should process the message \"send interactionData\"", function() {
+        it("should process the message 'send interactionData'", function() {
           const sendInteractionDataSpy = sandbox.spy(background, "sendInteractionData");
 
           const request = {
@@ -550,7 +644,7 @@ describe("background.js", function() {
       });
 
       describe("sendRequestDataAbort", function() {
-        it("should process the message \"send requestData abort\"", function() {
+        it("should process the message 'send requestData abort'", function() {
           const sendRequestDataAbortSpy = sandbox.spy(background, "sendRequestDataAbort");
 
           const request = {
@@ -611,7 +705,7 @@ describe("background.js", function() {
           sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {msg: "call initialInteractionState"});
         });
 
-        it("should create the \"no-xhr-or-textstatus-notification\", because there is no xhr", function() {
+        it("should create the 'no-xhr-or-textstatus-notification', because there is no xhr", function() {
           const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
 
           const id = "no-xhr-or-textstatus-notification";
@@ -624,7 +718,7 @@ describe("background.js", function() {
           sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
         });
 
-        it("should create the \"no-xhr-or-textstatus-notification\", because there is no text status", function() {
+        it("should create the 'no-xhr-or-textstatus-notification', because there is no text status", function() {
           const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
 
           const id = "no-xhr-or-textstatus-notification";
@@ -637,12 +731,12 @@ describe("background.js", function() {
           sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
         });
 
-        it("should create the \"nodata-notification\"", function() {
+        it("should create the 'nodata-notification'", function() {
           const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
 
           const id = "nodata-notification";
           const title = "No data!";
-          const message = "The VIEW server is taking too long to respond.";
+          const message = "The VIEW server did not send any data.";
 
           background.ajaxError({}, "nodata");
 
@@ -650,13 +744,26 @@ describe("background.js", function() {
           sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
         });
 
-        it("should create the \"timeout-notification\" and call abortEnhancement()", function() {
+        it("should create the 'no-session-id'", function() {
+          const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
+
+          const id = "no-session-id-notification";
+          const title = "No session id!";
+          const message = "The VIEW server did not send the session id.";
+
+          background.ajaxError({}, "no-session-id");
+
+          sinon.assert.calledOnce(createBasicNotificationSpy);
+          sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
+        });
+
+        it("should create the 'timeout-notification' and call abortEnhancement()", function() {
           const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
           const callAbortEnhancementSpy = sandbox.spy(background, "callAbortEnhancement");
 
           const id = "timeout-notification";
           const title = "Timeout!";
-          const message = "The VIEW server is currently unavailable.";
+          const message = "The VIEW server is taking too long to respond.";
 
           background.ajaxError({}, "timeout");
 
@@ -666,7 +773,7 @@ describe("background.js", function() {
           sinon.assert.calledOnce(callAbortEnhancementSpy);
         });
 
-        it("should create the \"error-490-notification\"", function() {
+        it("should create the 'error-490-notification'", function() {
           const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
 
           const id = "error-490-notification";
@@ -681,7 +788,7 @@ describe("background.js", function() {
           sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
         });
 
-        it("should create the \"error-491-notification\"", function() {
+        it("should create the 'error-491-notification'", function() {
           const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
 
           const id = "error-491-notification";
@@ -695,7 +802,7 @@ describe("background.js", function() {
           sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
         });
 
-        it("should create the \"error-492-notification\"", function() {
+        it("should create the 'error-492-notification'", function() {
           const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
 
           const id = "error-492-notification";
@@ -710,7 +817,7 @@ describe("background.js", function() {
           sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
         });
 
-        it("should create the \"error-493-notification\"", function() {
+        it("should create the 'error-493-notification'", function() {
           const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
 
           const id = "error-493-notification";
@@ -730,7 +837,7 @@ describe("background.js", function() {
           background.ajaxError({status: 494}, "error");
         });
 
-        it("should create the \"unknown-error-notification\", when the error status is unknown", function() {
+        it("should create the 'unknown-error-notification', when the error status is unknown", function() {
           const createUnknownErrorNotificationSpy = sandbox.spy(background, "createUnknownErrorNotification");
 
           background.ajaxError({status: 495}, "error");
@@ -738,7 +845,7 @@ describe("background.js", function() {
           sinon.assert.calledOnce(createUnknownErrorNotificationSpy);
         });
 
-        it("should create the \"unknown-error-notification\", when the text status is unknown", function() {
+        it("should create the 'unknown-error-notification', when the text status is unknown", function() {
           const createUnknownErrorNotificationSpy = sandbox.spy(background, "createUnknownErrorNotification");
 
           background.ajaxError({}, "unknown");
@@ -746,7 +853,7 @@ describe("background.js", function() {
           sinon.assert.calledOnce(createUnknownErrorNotificationSpy);
         });
 
-        it("should create the \"unknown-error-notification\"", function() {
+        it("should create the 'unknown-error-notification'", function() {
           const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
 
           const id = "unknown-error-notification";
@@ -822,7 +929,9 @@ describe("background.js", function() {
       sinon.assert.calledOnce(chrome.storage.local.set);
       sinon.assert.calledWith(chrome.storage.local.set, {
         userEmail: "",
-        userid: ""
+        userid: "",
+        user: "",
+        token: ""
       });
 
       sinon.assert.calledOnce(chrome.tabs.sendMessage);
@@ -830,7 +939,7 @@ describe("background.js", function() {
     });
 
     it("should set user email and id and send a request to sign in the user", function() {
-      const userData = "name/email/id";
+      const userData = "user/email/id";
 
       background.currentTabId = 5;
 
@@ -839,7 +948,9 @@ describe("background.js", function() {
       sinon.assert.calledOnce(chrome.storage.local.set);
       sinon.assert.calledWith(chrome.storage.local.set, {
         userEmail: "email",
-        userid: "id"
+        userid: "id",
+        user: "user",
+        token: "authtoken"
       });
 
       sinon.assert.calledOnce(chrome.tabs.sendMessage);

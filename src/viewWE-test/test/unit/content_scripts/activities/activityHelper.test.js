@@ -315,12 +315,12 @@ describe("activityHelper.js", function() {
         sinon.assert.calledWithExactly(setNumberOfExercisesSpy, 19);
       });
 
-      it("should call requestToGetSessionId()", function() {
-        const requestToGetSessionIdSpy = sandbox.spy(view, "requestToGetSessionId");
+      it("should call requestToSendSessionDataAndGetSessionId()", function() {
+        const requestToSendSessionDataAndGetSessionIdSpy = sandbox.spy(view, "requestToSendSessionDataAndGetSessionId");
 
         view.activityHelper.getNumberOfExercisesAndRequestSessionId(".viewinput");
 
-        sinon.assert.calledOnce(requestToGetSessionIdSpy);
+        sinon.assert.calledOnce(requestToSendSessionDataAndGetSessionIdSpy);
       });
     });
 

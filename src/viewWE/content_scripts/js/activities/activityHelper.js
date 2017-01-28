@@ -118,7 +118,7 @@ view.activityHelper = {
 
     view.setNumberOfExercises(numberOfExercises);
 
-    view.requestToGetSessionId();
+    view.requestToSendSessionDataAndGetSessionId();
   },
 
   /**

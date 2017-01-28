@@ -369,11 +369,11 @@ describe("view.js", function() {
     });
   });
 
-  describe("requestToGetSessionId", function() {
+  describe("requestToSendSessionDataAndGetSessionId", function() {
     it("should call createSessionData()", function() {
       const createSessionDataSpy = sandbox.spy(view, "createSessionData");
 
-      view.requestToGetSessionId();
+      view.requestToSendSessionDataAndGetSessionId();
 
       sinon.assert.calledOnce(createSessionDataSpy);
     });
@@ -414,11 +414,11 @@ describe("view.js", function() {
     it("should send a request to get the session id from the server", function() {
       const sessionData = view.createSessionData();
 
-      view.requestToGetSessionId();
+      view.requestToSendSessionDataAndGetSessionId();
 
       sinon.assert.calledOnce(chrome.runtime.sendMessage);
       sinon.assert.calledWith(chrome.runtime.sendMessage, {
-        msg: "get sessionid",
+        msg: "send sessionData and get sessionId",
         sessionData: sessionData,
         servletURL: "https://view.aleks.bg/view"
       });
@@ -429,7 +429,7 @@ describe("view.js", function() {
 
       chrome.runtime.sendMessage.yields(response);
 
-      view.requestToGetSessionId();
+      view.requestToSendSessionDataAndGetSessionId();
 
       expect(view.sessionid).to.equal(response.sessionid);
     });

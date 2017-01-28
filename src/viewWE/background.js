@@ -553,7 +553,7 @@ function processMessage(request, sender, sendResponse) {
     case "send activityData":
       background.sendActivityData(request);
       break;
-    case "get sessionid":
+    case "send sessionData and get sessionId":
       background.sendSessionDataAndGetSessionId(request, sendResponse);
       break;
     case "send interactionData":
