@@ -162,8 +162,6 @@ const view = {
 
       view.topicName = view.interaction.getTopicName(view.topic);
 
-      view.saveUserAndToken(storageItems.user, storageItems.token);
-
       view.saveTimestamp(storageItems.timestamp);
 
       view.interaction.enhance();
@@ -197,17 +195,6 @@ const view = {
     view.language = storageItems.language;
     view.topic = storageItems.topic;
     view.activity = storageItems.activity;
-  },
-
-  /**
-   * Save user name and authentication token.
-   *
-   * @param {string} user the current user name
-   * @param {string} token the authentication token of the user
-   */
-  saveUserAndToken: function(user, token) {
-    view.user = user;
-    view.token = token;
   },
 
   /**
