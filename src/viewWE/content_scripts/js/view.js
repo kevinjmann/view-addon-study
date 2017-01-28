@@ -170,6 +170,8 @@ const view = {
 
       view.topicName = view.interaction.getTopicName(storageItems.topic);
 
+      view.userid = "someid";
+
       view.interaction.enhance();
     });
   },
@@ -232,8 +234,6 @@ const view = {
       msg: "send sessionData and get sessionId",
       sessionData: sessionData,
       serverSessionURL: view.serverSessionURL
-    }, function(response) {
-      view.sessionid = response.sessionid;
     });
   },
 
@@ -253,5 +253,15 @@ const view = {
       timestamp: view.timestamp,
       "number-of-exercises": view.numberOfExercises
     };
+  },
+
+  /**
+   * Set the session id obtained from the server whenever a new
+   * session was started by the user.
+   *
+   * @param {number} sessionId the session id from the server
+   */
+  setSessionId: function(sessionId) {
+    view.sessionid = sessionId
   }
 };

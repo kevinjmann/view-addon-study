@@ -13,13 +13,11 @@ view.collector = {
   collectAndSendData: function($EnhancementElement, submission, isCorrect, usedHint) {
     const interactionData = {};
 
-    interactionData["user"] = view.user;
     interactionData["token"] = view.token;
     interactionData["session-id"] = view.sessionid;
     interactionData["enhancement-id"] = $EnhancementElement.attr("id");
     interactionData["submission"] = submission;
     interactionData["is-correct"] = isCorrect;
-    interactionData["timestamp"] = view.timestamp;
 
     const isClick = (view.activity === "click");
 
@@ -28,6 +26,8 @@ view.collector = {
       interactionData["correct-answer"] = view.activityHelper.getCorrectAnswer($EnhancementElement, capType);
       interactionData["used-hint"] = usedHint;
     }
+
+    interactionData["timestamp"] = view.timestamp;
 
     view.collector.requestToSendInteractionData(interactionData);
   },
@@ -42,7 +42,7 @@ view.collector = {
     chrome.runtime.sendMessage({
       msg: "send interactionData",
       interactionData: interactionData,
-      servletURL: view.servletURL
+      serverTrackingURL: view.serverTrackingURL
     });
   }
 };

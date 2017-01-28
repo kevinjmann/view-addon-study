@@ -237,21 +237,19 @@ const background = {
   },
 
   /**
-   * Send the session data from view.js to the
-   * server for processing.
-   * If successful, send as response the session id to view.js
+   * Send the session data from view.js to the server for processing.
+   * If successful, request to call setSessionId in view.js.
    *
    * @param {*} request the message sent by the calling script
-   * @callback sendResponseCallback
-   * @param {sendResponseCallback} sendResponse function to call as response
    */
-  sendSessionDataAndGetSessionId: function(request, sendResponse){
+  sendSessionDataAndGetSessionId: function(request){
     background.ajaxPost(request.serverSessionURL,
       request.sessionData,
       10000)
     .done(function(data, textStatus, xhr) {
       if (data) {
-        sendResponse(data);
+        const jsObject = JSON.parse(data);
+        background.callSetSessionId(jsObject["session-id"])
       } else {
         background.ajaxError(xhr, "no-session-id");
       }
@@ -262,13 +260,24 @@ const background = {
   },
 
   /**
-   * Send the interaction data from interaction.js to the
-   * server for processing.
+   * Request to call setSessionId(sessionId) in view.js.
+   *
+   * @param {number} sessionId the session id from the server
+   */
+  callSetSessionId: function(sessionId) {
+    chrome.tabs.sendMessage(background.currentTabId, {
+      msg: "call setSessionId",
+      sessionId: sessionId
+    });
+  },
+
+  /**
+   * Send the interaction data to the server for processing.
    *
    * @param {*} request the message sent by the calling script
    */
   sendInteractionData: function(request) {
-    background.ajaxPost(request.servletURL,
+    background.ajaxPost(request.serverTrackingURL,
       request.interactionData,
       10000);
   },
@@ -552,7 +561,7 @@ function processMessage(request, sender, sendResponse) {
       background.sendActivityData(request);
       break;
     case "send sessionData and get sessionId":
-      background.sendSessionDataAndGetSessionId(request, sendResponse);
+      background.sendSessionDataAndGetSessionId(request);
       break;
     case "send interactionData":
       background.sendInteractionData(request);
