@@ -55,6 +55,24 @@ describe("click.js", function() {
       sinon.assert.calledWith(eventSpy, "click");
     });
 
+    it("should call getNumberOfExercisesAndRequestSessionId(selector)", function() {
+      const getNumberOfExercisesAndRequestSessionIdSpy = sandbox.spy(
+        view.activityHelper,
+        "getNumberOfExercisesAndRequestSessionId"
+      );
+      const setNumberOfExercisesSpy = sandbox.spy(view, "setNumberOfExercises");
+
+      const selector = "viewenhancement[data-type!='miss']";
+
+      view.click.run();
+
+      sinon.assert.calledOnce(getNumberOfExercisesAndRequestSessionIdSpy);
+      sinon.assert.calledWithExactly(getNumberOfExercisesAndRequestSessionIdSpy, selector);
+
+      sinon.assert.calledOnce(setNumberOfExercisesSpy);
+      sinon.assert.calledWithExactly(setNumberOfExercisesSpy, 22);
+    });
+
     it("should call the handler on click", function() {
       const handlerSpy = sandbox.spy(view.click, "handler");
 
