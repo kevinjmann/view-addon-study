@@ -4,6 +4,8 @@ const view = {
   // General options
   serverURL: "https://view.aleks.bg",
   servletURL: "https://view.aleks.bg/view",
+  serverSessionURL: "https://view.aleks.bg/act/newSession",
+  serverTrackingURL: "https://view.aleks.bg/act/track",
   cookie_name: "wertiview_userid",
   cookie_path: "/VIEW/openid",
   ajaxTimeout: 60000,
@@ -229,7 +231,7 @@ const view = {
     chrome.runtime.sendMessage({
       msg: "send sessionData and get sessionId",
       sessionData: sessionData,
-      servletURL: view.servletURL
+      serverSessionURL: view.serverSessionURL
     }, function(response) {
       view.sessionid = response.sessionid;
     });
@@ -249,7 +251,7 @@ const view = {
       topic: view.topic,
       activity: view.activity,
       timestamp: view.timestamp,
-      numberOfExercises: view.numberOfExercises
+      "number-of-exercises": view.numberOfExercises
     };
   }
 };

@@ -246,7 +246,7 @@ const background = {
    * @param {sendResponseCallback} sendResponse function to call as response
    */
   sendSessionDataAndGetSessionId: function(request, sendResponse){
-    background.ajaxPost(request.servletURL,
+    background.ajaxPost(request.serverSessionURL,
       request.sessionData,
       10000)
     .done(function(data, textStatus, xhr) {
@@ -257,9 +257,7 @@ const background = {
       }
     })
     .fail(function(xhr, textStatus) {
-      // TODO: temporarily send a fake session id back
-      sendResponse("fake-session-id");
-      //background.ajaxError(xhr, textStatus);
+      background.ajaxError(xhr, textStatus);
     });
   },
 
