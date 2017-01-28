@@ -129,7 +129,7 @@ view.activityHelper = {
 
     const $ElementBox = $(this).prev();
     const $EnhancementElement = $ElementBox.parent();
-    const input = $ElementBox.val() || "no input";
+    const submission = $ElementBox.val() || "no submission";
     const countAsCorrect = true;
     const usedHint = true;
 
@@ -138,7 +138,7 @@ view.activityHelper = {
     if (view.userid) {
       view.collector.collectAndSendData(
         $EnhancementElement,
-        input,
+        submission,
         countAsCorrect,
         usedHint
       );
@@ -146,7 +146,7 @@ view.activityHelper = {
   },
 
   /**
-   * Deals with the input in the mc and cloze activities.
+   * Deals with the submission in the mc and cloze activities.
    *
    * @param {object} e the triggered event
    */
@@ -157,10 +157,10 @@ view.activityHelper = {
     let countsAsCorrect = false;
     const $ElementBox = $(e.target);
     const $EnhancementElement = $ElementBox.parent();
-    const input = $ElementBox.val();
+    const submission = $ElementBox.val();
     const usedHint = false;
 
-    if (input.toLowerCase() === $ElementBox.data("view-answer").toLowerCase()) {
+    if (submission.toLowerCase() === $ElementBox.data("view-answer").toLowerCase()) {
       countsAsCorrect = true;
       view.activityHelper.processCorrect($ElementBox, "correct");
     }
@@ -171,7 +171,7 @@ view.activityHelper = {
     if (view.userid) {
       view.collector.collectAndSendData(
         $EnhancementElement,
-        input,
+        submission,
         countsAsCorrect,
         usedHint
       );
@@ -179,7 +179,7 @@ view.activityHelper = {
   },
 
   /**
-   * Process the correct input.
+   * Process the correct submission.
    *
    * @param {object} $ElementBox the select or input box
    * @param {string} inputStyleType either "correct" or "provided"
@@ -238,7 +238,7 @@ view.activityHelper = {
   },
 
   /**
-   * Process the incorrect input.
+   * Process the incorrect submission.
    *
    * @param {object} $ElementBox the select or input box
    */
