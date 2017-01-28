@@ -3,9 +3,7 @@ view.mc = {
    * Run the multiple choice activity.
    */
   run: function() {
-    const hitList = view.activityHelper.createHitList();
-
-    view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+    view.activityHelper.exerciseHandler(view.mc.createExercise);
 
     $(".viewinput").on("change", view.activityHelper.inputHandler);
   },

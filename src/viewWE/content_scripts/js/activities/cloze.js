@@ -3,9 +3,7 @@ view.cloze = {
    * Run the cloze activity.
    */
   run: function() {
-    const hitList = view.activityHelper.createHitList();
-
-    view.activityHelper.exerciseHandler(hitList, view.cloze.createExercise);
+    view.activityHelper.exerciseHandler(view.cloze.createExercise);
 
     $(".viewinput").on("keyup", view.cloze.handler);
   },

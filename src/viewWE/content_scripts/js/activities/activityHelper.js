@@ -1,5 +1,30 @@
 view.activityHelper = {
   /**
+   * Generate multiple choice or cloze exercises.
+   *
+   * @param {function} createExercise either the mc or cloze createExercise
+   * function.
+   */
+  exerciseHandler: function(createExercise) {
+    const hitList = view.activityHelper.createHitList();
+
+    const numExercises = view.activityHelper.calculateNumberOfExercises(hitList);
+
+    const exerciseOptions = view.activityHelper.chooseWhichExercises(hitList);
+
+    view.activityHelper.createExercises(
+      numExercises,
+      exerciseOptions,
+      hitList,
+      createExercise
+    );
+
+    view.activityHelper.getNumberOfExercisesAndRequestSessionId(".viewinput");
+
+    $("viewhint").on("click", view.activityHelper.hintHandler);
+  },
+
+  /**
    * Create a hit list from all enhancements.
    */
   createHitList: function() {
@@ -18,30 +43,6 @@ view.activityHelper = {
     });
 
     return hitList;
-  },
-
-  /**
-   * Generate multiple choice or cloze exercises.
-   *
-   * @param {Array} hitList list of hits that could be turned into exercises
-   * @param {function} createExercise either the mc or cloze createExercise
-   * function.
-   */
-  exerciseHandler: function(hitList, createExercise) {
-    const numExercises = view.activityHelper.calculateNumberOfExercises(hitList);
-
-    const exerciseOptions = view.activityHelper.chooseWhichExercises(hitList);
-
-    view.activityHelper.createExercises(
-      numExercises,
-      exerciseOptions,
-      hitList,
-      createExercise
-    );
-
-    view.activityHelper.getNumberOfExercisesAndRequestSessionId(".viewinput");
-
-    $("viewhint").on("click", view.activityHelper.hintHandler);
   },
 
   /**

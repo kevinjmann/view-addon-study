@@ -37,19 +37,13 @@ describe("mc.js", function() {
   });
 
   describe("run", function() {
-    it("should create a hitlist and pass it on to the exerciseHandler", function() {
-      const createHitListSpy = sandbox.spy(view.activityHelper, "createHitList");
+    it("should call exerciseHandler(createExercise)", function() {
       const exerciseHandlerSpy = sandbox.spy(view.activityHelper, "exerciseHandler");
 
       view.mc.run();
 
-      sinon.assert.calledOnce(createHitListSpy);
-
       sinon.assert.calledOnce(exerciseHandlerSpy);
-      sinon.assert.calledWithExactly(exerciseHandlerSpy,
-        createHitListSpy.firstCall.returnValue,
-        view.mc.createExercise
-      );
+      sinon.assert.calledWithExactly(exerciseHandlerSpy, view.mc.createExercise);
     });
 
     describe("createExercise", function() {

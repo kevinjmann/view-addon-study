@@ -36,7 +36,15 @@ describe("activityHelper.js", function() {
     });
   });
 
-  describe("createHitList", function() {
+  describe("exerciseHandler", function() {
+    it("should call createHitList()", function() {
+      const createHitListSpy = sandbox.spy(view.activityHelper, "createHitList");
+
+      view.activityHelper.exerciseHandler(view.mc.createExercise);
+
+      sinon.assert.calledOnce(createHitListSpy);
+    });
+
     it("should create a hitlist", function() {
       const hitList = [];
 
@@ -49,15 +57,14 @@ describe("activityHelper.js", function() {
       expect(returnedHitList).to.eql(hitList);
       expect(returnedHitList.length).to.equal(19);
     });
-  });
 
-  describe("exerciseHandler", function() {
     it("should call calculateNumberOfExercises(hitList)", function() {
+      const createHitListSpy = sandbox.spy(view.activityHelper, "createHitList");
       const calculateNumberOfExercisesSpy = sandbox.spy(view.activityHelper, "calculateNumberOfExercises");
 
-      const hitList = view.activityHelper.createHitList();
+      view.activityHelper.exerciseHandler(view.mc.createExercise);
 
-      view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+      const hitList = createHitListSpy.firstCall.returnValue;
 
       sinon.assert.calledOnce(calculateNumberOfExercisesSpy);
       sinon.assert.calledWithExactly(calculateNumberOfExercisesSpy, hitList);
@@ -90,11 +97,12 @@ describe("activityHelper.js", function() {
     });
 
     it("should call chooseWhichExercises(hitList)", function() {
+      const createHitListSpy = sandbox.spy(view.activityHelper, "createHitList");
       const chooseWhichExercisesSpy = sandbox.spy(view.activityHelper, "chooseWhichExercises");
 
-      const hitList = view.activityHelper.createHitList();
+      view.activityHelper.exerciseHandler(view.mc.createExercise);
 
-      view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+      const hitList = createHitListSpy.firstCall.returnValue;
 
       sinon.assert.calledOnce(chooseWhichExercisesSpy);
       sinon.assert.calledWithExactly(chooseWhichExercisesSpy, hitList);
