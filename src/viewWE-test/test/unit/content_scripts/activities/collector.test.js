@@ -37,20 +37,20 @@ describe("collector.js", function() {
   });
 
   describe("collectAndSendData", function() {
-    it("should call detectCapitalization($EnhancementElement.text()), as the activity is not 'click'", function() {
+    it("should call detectCapitalization(word), as the activity is not 'click'", function() {
       const detectCapitalizationSpy = sandbox.spy(view.lib, "detectCapitalization");
 
       const $EnhancementElement = $("[data-type='hit']").first();
-      const input = "Усвоением";
-      const countAsCorrect = false;
+      const submission = "Усвоением";
+      const isCorrect = false;
       const usedHint = false;
 
       view.activity = "mc";
 
       view.collector.collectAndSendData(
         $EnhancementElement,
-        input,
-        countAsCorrect,
+        submission,
+        isCorrect,
         usedHint
       );
 
@@ -62,8 +62,8 @@ describe("collector.js", function() {
       const getCorrectAnswerSpy = sandbox.spy(view.activityHelper, "getCorrectAnswer");
 
       const $EnhancementElement = $("[data-type='hit']").first();
-      const input = "Усвоением";
-      const countAsCorrect = false;
+      const submission = "Усвоением";
+      const isCorrect = false;
       const usedHint = false;
       const capType = 2;
 
@@ -71,8 +71,8 @@ describe("collector.js", function() {
 
       view.collector.collectAndSendData(
         $EnhancementElement,
-        input,
-        countAsCorrect,
+        submission,
+        isCorrect,
         usedHint
       );
 
@@ -84,39 +84,39 @@ describe("collector.js", function() {
       const requestToSendInteractionDataSpy = sandbox.spy(view.collector, "requestToSendInteractionData");
 
       const $EnhancementElement = $("[data-type='hit']").first();
-      const input = "Усвоением";
-      const countsAsCorrect = false;
+
+      const user = "some user";
+      const token = "some token";
+      const sessionId = "fake-session-id";
+      const enhancementId = $EnhancementElement.attr("id");
+      const submission = "Усвоением";
+      const isCorrect = false;
+      const timestamp = 99;
+      const correctAnswer = "Усвоение";
       const usedHint = false;
 
-      const language = "ru";
-      const topic = "nouns";
-      const activity = "mc";
+      const interactionData = {};
 
+      interactionData["user"] = user;
+      interactionData["token"] = token;
+      interactionData["session-id"] = sessionId;
+      interactionData["enhancement-id"] = enhancementId;
+      interactionData["submission"] = submission;
+      interactionData["is-correct"] = isCorrect;
+      interactionData["timestamp"] = timestamp;
+      interactionData["correct-answer"] = correctAnswer;
+      interactionData["used-hint"] = usedHint;
 
-      const elementData = {
-        viewenhancementid: $EnhancementElement.attr("id"),
-        userinput: input,
-        correctanswer: "Усвоение",
-        usedhint: usedHint,
-        countsascorrect: countsAsCorrect
-      };
-
-      const interactionData = {
-        url: view.url,
-        language: language,
-        topic: topic,
-        activity: activity,
-        element: JSON.stringify(elementData)
-      };
-
-      view.language = language;
-      view.topic = topic;
-      view.activity = activity;
+      view.user = user;
+      view.token = token;
+      view.sessionid = sessionId;
+      view.timestamp = timestamp;
+      view.activity = "mc";
 
       view.collector.collectAndSendData(
         $EnhancementElement,
-        input,
-        countsAsCorrect,
+        submission,
+        isCorrect,
         usedHint
       );
 
@@ -128,37 +128,35 @@ describe("collector.js", function() {
       const requestToSendInteractionDataSpy = sandbox.spy(view.collector, "requestToSendInteractionData");
 
       const $EnhancementElement = $("[data-type='hit']").first();
-      const input = "Усвоением";
-      const countsAsCorrect = false;
+      const user = "some user";
+      const token = "some token";
+      const sessionId = "fake-session-id";
+      const enhancementId = $EnhancementElement.attr("id");
+      const submission = "Усвоением";
+      const isCorrect = false;
+      const timestamp = 99;
       const usedHint = false;
 
-      const language = "ru";
-      const topic = "nouns";
-      const activity = "click";
+      const interactionData = {};
 
+      interactionData["user"] = user;
+      interactionData["token"] = token;
+      interactionData["session-id"] = sessionId;
+      interactionData["enhancement-id"] = enhancementId;
+      interactionData["submission"] = submission;
+      interactionData["is-correct"] = isCorrect;
+      interactionData["timestamp"] = timestamp;
 
-      const elementData = {
-        viewenhancementid: $EnhancementElement.attr("id"),
-        userinput: input,
-        countsascorrect: countsAsCorrect
-      };
-
-      const interactionData = {
-        url: view.url,
-        language: language,
-        topic: topic,
-        activity: activity,
-        element: JSON.stringify(elementData)
-      };
-
-      view.language = language;
-      view.topic = topic;
-      view.activity = activity;
+      view.user = user;
+      view.token = token;
+      view.sessionid = sessionId;
+      view.timestamp = timestamp;
+      view.activity = "click";
 
       view.collector.collectAndSendData(
         $EnhancementElement,
-        input,
-        countsAsCorrect,
+        submission,
+        isCorrect,
         usedHint
       );
 

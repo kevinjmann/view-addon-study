@@ -390,7 +390,7 @@ describe("activityHelper.js", function() {
         const $ElementBox = $Hint.prev();
         const $EnhancementElement = $ElementBox.parent();
         const submission = "some value";
-        const countAsCorrect = true;
+        const isCorrect = true;
         const usedHint = true;
 
         $ElementBox.val(submission);
@@ -405,7 +405,7 @@ describe("activityHelper.js", function() {
         sinon.assert.calledWithExactly(collectAndSendDataSpy,
           $EnhancementElement,
           submission,
-          countAsCorrect,
+          isCorrect,
           usedHint
         );
       });
@@ -419,7 +419,7 @@ describe("activityHelper.js", function() {
         const $ElementBox = $Hint.prev();
         const $EnhancementElement = $ElementBox.parent();
         const submission = "no submission";
-        const countAsCorrect = true;
+        const isCorrect = true;
         const usedHint = true;
 
         view.userid = "someid";
@@ -432,7 +432,7 @@ describe("activityHelper.js", function() {
         sinon.assert.calledWithExactly(collectAndSendDataSpy,
           $EnhancementElement,
           submission,
-          countAsCorrect,
+          isCorrect,
           usedHint
         );
       });
@@ -494,7 +494,7 @@ describe("activityHelper.js", function() {
       sinon.assert.notCalled(collectAndSendDataSpy);
     });
 
-    it("should call collectAndSendData($Enhancement, submission, countsAsCorrect, usedHint), as the userid is defined", function() {
+    it("should call collectAndSendData($Enhancement, submission, isCorrect, usedHint), as the userid is defined", function() {
       const collectAndSendDataSpy = sandbox.spy(view.collector, "collectAndSendData");
 
       view.mc.run();
@@ -502,7 +502,7 @@ describe("activityHelper.js", function() {
       const $ElementBox = $(".viewinput").first();
       const $EnhancementElement = $ElementBox.parent();
       const answer = $ElementBox.data("view-answer");
-      const countAsCorrect = true;
+      const isCorrect = true;
       const usedHint = false;
 
       view.userid = "someid";
@@ -515,7 +515,7 @@ describe("activityHelper.js", function() {
       sinon.assert.calledWithExactly(collectAndSendDataSpy,
         $EnhancementElement,
         answer,
-        countAsCorrect,
+        isCorrect,
         usedHint
       );
     });

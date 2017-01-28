@@ -129,11 +129,11 @@ describe("click.js", function() {
         expect($EnhancementElement.hasClass(clickStylePointer)).to.be.false;
       });
 
-      it("should call collectAndSendData($Enhancement, input, countsAsCorrect, usedHint), as the user is logged in", function() {
+      it("should call collectAndSendData($Enhancement,submission, isCorrect, usedHint), as the user is logged in", function() {
         const collectAndSendDataSpy = sandbox.spy(view.collector, "collectAndSendData");
 
         const $EnhancementElement = $("[data-type='hit']").first();
-        const countAsCorrect = true;
+        const isCorrect = true;
         const usedHint = false;
 
         view.userid = "someid";
@@ -148,7 +148,7 @@ describe("click.js", function() {
         sinon.assert.calledWithExactly(collectAndSendDataSpy,
           $EnhancementElement,
           $EnhancementElement.text(),
-          countAsCorrect,
+          isCorrect,
           usedHint
         );
       });
