@@ -72,8 +72,8 @@ describe("view.js", function() {
       });
 
       describe("setMutableGeneralOptions", function() {
-        it("should call setEmailAndId(email, id) and setAutoEnhance(enabled)", function() {
-          const setEmailAndIdSpy = sandbox.spy(view, "setEmailAndId");
+        it("should call setAuthenticationDetails(email, id) and setAutoEnhance(enabled)", function() {
+          const setAuthenticationDetailsSpy = sandbox.spy(view, "setAuthenticationDetails");
           const setAutoEnhanceSpy = sandbox.spy(view, "setAutoEnhance");
 
           const userEmail = "some.email";
@@ -87,19 +87,23 @@ describe("view.js", function() {
 
           view.setMutableGeneralOptions(storageItems);
 
-          sinon.assert.calledOnce(setEmailAndIdSpy);
-          sinon.assert.calledWithExactly(setEmailAndIdSpy, userEmail, userid);
+          sinon.assert.calledOnce(setAuthenticationDetailsSpy);
+          sinon.assert.calledWithExactly(setAuthenticationDetailsSpy, storageItems);
 
           sinon.assert.calledOnce(setAutoEnhanceSpy);
           sinon.assert.calledWithExactly(setAutoEnhanceSpy, enabled);
         });
 
-        describe("setEmailAndId", function() {
+        describe("setAuthenticationDetails", function() {
           it("should set the user email and id to the defaults, as the id is undefined", function() {
             const userEmail = "some.email";
             const userid = undefined;
+            const storageItems = {
+              userEmail,
+              userid
+            };
 
-            view.setEmailAndId(userEmail, userid);
+            view.setAuthenticationDetails(storageItems);
 
             sinon.assert.calledOnce(chrome.storage.local.set);
             sinon.assert.calledWithExactly(chrome.storage.local.set, {
@@ -111,11 +115,15 @@ describe("view.js", function() {
           it("should set the user email and id from storage, as the id is defined", function() {
             const userEmail = "some.email";
             const userid = "someid";
+            const storageItems = {
+              userEmail,
+              userid
+            };
 
             expect(view.userEmail).to.be.empty;
             expect(view.userid).to.be.empty;
 
-            view.setEmailAndId(userEmail, userid);
+            view.setAuthenticationDetails(storageItems);
 
             expect(view.userEmail).to.equal(userEmail);
             expect(view.userid).to.equal(userid);
@@ -135,9 +143,9 @@ describe("view.js", function() {
   });
 
   describe("startToEnhance", function() {
-    it("should call saveUserOptions(storageItems), setEmailAndId(email, id), saveSelections(storageItems) and enhance()", function() {
+    it("should call saveUserOptions(storageItems), setAuthenticationDetails(email, id), saveSelections(storageItems) and enhance()", function() {
       const saveUserOptionsSpy = sandbox.spy(view, "saveUserOptions");
-      const setEmailAndIdSpy = sandbox.spy(view, "setEmailAndId");
+      const setAuthenticationDetailsSpy = sandbox.spy(view, "setAuthenticationDetails");
       const saveSelectionsSpy = sandbox.spy(view, "saveSelections");
       const enhanceSpy = sandbox.spy(view.interaction, "enhance");
       const getTopicNameSpy = sandbox.spy(view.interaction, "getTopicName");
@@ -159,8 +167,8 @@ describe("view.js", function() {
       sinon.assert.calledOnce(saveUserOptionsSpy);
       sinon.assert.calledWithExactly(saveUserOptionsSpy, storageItems);
 
-      sinon.assert.calledOnce(setEmailAndIdSpy);
-      sinon.assert.calledWithExactly(setEmailAndIdSpy, userEmail, userid);
+      sinon.assert.calledOnce(setAuthenticationDetailsSpy);
+      sinon.assert.calledWithExactly(setAuthenticationDetailsSpy, storageItems);
 
       sinon.assert.calledOnce(saveSelectionsSpy);
       sinon.assert.calledWithExactly(saveSelectionsSpy, storageItems);

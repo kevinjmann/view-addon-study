@@ -49,6 +49,8 @@ const view = {
         chrome.storage.local.get([
           "userEmail",
           "userid",
+          "user",
+          "token",
           "enabled"
         ], function(storageItems) {
           view.topics = response.topics;
@@ -88,26 +90,33 @@ const view = {
    * @param  {object} storageItems changeable items from storage
    */
   setMutableGeneralOptions: function(storageItems) {
-    view.setEmailAndId(storageItems.userEmail, storageItems.userid);
+    view.setAuthenticationDetails(storageItems);
     view.setAutoEnhance(storageItems.enabled);
   },
 
   /**
-   * Set user email and id.
+   * Set authentication details:
+   * - userid
+   * - userEmail
+   * - user
+   * - token
    *
-   * @param {string} email the email address from the user
-   * @param {string} id the user id
+   * @param  {object} storageItems changeable items from storage
    */
-  setEmailAndId: function(email, id) {
-    if (id === undefined) {
+  setAuthenticationDetails: function(storageItems) {
+    if (storageItems.userid === undefined) {
       chrome.storage.local.set({
         userEmail: view.userEmail,
-        userid: view.userid
+        userid: view.userid,
+        user: view.user,
+        token: view.token
       });
     }
     else {
-      view.userEmail = email;
-      view.userid = id;
+      view.userEmail = storageItems.userEmail;
+      view.userid = storageItems.userid;
+      view.user = storageItems.user;
+      view.token = storageItems.token;
     }
   },
 
@@ -147,7 +156,7 @@ const view = {
     ], function(storageItems) {
       view.saveUserOptions(storageItems);
 
-      view.setEmailAndId(storageItems.userEmail, storageItems.userid);
+      view.setAuthenticationDetails(storageItems.userEmail, storageItems.userid);
 
       view.saveSelections(storageItems);
 
