@@ -12,8 +12,8 @@ const view = {
   userid: "",
 
   // session data
-  user: "",
-  token: "",
+  user: "Eduard",
+  token: "authtoken",
   url: document.baseURI,
   timestamp: "",
   numberOfExercises: 0,
