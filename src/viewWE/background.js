@@ -257,7 +257,9 @@ const background = {
       }
     })
     .fail(function(xhr, textStatus) {
-      background.ajaxError(xhr, textStatus);
+      // TODO: temporarily send a fake session id back
+      sendResponse("fake-session-id");
+      //background.ajaxError(xhr, textStatus);
     });
   },
 
@@ -436,7 +438,9 @@ const background = {
   signOutUser: function(){
     chrome.storage.local.set({
       userEmail: "",
-      userid: ""
+      userid: "",
+      user: "",
+      token: ""
     }, function() {
       chrome.tabs.sendMessage(background.currentTabId, {msg: "call signOut"});
     });
@@ -453,12 +457,15 @@ const background = {
    */
   signInUser: function(userData){
     const account = userData.split("/");
+    const user = account[0];
     const userEmail = account[1];
     const userid = account[2];
 
     chrome.storage.local.set({
       userEmail: userEmail,
-      userid: userid
+      userid: userid,
+      user: user,
+      token: "authtoken" // TODO: figure out how to receive the auth token
     }, function() {
       chrome.tabs.sendMessage(background.currentTabId, {
         msg: "call signIn",
