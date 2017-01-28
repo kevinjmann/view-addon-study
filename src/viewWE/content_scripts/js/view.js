@@ -156,7 +156,7 @@ const view = {
     ], function(storageItems) {
       view.saveUserOptions(storageItems);
 
-      view.setAuthenticationDetails(storageItems.userEmail, storageItems.userid);
+      view.setAuthenticationDetails(storageItems);
 
       view.saveSelections(storageItems);
 
