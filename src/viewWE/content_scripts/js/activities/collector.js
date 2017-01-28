@@ -6,11 +6,11 @@ view.collector = {
    * @param {object} $EnhancementElement the current enhancement element the
    * user is interacting with
    * @param {string} submission the submission obtained from the user action
-   * @param {boolean} countsAsCorrect true if the answer is correct,
+   * @param {boolean} isCorrect true if the answer is correct,
    * false otherwise
    * @param usedHint true if a hint was used, false otherwise
    */
-  collectAndSendData: function($EnhancementElement, submission, countsAsCorrect, usedHint) {
+  collectAndSendData: function($EnhancementElement, submission, isCorrect, usedHint) {
     const interactionData = {};
 
     interactionData["user"] = view.user;
@@ -18,7 +18,7 @@ view.collector = {
     interactionData["session-id"] = view.sessionid;
     interactionData["enhancement-id"] = $EnhancementElement.attr("id");
     interactionData["submission"] = submission;
-    interactionData["correct"] = countsAsCorrect;
+    interactionData["is-correct"] = isCorrect;
     interactionData["timestamp"] = view.timestamp;
 
     const isClick = (view.activity === "click");

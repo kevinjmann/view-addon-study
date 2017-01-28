@@ -130,7 +130,7 @@ view.activityHelper = {
     const $ElementBox = $(this).prev();
     const $EnhancementElement = $ElementBox.parent();
     const submission = $ElementBox.val() || "no submission";
-    const countAsCorrect = true;
+    const isCorrect = true;
     const usedHint = true;
 
     view.activityHelper.processCorrect($ElementBox, "provided");
@@ -139,7 +139,7 @@ view.activityHelper = {
       view.collector.collectAndSendData(
         $EnhancementElement,
         submission,
-        countAsCorrect,
+        isCorrect,
         usedHint
       );
     }
@@ -154,14 +154,14 @@ view.activityHelper = {
     const timestamp = Date.now();
     view.saveTimestamp(timestamp);
 
-    let countsAsCorrect = false;
+    let isCorrect = false;
     const $ElementBox = $(e.target);
     const $EnhancementElement = $ElementBox.parent();
     const submission = $ElementBox.val();
     const usedHint = false;
 
     if (submission.toLowerCase() === $ElementBox.data("view-answer").toLowerCase()) {
-      countsAsCorrect = true;
+      isCorrect = true;
       view.activityHelper.processCorrect($ElementBox, "correct");
     }
     else {
@@ -172,7 +172,7 @@ view.activityHelper = {
       view.collector.collectAndSendData(
         $EnhancementElement,
         submission,
-        countsAsCorrect,
+        isCorrect,
         usedHint
       );
     }

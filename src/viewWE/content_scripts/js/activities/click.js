@@ -22,12 +22,12 @@ view.click = {
     const timestamp = Date.now();
     view.saveTimestamp(timestamp);
 
-    let countsAsCorrect = false;
+    let isCorrect = false;
     const $EnhancementElement = $(this);
     const usedHint = false;
 
     if ($EnhancementElement.is("[data-type!='miss']")) {
-      countsAsCorrect = true;
+      isCorrect = true;
       $EnhancementElement.addClass("click-style-correct");
     } else {
       $EnhancementElement.addClass("click-style-incorrect");
@@ -39,7 +39,7 @@ view.click = {
       view.collector.collectAndSendData(
         $EnhancementElement,
         $EnhancementElement.text(),
-        countsAsCorrect,
+        isCorrect,
         usedHint
       );
     }
