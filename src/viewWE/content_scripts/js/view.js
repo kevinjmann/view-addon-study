@@ -42,7 +42,7 @@ const view = {
    * Save general options to the storage
    * and retrieve changed options.
    */
-  saveGeneralOptions: function() {
+  setGeneralOptions: function() {
     chrome.runtime.sendMessage({
         msg: "call sendTopics"
       }, function(response) {
@@ -53,8 +53,7 @@ const view = {
           "token",
           "enabled"
         ], function(storageItems) {
-          view.topics = response.topics;
-          view.setAllGeneralOptions(storageItems);
+          view.setAllGeneralOptions(storageItems, response.topics);
         });
       }
     );
@@ -64,17 +63,22 @@ const view = {
    * Set all options, including eventually changed
    * ones from storage.
    *
-   * @param  {object} storageItems changeable items from storage
+   * @param {object} storageItems changeable items from storage
+   * @param {object} topics data from all topics
    */
-  setAllGeneralOptions: function(storageItems) {
-    view.setFixedGeneralOptions();
+  setAllGeneralOptions: function(storageItems, topics) {
+    view.setFixedGeneralOptions(topics);
     view.setMutableGeneralOptions(storageItems);
   },
 
   /**
    * Set all general options that aren't changeable.
+   *
+   * @param {object} topics data from all topics
    */
-  setFixedGeneralOptions: function() {
+  setFixedGeneralOptions: function(topics) {
+    view.topics = topics;
+
     chrome.storage.local.set({
       serverURL: view.serverURL,
       servletURL: view.servletURL,
@@ -87,7 +91,7 @@ const view = {
   /**
    * Set all general options that can be changed during runtime.
    *
-   * @param  {object} storageItems changeable items from storage
+   * @param {object} storageItems changeable items from storage
    */
   setMutableGeneralOptions: function(storageItems) {
     view.setAuthenticationDetails(storageItems);
@@ -101,7 +105,7 @@ const view = {
    * - user
    * - token
    *
-   * @param  {object} storageItems changeable items from storage
+   * @param {object} storageItems changeable items from storage
    */
   setAuthenticationDetails: function(storageItems) {
     if (storageItems.userid === undefined) {
@@ -154,26 +158,26 @@ const view = {
       "topic",
       "activity"
     ], function(storageItems) {
-      view.saveUserOptions(storageItems);
+      view.setUserOptions(storageItems);
 
       view.setAuthenticationDetails(storageItems);
 
-      view.saveSelections(storageItems);
+      view.setSelections(storageItems);
 
-      view.topicName = view.interaction.getTopicName(view.topic);
+      view.setTimestamp(storageItems.timestamp);
 
-      view.saveTimestamp(storageItems.timestamp);
+      view.topicName = view.interaction.getTopicName(storageItems.topic);
 
       view.interaction.enhance();
     });
   },
 
   /**
-   * Save all user options from the options page.
+   * Set all user options from the options page.
    *
    * @param {object} storageItems the storage items
    */
-  saveUserOptions: function(storageItems) {
+  setUserOptions: function(storageItems) {
     if (storageItems.fixedOrPercentage !== undefined) {
       view.fixedOrPercentage = storageItems.fixedOrPercentage;
       view.fixedNumberOfExercises = storageItems.fixedNumberOfExercises;
@@ -190,7 +194,7 @@ const view = {
    *
    * @param {object} storageItems the storage items
    */
-  saveSelections: function(storageItems) {
+  setSelections: function(storageItems) {
     view.enabled = storageItems.enabled;
     view.language = storageItems.language;
     view.topic = storageItems.topic;
@@ -198,20 +202,20 @@ const view = {
   },
 
   /**
-   * Save the timestamp.
+   * Set the timestamp.
    *
    * @param {number} timestamp the time stamp
    */
-  saveTimestamp: function(timestamp) {
+  setTimestamp: function(timestamp) {
     view.timestamp = timestamp;
   },
 
   /**
-   * Save the number of exercises.
+   * Set the number of exercises.
    *
    * @param {number} numberOfExercises the number of exercises
    */
-  saveNumberOfExercises: function(numberOfExercises) {
+  setNumberOfExercises: function(numberOfExercises) {
     view.numberOfExercises = numberOfExercises;
   },
 

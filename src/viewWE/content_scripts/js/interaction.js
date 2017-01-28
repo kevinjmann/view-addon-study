@@ -53,7 +53,7 @@ view.interaction = {
         $bodyContainer.removeClass("down");
       }
     } else {
-      view.saveGeneralOptions();
+      view.setGeneralOptions();
       view.interaction.initToolbar();
     }
   },

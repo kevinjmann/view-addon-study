@@ -20,7 +20,7 @@ view.click = {
    */
   handler: function() {
     const timestamp = Date.now();
-    view.saveTimestamp(timestamp);
+    view.setTimestamp(timestamp);
 
     let isCorrect = false;
     const $EnhancementElement = $(this);

@@ -115,7 +115,7 @@ view.activityHelper = {
   getNumberOfExercisesAndRequestSessionId: function(selector) {
     const numberOfExercises = $(selector).length;
 
-    view.saveNumberOfExercises(numberOfExercises);
+    view.setNumberOfExercises(numberOfExercises);
 
     view.requestToGetSessionId();
   },
@@ -125,7 +125,7 @@ view.activityHelper = {
    */
   hintHandler: function() {
     const timestamp = Date.now();
-    view.saveTimestamp(timestamp);
+    view.setTimestamp(timestamp);
 
     const $ElementBox = $(this).prev();
     const $EnhancementElement = $ElementBox.parent();
@@ -152,7 +152,7 @@ view.activityHelper = {
    */
   inputHandler: function(e) {
     const timestamp = Date.now();
-    view.saveTimestamp(timestamp);
+    view.setTimestamp(timestamp);
 
     let isCorrect = false;
     const $ElementBox = $(e.target);
