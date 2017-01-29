@@ -170,8 +170,6 @@ const view = {
 
       view.topicName = view.interaction.getTopicName(storageItems.topic);
 
-      view.userid = "someid";
-
       view.interaction.enhance();
     });
   },
