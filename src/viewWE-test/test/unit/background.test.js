@@ -537,7 +537,7 @@ describe("background.js", function() {
 
           const request = {
             msg: "send sessionData and get sessionId",
-            serverSessionURL: "https://view.aleks.bg/act/newSession",
+            serverSessionURL: "https://view.aleks.bg/act/session",
             sessionData: "some session data"
           };
           const sender = {tab: {id: 5}};
@@ -551,7 +551,7 @@ describe("background.js", function() {
         it("should call ajaxPost(url, data, ajaxTimeout)", function() {
           const ajaxPostSpy = sandbox.spy(background, "ajaxPost");
 
-          const serverSessionURL = "https://view.aleks.bg/act/newSession";
+          const serverSessionURL = "https://view.aleks.bg/act/session";
           const sessionData = "some session data";
 
           const request = {
@@ -573,7 +573,7 @@ describe("background.js", function() {
         it("should succeed to send session data, get the session id and call callSetSessionId(data)", function() {
           const callSetSessionIdSpy = sandbox.spy(background, "callSetSessionId");
 
-          const serverSessionURL = "https://view.aleks.bg/act/newSession";
+          const serverSessionURL = "https://view.aleks.bg/act/session";
 
           const request = {
             msg: "send sessionData and get sessionId",
@@ -601,7 +601,7 @@ describe("background.js", function() {
         it("should succeed to send session data, but fail to receive data from the server", function() {
           const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
 
-          const serverSessionURL = "https://view.aleks.bg/act/newSession";
+          const serverSessionURL = "https://view.aleks.bg/act/session";
 
           const request = {
             msg: "send sessionData and get sessionId",
@@ -625,7 +625,7 @@ describe("background.js", function() {
         it("should fail to send session data", function() {
           const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
 
-          const serverSessionURL = "https://view.aleks.bg/act/newSession";
+          const serverSessionURL = "https://view.aleks.bg/act/session";
 
           const request = {
             msg: "send sessionData and get sessionId",
@@ -653,7 +653,7 @@ describe("background.js", function() {
 
           const request = {
             msg: "send interactionData",
-            serverTrackingURL: "https://view.aleks.bg/act/track",
+            serverTrackingURL: "https://view.aleks.bg/act/tracking",
             interactionData: "some interaction data"
           };
           const sender = {tab: {id: 5}};
@@ -667,7 +667,7 @@ describe("background.js", function() {
         it("should call ajaxPost(url, data, ajaxTimeout)", function() {
           const ajaxPostSpy = sandbox.spy(background, "ajaxPost");
 
-          const serverTrackingURL = "https://view.aleks.bg/act/track";
+          const serverTrackingURL = "https://view.aleks.bg/act/tracking";
           const interactionData = "some interaction data";
 
           const request = {

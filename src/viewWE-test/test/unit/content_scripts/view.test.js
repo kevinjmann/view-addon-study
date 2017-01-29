@@ -420,7 +420,7 @@ describe("view.js", function() {
       sinon.assert.calledWith(chrome.runtime.sendMessage, {
         msg: "send sessionData and get sessionId",
         sessionData: sessionData,
-        serverSessionURL: "https://view.aleks.bg/act/newSession"
+        serverSessionURL: "https://view.aleks.bg/act/session"
       });
     });
   });
