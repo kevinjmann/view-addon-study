@@ -167,7 +167,7 @@ describe("tracker.js", function() {
       sinon.assert.calledWithExactly(chrome.runtime.sendMessage, {
         msg: "send interactionData",
         interactionData: interactionData,
-        serverTrackingURL: "https://view.aleks.bg/act/track"
+        serverTrackingURL: "https://view.aleks.bg/act/tracking"
       });
     });
   });

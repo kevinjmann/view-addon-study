@@ -4,8 +4,8 @@ const view = {
   // General options
   serverURL: "https://view.aleks.bg",
   servletURL: "https://view.aleks.bg/view",
-  serverSessionURL: "https://view.aleks.bg/act/newSession",
-  serverTrackingURL: "https://view.aleks.bg/act/track",
+  serverSessionURL: "https://view.aleks.bg/act/session",
+  serverTrackingURL: "https://view.aleks.bg/act/tracking",
   cookie_name: "wertiview_userid",
   cookie_path: "/VIEW/openid",
   ajaxTimeout: 60000,
