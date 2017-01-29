@@ -538,62 +538,83 @@ describe("background.js", function() {
           const request = {
             msg: "send sessionData and get sessionId",
             sessionData: "some session data",
-            servletURL: "https://some.url",
+            serverSessionURL: "https://view.aleks.bg/act/newSession"
           };
           const sender = {tab: {id: 5}};
-          const sendResponse = sandbox.spy();
 
-          chrome.runtime.onMessage.trigger(request, sender, sendResponse);
+          chrome.runtime.onMessage.trigger(request, sender);
 
           sinon.assert.calledOnce(sendSessionDataAndGetSessionIdSpy);
-          sinon.assert.calledWithExactly(sendSessionDataAndGetSessionIdSpy,
-            request,
-            sendResponse
+          sinon.assert.calledWithExactly(sendSessionDataAndGetSessionIdSpy, request);
+        });
+
+        it("should call ajaxPost(url, data, ajaxTimeout)", function() {
+          const ajaxPostSpy = sandbox.spy(background, "ajaxPost");
+
+          const serverSessionURL = "https://view.aleks.bg/act/newSession";
+          const sessionData = "some session data";
+
+          const request = {
+            msg: "send sessionData and get sessionId",
+            sessionData: sessionData,
+            serverSessionURL: serverSessionURL
+          };
+
+          background.sendSessionDataAndGetSessionId(request);
+
+          sinon.assert.calledOnce(ajaxPostSpy);
+          sinon.assert.calledWithExactly(ajaxPostSpy,
+            serverSessionURL,
+            sessionData,
+            10000
           );
         });
 
-        it("should succeed to send session data, get the session id and call sendResponse(data)", function() {
+        it("should succeed to send session data, get the session id and call callSetSessionId(data)", function() {
+          const callSetSessionIdSpy = sandbox.spy(background, "callSetSessionId");
+
+          const serverSessionURL = "https://view.aleks.bg/act/newSession";
+
           const request = {
             msg: "send sessionData and get sessionId",
             sessionData: "some session data",
-            servletURL: "https://some.url",
+            serverSessionURL: serverSessionURL
           };
-          const sendResponse = sandbox.spy();
 
           sandbox.useFakeServer();
 
-          const serverURL = "https://some.url";
-          const serverData = "some server data";
+          const sessionId = "some-session-id";
 
-          sandbox.server.respondWith("POST", serverURL,
-            [200, {"Content-Type": "text"}, serverData]);
+          const serverData = {"session-id": sessionId};
 
-          background.sendSessionDataAndGetSessionId(request, sendResponse);
+          sandbox.server.respondWith("POST", serverSessionURL,
+            [200, {"Content-Type": "application/json"}, JSON.stringify(serverData)]);
+
+          background.sendSessionDataAndGetSessionId(request);
 
           sandbox.server.respond();
 
-          sinon.assert.calledOnce(sendResponse);
-          sinon.assert.calledWithExactly(sendResponse, serverData);
+          sinon.assert.calledOnce(callSetSessionIdSpy);
+          sinon.assert.calledWithExactly(callSetSessionIdSpy, sessionId);
         });
 
         it("should succeed to send session data, but fail to receive data from the server", function() {
           const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
 
+          const serverSessionURL = "https://view.aleks.bg/act/newSession";
+
           const request = {
             msg: "send sessionData and get sessionId",
             sessionData: "some session data",
-            servletURL: "https://some.url",
+            serverSessionURL: serverSessionURL
           };
-          const sendResponse = sandbox.spy();
 
           sandbox.useFakeServer();
 
-          const serverURL = "https://some.url";
+          sandbox.server.respondWith("POST", serverSessionURL,
+            [200, {"Content-Type": "application/json"}, ""]);
 
-          sandbox.server.respondWith("POST", serverURL,
-            [200, {"Content-Type": "text"}, ""]);
-
-          background.sendSessionDataAndGetSessionId(request, sendResponse);
+          background.sendSessionDataAndGetSessionId(request);
 
           sandbox.server.respond();
 
@@ -602,26 +623,27 @@ describe("background.js", function() {
         });
 
         it("should fail to send session data", function() {
+          const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
+
+          const serverSessionURL = "https://view.aleks.bg/act/newSession";
+
           const request = {
             msg: "send sessionData and get sessionId",
             sessionData: "some session data",
-            servletURL: "https://some.url",
+            serverSessionURL: serverSessionURL
           };
-          const sendResponse = sandbox.spy();
 
           sandbox.useFakeServer();
 
-          const serverURL = "https://some.url";
-
-          sandbox.server.respondWith("POST", serverURL,
+          sandbox.server.respondWith("POST", serverSessionURL,
             [404, {}, ""]);
 
-          background.sendSessionDataAndGetSessionId(request, sendResponse);
+          background.sendSessionDataAndGetSessionId(request);
 
           sandbox.server.respond();
 
-          sinon.assert.calledOnce(sendResponse);
-          sinon.assert.calledWithExactly(sendResponse, "fake-session-id");
+          sinon.assert.calledOnce(ajaxErrorSpy);
+          expect(ajaxErrorSpy.firstCall.args[1]).to.equal("error");
         });
       });
 
@@ -631,8 +653,8 @@ describe("background.js", function() {
 
           const request = {
             msg: "send interactionData",
-            servletURL: "https://some.url",
-            interactionData: "some interaction data"
+            interactionData: "some interaction data",
+            serverTrackingURL: "https://view.aleks.bg/act/track"
           };
           const sender = {tab: {id: 5}};
 
@@ -640,6 +662,28 @@ describe("background.js", function() {
 
           sinon.assert.calledOnce(sendInteractionDataSpy);
           sinon.assert.calledWithExactly(sendInteractionDataSpy, request);
+        });
+
+        it("should call ajaxPost(url, data, ajaxTimeout)", function() {
+          const ajaxPostSpy = sandbox.spy(background, "ajaxPost");
+
+          const serverTrackingURL = "https://view.aleks.bg/act/track";
+          const interactionData = "some interaction data";
+
+          const request = {
+            msg: "send sessionData and get sessionId",
+            interactionData: interactionData,
+            serverTrackingURL: serverTrackingURL
+          };
+
+          background.sendInteractionData(request);
+
+          sinon.assert.calledOnce(ajaxPostSpy);
+          sinon.assert.calledWithExactly(ajaxPostSpy,
+            serverTrackingURL,
+            interactionData,
+            10000
+          );
         });
       });
 
