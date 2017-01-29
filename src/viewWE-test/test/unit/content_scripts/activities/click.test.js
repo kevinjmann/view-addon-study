@@ -55,6 +55,24 @@ describe("click.js", function() {
       sinon.assert.calledWith(eventSpy, "click");
     });
 
+    it("should call getNumberOfExercisesAndRequestSessionId(selector)", function() {
+      const getNumberOfExercisesAndRequestSessionIdSpy = sandbox.spy(
+        view.activityHelper,
+        "getNumberOfExercisesAndRequestSessionId"
+      );
+      const setNumberOfExercisesSpy = sandbox.spy(view, "setNumberOfExercises");
+
+      const selector = "viewenhancement[data-type!='miss']";
+
+      view.click.run();
+
+      sinon.assert.calledOnce(getNumberOfExercisesAndRequestSessionIdSpy);
+      sinon.assert.calledWithExactly(getNumberOfExercisesAndRequestSessionIdSpy, selector);
+
+      sinon.assert.calledOnce(setNumberOfExercisesSpy);
+      sinon.assert.calledWithExactly(setNumberOfExercisesSpy, 22);
+    });
+
     it("should call the handler on click", function() {
       const handlerSpy = sandbox.spy(view.click, "handler");
 
@@ -111,11 +129,11 @@ describe("click.js", function() {
         expect($EnhancementElement.hasClass(clickStylePointer)).to.be.false;
       });
 
-      it("should call collectAndSendData($Enhancement, input, countsAsCorrect, usedHint), as the user is logged in", function() {
-        const collectAndSendDataSpy = sandbox.spy(view.collector, "collectAndSendData");
+      it("should call trackData($Enhancement,submission, isCorrect, usedHint), as the user is logged in", function() {
+        const trackDataSpy = sandbox.spy(view.tracker, "trackData");
 
         const $EnhancementElement = $("[data-type='hit']").first();
-        const countAsCorrect = true;
+        const isCorrect = true;
         const usedHint = false;
 
         view.userid = "someid";
@@ -126,11 +144,11 @@ describe("click.js", function() {
 
         delete $EnhancementElement.prevObject;
 
-        sinon.assert.calledOnce(collectAndSendDataSpy);
-        sinon.assert.calledWithExactly(collectAndSendDataSpy,
+        sinon.assert.calledOnce(trackDataSpy);
+        sinon.assert.calledWithExactly(trackDataSpy,
           $EnhancementElement,
           $EnhancementElement.text(),
-          countAsCorrect,
+          isCorrect,
           usedHint
         );
       });

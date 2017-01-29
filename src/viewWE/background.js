@@ -132,8 +132,7 @@ const background = {
    * toolbar.js/view.js is ready to receive the topics. Send them to it.
    *
    * @callback sendResponseCallback
-   * @param {sendResponseCallback} sendResponse function to call (at most once)
-   * when you have a response
+   * @param {sendResponseCallback} sendResponse function to call as response
    */
   sendTopics: function(sendResponse) {
     sendResponse({topics: background.topics});
@@ -238,13 +237,47 @@ const background = {
   },
 
   /**
-   * Send the interaction data from interaction.js to the
-   * server for processing.
+   * Send the session data from view.js to the server for processing.
+   * If successful, request to call setSessionId in view.js.
+   *
+   * @param {*} request the message sent by the calling script
+   */
+  sendSessionDataAndGetSessionId: function(request){
+    background.ajaxPost(request.serverSessionURL,
+      request.sessionData,
+      10000)
+    .done(function(data, textStatus, xhr) {
+      if (data) {
+        const jsObject = JSON.parse(data);
+        background.callSetSessionId(jsObject["session-id"])
+      } else {
+        background.ajaxError(xhr, "no-session-id");
+      }
+    })
+    .fail(function(xhr, textStatus) {
+      background.ajaxError(xhr, textStatus);
+    });
+  },
+
+  /**
+   * Request to call setSessionId(sessionId) in view.js.
+   *
+   * @param {number} sessionId the session id from the server
+   */
+  callSetSessionId: function(sessionId) {
+    chrome.tabs.sendMessage(background.currentTabId, {
+      msg: "call setSessionId",
+      sessionId: sessionId
+    });
+  },
+
+  /**
+   * Send the interaction data to the server for processing.
    *
    * @param {*} request the message sent by the calling script
    */
   sendInteractionData: function(request) {
-    background.ajaxPost(request.servletURL,
+    background.ajaxPost(request.serverTrackingURL,
       request.interactionData,
       10000);
   },
@@ -300,14 +333,21 @@ const background = {
         background.createBasicNotification(
           "nodata-notification",
           "No data!",
-          "The VIEW server is taking too long to respond."
+          "The VIEW server did not send any data."
+        );
+        break;
+      case "no-session-id":
+        background.createBasicNotification(
+          "no-session-id-notification",
+          "No session id!",
+          "The VIEW server did not send the session id."
         );
         break;
       case "timeout":
         background.createBasicNotification(
           "timeout-notification",
           "Timeout!",
-          "The VIEW server is currently unavailable."
+          "The VIEW server is taking too long to respond."
         );
         // when the add-on has timed out, tell the server to stop
         background.callAbortEnhancement();
@@ -405,7 +445,9 @@ const background = {
   signOutUser: function(){
     chrome.storage.local.set({
       userEmail: "",
-      userid: ""
+      userid: "",
+      user: "",
+      token: ""
     }, function() {
       chrome.tabs.sendMessage(background.currentTabId, {msg: "call signOut"});
     });
@@ -422,12 +464,15 @@ const background = {
    */
   signInUser: function(userData){
     const account = userData.split("/");
+    const user = account[0];
     const userEmail = account[1];
     const userid = account[2];
 
     chrome.storage.local.set({
       userEmail: userEmail,
-      userid: userid
+      userid: userid,
+      user: user,
+      token: "authtoken" // TODO: figure out how to receive the auth token
     }, function() {
       chrome.tabs.sendMessage(background.currentTabId, {
         msg: "call signIn",
@@ -465,8 +510,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
  * @param {*} request the message sent by the calling script
  * @param {Object} sender the MessageSender Object containing sender info
  * @callback sendResponseCallback
- * @param {sendResponseCallback} sendResponse function to call (at most once)
- * when you have a response
+ * @param {sendResponseCallback} sendResponse function to call as response
  */
 function processMessage(request, sender, sendResponse) {
   background.currentTabId = sender.tab.id;
@@ -515,6 +559,9 @@ function processMessage(request, sender, sendResponse) {
       break;
     case "send activityData":
       background.sendActivityData(request);
+      break;
+    case "send sessionData and get sessionId":
+      background.sendSessionDataAndGetSessionId(request);
       break;
     case "send interactionData":
       background.sendInteractionData(request);

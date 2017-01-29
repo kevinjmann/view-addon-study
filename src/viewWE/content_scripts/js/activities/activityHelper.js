@@ -1,5 +1,30 @@
 view.activityHelper = {
   /**
+   * Generate multiple choice or cloze exercises.
+   *
+   * @param {function} createExercise either the mc or cloze createExercise
+   * function.
+   */
+  exerciseHandler: function(createExercise) {
+    const hitList = view.activityHelper.createHitList();
+
+    const numExercises = view.activityHelper.calculateNumberOfExercises(hitList);
+
+    const exerciseOptions = view.activityHelper.chooseWhichExercises(hitList);
+
+    view.activityHelper.createExercises(
+      numExercises,
+      exerciseOptions,
+      hitList,
+      createExercise
+    );
+
+    view.activityHelper.getNumberOfExercisesAndRequestSessionId(".viewinput");
+
+    $("viewhint").on("click", view.activityHelper.hintHandler);
+  },
+
+  /**
    * Create a hit list from all enhancements.
    */
   createHitList: function() {
@@ -18,28 +43,6 @@ view.activityHelper = {
     });
 
     return hitList;
-  },
-
-  /**
-   * Generate multiple choice or cloze exercises.
-   *
-   * @param {Array} hitList list of hits that could be turned into exercises
-   * @param {function} createExercise either the mc or cloze createExercise
-   * function.
-   */
-  exerciseHandler: function(hitList, createExercise) {
-    const numExercises = view.activityHelper.calculateNumberOfExercises(hitList);
-
-    const exerciseOptions = view.activityHelper.chooseWhichExercises(hitList);
-
-    view.activityHelper.createExercises(
-      numExercises,
-      exerciseOptions,
-      hitList,
-      createExercise
-    );
-
-    $("viewhint").on("click", view.activityHelper.hintHandler);
   },
 
   /**
@@ -105,41 +108,61 @@ view.activityHelper = {
   },
 
   /**
+   * Use the selector to retrieve the number of exercises, save
+   * the number and request the session id from the server.
+   *
+   * @param {string} selector the selector to get the length of
+   */
+  getNumberOfExercisesAndRequestSessionId: function(selector) {
+    const numberOfExercises = $(selector).length;
+
+    view.setNumberOfExercises(numberOfExercises);
+
+    view.requestToSendSessionDataAndGetSessionId();
+  },
+
+  /**
    * Deals with the hint in the mc and cloze activities.
    */
   hintHandler: function() {
+    const timestamp = Date.now();
+    view.setTimestamp(timestamp);
+
     const $ElementBox = $(this).prev();
     const $EnhancementElement = $ElementBox.parent();
-    const input = $ElementBox.val() || "no input";
-    const countAsCorrect = true;
+    const submission = $ElementBox.val() || "no submission";
+    const isCorrect = true;
     const usedHint = true;
 
     view.activityHelper.processCorrect($ElementBox, "provided");
 
     if (view.userid) {
-      view.collector.collectAndSendData(
+      view.tracker.trackData(
         $EnhancementElement,
-        input,
-        countAsCorrect,
+        submission,
+        isCorrect,
         usedHint
       );
     }
   },
 
   /**
-   * Deals with the input in the mc and cloze activities.
+   * Deals with the submission in the mc and cloze activities.
    *
    * @param {object} e the triggered event
    */
   inputHandler: function(e) {
-    let countsAsCorrect = false;
+    const timestamp = Date.now();
+    view.setTimestamp(timestamp);
+
+    let isCorrect = false;
     const $ElementBox = $(e.target);
     const $EnhancementElement = $ElementBox.parent();
-    const input = $ElementBox.val();
+    const submission = $ElementBox.val();
     const usedHint = false;
 
-    if (input.toLowerCase() === $ElementBox.data("view-answer").toLowerCase()) {
-      countsAsCorrect = true;
+    if (submission.toLowerCase() === $ElementBox.data("view-answer").toLowerCase()) {
+      isCorrect = true;
       view.activityHelper.processCorrect($ElementBox, "correct");
     }
     else {
@@ -147,17 +170,17 @@ view.activityHelper = {
     }
 
     if (view.userid) {
-      view.collector.collectAndSendData(
+      view.tracker.trackData(
         $EnhancementElement,
-        input,
-        countsAsCorrect,
+        submission,
+        isCorrect,
         usedHint
       );
     }
   },
 
   /**
-   * Process the correct input.
+   * Process the correct submission.
    *
    * @param {object} $ElementBox the select or input box
    * @param {string} inputStyleType either "correct" or "provided"
@@ -216,7 +239,7 @@ view.activityHelper = {
   },
 
   /**
-   * Process the incorrect input.
+   * Process the incorrect submission.
    *
    * @param {object} $ElementBox the select or input box
    */

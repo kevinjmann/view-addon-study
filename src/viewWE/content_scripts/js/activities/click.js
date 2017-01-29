@@ -10,6 +10,8 @@ view.click = {
       $EnhancementElement.addClass("click-style-pointer");
     });
 
+    view.activityHelper.getNumberOfExercisesAndRequestSessionId("viewenhancement[data-type!='miss']");
+
     $("viewenhancement").on("click", view.click.handler);
   },
 
@@ -17,12 +19,15 @@ view.click = {
    * Turn correctly clicked hits green and incorrect ones red.
    */
   handler: function() {
-    let countsAsCorrect = false;
+    const timestamp = Date.now();
+    view.setTimestamp(timestamp);
+
+    let isCorrect = false;
     const $EnhancementElement = $(this);
     const usedHint = false;
 
     if ($EnhancementElement.is("[data-type!='miss']")) {
-      countsAsCorrect = true;
+      isCorrect = true;
       $EnhancementElement.addClass("click-style-correct");
     } else {
       $EnhancementElement.addClass("click-style-incorrect");
@@ -31,10 +36,10 @@ view.click = {
     $EnhancementElement.removeClass("click-style-pointer");
 
     if (view.userid) {
-      view.collector.collectAndSendData(
+      view.tracker.trackData(
         $EnhancementElement,
         $EnhancementElement.text(),
-        countsAsCorrect,
+        isCorrect,
         usedHint
       );
     }

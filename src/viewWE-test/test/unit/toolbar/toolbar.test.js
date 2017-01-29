@@ -683,8 +683,9 @@ describe("toolbar.js", function() {
           sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "create unselectedNotification"});
         });
 
-        it("should set language, topic and activity and call prepareToEnhance()", function() {
+        it("should set language, topic, activity, timestamp and call prepareToEnhance()", function() {
           const prepareToEnhanceSpy = sandbox.spy(toolbar, "prepareToEnhance");
+          const dateNowSpy = sandbox.spy(Date, "now");
 
           const language = "en";
           const topic = "articles";
@@ -702,11 +703,16 @@ describe("toolbar.js", function() {
 
           toolbar.setSelectionsAndPrepareToEnhance();
 
+          sinon.assert.calledOnce(dateNowSpy);
+
+          const timestamp = dateNowSpy.firstCall.returnValue;
+
           sinon.assert.calledOnce(chrome.storage.local.set);
           sinon.assert.calledWith(chrome.storage.local.set, {
             language: language,
             topic: topic,
-            activity: activity
+            activity: activity,
+            timestamp: timestamp
           });
 
           sinon.assert.calledOnce(prepareToEnhanceSpy);

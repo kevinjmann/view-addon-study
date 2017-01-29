@@ -36,7 +36,15 @@ describe("activityHelper.js", function() {
     });
   });
 
-  describe("createHitList", function() {
+  describe("exerciseHandler", function() {
+    it("should call createHitList()", function() {
+      const createHitListSpy = sandbox.spy(view.activityHelper, "createHitList");
+
+      view.activityHelper.exerciseHandler(view.mc.createExercise);
+
+      sinon.assert.calledOnce(createHitListSpy);
+    });
+
     it("should create a hitlist", function() {
       const hitList = [];
 
@@ -49,15 +57,14 @@ describe("activityHelper.js", function() {
       expect(returnedHitList).to.eql(hitList);
       expect(returnedHitList.length).to.equal(19);
     });
-  });
 
-  describe("exerciseHandler", function() {
     it("should call calculateNumberOfExercises(hitList)", function() {
+      const createHitListSpy = sandbox.spy(view.activityHelper, "createHitList");
       const calculateNumberOfExercisesSpy = sandbox.spy(view.activityHelper, "calculateNumberOfExercises");
 
-      const hitList = view.activityHelper.createHitList();
+      view.activityHelper.exerciseHandler(view.mc.createExercise);
 
-      view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+      const hitList = createHitListSpy.firstCall.returnValue;
 
       sinon.assert.calledOnce(calculateNumberOfExercisesSpy);
       sinon.assert.calledWithExactly(calculateNumberOfExercisesSpy, hitList);
@@ -90,11 +97,12 @@ describe("activityHelper.js", function() {
     });
 
     it("should call chooseWhichExercises(hitList)", function() {
+      const createHitListSpy = sandbox.spy(view.activityHelper, "createHitList");
       const chooseWhichExercisesSpy = sandbox.spy(view.activityHelper, "chooseWhichExercises");
 
-      const hitList = view.activityHelper.createHitList();
+      view.activityHelper.exerciseHandler(view.mc.createExercise);
 
-      view.activityHelper.exerciseHandler(hitList, view.mc.createExercise);
+      const hitList = createHitListSpy.firstCall.returnValue;
 
       sinon.assert.calledOnce(chooseWhichExercisesSpy);
       sinon.assert.calledWithExactly(chooseWhichExercisesSpy, hitList);
@@ -152,6 +160,8 @@ describe("activityHelper.js", function() {
 
     it("should call createExercises(numExercises, exerciseOptions, hitList, createExercise)", function() {
       const createExercisesSpy = sandbox.spy(view.activityHelper, "createExercises");
+
+      view.choiceMode = 0;
 
       view.fixedOrPercentage = 1;
 
@@ -277,6 +287,43 @@ describe("activityHelper.js", function() {
       });
     });
 
+    it("should call getNumberOfExercisesAndRequestSessionId(selector)", function() {
+      const getNumberOfExercisesAndRequestSessionIdSpy = sandbox.spy(
+        view.activityHelper,
+        "getNumberOfExercisesAndRequestSessionId"
+      );
+
+      view.mc.run();
+
+      sinon.assert.calledOnce(getNumberOfExercisesAndRequestSessionIdSpy);
+      sinon.assert.calledWithExactly(getNumberOfExercisesAndRequestSessionIdSpy, ".viewinput");
+    });
+
+    describe("getNumberOfExercisesAndRequestSessionId", function() {
+      it("should call setNumberOfExercises(numberOfExercises)", function() {
+        const setNumberOfExercisesSpy = sandbox.spy(view, "setNumberOfExercises");
+
+        view.choiceMode = 0;
+
+        view.fixedOrPercentage = 1;
+
+        view.percentageOfExercises = 100;
+
+        view.mc.run();
+
+        sinon.assert.calledOnce(setNumberOfExercisesSpy);
+        sinon.assert.calledWithExactly(setNumberOfExercisesSpy, 19);
+      });
+
+      it("should call requestToSendSessionDataAndGetSessionId()", function() {
+        const requestToSendSessionDataAndGetSessionIdSpy = sandbox.spy(view, "requestToSendSessionDataAndGetSessionId");
+
+        view.activityHelper.getNumberOfExercisesAndRequestSessionId(".viewinput");
+
+        sinon.assert.calledOnce(requestToSendSessionDataAndGetSessionIdSpy);
+      });
+    });
+
     it("should initialize the hint handler", function() {
       const eventSpy = sandbox.spy($.fn, "on");
 
@@ -320,8 +367,8 @@ describe("activityHelper.js", function() {
         );
       });
 
-      it("should not call collectAndSendData, as the userid is undefined", function() {
-        const collectAndSendDataSpy = sandbox.spy(view.collector, "collectAndSendData");
+      it("should not call trackData, as the userid is undefined", function() {
+        const trackDataSpy = sandbox.spy(view.tracker, "trackData");
 
         view.cloze.run();
 
@@ -331,22 +378,22 @@ describe("activityHelper.js", function() {
 
         $Hint.trigger("click");
 
-        sinon.assert.notCalled(collectAndSendDataSpy);
+        sinon.assert.notCalled(trackDataSpy);
       });
 
-      it("should call collectAndSendData, as the userid is defined, the element box had some value", function() {
-        const collectAndSendDataSpy = sandbox.spy(view.collector, "collectAndSendData");
+      it("should call trackData, as the userid is defined, the element box had some value", function() {
+        const trackDataSpy = sandbox.spy(view.tracker, "trackData");
 
         view.cloze.run();
 
         const $Hint = $("viewhint").first();
         const $ElementBox = $Hint.prev();
         const $EnhancementElement = $ElementBox.parent();
-        const input = "some value";
-        const countAsCorrect = true;
+        const submission = "some value";
+        const isCorrect = true;
         const usedHint = true;
 
-        $ElementBox.val(input);
+        $ElementBox.val(submission);
 
         view.userid = "someid";
 
@@ -354,25 +401,25 @@ describe("activityHelper.js", function() {
 
         delete $Hint.prevObject;
 
-        sinon.assert.calledOnce(collectAndSendDataSpy);
-        sinon.assert.calledWithExactly(collectAndSendDataSpy,
+        sinon.assert.calledOnce(trackDataSpy);
+        sinon.assert.calledWithExactly(trackDataSpy,
           $EnhancementElement,
-          input,
-          countAsCorrect,
+          submission,
+          isCorrect,
           usedHint
         );
       });
 
-      it("should call collectAndSendData, as the userid is defined, the element box had no value", function() {
-        const collectAndSendDataSpy = sandbox.spy(view.collector, "collectAndSendData");
+      it("should call trackData, as the userid is defined, the element box had no value", function() {
+        const trackDataSpy = sandbox.spy(view.tracker, "trackData");
 
         view.cloze.run();
 
         const $Hint = $("viewhint").first();
         const $ElementBox = $Hint.prev();
         const $EnhancementElement = $ElementBox.parent();
-        const input = "no input";
-        const countAsCorrect = true;
+        const submission = "no submission";
+        const isCorrect = true;
         const usedHint = true;
 
         view.userid = "someid";
@@ -381,11 +428,11 @@ describe("activityHelper.js", function() {
 
         delete $Hint.prevObject;
 
-        sinon.assert.calledOnce(collectAndSendDataSpy);
-        sinon.assert.calledWithExactly(collectAndSendDataSpy,
+        sinon.assert.calledOnce(trackDataSpy);
+        sinon.assert.calledWithExactly(trackDataSpy,
           $EnhancementElement,
-          input,
-          countAsCorrect,
+          submission,
+          isCorrect,
           usedHint
         );
       });
@@ -432,8 +479,8 @@ describe("activityHelper.js", function() {
       sinon.assert.calledWithExactly(processIncorrectSpy, $ElementBox);
     });
 
-    it("should not call collectAndSendData, as the userid is undefined", function() {
-      const collectAndSendDataSpy = sandbox.spy(view.collector, "collectAndSendData");
+    it("should not call trackData, as the userid is undefined", function() {
+      const trackDataSpy = sandbox.spy(view.tracker, "trackData");
 
       view.mc.run();
 
@@ -444,18 +491,18 @@ describe("activityHelper.js", function() {
 
       $ElementBox.val(answer).trigger("change");
 
-      sinon.assert.notCalled(collectAndSendDataSpy);
+      sinon.assert.notCalled(trackDataSpy);
     });
 
-    it("should call collectAndSendData($Enhancement, input, countsAsCorrect, usedHint), as the userid is defined", function() {
-      const collectAndSendDataSpy = sandbox.spy(view.collector, "collectAndSendData");
+    it("should call trackData($Enhancement, submission, isCorrect, usedHint), as the userid is defined", function() {
+      const trackDataSpy = sandbox.spy(view.tracker, "trackData");
 
       view.mc.run();
 
       const $ElementBox = $(".viewinput").first();
       const $EnhancementElement = $ElementBox.parent();
       const answer = $ElementBox.data("view-answer");
-      const countAsCorrect = true;
+      const isCorrect = true;
       const usedHint = false;
 
       view.userid = "someid";
@@ -464,11 +511,11 @@ describe("activityHelper.js", function() {
 
       delete $ElementBox.prevObject;
 
-      sinon.assert.calledOnce(collectAndSendDataSpy);
-      sinon.assert.calledWithExactly(collectAndSendDataSpy,
+      sinon.assert.calledOnce(trackDataSpy);
+      sinon.assert.calledWithExactly(trackDataSpy,
         $EnhancementElement,
         answer,
-        countAsCorrect,
+        isCorrect,
         usedHint
       );
     });

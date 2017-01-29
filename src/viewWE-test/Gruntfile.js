@@ -121,7 +121,7 @@ module.exports = function(grunt) {
             "../viewWE/content_scripts/js/selector-cache.js",
             "../viewWE/content_scripts/js/view.js",
             "../viewWE/content_scripts/js/lib.js",
-            "../viewWE/content_scripts/js/activities/collector.js",
+            "../viewWE/content_scripts/js/activities/tracker.js",
             "../viewWE/content_scripts/js/activities/activityHelper.js",
             "../viewWE/content_scripts/js/activities/click.js",
             "test/unit/content_scripts/activities/click.test.js"
@@ -138,7 +138,7 @@ module.exports = function(grunt) {
             "../viewWE/content_scripts/js/selector-cache.js",
             "../viewWE/content_scripts/js/view.js",
             "../viewWE/content_scripts/js/lib.js",
-            "../viewWE/content_scripts/js/activities/collector.js",
+            "../viewWE/content_scripts/js/activities/tracker.js",
             "../viewWE/content_scripts/js/activities/activityHelper.js",
             "../viewWE/content_scripts/js/activities/mc.js",
             "test/unit/content_scripts/activities/mc.test.js"
@@ -155,7 +155,7 @@ module.exports = function(grunt) {
             "../viewWE/content_scripts/js/selector-cache.js",
             "../viewWE/content_scripts/js/view.js",
             "../viewWE/content_scripts/js/lib.js",
-            "../viewWE/content_scripts/js/activities/collector.js",
+            "../viewWE/content_scripts/js/activities/tracker.js",
             "../viewWE/content_scripts/js/activities/activityHelper.js",
             "../viewWE/content_scripts/js/activities/cloze.js",
             "test/unit/content_scripts/activities/cloze.test.js"
@@ -172,7 +172,7 @@ module.exports = function(grunt) {
             "../viewWE/content_scripts/js/selector-cache.js",
             "../viewWE/content_scripts/js/view.js",
             "../viewWE/content_scripts/js/lib.js",
-            "../viewWE/content_scripts/js/activities/collector.js",
+            "../viewWE/content_scripts/js/activities/tracker.js",
             "../viewWE/content_scripts/js/activities/activityHelper.js",
             "test/unit/content_scripts/activities/activityHelper.test.js",
             "../viewWE/content_scripts/js/activities/click.js",
@@ -185,19 +185,19 @@ module.exports = function(grunt) {
           "**/ru-nouns-mc-and-cloze.html": ["html2js"]
         }
       },
-      collector: {
+      tracker: {
         files: {
           src: [
             "../viewWE/content_scripts/js/selector-cache.js",
             "../viewWE/content_scripts/js/view.js",
             "../viewWE/content_scripts/js/lib.js",
-            "../viewWE/content_scripts/js/activities/collector.js",
-            "test/unit/content_scripts/activities/collector.test.js",
+            "../viewWE/content_scripts/js/activities/tracker.js",
+            "test/unit/content_scripts/activities/tracker.test.js",
             "../viewWE/content_scripts/js/activities/activityHelper.js"
           ]
         },
         preprocessors: {
-          "../viewWE/content_scripts/js/activities/collector.js": ["coverage"],
+          "../viewWE/content_scripts/js/activities/tracker.js": ["coverage"],
           "**/ru-nouns-mc-and-cloze.html": ["html2js"]
         }
       }

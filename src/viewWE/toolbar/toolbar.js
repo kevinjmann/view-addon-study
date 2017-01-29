@@ -319,11 +319,13 @@ const toolbar = {
   },
 
   /**
-   * Set language, topic and activity, if none of them are "unselected".
+   * Set language, topic, activity and timestamp if none of the activities
+   * are "unselected".
    * Afterwards prepare to enhance the page.
    * Otherwise create a unselected notification for the user.
    */
   setSelectionsAndPrepareToEnhance: function() {
+    const timestamp = Date.now();
     const language = toolbar.$cache.get(toolbar.selectorStart + "language-menu").val();
     const topic = $(".selected-toolbar-topic-menu").val();
     const activity = toolbar.$cache.get(toolbar.selectorStart + "activity-menu").val();
@@ -338,7 +340,8 @@ const toolbar = {
       chrome.storage.local.set({
         language: language,
         topic: topic,
-        activity: activity
+        activity: activity,
+        timestamp: timestamp
       }, toolbar.prepareToEnhance);
     }
   },

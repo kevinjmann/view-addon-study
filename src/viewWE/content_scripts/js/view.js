@@ -4,12 +4,22 @@ const view = {
   // General options
   serverURL: "https://view.aleks.bg",
   servletURL: "https://view.aleks.bg/view",
+  serverSessionURL: "https://view.aleks.bg/act/newSession",
+  serverTrackingURL: "https://view.aleks.bg/act/track",
   cookie_name: "wertiview_userid",
   cookie_path: "/VIEW/openid",
   ajaxTimeout: 60000,
   topics: {},
   userEmail: "",
   userid: "",
+
+  // session data
+  user: "Eduard",
+  token: "authtoken",
+  url: document.baseURI,
+  timestamp: "",
+  numberOfExercises: 0,
+  sessionid: "",
 
   // user options (defaults)
   fixedOrPercentage: 0,
@@ -34,17 +44,18 @@ const view = {
    * Save general options to the storage
    * and retrieve changed options.
    */
-  saveGeneralOptions: function() {
+  setGeneralOptions: function() {
     chrome.runtime.sendMessage({
         msg: "call sendTopics"
       }, function(response) {
         chrome.storage.local.get([
           "userEmail",
           "userid",
+          "user",
+          "token",
           "enabled"
         ], function(storageItems) {
-          view.topics = response.topics;
-          view.setAllGeneralOptions(storageItems);
+          view.setAllGeneralOptions(storageItems, response.topics);
         });
       }
     );
@@ -54,17 +65,22 @@ const view = {
    * Set all options, including eventually changed
    * ones from storage.
    *
-   * @param  {object} storageItems changeable items from storage
+   * @param {object} storageItems changeable items from storage
+   * @param {object} topics data from all topics
    */
-  setAllGeneralOptions: function(storageItems) {
-    view.setFixedGeneralOptions();
+  setAllGeneralOptions: function(storageItems, topics) {
+    view.setFixedGeneralOptions(topics);
     view.setMutableGeneralOptions(storageItems);
   },
 
   /**
    * Set all general options that aren't changeable.
+   *
+   * @param {object} topics data from all topics
    */
-  setFixedGeneralOptions: function() {
+  setFixedGeneralOptions: function(topics) {
+    view.topics = topics;
+
     chrome.storage.local.set({
       serverURL: view.serverURL,
       servletURL: view.servletURL,
@@ -77,29 +93,36 @@ const view = {
   /**
    * Set all general options that can be changed during runtime.
    *
-   * @param  {object} storageItems changeable items from storage
+   * @param {object} storageItems changeable items from storage
    */
   setMutableGeneralOptions: function(storageItems) {
-    view.setEmailAndId(storageItems.userEmail, storageItems.userid);
+    view.setAuthenticationDetails(storageItems);
     view.setAutoEnhance(storageItems.enabled);
   },
 
   /**
-   * Set user email and id.
+   * Set authentication details:
+   * - userid
+   * - userEmail
+   * - user
+   * - token
    *
-   * @param email the email address from the user
-   * @param id the user id
+   * @param {object} storageItems changeable items from storage
    */
-  setEmailAndId: function(email, id) {
-    if (id === undefined) {
+  setAuthenticationDetails: function(storageItems) {
+    if (storageItems.userid === undefined) {
       chrome.storage.local.set({
         userEmail: view.userEmail,
-        userid: view.userid
+        userid: view.userid,
+        user: view.user,
+        token: view.token
       });
     }
     else {
-      view.userEmail = email;
-      view.userid = id;
+      view.userEmail = storageItems.userEmail;
+      view.userid = storageItems.userid;
+      view.user = storageItems.user;
+      view.token = storageItems.token;
     }
   },
 
@@ -129,29 +152,34 @@ const view = {
       "showInst",
       "userEmail",
       "userid",
+      "user",
+      "token",
+      "timestamp",
       "enabled",
       "language",
       "topic",
       "activity"
     ], function(storageItems) {
-      view.saveUserOptions(storageItems);
+      view.setUserOptions(storageItems);
 
-      view.setEmailAndId(storageItems.userEmail, storageItems.userid);
+      view.setAuthenticationDetails(storageItems);
 
-      view.saveSelections(storageItems);
+      view.setSelections(storageItems);
 
-      view.topicName = view.interaction.getTopicName(view.topic);
+      view.setTimestamp(storageItems.timestamp);
+
+      view.topicName = view.interaction.getTopicName(storageItems.topic);
 
       view.interaction.enhance();
     });
   },
 
   /**
-   * Save all user options from the options page.
+   * Set all user options from the options page.
    *
    * @param {object} storageItems the storage items
    */
-  saveUserOptions: function(storageItems) {
+  setUserOptions: function(storageItems) {
     if (storageItems.fixedOrPercentage !== undefined) {
       view.fixedOrPercentage = storageItems.fixedOrPercentage;
       view.fixedNumberOfExercises = storageItems.fixedNumberOfExercises;
@@ -168,10 +196,70 @@ const view = {
    *
    * @param {object} storageItems the storage items
    */
-  saveSelections: function(storageItems) {
+  setSelections: function(storageItems) {
     view.enabled = storageItems.enabled;
     view.language = storageItems.language;
     view.topic = storageItems.topic;
     view.activity = storageItems.activity;
+  },
+
+  /**
+   * Set the timestamp.
+   *
+   * @param {number} timestamp the time stamp
+   */
+  setTimestamp: function(timestamp) {
+    view.timestamp = timestamp;
+  },
+
+  /**
+   * Set the number of exercises.
+   *
+   * @param {number} numberOfExercises the number of exercises
+   */
+  setNumberOfExercises: function(numberOfExercises) {
+    view.numberOfExercises = numberOfExercises;
+  },
+
+  /**
+   * Send a request to the background script to send session data
+   * and get the session id.
+   */
+  requestToSendSessionDataAndGetSessionId: function() {
+    const sessionData = view.createSessionData();
+
+    chrome.runtime.sendMessage({
+      msg: "send sessionData and get sessionId",
+      sessionData: sessionData,
+      serverSessionURL: view.serverSessionURL
+    }, view.lib.noResponse);
+  },
+
+  /**
+   * Create session data to be send to the server.
+   *
+   * @returns {object} the data of the current session
+   */
+  createSessionData: function() {
+    return {
+      user: view.user,
+      token: view.token,
+      url: view.url,
+      language: view.language,
+      topic: view.topic,
+      activity: view.activity,
+      timestamp: view.timestamp,
+      "number-of-exercises": view.numberOfExercises
+    };
+  },
+
+  /**
+   * Set the session id obtained from the server whenever a new
+   * session was started by the user.
+   *
+   * @param {string} sessionId the session id from the server
+   */
+  setSessionId: function(sessionId) {
+    view.sessionid = sessionId
   }
 };
