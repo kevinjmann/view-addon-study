@@ -537,8 +537,8 @@ describe("background.js", function() {
 
           const request = {
             msg: "send sessionData and get sessionId",
-            sessionData: "some session data",
-            serverSessionURL: "https://view.aleks.bg/act/newSession"
+            serverSessionURL: "https://view.aleks.bg/act/newSession",
+            sessionData: "some session data"
           };
           const sender = {tab: {id: 5}};
 
@@ -556,8 +556,8 @@ describe("background.js", function() {
 
           const request = {
             msg: "send sessionData and get sessionId",
-            sessionData: sessionData,
-            serverSessionURL: serverSessionURL
+            serverSessionURL: serverSessionURL,
+            sessionData: sessionData
           };
 
           background.sendSessionDataAndGetSessionId(request);
@@ -577,8 +577,8 @@ describe("background.js", function() {
 
           const request = {
             msg: "send sessionData and get sessionId",
-            sessionData: "some session data",
-            serverSessionURL: serverSessionURL
+            serverSessionURL: serverSessionURL,
+            sessionData: "some session data"
           };
 
           sandbox.useFakeServer();
@@ -605,8 +605,8 @@ describe("background.js", function() {
 
           const request = {
             msg: "send sessionData and get sessionId",
-            sessionData: "some session data",
-            serverSessionURL: serverSessionURL
+            serverSessionURL: serverSessionURL,
+            sessionData: "some session data"
           };
 
           sandbox.useFakeServer();
@@ -629,8 +629,8 @@ describe("background.js", function() {
 
           const request = {
             msg: "send sessionData and get sessionId",
-            sessionData: "some session data",
-            serverSessionURL: serverSessionURL
+            serverSessionURL: serverSessionURL,
+            sessionData: "some session data"
           };
 
           sandbox.useFakeServer();
@@ -653,8 +653,8 @@ describe("background.js", function() {
 
           const request = {
             msg: "send interactionData",
-            interactionData: "some interaction data",
-            serverTrackingURL: "https://view.aleks.bg/act/track"
+            serverTrackingURL: "https://view.aleks.bg/act/track",
+            interactionData: "some interaction data"
           };
           const sender = {tab: {id: 5}};
 
@@ -672,8 +672,8 @@ describe("background.js", function() {
 
           const request = {
             msg: "send sessionData and get sessionId",
-            interactionData: interactionData,
-            serverTrackingURL: serverTrackingURL
+            serverTrackingURL: serverTrackingURL,
+            interactionData: interactionData
           };
 
           background.sendInteractionData(request);
