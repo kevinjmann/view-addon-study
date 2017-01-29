@@ -232,7 +232,7 @@ const view = {
       msg: "send sessionData and get sessionId",
       sessionData: sessionData,
       serverSessionURL: view.serverSessionURL
-    });
+    }, view.lib.noResponse);
   },
 
   /**
@@ -257,7 +257,7 @@ const view = {
    * Set the session id obtained from the server whenever a new
    * session was started by the user.
    *
-   * @param {number} sessionId the session id from the server
+   * @param {string} sessionId the session id from the server
    */
   setSessionId: function(sessionId) {
     view.sessionid = sessionId

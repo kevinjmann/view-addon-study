@@ -85,7 +85,6 @@ describe("tracker.js", function() {
 
       const $EnhancementElement = $("[data-type='hit']").first();
 
-      const user = "some user";
       const token = "some token";
       const sessionId = "fake-session-id";
       const enhancementId = $EnhancementElement.attr("id");
@@ -97,17 +96,15 @@ describe("tracker.js", function() {
 
       const interactionData = {};
 
-      interactionData["user"] = user;
       interactionData["token"] = token;
       interactionData["session-id"] = sessionId;
       interactionData["enhancement-id"] = enhancementId;
       interactionData["submission"] = submission;
       interactionData["is-correct"] = isCorrect;
-      interactionData["timestamp"] = timestamp;
       interactionData["correct-answer"] = correctAnswer;
       interactionData["used-hint"] = usedHint;
+      interactionData["timestamp"] = timestamp;
 
-      view.user = user;
       view.token = token;
       view.sessionid = sessionId;
       view.timestamp = timestamp;
@@ -128,7 +125,6 @@ describe("tracker.js", function() {
       const requestToSendInteractionDataSpy = sandbox.spy(view.tracker, "requestToSendInteractionData");
 
       const $EnhancementElement = $("[data-type='hit']").first();
-      const user = "some user";
       const token = "some token";
       const sessionId = "fake-session-id";
       const enhancementId = $EnhancementElement.attr("id");
@@ -139,7 +135,6 @@ describe("tracker.js", function() {
 
       const interactionData = {};
 
-      interactionData["user"] = user;
       interactionData["token"] = token;
       interactionData["session-id"] = sessionId;
       interactionData["enhancement-id"] = enhancementId;
@@ -147,7 +142,6 @@ describe("tracker.js", function() {
       interactionData["is-correct"] = isCorrect;
       interactionData["timestamp"] = timestamp;
 
-      view.user = user;
       view.token = token;
       view.sessionid = sessionId;
       view.timestamp = timestamp;
@@ -173,7 +167,7 @@ describe("tracker.js", function() {
       sinon.assert.calledWithExactly(chrome.runtime.sendMessage, {
         msg: "send interactionData",
         interactionData: interactionData,
-        servletURL: "https://view.aleks.bg/view"
+        serverTrackingURL: "https://view.aleks.bg/act/track"
       });
     });
   });

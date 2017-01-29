@@ -407,7 +407,7 @@ describe("view.js", function() {
         topic,
         activity,
         timestamp,
-        numberOfExercises
+        "number-of-exercises": numberOfExercises
       })
     });
 
@@ -420,18 +420,20 @@ describe("view.js", function() {
       sinon.assert.calledWith(chrome.runtime.sendMessage, {
         msg: "send sessionData and get sessionId",
         sessionData: sessionData,
-        servletURL: "https://view.aleks.bg/view"
+        serverSessionURL: "https://view.aleks.bg/act/newSession"
       });
     });
-
-    it("should get the session id from the server", function() {
-      const response = {sessionid: "fake-session-id"};
-
-      chrome.runtime.sendMessage.yields(response);
-
-      view.requestToSendSessionDataAndGetSessionId();
-
-      expect(view.sessionid).to.equal(response.sessionid);
-    });
   });
+  
+  describe("setSessionId", function() {
+    it("should set the session id", function() {
+      expect(view.sessionid).to.be.empty;
+
+      const sessionId = "some-session-id";
+
+      view.setSessionId(sessionId);
+
+      expect(view.sessionid).to.equal(sessionId);
+    });
+  })
 });
