@@ -36,7 +36,7 @@ view.click = {
     $EnhancementElement.removeClass("click-style-pointer");
 
     if (view.userid) {
-      view.collector.collectAndSendData(
+      view.tracker.trackData(
         $EnhancementElement,
         $EnhancementElement.text(),
         isCorrect,

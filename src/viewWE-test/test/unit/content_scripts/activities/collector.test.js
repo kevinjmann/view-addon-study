@@ -1,12 +1,12 @@
 /**
- * Tests for the collector.js file of the VIEW add-on.
+ * Tests for the tracker.js file of the VIEW add-on.
  *
  * Created by eduard on 24.01.17.
  */
 
 "use strict";
 
-describe("collector.js", function() {
+describe("tracker.js", function() {
   let sandbox;
 
   beforeEach(function() {
@@ -36,7 +36,7 @@ describe("collector.js", function() {
     });
   });
 
-  describe("collectAndSendData", function() {
+  describe("trackData", function() {
     it("should call detectCapitalization(word), as the activity is not 'click'", function() {
       const detectCapitalizationSpy = sandbox.spy(view.lib, "detectCapitalization");
 
@@ -47,7 +47,7 @@ describe("collector.js", function() {
 
       view.activity = "mc";
 
-      view.collector.collectAndSendData(
+      view.tracker.trackData(
         $EnhancementElement,
         submission,
         isCorrect,
@@ -69,7 +69,7 @@ describe("collector.js", function() {
 
       view.activity = "mc";
 
-      view.collector.collectAndSendData(
+      view.tracker.trackData(
         $EnhancementElement,
         submission,
         isCorrect,
@@ -81,7 +81,7 @@ describe("collector.js", function() {
     });
 
     it("should call requestToSendInteractionData(interactionData), 'mc' activity", function() {
-      const requestToSendInteractionDataSpy = sandbox.spy(view.collector, "requestToSendInteractionData");
+      const requestToSendInteractionDataSpy = sandbox.spy(view.tracker, "requestToSendInteractionData");
 
       const $EnhancementElement = $("[data-type='hit']").first();
 
@@ -113,7 +113,7 @@ describe("collector.js", function() {
       view.timestamp = timestamp;
       view.activity = "mc";
 
-      view.collector.collectAndSendData(
+      view.tracker.trackData(
         $EnhancementElement,
         submission,
         isCorrect,
@@ -125,7 +125,7 @@ describe("collector.js", function() {
     });
 
     it("should call requestToSendInteractionData(interactionData), 'click' activity", function() {
-      const requestToSendInteractionDataSpy = sandbox.spy(view.collector, "requestToSendInteractionData");
+      const requestToSendInteractionDataSpy = sandbox.spy(view.tracker, "requestToSendInteractionData");
 
       const $EnhancementElement = $("[data-type='hit']").first();
       const user = "some user";
@@ -153,7 +153,7 @@ describe("collector.js", function() {
       view.timestamp = timestamp;
       view.activity = "click";
 
-      view.collector.collectAndSendData(
+      view.tracker.trackData(
         $EnhancementElement,
         submission,
         isCorrect,
@@ -167,7 +167,7 @@ describe("collector.js", function() {
     it("should send a request to send interaction data to the server", function() {
       const interactionData = {data: "some data"};
 
-      view.collector.requestToSendInteractionData(interactionData);
+      view.tracker.requestToSendInteractionData(interactionData);
 
       sinon.assert.calledOnce(chrome.runtime.sendMessage);
       sinon.assert.calledWithExactly(chrome.runtime.sendMessage, {

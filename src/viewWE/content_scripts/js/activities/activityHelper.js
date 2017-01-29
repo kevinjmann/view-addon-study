@@ -137,7 +137,7 @@ view.activityHelper = {
     view.activityHelper.processCorrect($ElementBox, "provided");
 
     if (view.userid) {
-      view.collector.collectAndSendData(
+      view.tracker.trackData(
         $EnhancementElement,
         submission,
         isCorrect,
@@ -170,7 +170,7 @@ view.activityHelper = {
     }
 
     if (view.userid) {
-      view.collector.collectAndSendData(
+      view.tracker.trackData(
         $EnhancementElement,
         submission,
         isCorrect,

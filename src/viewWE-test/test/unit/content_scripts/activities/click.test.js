@@ -129,8 +129,8 @@ describe("click.js", function() {
         expect($EnhancementElement.hasClass(clickStylePointer)).to.be.false;
       });
 
-      it("should call collectAndSendData($Enhancement,submission, isCorrect, usedHint), as the user is logged in", function() {
-        const collectAndSendDataSpy = sandbox.spy(view.collector, "collectAndSendData");
+      it("should call trackData($Enhancement,submission, isCorrect, usedHint), as the user is logged in", function() {
+        const trackDataSpy = sandbox.spy(view.tracker, "trackData");
 
         const $EnhancementElement = $("[data-type='hit']").first();
         const isCorrect = true;
@@ -144,8 +144,8 @@ describe("click.js", function() {
 
         delete $EnhancementElement.prevObject;
 
-        sinon.assert.calledOnce(collectAndSendDataSpy);
-        sinon.assert.calledWithExactly(collectAndSendDataSpy,
+        sinon.assert.calledOnce(trackDataSpy);
+        sinon.assert.calledWithExactly(trackDataSpy,
           $EnhancementElement,
           $EnhancementElement.text(),
           isCorrect,

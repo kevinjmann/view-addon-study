@@ -1,7 +1,7 @@
-view.collector = {
+view.tracker = {
   /**
-   * Collects data from the user-interaction with the activity and sends
-   * it to the server for tracking.
+   * Tracks data from the user-interaction with the activity and sends
+   * the data to the server.
    *
    * @param {object} $EnhancementElement the current enhancement element the
    * user is interacting with
@@ -10,7 +10,7 @@ view.collector = {
    * false otherwise
    * @param usedHint true if a hint was used, false otherwise
    */
-  collectAndSendData: function($EnhancementElement, submission, isCorrect, usedHint) {
+  trackData: function($EnhancementElement, submission, isCorrect, usedHint) {
     const interactionData = {};
 
     interactionData["token"] = view.token;
@@ -29,7 +29,7 @@ view.collector = {
 
     interactionData["timestamp"] = view.timestamp;
 
-    view.collector.requestToSendInteractionData(interactionData);
+    view.tracker.requestToSendInteractionData(interactionData);
   },
 
   /**
