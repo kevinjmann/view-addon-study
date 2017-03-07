@@ -94,7 +94,8 @@
     "notifications",
     "cookies",
     "*://sifnos.sfs.uni-tuebingen.de/*",
-    "https://view.aleks.bg/*"
+    "https://view.aleks.bg/*",
+    "*://localhost:8080/*"
   ], 
   
   "web_accessible_resources": [
