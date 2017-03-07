@@ -86,7 +86,7 @@ describe("tracker.js", function() {
       const $EnhancementElement = $("[data-type='hit']").first();
 
       const token = "some token";
-      const sessionId = "fake-session-id";
+      const taskId = "fake-task-id";
       const enhancementId = $EnhancementElement.attr("id");
       const submission = "Усвоением";
       const isCorrect = false;
@@ -97,7 +97,7 @@ describe("tracker.js", function() {
       const interactionData = {};
 
       interactionData["token"] = token;
-      interactionData["session-id"] = sessionId;
+      interactionData["task-id"] = taskId;
       interactionData["enhancement-id"] = enhancementId;
       interactionData["submission"] = submission;
       interactionData["is-correct"] = isCorrect;
@@ -106,7 +106,7 @@ describe("tracker.js", function() {
       interactionData["timestamp"] = timestamp;
 
       view.token = token;
-      view.sessionid = sessionId;
+      view.taskId = taskId;
       view.timestamp = timestamp;
       view.activity = "mc";
 
@@ -126,7 +126,7 @@ describe("tracker.js", function() {
 
       const $EnhancementElement = $("[data-type='hit']").first();
       const token = "some token";
-      const sessionId = "fake-session-id";
+      const taskId = "fake-task-id";
       const enhancementId = $EnhancementElement.attr("id");
       const submission = "Усвоением";
       const isCorrect = false;
@@ -136,14 +136,14 @@ describe("tracker.js", function() {
       const interactionData = {};
 
       interactionData["token"] = token;
-      interactionData["session-id"] = sessionId;
+      interactionData["task-id"] = taskId;
       interactionData["enhancement-id"] = enhancementId;
       interactionData["submission"] = submission;
       interactionData["is-correct"] = isCorrect;
       interactionData["timestamp"] = timestamp;
 
       view.token = token;
-      view.sessionid = sessionId;
+      view.taskId = taskId;
       view.timestamp = timestamp;
       view.activity = "click";
 

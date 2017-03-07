@@ -4,7 +4,7 @@ const view = {
   // General options
   serverURL: "https://view.aleks.bg",
   servletURL: "https://view.aleks.bg/view",
-  serverSessionURL: "https://view.aleks.bg/act/session",
+  serverTaskURL: "https://view.aleks.bg/act/task",
   serverTrackingURL: "https://view.aleks.bg/act/tracking",
   cookie_name: "wertiview_userid",
   cookie_path: "/VIEW/openid",
@@ -13,13 +13,13 @@ const view = {
   userEmail: "",
   userid: "",
 
-  // session data
+  // task data
   user: "Eduard",
   token: "authtoken",
   url: document.baseURI,
   timestamp: "",
   numberOfExercises: 0,
-  sessionid: "",
+  taskId: "",
 
   // user options (defaults)
   fixedOrPercentage: 0,
@@ -222,27 +222,26 @@ const view = {
   },
 
   /**
-   * Send a request to the background script to send session data
-   * and get the session id.
+   * Send a request to the background script to send task data
+   * and get the task id.
    */
-  requestToSendSessionDataAndGetSessionId: function() {
-    const sessionData = view.createSessionData();
+  requestToSendTaskDataAndGetTaskId: function() {
+    const taskData = view.createTaskData();
 
     chrome.runtime.sendMessage({
-      msg: "send sessionData and get sessionId",
-      sessionData: sessionData,
-      serverSessionURL: view.serverSessionURL
+      msg: "send taskData and get taskId",
+      taskData: taskData,
+      serverTaskURL: view.serverTaskURL
     }, view.lib.noResponse);
   },
 
   /**
-   * Create session data to be send to the server.
+   * Create task data to be send to the server.
    *
-   * @returns {object} the data of the current session
+   * @returns {object} the data of the current task
    */
-  createSessionData: function() {
+  createTaskData: function() {
     return {
-      user: view.user,
       token: view.token,
       url: view.url,
       language: view.language,
@@ -254,12 +253,12 @@ const view = {
   },
 
   /**
-   * Set the session id obtained from the server whenever a new
-   * session was started by the user.
+   * Set the task id obtained from the server whenever a new
+   * task was started by the user.
    *
-   * @param {string} sessionId the session id from the server
+   * @param {string} taskId the task id from the server
    */
-  setSessionId: function(sessionId) {
-    view.sessionid = sessionId
+  setTaskId: function(taskId) {
+      view.taskId = taskId;
   }
 };

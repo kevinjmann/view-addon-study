@@ -237,21 +237,21 @@ const background = {
   },
 
   /**
-   * Send the session data from view.js to the server for processing.
-   * If successful, request to call setSessionId in view.js.
+   * Send the task data from view.js to the server for processing.
+   * If successful, request to call setTaskId in view.js.
    *
    * @param {*} request the message sent by the calling script
    */
-  sendSessionDataAndGetSessionId: function(request){
-    background.ajaxPost(request.serverSessionURL,
-      request.sessionData,
+  sendTaskDataAndGetTaskId: function(request){
+    background.ajaxPost(request.serverTaskURL,
+      request.taskData,
       10000)
     .done(function(data, textStatus, xhr) {
       if (data) {
         const jsObject = JSON.parse(data);
-        background.callSetSessionId(jsObject["session-id"])
+          background.callSetTaskId(jsObject["task-id"]);
       } else {
-        background.ajaxError(xhr, "no-session-id");
+        background.ajaxError(xhr, "no-task-id");
       }
     })
     .fail(function(xhr, textStatus) {
@@ -260,14 +260,14 @@ const background = {
   },
 
   /**
-   * Request to call setSessionId(sessionId) in view.js.
+   * Request to call setTaskId(taskId) in view.js.
    *
-   * @param {number} sessionId the session id from the server
+   * @param {number} taskId the task id from the server
    */
-  callSetSessionId: function(sessionId) {
+  callSetTaskId: function(taskId) {
     chrome.tabs.sendMessage(background.currentTabId, {
-      msg: "call setSessionId",
-      sessionId: sessionId
+      msg: "call setTaskId",
+      taskId: taskId
     });
   },
 
@@ -336,11 +336,11 @@ const background = {
           "The VIEW server did not send any data."
         );
         break;
-      case "no-session-id":
+      case "no-task-id":
         background.createBasicNotification(
-          "no-session-id-notification",
-          "No session id!",
-          "The VIEW server did not send the session id."
+          "no-task-id-notification",
+          "No task id!",
+          "The VIEW server did not send the task id."
         );
         break;
       case "timeout":
@@ -560,8 +560,8 @@ function processMessage(request, sender, sendResponse) {
     case "send activityData":
       background.sendActivityData(request);
       break;
-    case "send sessionData and get sessionId":
-      background.sendSessionDataAndGetSessionId(request);
+    case "send taskData and get taskId":
+      background.sendTaskDataAndGetTaskId(request);
       break;
     case "send interactionData":
       background.sendInteractionData(request);
