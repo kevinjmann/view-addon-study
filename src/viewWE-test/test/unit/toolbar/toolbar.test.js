@@ -27,6 +27,7 @@ describe("toolbar.js", function() {
 
   const toolbarStart = "#wertiview-toolbar-";
   const identityIdStart = toolbar.selectorStart + "identity-";
+  const authenticatorURL = "https://view.aleks.bg/authenticator.html";
 
   describe("Selector_Cache", function() {
     it("should get the wanted jquery selector", function() {
@@ -113,12 +114,11 @@ describe("toolbar.js", function() {
 
       toolbar.initSignInOutInterfaces(); // adds the link attribute
 
-      expect($(identityIdStart + "signinlink").attr("link"))
-      .to.equal("http://sifnos.sfs.uni-tuebingen.de/VIEW/openid/authenticator.html");
+      expect($(identityIdStart + "signinlink").attr("link")).to.equal(authenticatorURL);
       expect($(identityIdStart + "signedinstatus").length).to.be.above(0);
       expect($(identityIdStart + "signedinuseremail").length).to.be.above(0);
       expect($(identityIdStart + "signoutlink").attr("link"))
-      .to.equal("http://sifnos.sfs.uni-tuebingen.de/VIEW/openid/authenticator.html");
+      .to.equal(authenticatorURL);
 
       expect($(toolbar.selectorStart + "toggle-button").length).to.be.above(0);
     });
@@ -797,8 +797,7 @@ describe("toolbar.js", function() {
 
     describe("initSignInOutInterfaces", function() {
       it("should initialize the sign in and sign out interfaces", function() {
-        // TODO: This test is going to change when the authenticator works on the new server
-        const link = "http://sifnos.sfs.uni-tuebingen.de/VIEW/openid/authenticator.html";
+        const link = authenticatorURL;
 
         toolbar.initSignInOutInterfaces();
 
