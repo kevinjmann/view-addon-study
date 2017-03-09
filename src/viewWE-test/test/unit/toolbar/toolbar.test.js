@@ -27,7 +27,8 @@ describe("toolbar.js", function() {
 
   const toolbarStart = "#wertiview-toolbar-";
   const identityIdStart = toolbar.selectorStart + "identity-";
-  const authenticatorURL = "https://view.aleks.bg/authenticator.html";
+  const globalServerURL = "https://view.aleks.bg";
+  const authenticatorURL = globalServerURL + "/authenticator.html";
 
   describe("Selector_Cache", function() {
     it("should get the wanted jquery selector", function() {
@@ -112,6 +113,7 @@ describe("toolbar.js", function() {
       expect($(toolbar.selectorStart + "abort-button").length).to.be.above(0);
       expect($(toolbar.selectorStart + "loading-image").length).to.be.above(0);
 
+      chrome.storage.local.get.yields({ serverURL: globalServerURL });
       toolbar.initSignInOutInterfaces(); // adds the link attribute
 
       expect($(identityIdStart + "signinlink").attr("link")).to.equal(authenticatorURL);
