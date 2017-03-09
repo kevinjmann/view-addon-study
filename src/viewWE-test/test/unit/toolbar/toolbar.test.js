@@ -835,7 +835,7 @@ describe("toolbar.js", function() {
       it("should open the sign in window", function() {
         const windowOpenSpy = sandbox.spy(window, "open");
 
-        toolbar.initSignInOutInterfaces("https://view.aleks.bg");
+        toolbar.initSignInOutInterfaces(globalServerURL);
 
         toolbar.initSignInLink();
 
@@ -878,7 +878,7 @@ describe("toolbar.js", function() {
       it("should open the sign out window", function() {
         const windowOpenSpy = sandbox.spy(window, "open");
 
-        toolbar.initSignInOutInterfaces("https://view.aleks.bg");
+        toolbar.initSignInOutInterfaces(globalServerURL);
 
         toolbar.openSignOutWindow();
 
