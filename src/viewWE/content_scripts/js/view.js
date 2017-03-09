@@ -1,11 +1,12 @@
+const theServerURL = "https://view.aleks.bg";
 const view = {
   $cache: new Selector_Cache(),
 
   // General options
-  serverURL: "https://view.aleks.bg",
-  servletURL: "https://view.aleks.bg/view",
-  serverTaskURL: "https://view.aleks.bg/act/task",
-  serverTrackingURL: "https://view.aleks.bg/act/tracking",
+  serverURL: theServerURL,
+  servletURL: theServerURL + "/view",
+  serverTaskURL: theServerURL + "/act/task",
+  serverTrackingURL: theServerURL + "/act/tracking",
   cookie_name: "wertiview_userid",
   cookie_path: "/VIEW/openid",
   ajaxTimeout: 60000,
