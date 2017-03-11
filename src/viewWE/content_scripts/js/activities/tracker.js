@@ -19,13 +19,9 @@ view.tracker = {
     interactionData["submission"] = submission;
     interactionData["is-correct"] = isCorrect;
 
-    const isClick = (view.activity === "click");
-
-    if (!isClick) {
-      const capType = view.lib.detectCapitalization($EnhancementElement.text());
-      interactionData["correct-answer"] = view.activityHelper.getCorrectAnswer($EnhancementElement, capType);
-      interactionData["used-hint"] = usedHint;
-    }
+    const capType = view.lib.detectCapitalization($EnhancementElement.text());
+    interactionData["correct-answer"] = view.activityHelper.getCorrectAnswer($EnhancementElement, capType);
+    interactionData["used-hint"] = usedHint;
 
     interactionData["timestamp"] = view.timestamp;
 

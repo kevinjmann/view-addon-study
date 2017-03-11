@@ -37,7 +37,7 @@ describe("tracker.js", function() {
   });
 
   describe("trackData", function() {
-    it("should call detectCapitalization(word), as the activity is not 'click'", function() {
+    it("should call detectCapitalization(word)", function() {
       const detectCapitalizationSpy = sandbox.spy(view.lib, "detectCapitalization");
 
       const $EnhancementElement = $("[data-type='hit']").first();
@@ -58,7 +58,7 @@ describe("tracker.js", function() {
       sinon.assert.calledWithExactly(detectCapitalizationSpy, $EnhancementElement.text());
     });
 
-    it("should call getCorrectAnswer($EnhancementElement, capType), as the activity is not 'click'", function() {
+    it("should call getCorrectAnswer($EnhancementElement, capType)", function() {
       const getCorrectAnswerSpy = sandbox.spy(view.activityHelper, "getCorrectAnswer");
 
       const $EnhancementElement = $("[data-type='hit']").first();
@@ -129,6 +129,7 @@ describe("tracker.js", function() {
       const taskId = "fake-task-id";
       const enhancementId = $EnhancementElement.attr("id");
       const submission = "Усвоением";
+      const correctAnswer = "Усвоение";
       const isCorrect = false;
       const timestamp = 99;
       const usedHint = false;
@@ -141,6 +142,8 @@ describe("tracker.js", function() {
       interactionData["submission"] = submission;
       interactionData["is-correct"] = isCorrect;
       interactionData["timestamp"] = timestamp;
+      interactionData["correct-answer"] = correctAnswer;
+      interactionData["used-hint"] = usedHint;
 
       view.token = token;
       view.taskId = taskId;
