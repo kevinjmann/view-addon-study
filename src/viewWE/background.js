@@ -574,7 +574,7 @@ function processMessage(request, sender, sendResponse) {
         "unhandled-message-notification",
         "Unhandled Message!",
         "There was an unhandled message!"
-      )
+      );
   }
 }
 
