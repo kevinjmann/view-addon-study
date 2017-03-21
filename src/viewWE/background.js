@@ -467,12 +467,13 @@ const background = {
     const user = account[0];
     const userEmail = account[1];
     const userid = account[2];
+    const authtoken = account[3];
 
     chrome.storage.local.set({
       userEmail: userEmail,
       userid: userid,
       user: user,
-      token: "authtoken" // TODO: figure out how to receive the auth token
+      token: authtoken
     }, function() {
       chrome.tabs.sendMessage(background.currentTabId, {
         msg: "call signIn",
