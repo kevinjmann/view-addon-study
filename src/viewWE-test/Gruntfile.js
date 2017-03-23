@@ -27,7 +27,8 @@ module.exports = function(grunt) {
           {pattern: "fixtures/**/*"}
         ],
         preprocessors: {
-          "**/articles.json": ["json_fixtures"]
+          "**/articles.json": ["json_fixtures"],
+          "**/nouns.json": ["json_fixtures"]
         },
         plugins: [
           "karma-coverage",
