@@ -1,6 +1,22 @@
 {
   "ru": {
-    "filters": "all;singular;plural",
+    "filters": {
+      "all": {
+        "id": "wertiview-toolbar-filter-all",
+        "val": "all",
+        "text": "All"
+      },
+      "singular": {
+        "id": "wertiview-toolbar-filter-singular",
+        "val": "singular",
+        "text": "Singular"
+      },
+      "plural": {
+        "id": "wertiview-toolbar-filter-plural",
+        "val": "plural",
+        "text": "Plural"
+      }
+    },
     "activities": {
       "color": {
         "description": {
