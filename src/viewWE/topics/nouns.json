@@ -8,12 +8,12 @@
       },
       "singular": {
         "id": "wertiview-toolbar-filter-singular",
-        "val": "singular",
+        "val": "Sg",
         "text": "Singular"
       },
       "plural": {
         "id": "wertiview-toolbar-filter-plural",
-        "val": "plural",
+        "val": "Pl",
         "text": "Plural"
       }
     },
