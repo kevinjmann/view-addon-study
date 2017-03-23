@@ -7,12 +7,12 @@
         "text": "All"
       },
       "singular": {
-        "id": "wertiview-toolbar-filter-singular",
+        "id": "wertiview-toolbar-filter-Sg",
         "val": "Sg",
         "text": "Singular"
       },
       "plural": {
-        "id": "wertiview-toolbar-filter-plural",
+        "id": "wertiview-toolbar-filter-Pl",
         "val": "Pl",
         "text": "Plural"
       }
