@@ -1,6 +1,6 @@
 {
   "ru": {
-    "filters": "singular;plural",
+    "filters": "all;singular;plural",
     "activities": {
       "color": {
         "description": {
