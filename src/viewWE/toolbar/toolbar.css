@@ -30,6 +30,10 @@ body {
     display: inline-block;
 }
 
+#wertiview-toolbar-filter-no-filter {
+    display: none;
+}
+
 #wertiview-toolbar-enabled {
     background-color: #ff7f2a;
 }
