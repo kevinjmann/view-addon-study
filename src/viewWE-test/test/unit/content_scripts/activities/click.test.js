@@ -12,6 +12,7 @@ describe("click.js", function() {
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
     fixture.load("/fixtures/ru-nouns-click.html");
+    view.selector.select("Sg");
   });
 
   afterEach(function() {
@@ -33,6 +34,7 @@ describe("click.js", function() {
       expect($("[data-type='hit']").length).to.be.above(0);
       expect($("[data-type='ambiguity']").length).to.be.above(0);
       expect($("[data-type='miss']").length).to.be.above(0);
+      expect($(".selected").length).to.be.above(0);
     });
   });
 
@@ -41,6 +43,7 @@ describe("click.js", function() {
       const eventSpy = sandbox.spy($.fn, "on");
 
       const clickStyleClass = "click-style-pointer";
+
       const $Enhancements = $("viewenhancement");
 
       expect($Enhancements.hasClass(clickStyleClass)).to.be.false;
@@ -62,7 +65,7 @@ describe("click.js", function() {
       );
       const setNumberOfExercisesSpy = sandbox.spy(view, "setNumberOfExercises");
 
-      const selector = "viewenhancement[data-type!='miss']";
+      const selector = "viewenhancement[data-type!='miss'].selected";
 
       view.click.run();
 
@@ -70,13 +73,13 @@ describe("click.js", function() {
       sinon.assert.calledWithExactly(getNumberOfExercisesAndRequestTaskIdSpy, selector);
 
       sinon.assert.calledOnce(setNumberOfExercisesSpy);
-      sinon.assert.calledWithExactly(setNumberOfExercisesSpy, 22);
+      sinon.assert.calledWithExactly(setNumberOfExercisesSpy, 20);
     });
 
     it("should call the handler on click", function() {
       const handlerSpy = sandbox.spy(view.click, "handler");
 
-      const $EnhancementElement = $("[data-type='hit']").first();
+      const $EnhancementElement = $("[data-type='hit'].selected").first();
 
       view.click.run();
 
@@ -87,7 +90,7 @@ describe("click.js", function() {
 
     describe("handler", function() {
       it("should add class for a correct click on an element of type 'hit'", function() {
-        const $EnhancementElement = $("[data-type='hit']").first();
+        const $EnhancementElement = $("[data-type='hit'].selected").first();
 
         view.click.run();
 
@@ -97,7 +100,7 @@ describe("click.js", function() {
       });
 
       it("should add class for a correct click on an element of type 'ambiguity'", function() {
-        const $EnhancementElement = $("[data-type='ambiguity']").first();
+        const $EnhancementElement = $("[data-type='ambiguity'].selected").first();
 
         view.click.run();
 
@@ -132,7 +135,7 @@ describe("click.js", function() {
       it("should call trackData($Enhancement,submission, isCorrect, usedHint), as the user is logged in", function() {
         const trackDataSpy = sandbox.spy(view.tracker, "trackData");
 
-        const $EnhancementElement = $("[data-type='hit']").first();
+        const $EnhancementElement = $("[data-type='hit'].selected").first();
         const isCorrect = true;
         const usedHint = false;
 
@@ -153,8 +156,8 @@ describe("click.js", function() {
         );
       });
 
-      it("should return false in any case", function() {
-        const handlerSpy = sandbox.spy(view.click, "handler");
+      it("should call off('click') in any case", function() {
+        const eventSpy = sandbox.spy($.fn, "off");
 
         const $EnhancementElement = $("viewenhancement").first();
 
@@ -162,8 +165,8 @@ describe("click.js", function() {
 
         $EnhancementElement.trigger("click");
 
-        sinon.assert.calledOnce(handlerSpy);
-        expect(handlerSpy.firstCall.returnValue).to.be.false;
+        sinon.assert.calledOnce(eventSpy);
+        sinon.assert.calledWith(eventSpy, "click");
       });
     });
   });

@@ -1,7 +1,5 @@
 const theServerURL = "https://view.aleks.bg";
 const view = {
-  $cache: new Selector_Cache(),
-
   // General options
   serverURL: theServerURL,
   servletURL: theServerURL + "/view",
@@ -35,6 +33,7 @@ const view = {
   enabled: false, // should the page be enhanced right away?
   language: "unselected",
   topic: "unselected",
+  filter: "unselected",
   activity: "unselected",
 
   // the topic name which is used to call the topic modules
@@ -159,6 +158,7 @@ const view = {
       "enabled",
       "language",
       "topic",
+      "filter",
       "activity"
     ], function(storageItems) {
       view.setUserOptions(storageItems);
@@ -201,6 +201,7 @@ const view = {
     view.enabled = storageItems.enabled;
     view.language = storageItems.language;
     view.topic = storageItems.topic;
+    view.filter = storageItems.filter;
     view.activity = storageItems.activity;
   },
 
@@ -247,6 +248,7 @@ const view = {
       url: view.url,
       language: view.language,
       topic: view.topic,
+      filter: view.filter,
       activity: view.activity,
       timestamp: view.timestamp,
       "number-of-exercises": view.numberOfExercises

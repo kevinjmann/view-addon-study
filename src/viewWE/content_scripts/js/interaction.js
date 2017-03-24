@@ -207,6 +207,7 @@ view.interaction = {
     activityData["url"] = view.url;
     activityData["language"] = view.language;
     activityData["topic"] = view.topic;
+    activityData["filter"] = view.filter;
     activityData["activity"] = view.activity;
     activityData["document"] = $("#wertiview-body-content").html();
 
@@ -244,6 +245,7 @@ view.interaction = {
 
     $("#wertiview-body-content").html(data);
 
+    view.selector.select(view.filter);
     view.interaction.runActivity();
     view.interaction.initialInteractionState();
     chrome.runtime.sendMessage({
@@ -315,6 +317,7 @@ view.interaction = {
     requestData["url"] = view.url;
     requestData["language"] = view.language;
     requestData["topic"] = view.topic;
+    requestData["filter"] = view.filter;
     requestData["activity"] = view.activity;
 
     // send a request to the background script, to send the request data to the server for processing
@@ -371,7 +374,7 @@ view.interaction = {
     view.activityHelper.restore();
 
     $("viewenhancement").each(function() {
-      $(this).replaceWith($(this).data("view-original-text"));
+      $(this).replaceWith($(this).data("original-text"));
     });
 
     view.lib.enableAnchors();

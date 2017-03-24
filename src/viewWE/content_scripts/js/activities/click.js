@@ -10,7 +10,7 @@ view.click = {
       $EnhancementElement.addClass("click-style-pointer");
     });
 
-    view.activityHelper.getNumberOfExercisesAndRequestTaskId("viewenhancement[data-type!='miss']");
+    view.activityHelper.getNumberOfExercisesAndRequestSessionId("viewenhancement[data-type!='miss'].selected");
 
     $("viewenhancement").on("click", view.click.handler);
   },
@@ -26,7 +26,7 @@ view.click = {
     const $EnhancementElement = $(this);
     const usedHint = false;
 
-    if ($EnhancementElement.is("[data-type!='miss']")) {
+    if ($EnhancementElement.is("viewenhancement[data-type!='miss'].selected")) {
       isCorrect = true;
       $EnhancementElement.addClass("click-style-correct");
     } else {
@@ -44,7 +44,6 @@ view.click = {
       );
     }
 
-    // prevent execution of further event listeners
-    return false;
+    $EnhancementElement.off("click");
   }
 };

@@ -12,6 +12,7 @@ describe("color.js", function() {
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
     fixture.load("/fixtures/ru-nouns-color.html");
+    view.selector.select("Sg");
   });
 
   afterEach(function() {
@@ -31,6 +32,7 @@ describe("color.js", function() {
       expect($("viewenhancement").length).to.be.above(0);
       expect($("[data-type='hit']").length).to.be.above(0);
       expect($("[data-type='ambiguity']").length).to.be.above(0);
+      expect($(".selected").length).to.be.above(0);
     });
   });
 
@@ -38,7 +40,7 @@ describe("color.js", function() {
     it("should add the color class to all viewenhancement tags", function() {
       const topic = "nouns";
       const colorizeStyleClass = "colorize-style-nouns";
-      const $Enhancements = $("viewenhancement");
+      const $Enhancements = $("viewenhancement.selected");
 
       expect($Enhancements.hasClass(colorizeStyleClass)).to.be.false;
 

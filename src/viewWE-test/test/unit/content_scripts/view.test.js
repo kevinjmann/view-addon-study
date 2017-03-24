@@ -205,6 +205,7 @@ describe("view.js", function() {
         "enabled",
         "language",
         "topic",
+        "filter",
         "activity"
       ]);
     });
@@ -284,12 +285,14 @@ describe("view.js", function() {
       const enabled = true;
       const language = "en";
       const topic = "articles";
+      const filter = "no-filter";
       const activity = "color";
 
       const storageItems = {
         enabled,
         language,
         topic,
+        filter,
         activity
       };
 
@@ -300,6 +303,7 @@ describe("view.js", function() {
       expect(view.enabled).to.equal(enabled);
       expect(view.language).to.equal(language);
       expect(view.topic).to.equal(topic);
+      expect(view.filter).to.equal(filter);
       expect(view.activity).to.equal(activity);
     });
 
@@ -383,6 +387,7 @@ describe("view.js", function() {
       const url = "some url";
       const language = "some language";
       const topic = "some topic";
+      const filter = "some filter";
       const activity = "some activity";
       const timestamp = 99;
       const numberOfExercises = 100;
@@ -391,6 +396,7 @@ describe("view.js", function() {
       view.url = url;
       view.language = language;
       view.topic = topic;
+      view.filter = filter;
       view.activity = activity;
       view.timestamp = timestamp;
       view.numberOfExercises = numberOfExercises;
@@ -402,6 +408,7 @@ describe("view.js", function() {
         url,
         language,
         topic,
+        filter,
         activity,
         timestamp,
         "number-of-exercises": numberOfExercises

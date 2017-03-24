@@ -13,6 +13,7 @@ describe("activityHelper.js", function() {
     sandbox = sinon.sandbox.create();
     fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
     view.language = "ru";
+    view.selector.select("Sg");
   });
 
   afterEach(function() {
@@ -33,6 +34,7 @@ describe("activityHelper.js", function() {
       expect($("viewenhancement").length).to.be.above(0);
       expect($("[data-type='hit']").length).to.be.above(0);
       expect($("[data-type='clue']").length).to.be.above(0);
+      expect($(".selected").length).to.be.above(0);
     });
   });
 
@@ -48,14 +50,14 @@ describe("activityHelper.js", function() {
     it("should create a hitlist", function() {
       const hitList = [];
 
-      $("viewenhancement[data-type='hit']").each(function() {
+      $("viewenhancement[data-type='hit'].selected").each(function() {
         hitList.push($(this));
       });
 
       const returnedHitList = view.activityHelper.createHitList();
 
       expect(returnedHitList).to.eql(hitList);
-      expect(returnedHitList.length).to.equal(19);
+      expect(returnedHitList.length).to.equal(17);
     });
 
     it("should call calculateNumberOfExercises(hitList)", function() {
@@ -171,7 +173,7 @@ describe("activityHelper.js", function() {
 
       sinon.assert.calledOnce(createExercisesSpy);
       sinon.assert.calledWith(createExercisesSpy,
-        19,
+        17,
         {
           firstOffset: 0,
           intervalSize: 1
@@ -312,7 +314,7 @@ describe("activityHelper.js", function() {
         view.mc.run();
 
         sinon.assert.calledOnce(setNumberOfExercisesSpy);
-        sinon.assert.calledWithExactly(setNumberOfExercisesSpy, 19);
+        sinon.assert.calledWithExactly(setNumberOfExercisesSpy, 17);
       });
 
       it("should call requestToSendTaskDataAndGetTaskId()", function() {

@@ -5,7 +5,7 @@ view.color = {
    * @param {string} topic the name of the topic.
    */
   run: function(topic) {
-    $("viewenhancement").each(function() {
+    $("viewenhancement.selected").each(function() {
       const $Enhancement = $(this);
       $Enhancement.data("view-original-text", $Enhancement.text());
 
