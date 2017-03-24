@@ -38,7 +38,10 @@ describe("color.js", function() {
     it("should add the color class to all viewenhancement tags", function() {
       const topic = "nouns";
       const colorizeStyleClass = "colorize-style-nouns";
-      const $Enhancements = $("viewenhancement");
+
+      view.selector.select("Sg");
+
+      const $Enhancements = $("viewenhancement.selected");
 
       expect($Enhancements.hasClass(colorizeStyleClass)).to.be.false;
 
