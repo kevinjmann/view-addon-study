@@ -107,6 +107,7 @@ module.exports = function(grunt) {
           src: [
             "../viewWE/content_scripts/js/selector-cache.js",
             "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/selector.js",
             "../viewWE/content_scripts/js/activities/color.js",
             "test/unit/content_scripts/activities/color.test.js"
           ]
@@ -121,6 +122,7 @@ module.exports = function(grunt) {
           src: [
             "../viewWE/content_scripts/js/selector-cache.js",
             "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/selector.js",
             "../viewWE/content_scripts/js/lib.js",
             "../viewWE/content_scripts/js/activities/tracker.js",
             "../viewWE/content_scripts/js/activities/activityHelper.js",
@@ -138,6 +140,7 @@ module.exports = function(grunt) {
           src: [
             "../viewWE/content_scripts/js/selector-cache.js",
             "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/selector.js",
             "../viewWE/content_scripts/js/lib.js",
             "../viewWE/content_scripts/js/activities/tracker.js",
             "../viewWE/content_scripts/js/activities/activityHelper.js",
@@ -155,6 +158,7 @@ module.exports = function(grunt) {
           src: [
             "../viewWE/content_scripts/js/selector-cache.js",
             "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/selector.js",
             "../viewWE/content_scripts/js/lib.js",
             "../viewWE/content_scripts/js/activities/tracker.js",
             "../viewWE/content_scripts/js/activities/activityHelper.js",
@@ -172,6 +176,7 @@ module.exports = function(grunt) {
           src: [
             "../viewWE/content_scripts/js/selector-cache.js",
             "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/selector.js",
             "../viewWE/content_scripts/js/lib.js",
             "../viewWE/content_scripts/js/activities/tracker.js",
             "../viewWE/content_scripts/js/activities/activityHelper.js",
