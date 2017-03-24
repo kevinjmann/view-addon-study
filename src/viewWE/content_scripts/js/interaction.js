@@ -207,6 +207,7 @@ view.interaction = {
     activityData["url"] = view.url;
     activityData["language"] = view.language;
     activityData["topic"] = view.topic;
+    activityData["filter"] = view.filter;
     activityData["activity"] = view.activity;
     activityData["document"] = $("#wertiview-body-content").html();
 
@@ -315,6 +316,7 @@ view.interaction = {
     requestData["url"] = view.url;
     requestData["language"] = view.language;
     requestData["topic"] = view.topic;
+    requestData["filter"] = view.filter;
     requestData["activity"] = view.activity;
 
     // send a request to the background script, to send the request data to the server for processing
