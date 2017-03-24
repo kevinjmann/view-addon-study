@@ -4,7 +4,7 @@ view.selector = {
       $("viewenhancement").addClass("selected");
     }
     else{
-      $("viewenhancement[data-filters='" + filter + "']").addClass("selected");
+      $("viewenhancement[data-filters~='" + filter + "']").addClass("selected");
     }
   }
 };
