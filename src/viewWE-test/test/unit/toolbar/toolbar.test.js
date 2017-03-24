@@ -518,14 +518,22 @@ describe("toolbar.js", function() {
               );
             });
 
-            it("should have options with filter specific", function() {
+            it("should have options with filter specific data", function() {
               const jsonData = fixture.load("fixtures/json/nouns.json", true);
 
               const filters = jsonData.ru.filters;
+              const $FilterMenu = $(toolbar.selectorStart + "filter-menu");
 
-              toolbar.showFilterMenu(filters);
+              toolbar.addFilterOptions(filters, $FilterMenu);
 
-              expect($(toolbar.selectorStart + "filter-menu").val()).to.equal("unselected");
+              $.each(filters, function(filter) {
+                const filterObject = filters[filter];
+                const $FilterOption = $("#" + filterObject.id);
+
+                expect($FilterOption.attr("id")).to.equal(filterObject.id);
+                expect($FilterOption.val()).to.equal(filterObject.val);
+                expect($FilterOption.text()).to.equal(filterObject.text);
+              });
             });
 
             it("should show the filter menu", function() {
