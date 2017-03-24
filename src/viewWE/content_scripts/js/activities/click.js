@@ -3,16 +3,16 @@ view.click = {
    * Run the click activity.
    */
   run: function() {
-    $("viewenhancement.selected").each(function() {
+    $("viewenhancement").each(function() {
       const $EnhancementElement = $(this);
       $EnhancementElement.data("view-original-text", $EnhancementElement.text());
 
       $EnhancementElement.addClass("click-style-pointer");
     });
 
-    view.activityHelper.getNumberOfExercisesAndRequestSessionId("viewenhancement[data-type!='miss']");
+    view.activityHelper.getNumberOfExercisesAndRequestSessionId("[data-type!='miss'].selected");
 
-    $("viewenhancement.selected").on("click", view.click.handler);
+    $("viewenhancement").on("click", view.click.handler);
   },
 
   /**
@@ -26,7 +26,7 @@ view.click = {
     const $EnhancementElement = $(this);
     const usedHint = false;
 
-    if ($EnhancementElement.is("[data-type!='miss']")) {
+    if ($EnhancementElement.is("[data-type!='miss'].selected")) {
       isCorrect = true;
       $EnhancementElement.addClass("click-style-correct");
     } else {
@@ -44,7 +44,6 @@ view.click = {
       );
     }
 
-    // prevent execution of further event listeners
-    return false;
+    $EnhancementElement.off("click");
   }
 };
