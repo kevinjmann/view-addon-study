@@ -3,7 +3,7 @@ view.click = {
    * Run the click activity.
    */
   run: function() {
-    $("viewenhancement").each(function() {
+    $("viewenhancement.selected").each(function() {
       const $EnhancementElement = $(this);
       $EnhancementElement.data("view-original-text", $EnhancementElement.text());
 
@@ -12,7 +12,7 @@ view.click = {
 
     view.activityHelper.getNumberOfExercisesAndRequestSessionId("viewenhancement[data-type!='miss']");
 
-    $("viewenhancement").on("click", view.click.handler);
+    $("viewenhancement.selected").on("click", view.click.handler);
   },
 
   /**

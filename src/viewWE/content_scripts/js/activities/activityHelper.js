@@ -30,7 +30,7 @@ view.activityHelper = {
   createHitList: function() {
     const hitList = [];
 
-    $("viewenhancement[data-type='hit']").each(function() {
+    $("viewenhancement[data-type='hit'].selected").each(function() {
       const $Hit = $(this);
       $Hit.data("view-original-text", $Hit.text());
 
