@@ -245,6 +245,7 @@ view.interaction = {
 
     $("#wertiview-body-content").html(data);
 
+    view.selector.select(view.filter);
     view.interaction.runActivity();
     view.interaction.initialInteractionState();
     chrome.runtime.sendMessage({
@@ -373,7 +374,7 @@ view.interaction = {
     view.activityHelper.restore();
 
     $("viewenhancement").each(function() {
-      $(this).replaceWith($(this).data("view-original-text"));
+      $(this).replaceWith($(this).data("original-text"));
     });
 
     view.lib.enableAnchors();
