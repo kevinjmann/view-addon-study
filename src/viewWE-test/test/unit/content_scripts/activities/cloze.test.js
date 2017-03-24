@@ -13,6 +13,7 @@ describe("cloze.js", function() {
     sandbox = sinon.sandbox.create();
     fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
     view.language = "ru";
+    view.selector.select("Sg");
   });
 
   afterEach(function() {
@@ -33,6 +34,7 @@ describe("cloze.js", function() {
       expect($("viewenhancement").length).to.be.above(0);
       expect($("[data-type='hit']").length).to.be.above(0);
       expect($("[data-type='clue']").length).to.be.above(0);
+      expect($(".selected").length).to.be.above(0);
     });
   });
 
