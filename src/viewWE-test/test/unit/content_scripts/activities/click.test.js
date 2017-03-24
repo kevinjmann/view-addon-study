@@ -65,7 +65,7 @@ describe("click.js", function() {
       );
       const setNumberOfExercisesSpy = sandbox.spy(view, "setNumberOfExercises");
 
-      const selector = "[data-type!='miss'].selected";
+      const selector = "viewenhancement[data-type!='miss'].selected";
 
       view.click.run();
 
