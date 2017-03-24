@@ -397,13 +397,11 @@ const toolbar = {
    * Set the href attribute for the identity sign-in/out link.
    */
   initSignInOutInterfaces: function() {
-    //chrome.storage.local.get("serverURL", function(res) {
-      //var link = res.serverURL + "/openid/authenticator.html";
-      // TODO: hardcoded, implement authenticator.html on this server
-    //});
-    const link = "http://sifnos.sfs.uni-tuebingen.de/VIEW/openid/authenticator.html";
-    toolbar.$cache.get(toolbar.selectorStart + "identity-signinlink").attr("link", link);
-    toolbar.$cache.get(toolbar.selectorStart + "identity-signoutlink").attr("link", link);
+    chrome.storage.local.get("serverURL", function(result) {
+      var authenticator = result.serverURL + "/authenticator.html";
+      toolbar.$cache.get(toolbar.selectorStart + "identity-signinlink").attr("link", authenticator);
+      toolbar.$cache.get(toolbar.selectorStart + "identity-signoutlink").attr("link", authenticator);
+    });
   },
 
   /**

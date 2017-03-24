@@ -287,19 +287,19 @@ describe("activityHelper.js", function() {
       });
     });
 
-    it("should call getNumberOfExercisesAndRequestSessionId(selector)", function() {
-      const getNumberOfExercisesAndRequestSessionIdSpy = sandbox.spy(
+    it("should call getNumberOfExercisesAndRequestTaskId(selector)", function() {
+      const getNumberOfExercisesAndRequestTaskIdSpy = sandbox.spy(
         view.activityHelper,
-        "getNumberOfExercisesAndRequestSessionId"
+        "getNumberOfExercisesAndRequestTaskId"
       );
 
       view.mc.run();
 
-      sinon.assert.calledOnce(getNumberOfExercisesAndRequestSessionIdSpy);
-      sinon.assert.calledWithExactly(getNumberOfExercisesAndRequestSessionIdSpy, ".viewinput");
+      sinon.assert.calledOnce(getNumberOfExercisesAndRequestTaskIdSpy);
+      sinon.assert.calledWithExactly(getNumberOfExercisesAndRequestTaskIdSpy, ".viewinput");
     });
 
-    describe("getNumberOfExercisesAndRequestSessionId", function() {
+    describe("getNumberOfExercisesAndRequestTaskId", function() {
       it("should call setNumberOfExercises(numberOfExercises)", function() {
         const setNumberOfExercisesSpy = sandbox.spy(view, "setNumberOfExercises");
 
@@ -315,12 +315,12 @@ describe("activityHelper.js", function() {
         sinon.assert.calledWithExactly(setNumberOfExercisesSpy, 19);
       });
 
-      it("should call requestToSendSessionDataAndGetSessionId()", function() {
-        const requestToSendSessionDataAndGetSessionIdSpy = sandbox.spy(view, "requestToSendSessionDataAndGetSessionId");
+      it("should call requestToSendTaskDataAndGetTaskId()", function() {
+        const requestToSendTaskDataAndGetTaskIdSpy = sandbox.spy(view, "requestToSendTaskDataAndGetTaskId");
 
-        view.activityHelper.getNumberOfExercisesAndRequestSessionId(".viewinput");
+        view.activityHelper.getNumberOfExercisesAndRequestTaskId(".viewinput");
 
-        sinon.assert.calledOnce(requestToSendSessionDataAndGetSessionIdSpy);
+        sinon.assert.calledOnce(requestToSendTaskDataAndGetTaskIdSpy);
       });
     });
 

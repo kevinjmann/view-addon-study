@@ -369,17 +369,16 @@ describe("view.js", function() {
     });
   });
 
-  describe("requestToSendSessionDataAndGetSessionId", function() {
-    it("should call createSessionData()", function() {
-      const createSessionDataSpy = sandbox.spy(view, "createSessionData");
+  describe("requestToSendTaskDataAndGetTaskId", function() {
+    it("should call createTaskData()", function() {
+      const createTaskDataSpy = sandbox.spy(view, "createTaskData");
 
-      view.requestToSendSessionDataAndGetSessionId();
+      view.requestToSendTaskDataAndGetTaskId();
 
-      sinon.assert.calledOnce(createSessionDataSpy);
+      sinon.assert.calledOnce(createTaskDataSpy);
     });
 
-    it("should create session data", function() {
-      const user = "some user";
+    it("should create task data", function() {
       const token = "some token";
       const url = "some url";
       const language = "some language";
@@ -388,7 +387,6 @@ describe("view.js", function() {
       const timestamp = 99;
       const numberOfExercises = 100;
 
-      view.user = user;
       view.token = token;
       view.url = url;
       view.language = language;
@@ -397,10 +395,9 @@ describe("view.js", function() {
       view.timestamp = timestamp;
       view.numberOfExercises = numberOfExercises;
 
-      const returnedSessionData = view.createSessionData();
+      const returnedTaskData = view.createTaskData();
 
-      expect(returnedSessionData).to.eql({
-        user,
+      expect(returnedTaskData).to.eql({
         token,
         url,
         language,
@@ -408,32 +405,32 @@ describe("view.js", function() {
         activity,
         timestamp,
         "number-of-exercises": numberOfExercises
-      })
+      });
     });
 
-    it("should send a request to get the session id from the server", function() {
-      const sessionData = view.createSessionData();
+    it("should send a request to get the task id from the server", function() {
+      const taskData = view.createTaskData();
 
-      view.requestToSendSessionDataAndGetSessionId();
+      view.requestToSendTaskDataAndGetTaskId();
 
       sinon.assert.calledOnce(chrome.runtime.sendMessage);
       sinon.assert.calledWith(chrome.runtime.sendMessage, {
-        msg: "send sessionData and get sessionId",
-        sessionData: sessionData,
-        serverSessionURL: "https://view.aleks.bg/act/session"
+        msg: "send taskData and get taskId",
+        taskData: taskData,
+        serverTaskURL: "https://view.aleks.bg/act/task"
       });
     });
   });
-  
-  describe("setSessionId", function() {
-    it("should set the session id", function() {
-      expect(view.sessionid).to.be.empty;
 
-      const sessionId = "some-session-id";
+  describe("setTaskId", function() {
+    it("should set the task id", function() {
+      expect(view.taskId).to.be.empty;
 
-      view.setSessionId(sessionId);
+      const taskId = "some-task-id";
 
-      expect(view.sessionid).to.equal(sessionId);
+      view.setTaskId(taskId);
+
+      expect(view.taskId).to.equal(taskId);
     });
   })
 });
