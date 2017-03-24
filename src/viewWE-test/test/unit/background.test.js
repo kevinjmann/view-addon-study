@@ -983,7 +983,7 @@ describe("background.js", function() {
     });
 
     it("should set user email and id and send a request to sign in the user", function() {
-      const userData = "user/email/id";
+      const userData = "user/email/id/authtoken";
 
       background.currentTabId = 5;
 
