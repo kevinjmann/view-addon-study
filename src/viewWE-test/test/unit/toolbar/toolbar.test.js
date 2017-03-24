@@ -27,6 +27,8 @@ describe("toolbar.js", function() {
 
   const toolbarStart = "#wertiview-toolbar-";
   const identityIdStart = toolbar.selectorStart + "identity-";
+  const globalServerURL = "https://view.aleks.bg";
+  const authenticatorURL = globalServerURL + "/authenticator.html";
 
   describe("Selector_Cache", function() {
     it("should get the wanted jquery selector", function() {
@@ -129,14 +131,14 @@ describe("toolbar.js", function() {
       expect($(toolbar.selectorStart + "abort-button").length).to.be.above(0);
       expect($(toolbar.selectorStart + "loading-image").length).to.be.above(0);
 
+      chrome.storage.local.get.yields({ serverURL: globalServerURL });
       toolbar.initSignInOutInterfaces(); // adds the link attribute
 
-      expect($(identityIdStart + "signinlink").attr("link"))
-      .to.equal("http://sifnos.sfs.uni-tuebingen.de/VIEW/openid/authenticator.html");
+      expect($(identityIdStart + "signinlink").attr("link")).to.equal(authenticatorURL);
       expect($(identityIdStart + "signedinstatus").length).to.be.above(0);
       expect($(identityIdStart + "signedinuseremail").length).to.be.above(0);
       expect($(identityIdStart + "signoutlink").attr("link"))
-      .to.equal("http://sifnos.sfs.uni-tuebingen.de/VIEW/openid/authenticator.html");
+      .to.equal(authenticatorURL);
 
       expect($(toolbar.selectorStart + "toggle-button").length).to.be.above(0);
     });
@@ -1009,8 +1011,7 @@ describe("toolbar.js", function() {
 
     describe("initSignInOutInterfaces", function() {
       it("should initialize the sign in and sign out interfaces", function() {
-        // TODO: This test is going to change when the authenticator works on the new server
-        const link = "http://sifnos.sfs.uni-tuebingen.de/VIEW/openid/authenticator.html";
+        const link = authenticatorURL;
 
         toolbar.initSignInOutInterfaces();
 
@@ -1046,7 +1047,7 @@ describe("toolbar.js", function() {
       it("should open the sign in window", function() {
         const windowOpenSpy = sandbox.spy(window, "open");
 
-        toolbar.initSignInOutInterfaces("https://view.aleks.bg");
+        toolbar.initSignInOutInterfaces(globalServerURL);
 
         toolbar.initSignInLink();
 
@@ -1089,7 +1090,7 @@ describe("toolbar.js", function() {
       it("should open the sign out window", function() {
         const windowOpenSpy = sandbox.spy(window, "open");
 
-        toolbar.initSignInOutInterfaces("https://view.aleks.bg");
+        toolbar.initSignInOutInterfaces(globalServerURL);
 
         toolbar.openSignOutWindow();
 

@@ -19,7 +19,7 @@ view.activityHelper = {
       createExercise
     );
 
-    view.activityHelper.getNumberOfExercisesAndRequestSessionId(".viewinput");
+    view.activityHelper.getNumberOfExercisesAndRequestTaskId(".viewinput");
 
     $("viewhint").on("click", view.activityHelper.hintHandler);
   },
@@ -109,16 +109,16 @@ view.activityHelper = {
 
   /**
    * Use the selector to retrieve the number of exercises, save
-   * the number and request the session id from the server.
+   * the number and request the task id from the server.
    *
    * @param {string} selector the selector to get the length of
    */
-  getNumberOfExercisesAndRequestSessionId: function(selector) {
+  getNumberOfExercisesAndRequestTaskId: function(selector) {
     const numberOfExercises = $(selector).length;
 
     view.setNumberOfExercises(numberOfExercises);
 
-    view.requestToSendSessionDataAndGetSessionId();
+    view.requestToSendTaskDataAndGetTaskId();
   },
 
   /**

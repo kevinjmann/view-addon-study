@@ -14,18 +14,14 @@ view.tracker = {
     const interactionData = {};
 
     interactionData["token"] = view.token;
-    interactionData["session-id"] = view.sessionid;
+    interactionData["task-id"] = view.taskId;
     interactionData["enhancement-id"] = $EnhancementElement.attr("id");
     interactionData["submission"] = submission;
     interactionData["is-correct"] = isCorrect;
 
-    const isClick = (view.activity === "click");
-
-    if (!isClick) {
-      const capType = view.lib.detectCapitalization($EnhancementElement.text());
-      interactionData["correct-answer"] = view.activityHelper.getCorrectAnswer($EnhancementElement, capType);
-      interactionData["used-hint"] = usedHint;
-    }
+    const capType = view.lib.detectCapitalization($EnhancementElement.text());
+    interactionData["correct-answer"] = view.activityHelper.getCorrectAnswer($EnhancementElement, capType);
+    interactionData["used-hint"] = usedHint;
 
     interactionData["timestamp"] = view.timestamp;
 

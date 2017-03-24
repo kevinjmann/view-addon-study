@@ -58,10 +58,10 @@ describe("click.js", function() {
       sinon.assert.calledWith(eventSpy, "click");
     });
 
-    it("should call getNumberOfExercisesAndRequestSessionId(selector)", function() {
-      const getNumberOfExercisesAndRequestSessionIdSpy = sandbox.spy(
+    it("should call getNumberOfExercisesAndRequestTaskId(selector)", function() {
+      const getNumberOfExercisesAndRequestTaskIdSpy = sandbox.spy(
         view.activityHelper,
-        "getNumberOfExercisesAndRequestSessionId"
+        "getNumberOfExercisesAndRequestTaskId"
       );
       const setNumberOfExercisesSpy = sandbox.spy(view, "setNumberOfExercises");
 
@@ -69,8 +69,8 @@ describe("click.js", function() {
 
       view.click.run();
 
-      sinon.assert.calledOnce(getNumberOfExercisesAndRequestSessionIdSpy);
-      sinon.assert.calledWithExactly(getNumberOfExercisesAndRequestSessionIdSpy, selector);
+      sinon.assert.calledOnce(getNumberOfExercisesAndRequestTaskIdSpy);
+      sinon.assert.calledWithExactly(getNumberOfExercisesAndRequestTaskIdSpy, selector);
 
       sinon.assert.calledOnce(setNumberOfExercisesSpy);
       sinon.assert.calledWithExactly(setNumberOfExercisesSpy, 20);

@@ -22,8 +22,8 @@ function processMessage(request) {
     case "call addServerMarkup":
       view.interaction.callAddServerMarkup(request);
       break;
-    case "call setSessionId":
-      view.setSessionId(request.sessionId);
+    case "call setTaskId":
+      view.setTaskId(request.taskId);
       break;
     case "call abort":
       view.interaction.callAbort(request);

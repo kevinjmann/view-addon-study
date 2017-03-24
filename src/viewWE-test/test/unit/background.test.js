@@ -531,114 +531,114 @@ describe("background.js", function() {
         });
       });
 
-      describe("sendSessionDataAndGetSessionId", function() {
-        it("should process the message 'send sessionData and get sessionId'", function() {
-          const sendSessionDataAndGetSessionIdSpy = sandbox.spy(background, "sendSessionDataAndGetSessionId");
+      describe("sendTaskDataAndGetTaskId", function() {
+        it("should process the message 'send taskData and get taskId'", function() {
+          const sendTaskDataAndGetTaskIdSpy = sandbox.spy(background, "sendTaskDataAndGetTaskId");
 
           const request = {
-            msg: "send sessionData and get sessionId",
-            serverSessionURL: "https://view.aleks.bg/act/session",
-            sessionData: "some session data"
+            msg: "send taskData and get taskId",
+            serverTaskURL: "https://view.aleks.bg/act/task",
+            taskData: "some task data"
           };
           const sender = {tab: {id: 5}};
 
           chrome.runtime.onMessage.trigger(request, sender);
 
-          sinon.assert.calledOnce(sendSessionDataAndGetSessionIdSpy);
-          sinon.assert.calledWithExactly(sendSessionDataAndGetSessionIdSpy, request);
+          sinon.assert.calledOnce(sendTaskDataAndGetTaskIdSpy);
+          sinon.assert.calledWithExactly(sendTaskDataAndGetTaskIdSpy, request);
         });
 
         it("should call ajaxPost(url, data, ajaxTimeout)", function() {
           const ajaxPostSpy = sandbox.spy(background, "ajaxPost");
 
-          const serverSessionURL = "https://view.aleks.bg/act/session";
-          const sessionData = "some session data";
+          const serverTaskURL = "https://view.aleks.bg/act/task";
+          const taskData = "some task data";
 
           const request = {
-            msg: "send sessionData and get sessionId",
-            serverSessionURL: serverSessionURL,
-            sessionData: sessionData
+            msg: "send taskData and get taskId",
+            serverTaskURL: serverTaskURL,
+            taskData: taskData
           };
 
-          background.sendSessionDataAndGetSessionId(request);
+          background.sendTaskDataAndGetTaskId(request);
 
           sinon.assert.calledOnce(ajaxPostSpy);
           sinon.assert.calledWithExactly(ajaxPostSpy,
-            serverSessionURL,
-            sessionData,
+            serverTaskURL,
+            taskData,
             10000
           );
         });
 
-        it("should succeed to send session data, get the session id and call callSetSessionId(data)", function() {
-          const callSetSessionIdSpy = sandbox.spy(background, "callSetSessionId");
+        it("should succeed to send task data, get the task id and call callSetTaskId(data)", function() {
+          const callSetTaskIdSpy = sandbox.spy(background, "callSetTaskId");
 
-          const serverSessionURL = "https://view.aleks.bg/act/session";
+          const serverTaskURL = "https://view.aleks.bg/act/task";
 
           const request = {
-            msg: "send sessionData and get sessionId",
-            serverSessionURL: serverSessionURL,
-            sessionData: "some session data"
+            msg: "send taskData and get taskId",
+            serverTaskURL: serverTaskURL,
+            taskData: "some task data"
           };
 
           sandbox.useFakeServer();
 
-          const sessionId = "some-session-id";
+          const taskId = "some-task-id";
 
-          const serverData = {"session-id": sessionId};
+          const serverData = {"task-id": taskId};
 
-          sandbox.server.respondWith("POST", serverSessionURL,
+          sandbox.server.respondWith("POST", serverTaskURL,
             [200, {"Content-Type": "application/json"}, JSON.stringify(serverData)]);
 
-          background.sendSessionDataAndGetSessionId(request);
+          background.sendTaskDataAndGetTaskId(request);
 
           sandbox.server.respond();
 
-          sinon.assert.calledOnce(callSetSessionIdSpy);
-          sinon.assert.calledWithExactly(callSetSessionIdSpy, sessionId);
+          sinon.assert.calledOnce(callSetTaskIdSpy);
+          sinon.assert.calledWithExactly(callSetTaskIdSpy, taskId);
         });
 
-        it("should succeed to send session data, but fail to receive data from the server", function() {
+        it("should succeed to send task data, but fail to receive data from the server", function() {
           const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
 
-          const serverSessionURL = "https://view.aleks.bg/act/session";
+          const serverTaskURL = "https://view.aleks.bg/act/task";
 
           const request = {
-            msg: "send sessionData and get sessionId",
-            serverSessionURL: serverSessionURL,
-            sessionData: "some session data"
+            msg: "send taskData and get taskId",
+            serverTaskURL: serverTaskURL,
+            taskData: "some task data"
           };
 
           sandbox.useFakeServer();
 
-          sandbox.server.respondWith("POST", serverSessionURL,
+          sandbox.server.respondWith("POST", serverTaskURL,
             [200, {"Content-Type": "application/json"}, ""]);
 
-          background.sendSessionDataAndGetSessionId(request);
+          background.sendTaskDataAndGetTaskId(request);
 
           sandbox.server.respond();
 
           sinon.assert.calledOnce(ajaxErrorSpy);
-          expect(ajaxErrorSpy.firstCall.args[1]).to.equal("no-session-id");
+          expect(ajaxErrorSpy.firstCall.args[1]).to.equal("no-task-id");
         });
 
-        it("should fail to send session data", function() {
+        it("should fail to send task data", function() {
           const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
 
-          const serverSessionURL = "https://view.aleks.bg/act/session";
+          const serverTaskURL = "https://view.aleks.bg/act/task";
 
           const request = {
-            msg: "send sessionData and get sessionId",
-            serverSessionURL: serverSessionURL,
-            sessionData: "some session data"
+            msg: "send taskData and get taskId",
+            serverTaskURL: serverTaskURL,
+            taskData: "some task data"
           };
 
           sandbox.useFakeServer();
 
-          sandbox.server.respondWith("POST", serverSessionURL,
+          sandbox.server.respondWith("POST", serverTaskURL,
             [404, {}, ""]);
 
-          background.sendSessionDataAndGetSessionId(request);
+          background.sendTaskDataAndGetTaskId(request);
 
           sandbox.server.respond();
 
@@ -671,7 +671,7 @@ describe("background.js", function() {
           const interactionData = "some interaction data";
 
           const request = {
-            msg: "send sessionData and get sessionId",
+            msg: "send taskData and get taskId",
             serverTrackingURL: serverTrackingURL,
             interactionData: interactionData
           };
@@ -788,14 +788,14 @@ describe("background.js", function() {
           sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
         });
 
-        it("should create the 'no-session-id'", function() {
+        it("should create the 'no-task-id'", function() {
           const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
 
-          const id = "no-session-id-notification";
-          const title = "No session id!";
-          const message = "The VIEW server did not send the session id.";
+          const id = "no-task-id-notification";
+          const title = "No task id!";
+          const message = "The VIEW server did not send the task id.";
 
-          background.ajaxError({}, "no-session-id");
+          background.ajaxError({}, "no-task-id");
 
           sinon.assert.calledOnce(createBasicNotificationSpy);
           sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
@@ -983,7 +983,7 @@ describe("background.js", function() {
     });
 
     it("should set user email and id and send a request to sign in the user", function() {
-      const userData = "user/email/id";
+      const userData = "user/email/id/authtoken";
 
       background.currentTabId = 5;
 
