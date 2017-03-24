@@ -83,6 +83,7 @@ describe("toolbar.js", function() {
 
       expect($(toolbar.selectorStart + "language-menu").length).to.be.above(0);
       expect($(toolbar.selectorStart + "language-unselected").val()).to.equal("unselected");
+      expect($(toolbar.selectorStart + "language-unselected").next().text()).to.equal("──────────");
       expect($(toolbar.selectorStart + "language-en").val()).to.equal("en");
       expect($(toolbar.selectorStart + "language-ru").val()).to.equal("ru");
 
@@ -91,12 +92,29 @@ describe("toolbar.js", function() {
 
       expect($(toolbar.selectorStart + "topic-menu-en").length).to.be.above(0);
       expect($(toolbar.selectorStart + "topic-unselected-en").val()).to.equal("unselected-en");
+      expect($(toolbar.selectorStart + "topic-unselected-en").next().text()).to.equal("──────────");
       expect($(toolbar.selectorStart + "topic-articles").val()).to.equal("articles");
       expect($(toolbar.selectorStart + "topic-determiners-en").val()).to.equal("determiners");
 
       expect($(toolbar.selectorStart + "topic-menu-ru").length).to.be.above(0);
       expect($(toolbar.selectorStart + "topic-unselected-ru").val()).to.equal("unselected-ru");
+      expect($(toolbar.selectorStart + "topic-unselected-ru").next().text()).to.equal("──────────");
       expect($(toolbar.selectorStart + "topic-nouns").val()).to.equal("nouns");
+
+      expect($(toolbar.selectorStart + "filter-menu").length).to.be.above(0);
+      expect($(toolbar.selectorStart + "filter-no-filter").val()).to.equal("no-filter");
+      expect($(toolbar.selectorStart + "filter-unselected").val()).to.equal("unselected");
+      expect($(toolbar.selectorStart + "filter-unselected").next().text()).to.equal("──────────");
+
+      const jsonData = fixture.load("fixtures/json/nouns.json", true);
+
+      toolbar.topics = {nouns: jsonData};
+
+      toolbar.checkForFilters("ru", "nouns");
+
+      expect($(toolbar.selectorStart + "filter-all").val()).to.equal("all");
+      expect($(toolbar.selectorStart + "filter-Sg").val()).to.equal("Sg");
+      expect($(toolbar.selectorStart + "filter-Pl").val()).to.equal("Pl");
 
       expect($(toolbar.selectorStart + "activity-menu").length).to.be.above(0);
       expect($(toolbar.selectorStart + "activity-unselected").val()).to.equal("unselected");
@@ -400,7 +418,6 @@ describe("toolbar.js", function() {
 
       describe("toggleTopicMenu", function() {
         it("should show the selected topic menu and call updateActivities(language, topic)", function() {
-          const updateActivitiesSpy = sandbox.spy(toolbar, "updateActivities");
           const selectedLanguage = "en";
           const currentLanguage = "en";
           const topicMenu = toolbar.selectorStart + "topic-menu-" + currentLanguage;
@@ -413,6 +430,168 @@ describe("toolbar.js", function() {
           expect($(topicMenu).hasClass("selected-toolbar-topic-menu")).to.be.true;
 
           expect($(topicMenu).is(":visible")).to.be.true;
+        });
+
+        it("should call checkForFilters(language, topic)", function() {
+          const checkForFiltersSpy = sandbox.spy(toolbar, "checkForFilters");
+          const selectedLanguage = "en";
+          const currentLanguage = "en";
+          const topicMenu = toolbar.selectorStart + "topic-menu-" + currentLanguage;
+          const topic = "articles";
+
+          $(topicMenu).val(topic);
+
+          toolbar.toggleTopicMenu(selectedLanguage, currentLanguage);
+
+          sinon.assert.calledOnce(checkForFiltersSpy);
+          sinon.assert.calledWithExactly(checkForFiltersSpy, selectedLanguage, topic);
+        });
+
+        describe("checkForFilters", function() {
+          it("should hide the filter menu", function() {
+            toolbar.checkForFilters("ru", "nouns");
+
+            expect($(toolbar.selectorStart + "filter-menu").is(":hidden")).to.be.true;
+          });
+
+          it("should remove all options followed after the horizontal line", function() {
+            const jsonData = fixture.load("fixtures/json/nouns.json", true);
+
+            toolbar.topics = {nouns: jsonData};
+
+            toolbar.checkForFilters("ru", "nouns");
+
+            // noun filter options do exist
+            expect($(toolbar.selectorStart + "filter-unselected").next().next().length).to.be.above(0);
+
+            toolbar.checkForFilters("en", "articles");
+
+            // articles filter options do not exist, previous filter options were removed
+            expect($(toolbar.selectorStart + "filter-unselected").next().next().length).to.equal(0);
+          });
+
+          it("should select the 'no-filter' option", function() {
+            toolbar.checkForFilters("ru", "nouns");
+
+            expect($(toolbar.selectorStart + "filter-menu").val()).to.equal("no-filter");
+          });
+
+          it("should call showFilterMenu(filters), as filters exist for the topic", function() {
+            const showFilterMenuSpy = sandbox.spy(toolbar, "showFilterMenu");
+            const jsonData = fixture.load("fixtures/json/nouns.json", true);
+
+            toolbar.topics = {nouns: jsonData};
+
+            const language = "ru";
+            const topic = "nouns";
+            const filters = toolbar.topics[topic][language].filters;
+
+            toolbar.checkForFilters(language, topic);
+
+            sinon.assert.calledOnce(showFilterMenuSpy);
+            sinon.assert.calledWithExactly(showFilterMenuSpy, filters);
+          });
+
+          describe("showFilterMenu", function() {
+            it("should select the option 'unselected", function() {
+              const jsonData = fixture.load("fixtures/json/nouns.json", true);
+
+              const filters = jsonData.ru.filters;
+
+              toolbar.showFilterMenu(filters);
+
+              expect($(toolbar.selectorStart + "filter-menu").val()).to.equal("unselected");
+            });
+
+            it("should call addFilterOptions(filters, $FilterMenu)", function() {
+              const addFilterOptionsSpy = sandbox.spy(toolbar, "addFilterOptions");
+              const jsonData = fixture.load("fixtures/json/nouns.json", true);
+
+              const filters = jsonData.ru.filters;
+
+              toolbar.showFilterMenu(filters);
+
+              sinon.assert.calledOnce(addFilterOptionsSpy);
+              sinon.assert.calledWithExactly(addFilterOptionsSpy,
+                filters,
+                toolbar.$cache.get(toolbar.selectorStart + "filter-menu")
+              );
+            });
+
+            it("should have options with filter specific", function() {
+              const jsonData = fixture.load("fixtures/json/nouns.json", true);
+
+              const filters = jsonData.ru.filters;
+
+              toolbar.showFilterMenu(filters);
+
+              expect($(toolbar.selectorStart + "filter-menu").val()).to.equal("unselected");
+            });
+
+            it("should show the filter menu", function() {
+              const jsonData = fixture.load("fixtures/json/nouns.json", true);
+
+              const filters = jsonData.ru.filters;
+
+              toolbar.showFilterMenu(filters);
+
+              expect($(toolbar.selectorStart + "filter-menu").is(":visible")).to.be.true;
+            });
+          });
+
+          it("should not call showFilterMenu(filters), as no filters exist for the topic", function() {
+            const showFilterMenuSpy = sandbox.spy(toolbar, "showFilterMenu");
+            const jsonData = fixture.load("fixtures/json/articles.json", true);
+
+            toolbar.topics = {articles: jsonData};
+
+            const language = "en";
+            const topic = "articles";
+
+            toolbar.checkForFilters(language, topic);
+
+            sinon.assert.notCalled(showFilterMenuSpy);
+          });
+
+          it("should not call showFilterMenu(filters), as there is no json data for the topic", function() {
+            const showFilterMenuSpy = sandbox.spy(toolbar, "showFilterMenu");
+            const jsonData = fixture.load("fixtures/json/articles.json", true);
+
+            toolbar.topics = {articles: jsonData};
+
+            const language = "en";
+            const topic = "unknown topic";
+
+            toolbar.checkForFilters(language, topic);
+
+            sinon.assert.notCalled(showFilterMenuSpy);
+          });
+
+          it("should not call showFilterMenu(filters), as there is no json data for the topic-language combination", function() {
+            const showFilterMenuSpy = sandbox.spy(toolbar, "showFilterMenu");
+            const jsonData = fixture.load("fixtures/json/articles.json", true);
+
+            toolbar.topics = {articles: jsonData};
+
+            const language = "unknown language";
+            const topic = "articles";
+
+            toolbar.checkForFilters(language, topic);
+
+            sinon.assert.notCalled(showFilterMenuSpy);
+          });
+        });
+
+        it("should call updateActivities(language, topic)", function() {
+          const updateActivitiesSpy = sandbox.spy(toolbar, "updateActivities");
+          const selectedLanguage = "en";
+          const currentLanguage = "en";
+          const topicMenu = toolbar.selectorStart + "topic-menu-" + currentLanguage;
+          const topic = "articles";
+
+          $(topicMenu).val(topic);
+
+          toolbar.toggleTopicMenu(selectedLanguage, currentLanguage);
 
           sinon.assert.calledOnce(updateActivitiesSpy);
           sinon.assert.calledWithExactly(updateActivitiesSpy, selectedLanguage, topic);
@@ -573,6 +752,21 @@ describe("toolbar.js", function() {
         sinon.assert.calledWith(eventSpy, "change");
       });
 
+      it("should call checkForFilters(language, topic) on topic change", function() {
+        const checkForFiltersSpy = sandbox.spy(toolbar, "checkForFilters");
+        const language = "en";
+        const topic = "articles";
+
+        toolbar.initTopicMenu();
+
+        $(toolbar.selectorStart + "language-menu").val(language);
+
+        $(toolbar.selectorStart + "topic-menu-" + language).val(topic).trigger("change");
+
+        sinon.assert.calledOnce(checkForFiltersSpy);
+        sinon.assert.calledWithExactly(checkForFiltersSpy, language, topic);
+      });
+
       // TODO: Should we do this for each topic menu?
       it("should call updateActivities(language, topic) on topic change", function() {
         const updateActivitiesSpy = sandbox.spy(toolbar, "updateActivities");
@@ -683,13 +877,20 @@ describe("toolbar.js", function() {
           sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "create unselectedNotification"});
         });
 
-        it("should set language, topic, activity, timestamp and call prepareToEnhance()", function() {
+        it("should set language, topic, filter, activity, timestamp and call prepareToEnhance()", function() {
           const prepareToEnhanceSpy = sandbox.spy(toolbar, "prepareToEnhance");
           const dateNowSpy = sandbox.spy(Date, "now");
 
-          const language = "en";
-          const topic = "articles";
+          const language = "ru";
+          const topic = "nouns";
+          const filter = "Sg";
           const activity = "color";
+
+          const jsonData = fixture.load("fixtures/json/nouns.json", true);
+
+          toolbar.topics = {nouns: jsonData};
+
+          toolbar.checkForFilters(language, topic);
 
           chrome.storage.local.set.yields(); // make set synchronous
 
@@ -698,6 +899,8 @@ describe("toolbar.js", function() {
           $(toolbar.selectorStart + "topic-menu-" + language)
           .addClass("selected-toolbar-topic-menu")
           .val(topic);
+
+          $(toolbar.selectorStart + "filter-menu").val(filter);
 
           $(toolbar.selectorStart + "activity-menu").val(activity);
 
@@ -709,10 +912,11 @@ describe("toolbar.js", function() {
 
           sinon.assert.calledOnce(chrome.storage.local.set);
           sinon.assert.calledWith(chrome.storage.local.set, {
-            language: language,
-            topic: topic,
-            activity: activity,
-            timestamp: timestamp
+            language,
+            topic,
+            filter,
+            activity,
+            timestamp
           });
 
           sinon.assert.calledOnce(prepareToEnhanceSpy);
@@ -932,6 +1136,7 @@ describe("toolbar.js", function() {
 
         const language = "unselected";
         const topic = "unselected";
+        const filter = "no-filter";
         const activity = "unselected";
         const userEmail = "";
         const enabled = false;
@@ -941,7 +1146,7 @@ describe("toolbar.js", function() {
         toolbar.restoreSelections();
 
         sinon.assert.calledOnce(restoreSelectionMenusSpy);
-        sinon.assert.calledWithExactly(restoreSelectionMenusSpy, language, topic, activity);
+        sinon.assert.calledWithExactly(restoreSelectionMenusSpy, language, topic, filter, activity);
 
         sinon.assert.calledOnce(selectTopicMenuSpy);
         sinon.assert.calledWithExactly(selectTopicMenuSpy, language);
@@ -959,24 +1164,30 @@ describe("toolbar.js", function() {
         const verifySignInStatusSpy = sandbox.spy(toolbar, "verifySignInStatus");
         const restoreAutoEnhanceSpy = sandbox.spy(toolbar, "restoreAutoEnhance");
 
-        const language = "en";
-        const topic = "articles";
+        const language = "ru";
+        const topic = "nouns";
+        const filter = "Sg";
         const activity = "color";
         const userEmail = "some.mail";
         const enabled = true;
 
         chrome.storage.local.get.yields({
-          language: language,
-          topic: topic,
-          activity: activity,
-          userEmail: userEmail,
-          enabled: enabled
+          language,
+          topic,
+          filter,
+          activity,
+          userEmail,
+          enabled
         });
+
+        const jsonData = fixture.load("fixtures/json/nouns.json", true);
+
+        toolbar.topics = {nouns: jsonData};
 
         toolbar.restoreSelections();
 
         sinon.assert.calledOnce(restoreSelectionMenusSpy);
-        sinon.assert.calledWithExactly(restoreSelectionMenusSpy, language, topic, activity);
+        sinon.assert.calledWithExactly(restoreSelectionMenusSpy, language, topic, filter, activity);
 
         sinon.assert.calledOnce(selectTopicMenuSpy);
         sinon.assert.calledWithExactly(selectTopicMenuSpy, language);
@@ -990,24 +1201,31 @@ describe("toolbar.js", function() {
 
       describe("restoreSelectionMenus", function() {
         it("should restore all usual selections of the selection menus", function() {
-          const language = "en";
-          const topic = "articles";
+          const language = "ru";
+          const topic = "nouns";
+          const filter = "Sg";
           const activity = "color";
           const selected = "selected";
 
-          toolbar.restoreSelectionMenus(language, topic, activity);
+          const jsonData = fixture.load("fixtures/json/nouns.json", true);
+
+          toolbar.topics = {nouns: jsonData};
+
+          toolbar.restoreSelectionMenus(language, topic, filter, activity);
 
           expect($(toolbar.selectorStart + "language-" + language).prop(selected)).to.be.true;
           expect($(toolbar.selectorStart + "topic-" + topic).prop(selected)).to.be.true;
+          expect($(toolbar.selectorStart + "filter-" + filter).prop(selected)).to.be.true;
           expect($(toolbar.selectorStart + "activity-" + activity).prop(selected)).to.be.true;
         });
 
         it("should restore the determiners special case", function() {
           const language = "en";
           const topic = "determiners";
+          const filter = "no-filter";
           const activity = "color";
 
-          toolbar.restoreSelectionMenus(language, topic, activity);
+          toolbar.restoreSelectionMenus(language, topic, filter, activity);
 
           expect($(toolbar.selectorStart + "topic-" + topic + "-" + language).prop("selected")).to.be.true;
         });
@@ -1017,6 +1235,7 @@ describe("toolbar.js", function() {
         //           //
         //   const language = "en";
         //   const topic = "Preps";
+        //   const filter = "no-filter";
         //   const activity = "color";
         //
         //   toolbar.restoreSelectionMenus(language, topic, activity);

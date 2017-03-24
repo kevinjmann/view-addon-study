@@ -212,9 +212,34 @@ const toolbar = {
 
     if (selectedLanguage === currentLanguage) {
       $topicMenu.addClass(selectedTopicMenu).show();
-      toolbar.updateActivities(selectedLanguage, $topicMenu.val());
+
+      const topic = $topicMenu.val();
+
+      toolbar.checkForFilters(selectedLanguage, topic);
+      toolbar.updateActivities(selectedLanguage, topic);
     } else {
       $topicMenu.removeClass(selectedTopicMenu).hide();
+    }
+  },
+
+  /**
+   * Check if filters are available for the topic and language selection.
+   *
+   * @param language the current language
+   * @param topic the current topic
+   */
+  checkForFilters: function(language, topic) {
+    toolbar.$cache.get(toolbar.selectorStart + "filter-menu").hide();
+    toolbar.$cache.get(toolbar.selectorStart + "filter-unselected").next().nextAll().remove();
+    toolbar.$cache.get(toolbar.selectorStart + "filter-menu").val("no-filter");
+
+    if(toolbar.topics[topic] &&
+      toolbar.topics[topic][language]){
+      const filters = toolbar.topics[topic][language].filters;
+
+      if(filters){
+        toolbar.showFilterMenu(filters);
+      }
     }
   },
 
@@ -234,7 +259,7 @@ const toolbar = {
     activitySelectors[unselected].prop("disabled", false).prop("selected", true).show();
 
     if (
-      language == unselected ||
+      language === unselected ||
       topic.startsWith(unselected) ||
       typeof toolbar.topics[topic] === undefinedType ||
       typeof toolbar.topics[topic][language] === undefinedType) {
@@ -294,7 +319,43 @@ const toolbar = {
       const language = toolbar.$cache.get(toolbar.selectorStart + "language-menu").val();
       const topic = $(this).val();
 
+      toolbar.checkForFilters(language, topic);
+
       toolbar.updateActivities(language, topic);
+    });
+  },
+
+  /**
+   * Show the filter menu with the filters defined for the topic.
+   *
+   * @param {Object} filters the available filters for the topic
+   */
+  showFilterMenu: function(filters) {
+    const $FilterMenu = toolbar.$cache.get(toolbar.selectorStart + "filter-menu");
+
+    $FilterMenu.val("unselected");
+
+    toolbar.addFilterOptions(filters, $FilterMenu);
+
+    $FilterMenu.show();
+  },
+
+  /**
+   * Add filter options to the filter menu.
+   *
+   * @param {Object} filters the available filters for the topic
+   * @param {Object} $FilterMenu the filter menu the options are added to
+   */
+  addFilterOptions: function(filters, $FilterMenu) {
+    $.each(filters, function(filter) {
+      const filterObject = filters[filter];
+      const $Option = $("<option>");
+
+      $Option.attr("id", filterObject.id);
+      $Option.val(filterObject.val);
+      $Option.text(filterObject.text);
+
+      $FilterMenu.append($Option);
     });
   },
 
@@ -328,6 +389,7 @@ const toolbar = {
     const timestamp = Date.now();
     const language = toolbar.$cache.get(toolbar.selectorStart + "language-menu").val();
     const topic = $(".selected-toolbar-topic-menu").val();
+    const filter = toolbar.$cache.get(toolbar.selectorStart + "filter-menu").val();
     const activity = toolbar.$cache.get(toolbar.selectorStart + "activity-menu").val();
     const unselected = "unselected";
 
@@ -340,6 +402,7 @@ const toolbar = {
       chrome.storage.local.set({
         language: language,
         topic: topic,
+        filter: filter,
         activity: activity,
         timestamp: timestamp
       }, toolbar.prepareToEnhance);
@@ -470,18 +533,19 @@ const toolbar = {
     chrome.storage.local.get([
       "language",
       "topic",
+      "filter",
       "activity",
       "userEmail",
-      "enabled"], function(res) {
+      "enabled"
+    ], function(res) {
       const language = res.language || "unselected";
       const topic = res.topic || "unselected";
+      const filter = res.filter || "no-filter";
       const activity = res.activity || "unselected";
       const userEmail = res.userEmail || "";
       const enabled = res.enabled || false;
 
-      toolbar.restoreSelectionMenus(language, topic, activity);
-
-      toolbar.selectTopicMenu(language);
+      toolbar.restoreSelectionMenus(language, topic, filter, activity);
 
       toolbar.verifySignInStatus(userEmail);
 
@@ -494,9 +558,10 @@ const toolbar = {
    *
    * @param {string} language the stored language
    * @param {string} topic the stored topic
+   * @param {string} filter the stored filter
    * @param {string} activity the stored activity
    */
-  restoreSelectionMenus: function(language, topic, activity) {
+  restoreSelectionMenus: function(language, topic, filter, activity) {
     const selected = "selected";
 
     toolbar.$cache.get(toolbar.selectorStart + "language-" + language).prop(selected, true);
@@ -504,12 +569,16 @@ const toolbar = {
     const topicMenu = toolbar.selectorStart + "topic-" + topic;
 
     // special case Dets and Preps are shared between en, de and es
-    if (topic == "determiners" || topic == "Preps") {
+    if (topic === "determiners" || topic === "Preps") {
       toolbar.$cache.get(topicMenu + "-" + language).prop(selected, true);
     }
     else {
       toolbar.$cache.get(topicMenu).prop(selected, true);
     }
+
+    toolbar.selectTopicMenu(language);
+
+    toolbar.$cache.get(toolbar.selectorStart + "filter-" + filter).prop(selected, true);
 
     toolbar.$cache.get(toolbar.selectorStart + "activity-" + activity).prop(selected, true);
   },
@@ -521,7 +590,7 @@ const toolbar = {
    * @param {string} userEmail the email address of the user
    */
   verifySignInStatus: function(userEmail) {
-    if (userEmail == "") {
+    if (userEmail === "") {
       toolbar.signOut();
     }
     else {
