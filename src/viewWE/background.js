@@ -454,8 +454,8 @@ const background = {
   },
 
   /**
-   * Set user email and user id and send a request to the toolbar to
-   * sign in the user afterwards.
+   * Set user email, user id, and authentication token and send a request to the
+   * toolbar to sign in the user.
    *
    * @param {string} userData "/" delimited string with user data:
    * - name
