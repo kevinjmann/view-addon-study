@@ -237,7 +237,7 @@ const view = {
   },
 
   /**
-   * Create task data to be send to the server.
+   * Create task data to be sent to the server.
    *
    * @returns {object} the data of the current task
    */
