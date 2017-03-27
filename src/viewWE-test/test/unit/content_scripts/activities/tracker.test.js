@@ -13,6 +13,7 @@ describe("tracker.js", function() {
     sandbox = sinon.sandbox.create();
     fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
     view.language = "ru";
+    view.userid = "some-id";
   });
 
   afterEach(function() {
@@ -37,6 +38,27 @@ describe("tracker.js", function() {
   });
 
   describe("trackData", function() {
+    it("should not do anything if the user is logged out", function() {
+      const detectCapitalizationSpy = sandbox.spy(view.lib, "detectCapitalization");
+
+      const $EnhancementElement = $("[data-type='hit']").first();
+      const submission = "Усвоением";
+      const isCorrect = false;
+      const usedHint = false;
+
+      view.activity = "mc";
+      view.userid = "";
+
+      view.tracker.trackData(
+        $EnhancementElement,
+        submission,
+        isCorrect,
+        usedHint
+      );
+
+      sinon.assert.notCalled(detectCapitalizationSpy);
+    });
+
     it("should call detectCapitalization(word)", function() {
       const detectCapitalizationSpy = sandbox.spy(view.lib, "detectCapitalization");
 
