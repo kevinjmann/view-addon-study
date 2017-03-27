@@ -31,15 +31,7 @@ view.activityHelper = {
     const hitList = [];
 
     $("viewenhancement[data-type='hit'].selected").each(function() {
-      const $Hit = $(this);
-      $Hit.data("view-original-text", $Hit.text());
-
-      hitList.push($Hit);
-    });
-
-    $("viewenhancement[data-type='clue']").each(function() {
-      const $Clue = $(this);
-      $Clue.data("view-original-text", $Clue.text());
+      hitList.push($(this));
     });
 
     return hitList;

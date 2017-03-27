@@ -3,16 +3,13 @@ view.click = {
    * Run the click activity.
    */
   run: function() {
-    $("viewenhancement").each(function() {
-      const $EnhancementElement = $(this);
-      $EnhancementElement.data("view-original-text", $EnhancementElement.text());
+    const $Enhancements = $("viewenhancement");
 
-      $EnhancementElement.addClass("click-style-pointer");
-    });
+    $Enhancements.addClass("click-style-pointer");
 
     view.activityHelper.getNumberOfExercisesAndRequestTaskId("viewenhancement[data-type!='miss'].selected");
 
-    $("viewenhancement").on("click", view.click.handler);
+    $Enhancements.on("click", view.click.handler);
   },
 
   /**
