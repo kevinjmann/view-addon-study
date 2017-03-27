@@ -13,6 +13,7 @@ describe("activityHelper.js", function() {
     sandbox = sinon.sandbox.create();
     fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
     view.language = "ru";
+    view.userid = "";
     view.selector.select("Sg");
   });
 
@@ -311,6 +312,8 @@ describe("activityHelper.js", function() {
 
         view.percentageOfExercises = 100;
 
+        view.userid = "some-id";
+
         view.mc.run();
 
         sinon.assert.calledOnce(setNumberOfExercisesSpy);
@@ -319,6 +322,8 @@ describe("activityHelper.js", function() {
 
       it("should call requestToSendTaskDataAndGetTaskId()", function() {
         const requestToSendTaskDataAndGetTaskIdSpy = sandbox.spy(view, "requestToSendTaskDataAndGetTaskId");
+
+        view.userid = "some-id";
 
         view.activityHelper.getNumberOfExercisesAndRequestTaskId(".viewinput");
 

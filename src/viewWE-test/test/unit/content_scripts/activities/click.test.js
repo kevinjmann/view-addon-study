@@ -13,6 +13,7 @@ describe("click.js", function() {
     sandbox = sinon.sandbox.create();
     fixture.load("/fixtures/ru-nouns-click.html");
     view.selector.select("Sg");
+    view.userid = "";
   });
 
   afterEach(function() {
@@ -66,6 +67,8 @@ describe("click.js", function() {
       const setNumberOfExercisesSpy = sandbox.spy(view, "setNumberOfExercises");
 
       const selector = "viewenhancement[data-type!='miss'].selected";
+
+      view.userid = "some-id";
 
       view.click.run();
 
