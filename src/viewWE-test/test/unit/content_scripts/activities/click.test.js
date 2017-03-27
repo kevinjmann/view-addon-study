@@ -13,6 +13,7 @@ describe("click.js", function() {
     sandbox = sinon.sandbox.create();
     fixture.load("/fixtures/ru-nouns-click.html");
     view.selector.select("Sg");
+    view.userid = "";
   });
 
   afterEach(function() {
@@ -66,6 +67,8 @@ describe("click.js", function() {
       const setNumberOfExercisesSpy = sandbox.spy(view, "setNumberOfExercises");
 
       const selector = "viewenhancement[data-type!='miss'].selected";
+
+      view.userid = "some-id";
 
       view.click.run();
 
@@ -132,14 +135,12 @@ describe("click.js", function() {
         expect($EnhancementElement.hasClass(clickStylePointer)).to.be.false;
       });
 
-      it("should call trackData($Enhancement,submission, isCorrect, usedHint), as the user is logged in", function() {
+      it("should call trackData($Enhancement,submission, isCorrect, usedHint)", function() {
         const trackDataSpy = sandbox.spy(view.tracker, "trackData");
 
         const $EnhancementElement = $("[data-type='hit'].selected").first();
         const isCorrect = true;
         const usedHint = false;
-
-        view.userid = "someid";
 
         view.click.run();
 

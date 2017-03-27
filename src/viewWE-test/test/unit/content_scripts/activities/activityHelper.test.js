@@ -13,6 +13,7 @@ describe("activityHelper.js", function() {
     sandbox = sinon.sandbox.create();
     fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
     view.language = "ru";
+    view.userid = "";
     view.selector.select("Sg");
   });
 
@@ -311,6 +312,8 @@ describe("activityHelper.js", function() {
 
         view.percentageOfExercises = 100;
 
+        view.userid = "some-id";
+
         view.mc.run();
 
         sinon.assert.calledOnce(setNumberOfExercisesSpy);
@@ -319,6 +322,8 @@ describe("activityHelper.js", function() {
 
       it("should call requestToSendTaskDataAndGetTaskId()", function() {
         const requestToSendTaskDataAndGetTaskIdSpy = sandbox.spy(view, "requestToSendTaskDataAndGetTaskId");
+
+        view.userid = "some-id";
 
         view.activityHelper.getNumberOfExercisesAndRequestTaskId(".viewinput");
 
@@ -369,21 +374,7 @@ describe("activityHelper.js", function() {
         );
       });
 
-      it("should not call trackData, as the userid is undefined", function() {
-        const trackDataSpy = sandbox.spy(view.tracker, "trackData");
-
-        view.cloze.run();
-
-        const $Hint = $("viewhint").first();
-
-        view.userid = "";
-
-        $Hint.trigger("click");
-
-        sinon.assert.notCalled(trackDataSpy);
-      });
-
-      it("should call trackData, as the userid is defined, the element box had some value", function() {
+      it("should call trackData, while the element box has some value", function() {
         const trackDataSpy = sandbox.spy(view.tracker, "trackData");
 
         view.cloze.run();
@@ -396,8 +387,6 @@ describe("activityHelper.js", function() {
         const usedHint = true;
 
         $ElementBox.val(submission);
-
-        view.userid = "someid";
 
         $Hint.trigger("click");
 
@@ -412,7 +401,7 @@ describe("activityHelper.js", function() {
         );
       });
 
-      it("should call trackData, as the userid is defined, the element box had no value", function() {
+      it("should call trackData, while the element box has no value", function() {
         const trackDataSpy = sandbox.spy(view.tracker, "trackData");
 
         view.cloze.run();
@@ -423,8 +412,6 @@ describe("activityHelper.js", function() {
         const submission = "no submission";
         const isCorrect = true;
         const usedHint = true;
-
-        view.userid = "someid";
 
         $Hint.trigger("click");
 
@@ -481,22 +468,7 @@ describe("activityHelper.js", function() {
       sinon.assert.calledWithExactly(processIncorrectSpy, $ElementBox);
     });
 
-    it("should not call trackData, as the userid is undefined", function() {
-      const trackDataSpy = sandbox.spy(view.tracker, "trackData");
-
-      view.mc.run();
-
-      const $ElementBox = $(".viewinput").first();
-      const answer = $ElementBox.data("view-answer");
-
-      view.userid = "";
-
-      $ElementBox.val(answer).trigger("change");
-
-      sinon.assert.notCalled(trackDataSpy);
-    });
-
-    it("should call trackData($Enhancement, submission, isCorrect, usedHint), as the userid is defined", function() {
+    it("should call trackData($Enhancement, submission, isCorrect, usedHint)", function() {
       const trackDataSpy = sandbox.spy(view.tracker, "trackData");
 
       view.mc.run();
@@ -506,8 +478,6 @@ describe("activityHelper.js", function() {
       const answer = $ElementBox.data("view-answer");
       const isCorrect = true;
       const usedHint = false;
-
-      view.userid = "someid";
 
       $ElementBox.val(answer).trigger("change");
 

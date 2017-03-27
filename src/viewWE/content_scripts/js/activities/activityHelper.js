@@ -110,15 +110,18 @@ view.activityHelper = {
   /**
    * Use the selector to retrieve the number of exercises, save
    * the number and request the task id from the server.
+   * The user has to be logged in.
    *
    * @param {string} selector the selector to get the length of
    */
   getNumberOfExercisesAndRequestTaskId: function(selector) {
-    const numberOfExercises = $(selector).length;
+    if (view.userid) {
+      const numberOfExercises = $(selector).length;
 
-    view.setNumberOfExercises(numberOfExercises);
+      view.setNumberOfExercises(numberOfExercises);
 
-    view.requestToSendTaskDataAndGetTaskId();
+      view.requestToSendTaskDataAndGetTaskId();
+    }
   },
 
   /**
@@ -136,14 +139,12 @@ view.activityHelper = {
 
     view.activityHelper.processCorrect($ElementBox, "provided");
 
-    if (view.userid) {
-      view.tracker.trackData(
-        $EnhancementElement,
-        submission,
-        isCorrect,
-        usedHint
-      );
-    }
+    view.tracker.trackData(
+      $EnhancementElement,
+      submission,
+      isCorrect,
+      usedHint
+    );
   },
 
   /**
@@ -169,14 +170,12 @@ view.activityHelper = {
       view.activityHelper.processIncorrect($ElementBox);
     }
 
-    if (view.userid) {
-      view.tracker.trackData(
-        $EnhancementElement,
-        submission,
-        isCorrect,
-        usedHint
-      );
-    }
+    view.tracker.trackData(
+      $EnhancementElement,
+      submission,
+      isCorrect,
+      usedHint
+    );
   },
 
   /**
