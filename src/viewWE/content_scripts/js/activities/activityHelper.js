@@ -139,14 +139,12 @@ view.activityHelper = {
 
     view.activityHelper.processCorrect($ElementBox, "provided");
 
-    if (view.userid) {
-      view.tracker.trackData(
-        $EnhancementElement,
-        submission,
-        isCorrect,
-        usedHint
-      );
-    }
+    view.tracker.trackData(
+      $EnhancementElement,
+      submission,
+      isCorrect,
+      usedHint
+    );
   },
 
   /**
@@ -172,14 +170,12 @@ view.activityHelper = {
       view.activityHelper.processIncorrect($ElementBox);
     }
 
-    if (view.userid) {
-      view.tracker.trackData(
-        $EnhancementElement,
-        submission,
-        isCorrect,
-        usedHint
-      );
-    }
+    view.tracker.trackData(
+      $EnhancementElement,
+      submission,
+      isCorrect,
+      usedHint
+    );
   },
 
   /**

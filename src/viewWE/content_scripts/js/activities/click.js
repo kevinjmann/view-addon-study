@@ -35,14 +35,12 @@ view.click = {
 
     $EnhancementElement.removeClass("click-style-pointer");
 
-    if (view.userid) {
-      view.tracker.trackData(
-        $EnhancementElement,
-        $EnhancementElement.text(),
-        isCorrect,
-        usedHint
-      );
-    }
+    view.tracker.trackData(
+      $EnhancementElement,
+      $EnhancementElement.text(),
+      isCorrect,
+      usedHint
+    );
 
     $EnhancementElement.off("click");
   }

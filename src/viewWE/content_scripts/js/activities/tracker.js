@@ -1,7 +1,7 @@
 view.tracker = {
   /**
    * Tracks data from the user-interaction with the activity and sends
-   * the data to the server.
+   * the data to the server. The user has to be logged in.
    *
    * @param {object} $EnhancementElement the current enhancement element the
    * user is interacting with
@@ -11,21 +11,23 @@ view.tracker = {
    * @param usedHint true if a hint was used, false otherwise
    */
   trackData: function($EnhancementElement, submission, isCorrect, usedHint) {
-    const interactionData = {};
+    if (view.userid) {
+      const interactionData = {};
 
-    interactionData["token"] = view.token;
-    interactionData["task-id"] = view.taskId;
-    interactionData["enhancement-id"] = $EnhancementElement.attr("id");
-    interactionData["submission"] = submission;
-    interactionData["is-correct"] = isCorrect;
+      interactionData["token"] = view.token;
+      interactionData["task-id"] = view.taskId;
+      interactionData["enhancement-id"] = $EnhancementElement.attr("id");
+      interactionData["submission"] = submission;
+      interactionData["is-correct"] = isCorrect;
 
-    const capType = view.lib.detectCapitalization($EnhancementElement.text());
-    interactionData["correct-answer"] = view.activityHelper.getCorrectAnswer($EnhancementElement, capType);
-    interactionData["used-hint"] = usedHint;
+      const capType = view.lib.detectCapitalization($EnhancementElement.text());
+      interactionData["correct-answer"] = view.activityHelper.getCorrectAnswer($EnhancementElement, capType);
+      interactionData["used-hint"] = usedHint;
 
-    interactionData["timestamp"] = view.timestamp;
+      interactionData["timestamp"] = view.timestamp;
 
-    view.tracker.requestToSendInteractionData(interactionData);
+      view.tracker.requestToSendInteractionData(interactionData);
+    }
   },
 
   /**
