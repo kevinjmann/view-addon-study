@@ -359,8 +359,6 @@ const toolbar = {
       const $ActivityOption = $(this);
 
       toolbar.activitySelectors[$ActivityOption.val()] = $ActivityOption;
-
-      $ActivityOption.remove();
     });
   },
 
