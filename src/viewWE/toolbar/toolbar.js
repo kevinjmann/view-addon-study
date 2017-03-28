@@ -28,6 +28,8 @@ function Selector_Cache() {
 const toolbar = {
   topics: {},
 
+  activitySelectors: {},
+
   $cache: new Selector_Cache(),
 
   selectorStart: "#wertiview-toolbar-",
@@ -58,6 +60,8 @@ const toolbar = {
     toolbar.initLanguageMenu();
 
     toolbar.initTopicMenu();
+
+    toolbar.initActivitySelectors();
 
     toolbar.initialInteractionState();
 
@@ -229,9 +233,11 @@ const toolbar = {
    * @param topic the current topic
    */
   checkForFilters: function(language, topic) {
-    toolbar.$cache.get(toolbar.selectorStart + "filter-menu").hide();
+    const $FilterMenu = toolbar.$cache.get(toolbar.selectorStart + "filter-menu");
+
+    $FilterMenu.hide();
     toolbar.$cache.get(toolbar.selectorStart + "filter-unselected").next().nextAll().remove();
-    toolbar.$cache.get(toolbar.selectorStart + "filter-menu").val("no-filter");
+    $FilterMenu.val("no-filter");
 
     if(toolbar.topics[topic] &&
       toolbar.topics[topic][language]){
@@ -241,88 +247,6 @@ const toolbar = {
         toolbar.showFilterMenu(filters);
       }
     }
-  },
-
-  /**
-   * Update activities when the topic is changed. Enable activities available
-   * to the topic and disable the ones that aren't.
-   * Activity "Pick an Activity" is always enabled, selected and visible.
-   *
-   * @param language the current language
-   * @param topic the current topic
-   */
-  updateActivities: function(language, topic) {
-    const activitySelectors = toolbar.fillActivitySelectors();
-    const unselected = "unselected";
-    const undefinedType = "undefined";
-
-    activitySelectors[unselected].prop("disabled", false).prop("selected", true).show();
-
-    if (
-      language === unselected ||
-      topic.startsWith(unselected) ||
-      typeof toolbar.topics[topic] === undefinedType ||
-      typeof toolbar.topics[topic][language] === undefinedType) {
-      activitySelectors[unselected].next().hide();
-    }
-    else {
-      toolbar.enableAndShowActivities(language, topic, activitySelectors);
-    }
-  },
-
-  /**
-   * Fill up the activity selectors, disable and hide all activities.
-   *
-   * @returns {Object} all activity selectors
-   */
-  fillActivitySelectors: function() {
-    const activitySelectors = {};
-
-    toolbar.$cache.get(toolbar.selectorStart + "activity-menu").find("option[value]").each(function() {
-      const currentActivity = $(this).val();
-      activitySelectors[currentActivity] =
-        $(toolbar.selectorStart + "activity-" + currentActivity).prop("disabled", true).hide();
-    });
-    return activitySelectors;
-  },
-
-  /**
-   * Enable and show only activities that are available for the language and
-   * topic combination. Show the horizontal separator.
-   *
-   * @param {string} language the selected language
-   * @param {string} topic the selected topic
-   * @param {Array} activitySelectors the object of jquery selectors for each
-   * activity
-   */
-  enableAndShowActivities: function(language, topic, activitySelectors) {
-    activitySelectors["unselected"].next().show();
-
-    const availableActivities = toolbar.topics[topic][language].activities;
-
-    $.each(availableActivities, function(activity) {
-      activitySelectors[activity].prop("disabled", false).show();
-    });
-  },
-
-  /**
-   * Init the handler for the topic menu selection box.
-   * Update the activities according to language and topic on change.
-   */
-  initTopicMenu: function() {
-    toolbar.$cache.get(
-      toolbar.selectorStart + "topic-menu-unselected, " +
-      toolbar.selectorStart + "topic-menu-en, " +
-      toolbar.selectorStart + "topic-menu-de, " +
-      toolbar.selectorStart + "topic-menu-es, " +
-      toolbar.selectorStart + "topic-menu-ru").on("change", function() {
-      const language = toolbar.$cache.get(toolbar.selectorStart + "language-menu").val();
-      const topic = $(this).val();
-
-      toolbar.checkForFilters(language, topic);
-
-      toolbar.updateActivities(language, topic);
-    });
   },
 
   /**
@@ -356,6 +280,87 @@ const toolbar = {
       $Option.text(filterObject.text);
 
       $FilterMenu.append($Option);
+    });
+  },
+
+  /**
+   * Update activities when the topic is changed. Enable activities available
+   * to the topic and disable the ones that aren't.
+   * Activity "Pick an Activity" is always enabled, selected and visible.
+   *
+   * @param language the current language
+   * @param topic the current topic
+   */
+  updateActivities: function(language, topic) {
+    const unselected = "unselected";
+    const undefinedType = "undefined";
+    const $ActivityMenu = toolbar.$cache.get(toolbar.selectorStart + "activity-menu");
+
+    $ActivityMenu.children().remove();
+
+    $ActivityMenu.append(toolbar.activitySelectors[unselected]);
+
+    if (
+      language !== unselected &&
+      !topic.startsWith(unselected) &&
+      typeof toolbar.topics[topic] !== undefinedType &&
+      typeof toolbar.topics[topic][language] !== undefinedType) {
+      toolbar.enableAndShowActivities(language, topic);
+    }
+  },
+
+  /**
+   * Enable and show only activities that are available for the language and
+   * topic combination. Show the horizontal separator.
+   *
+   * @param {string} language the selected language
+   * @param {string} topic the selected topic
+   */
+  enableAndShowActivities: function(language, topic) {
+    const $ActivityMenu = toolbar.$cache.get(toolbar.selectorStart + "activity-menu");
+    const activitySelectors = toolbar.activitySelectors;
+    const availableActivities = toolbar.topics[topic][language].activities;
+
+    $ActivityMenu.append(activitySelectors["splitter"]);
+
+    $.each(availableActivities, function(activity) {
+      $ActivityMenu.append(activitySelectors[activity]);
+    });
+
+    activitySelectors["unselected"].prop("selected", true);
+  },
+
+  /**
+   * Init the handler for the topic menu selection box.
+   * Update the activities according to language and topic on change.
+   */
+  initTopicMenu: function() {
+    toolbar.$cache.get(
+      toolbar.selectorStart + "topic-menu-unselected, " +
+      toolbar.selectorStart + "topic-menu-en, " +
+      toolbar.selectorStart + "topic-menu-de, " +
+      toolbar.selectorStart + "topic-menu-es, " +
+      toolbar.selectorStart + "topic-menu-ru").on("change", function() {
+      const language = toolbar.$cache.get(toolbar.selectorStart + "language-menu").val();
+      const topic = $(this).val();
+
+      toolbar.checkForFilters(language, topic);
+
+      toolbar.updateActivities(language, topic);
+    });
+  },
+
+  /**
+   * Init all activity selectors in order to retrieve
+   * the proper activity options for a topic.
+   */
+  initActivitySelectors: function() {
+    toolbar.$cache.get(toolbar.selectorStart + "activity-menu").find("option").each(function() {
+      const $ActivityOption = $(this);
+
+      toolbar.activitySelectors[$ActivityOption.val()] = $ActivityOption;
+
+      $ActivityOption.remove();
     });
   },
 
@@ -461,7 +466,7 @@ const toolbar = {
    */
   initSignInOutInterfaces: function() {
     chrome.storage.local.get("serverURL", function(result) {
-      var authenticator = result.serverURL + "/authenticator.html";
+      const authenticator = result.serverURL + "/authenticator.html";
       toolbar.$cache.get(toolbar.selectorStart + "identity-signinlink").attr("link", authenticator);
       toolbar.$cache.get(toolbar.selectorStart + "identity-signoutlink").attr("link", authenticator);
     });
