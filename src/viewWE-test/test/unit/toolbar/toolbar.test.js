@@ -739,7 +739,7 @@ describe("toolbar.js", function() {
             expect($(toolbar.selectorStart + "activity-splitter").length).to.be.above(0);
           });
 
-          it("should show all activity options available for this topic", function() {
+          it("should have all activity options available for this topic", function() {
             const jsonData = fixture.load("fixtures/json/articles.json", true);
             const language = "en";
             const topic = "articles";
@@ -753,7 +753,7 @@ describe("toolbar.js", function() {
             const availableActivities = toolbar.topics[topic][language].activities;
 
             $.each(availableActivities, function(activity) {
-              expect(toolbar.activitySelectors[activity].length).to.be.above(0);
+              expect($(toolbar.selectorStart + "activity-" + activity).length).to.be.above(0);
             });
           });
 
