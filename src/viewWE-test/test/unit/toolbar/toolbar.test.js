@@ -12,12 +12,13 @@ describe("toolbar.js", function() {
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
     fixture.load("/fixtures/toolbar.html");
+    toolbar.topics = {};
+    toolbar.activitySelectors = {};
+    toolbar.$cache = new Selector_Cache();
   });
 
   afterEach(function() {
     sandbox.restore();
-    toolbar.topics = {};
-    toolbar.$cache = new Selector_Cache();
     chrome.runtime.sendMessage.reset();
     chrome.storage.local.set.reset();
     chrome.storage.local.get.reset();
@@ -120,7 +121,7 @@ describe("toolbar.js", function() {
 
       expect($(toolbar.selectorStart + "activity-menu").length).to.be.above(0);
       expect($(toolbar.selectorStart + "activity-unselected").val()).to.equal("unselected");
-      expect($(toolbar.selectorStart + "activity-unselected").next().text()).to.equal("──────────");
+      expect($(toolbar.selectorStart + "activity-splitter").text()).to.equal("──────────");
       expect($(toolbar.selectorStart + "activity-color").val()).to.equal("color");
       expect($(toolbar.selectorStart + "activity-click").val()).to.equal("click");
       expect($(toolbar.selectorStart + "activity-mc").val()).to.equal("mc");
@@ -178,6 +179,7 @@ describe("toolbar.js", function() {
       const initAutoEnhanceSpy = sandbox.spy(toolbar, "initAutoEnhance");
       const initLanguageMenuSpy = sandbox.spy(toolbar, "initLanguageMenu");
       const initTopicMenuSpy = sandbox.spy(toolbar, "initTopicMenu");
+      const initActivitySelectorsSpy = sandbox.spy(toolbar, "initActivitySelectors");
       const initialInteractionStateSpy = sandbox.spy(toolbar, "initialInteractionState");
       const initEnhanceBtnSpy = sandbox.spy(toolbar, "initEnhanceBtn");
       const initAbortBtnSpy = sandbox.spy(toolbar, "initAbortBtn");
@@ -199,6 +201,7 @@ describe("toolbar.js", function() {
       sinon.assert.calledOnce(initAutoEnhanceSpy);
       sinon.assert.calledOnce(initLanguageMenuSpy);
       sinon.assert.calledOnce(initTopicMenuSpy);
+      sinon.assert.calledOnce(initActivitySelectorsSpy);
       sinon.assert.calledOnce(initialInteractionStateSpy);
       sinon.assert.calledOnce(initEnhanceBtnSpy);
       sinon.assert.calledOnce(initAbortBtnSpy);
@@ -419,7 +422,7 @@ describe("toolbar.js", function() {
       });
 
       describe("toggleTopicMenu", function() {
-        it("should show the selected topic menu and call updateActivities(language, topic)", function() {
+        it("should show the selected topic menu", function() {
           const selectedLanguage = "en";
           const currentLanguage = "en";
           const topicMenu = toolbar.selectorStart + "topic-menu-" + currentLanguage;
@@ -456,6 +459,12 @@ describe("toolbar.js", function() {
             expect($(toolbar.selectorStart + "filter-menu").is(":hidden")).to.be.true;
           });
 
+          it("should select the 'no-filter' option", function() {
+            toolbar.checkForFilters("ru", "nouns");
+
+            expect($(toolbar.selectorStart + "filter-menu").val()).to.equal("no-filter");
+          });
+
           it("should remove all options followed after the horizontal line", function() {
             const jsonData = fixture.load("fixtures/json/nouns.json", true);
 
@@ -470,12 +479,6 @@ describe("toolbar.js", function() {
 
             // articles filter options do not exist, previous filter options were removed
             expect($(toolbar.selectorStart + "filter-unselected").next().next().length).to.equal(0);
-          });
-
-          it("should select the 'no-filter' option", function() {
-            toolbar.checkForFilters("ru", "nouns");
-
-            expect($(toolbar.selectorStart + "filter-menu").val()).to.equal("no-filter");
           });
 
           it("should call showFilterMenu(filters), as filters exist for the topic", function() {
@@ -516,7 +519,7 @@ describe("toolbar.js", function() {
               sinon.assert.calledOnce(addFilterOptionsSpy);
               sinon.assert.calledWithExactly(addFilterOptionsSpy,
                 filters,
-                toolbar.$cache.get(toolbar.selectorStart + "filter-menu")
+                $(toolbar.selectorStart + "filter-menu")
               );
             });
 
@@ -625,119 +628,147 @@ describe("toolbar.js", function() {
       });
 
       describe("updateActivities", function() {
-        it("should call fillActivitySelectors() and show the activity \"unselected\"", function() {
-          const fillActivitySelectorsSpy = sandbox.spy(toolbar, "fillActivitySelectors");
+        it("should remove all activity options", function() {
           const language = "unselected";
           const topic = "unselected";
 
+          expect($(toolbar.selectorStart + "activity-menu").find("option").length).to.be.above(0);
+
           toolbar.updateActivities(language, topic);
 
-          sinon.assert.calledOnce(fillActivitySelectorsSpy);
-
-          const $ActivityUnselected = $(toolbar.selectorStart + "activity-unselected");
-
-          expect($ActivityUnselected.prop("disabled")).to.be.false;
-          expect($ActivityUnselected.prop("selected")).to.be.true;
-          expect($ActivityUnselected.is(":visible")).to.be.true;
+          expect($(toolbar.selectorStart + "activity-menu").find("option").length).to.equal(0);
         });
 
-        it("should fill and return an object of activity selectors", function() {
-          const selectorSpy = sandbox.spy(toolbar.$cache, "get");
-          const findSpy = sandbox.spy($.fn, "find");
-
-          const activitySelectors = toolbar.fillActivitySelectors();
-
-          sinon.assert.calledOnce(selectorSpy);
-          sinon.assert.calledWithExactly(selectorSpy, toolbar.selectorStart + "activity-menu");
-
-          sinon.assert.calledOnce(findSpy);
-          sinon.assert.calledWithExactly(findSpy, "option[value]");
-
-          expect(Object.keys(activitySelectors).length).to.equal(5);
-
-          for (let activity in activitySelectors) {
-            if (Object.prototype.hasOwnProperty.call(activitySelectors, activity)) {
-              expect(activitySelectors[activity].prop("disabled")).to.be.true;
-              expect(activitySelectors[activity].is(":hidden")).to.be.true;
-            }
-          }
-        });
-
-        it("should only hide the horizontal separator, as the language is \"unselected\"", function() {
+        it("should append the activity \"unselected\"", function() {
           const language = "unselected";
-          // the topic will be in this case always be "unselected"
           const topic = "unselected";
 
+          toolbar.initActivitySelectors();
+
           toolbar.updateActivities(language, topic);
 
-          expect($(toolbar.selectorStart + "activity-unselected").next().is(":hidden")).to.be.true;
+          expect($(toolbar.selectorStart + "activity-unselected").length).to.be.above(0);
         });
 
-        it("should only hide the horizontal separator, as the topic starts with \"unselected\"", function() {
+        it("should not call enableAndShowActivities(language, topic), as the language is \"unselected\"", function() {
+          const enableAndShowActivitiesSpy = sandbox.spy(toolbar, "enableAndShowActivities");
+          const language = "unselected";
+          const topic = "unselected";
+
+          toolbar.initActivitySelectors();
+
+          toolbar.updateActivities(language, topic);
+
+          sinon.assert.notCalled(enableAndShowActivitiesSpy);
+        });
+
+        it("should not call enableAndShowActivities(language, topic), as the topic starts with \"unselected\"", function() {
+          const enableAndShowActivitiesSpy = sandbox.spy(toolbar, "enableAndShowActivities");
           const language = "en";
           const topic = "unselected-en";
 
+          toolbar.initActivitySelectors();
+
           toolbar.updateActivities(language, topic);
 
-          expect($(toolbar.selectorStart + "activity-unselected").next().is(":hidden")).to.be.true;
+          sinon.assert.notCalled(enableAndShowActivitiesSpy);
         });
 
-        it("should only hide the horizontal separator, as the topic json objects don't have the language", function() {
+        it("should not call enableAndShowActivities(language, topic), as the topic json objects don't have the language", function() {
+          const jsonData = fixture.load("fixtures/json/articles.json", true);
+          const enableAndShowActivitiesSpy = sandbox.spy(toolbar, "enableAndShowActivities");
           const language = "unknownLanguage";
-          const topic = "determiners";
+          const topic = "articles";
+
+          toolbar.topics = {articles: jsonData};
+
+          toolbar.initActivitySelectors();
 
           toolbar.updateActivities(language, topic);
 
-          expect($(toolbar.selectorStart + "activity-unselected").next().is(":hidden")).to.be.true;
+          sinon.assert.notCalled(enableAndShowActivitiesSpy);
         });
 
-        it("should only hide the horizontal separator, as the topic json objects don't have the topic", function() {
+        it("should not call enableAndShowActivities(language, topic), as the topic json objects don't have the topic", function() {
+          const jsonData = fixture.load("fixtures/json/articles.json", true);
+          const enableAndShowActivitiesSpy = sandbox.spy(toolbar, "enableAndShowActivities");
           const language = "en";
           const topic = "unknownTopic";
 
+          toolbar.topics = {articles: jsonData};
+
+          toolbar.initActivitySelectors();
+
           toolbar.updateActivities(language, topic);
 
-          expect($(toolbar.selectorStart + "activity-unselected").next().is(":hidden")).to.be.true;
+          sinon.assert.notCalled(enableAndShowActivitiesSpy);
         });
 
-        it("should call enableAndShowActivities(language, topic, activitySelections)", function() {
+        it("should call enableAndShowActivities(language, topic)", function() {
           const jsonData = fixture.load("fixtures/json/articles.json", true);
 
-          const fillActivitySelectorsSpy = sandbox.spy(toolbar, "fillActivitySelectors");
           const enableAndShowActivitiesSpy = sandbox.spy(toolbar, "enableAndShowActivities");
           const language = "en";
           const topic = "articles";
 
           toolbar.topics = {articles: jsonData};
+
+          toolbar.initActivitySelectors();
 
           toolbar.updateActivities(language, topic);
 
           sinon.assert.calledOnce(enableAndShowActivitiesSpy);
           sinon.assert.calledWithExactly(enableAndShowActivitiesSpy,
             language,
-            topic,
-            fillActivitySelectorsSpy.returnValues[0]);
+            topic
+          );
         });
 
-        it("should show the horizontal separator and all activities available for this topic", function() {
-          const jsonData = fixture.load("fixtures/json/articles.json", true);
+        describe("enableAndShowActivities", function() {
+          it("should append the splitter option", function() {
+            const jsonData = fixture.load("fixtures/json/articles.json", true);
+            const language = "en";
+            const topic = "articles";
 
-          const enableAndShowActivitiesSpy = sandbox.spy(toolbar, "enableAndShowActivities");
-          const language = "en";
-          const topic = "articles";
+            toolbar.topics = {articles: jsonData};
 
-          toolbar.topics = {articles: jsonData};
+            toolbar.initActivitySelectors();
 
-          toolbar.updateActivities(language, topic);
+            toolbar.updateActivities(language, topic);
 
-          expect($(toolbar.selectorStart + "activity-unselected").next().is(":visible")).to.be.true;
+            expect($(toolbar.selectorStart + "activity-splitter").length).to.be.above(0);
+          });
 
-          const availableActivities = toolbar.topics[topic][language].activities;
-          const activitySelectors = enableAndShowActivitiesSpy.firstCall.args[2];
+          it("should show all activity options available for this topic", function() {
+            const jsonData = fixture.load("fixtures/json/articles.json", true);
+            const language = "en";
+            const topic = "articles";
 
-          $.each(availableActivities, function(activity) {
-            expect(activitySelectors[activity].prop("disabled")).to.be.false;
-            expect(activitySelectors[activity].is(":visible")).to.be.true;
+            toolbar.topics = {articles: jsonData};
+
+            toolbar.initActivitySelectors();
+
+            toolbar.updateActivities(language, topic);
+
+            const availableActivities = toolbar.topics[topic][language].activities;
+
+            $.each(availableActivities, function(activity) {
+              expect(toolbar.activitySelectors[activity].length).to.be.above(0);
+            });
+          });
+
+          it("should select the option 'unselected'", function() {
+            const jsonData = fixture.load("fixtures/json/articles.json", true);
+            const language = "en";
+            const topic = "articles";
+
+            toolbar.topics = {articles: jsonData};
+
+            toolbar.initActivitySelectors();
+
+            toolbar.updateActivities(language, topic);
+
+            expect($(toolbar.selectorStart + "activity-menu").val()).to.equal("unselected");
           });
         });
       });
@@ -791,6 +822,22 @@ describe("toolbar.js", function() {
 
         sinon.assert.calledOnce(updateActivitiesSpy);
         sinon.assert.calledWithExactly(updateActivitiesSpy, language, topic);
+      });
+    });
+
+    describe("initActivitySelectors", function() {
+      it("should fill the activity selectors", function() {
+        expect(toolbar.activitySelectors).to.be.empty;
+
+        const activitySelectors = {};
+
+        $(toolbar.selectorStart + "activity-menu").find("option").each(function() {
+          activitySelectors[$(this).val()] = $(this);
+        });
+
+        toolbar.initActivitySelectors();
+
+        expect(toolbar.activitySelectors).to.eql(activitySelectors);
       });
     });
 
@@ -1193,6 +1240,8 @@ describe("toolbar.js", function() {
 
         toolbar.topics = {nouns: jsonData};
 
+        toolbar.initActivitySelectors();
+
         toolbar.restoreSelections();
 
         sinon.assert.calledOnce(restoreSelectionMenusSpy);
@@ -1219,6 +1268,8 @@ describe("toolbar.js", function() {
           const jsonData = fixture.load("fixtures/json/nouns.json", true);
 
           toolbar.topics = {nouns: jsonData};
+
+          toolbar.initActivitySelectors();
 
           toolbar.restoreSelectionMenus(language, topic, filter, activity);
 
