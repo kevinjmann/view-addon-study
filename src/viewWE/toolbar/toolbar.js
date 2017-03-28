@@ -293,7 +293,6 @@ const toolbar = {
    */
   updateActivities: function(language, topic) {
     const unselected = "unselected";
-    const undefinedType = "undefined";
     const $ActivityMenu = toolbar.$cache.get(toolbar.selectorStart + "activity-menu");
 
     $ActivityMenu.children().remove();
@@ -303,8 +302,8 @@ const toolbar = {
     if (
       language !== unselected &&
       !topic.startsWith(unselected) &&
-      typeof toolbar.topics[topic] !== undefinedType &&
-      typeof toolbar.topics[topic][language] !== undefinedType) {
+      toolbar.topics[topic] &&
+      toolbar.topics[topic][language]) {
       toolbar.enableAndShowActivities(language, topic);
     }
   },
@@ -327,7 +326,7 @@ const toolbar = {
       $ActivityMenu.append(activitySelectors[activity]);
     });
 
-    activitySelectors["unselected"].prop("selected", true);
+    $ActivityMenu.val("unselected");
   },
 
   /**
