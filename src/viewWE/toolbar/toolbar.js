@@ -236,8 +236,8 @@ const toolbar = {
     const $FilterMenu = toolbar.$cache.get(toolbar.selectorStart + "filter-menu");
 
     $FilterMenu.hide();
-    toolbar.$cache.get(toolbar.selectorStart + "filter-unselected").next().nextAll().remove();
     $FilterMenu.val("no-filter");
+    toolbar.$cache.get(toolbar.selectorStart + "filter-unselected").next().nextAll().remove();
 
     if(toolbar.topics[topic] &&
       toolbar.topics[topic][language]){
