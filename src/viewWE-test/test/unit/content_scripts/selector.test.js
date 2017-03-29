@@ -51,5 +51,5 @@ describe("selector.js", function() {
 
       expect($("[data-filters~='Pl']").hasClass("selected")).to.be.true;
     });
-  })
+  });
 });
