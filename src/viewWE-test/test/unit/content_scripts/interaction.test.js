@@ -13,8 +13,6 @@ describe("interaction.js", function() {
     sandbox = sinon.sandbox.create();
 
     sandbox.stub($.fn, "load").yields();
-    // fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
-    // fixture.load("/fixtures/toolbar.html");
   });
 
   afterEach(function() {
