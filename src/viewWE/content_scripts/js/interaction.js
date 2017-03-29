@@ -1,35 +1,49 @@
 view.interaction = {
   toolbarUI: undefined,
 
-  /*
-   * Create the toolbar ui iframe and inject it in the current page
+  /**
+   * Create the toolbar ui iframe and inject it in the current page.
+   *
+   * @returns the iframe containing the toolbar
    */
   initToolbar: function() {
+    const toolbarHTML = chrome.runtime.getURL("toolbar/toolbar.html");
+
     const $iframe = $("<iframe>");
     $iframe.attr("id", "view-toolbar-iframe");
-    $iframe.attr("src", chrome.runtime.getURL("toolbar/toolbar.html"));
+    $iframe.attr("src", toolbarHTML);
 
-    const $body = $("body");
+    const $Body = $("body");
 
-    const $bodyContainer = $("<div id='wertiview-body-container'>");
-
-    let $bodyContent = $("<div id='wertiview-body-content'>");
-
-    $body.children().wrapAll($bodyContent);
-
-    $bodyContent = $("#wertiview-body-content");
-
-    $bodyContainer.append($bodyContent);
-
-    $bodyContainer.addClass("down");
-
-    $body.append($bodyContainer);
+    view.interaction.addChildContainer($Body);
 
     view.VIEWmenu.add();
 
-    $body.prepend($iframe);
+    $Body.prepend($iframe);
 
     return view.interaction.toolbarUI = $iframe;
+  },
+
+  /**
+   * Add a container that wraps all children inside the parent element
+   * given the selector of the parent.
+   *
+   * @param {Object} $Element the parent element
+   */
+  addChildContainer: function($Element) {
+    const $Container = $("<div id='wertiview-body-container'>");
+
+    let $Content = $("<div id='wertiview-body-content'>");
+
+    $Element.children().wrapAll($Content);
+
+    $Content = $("#wertiview-body-content");
+
+    $Container.append($Content);
+
+    $Container.addClass("down");
+
+    $Element.append($Container);
   },
 
   /*
