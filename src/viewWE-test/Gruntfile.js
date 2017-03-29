@@ -44,40 +44,39 @@ module.exports = function(grunt) {
       background: {
         files: {
           src: [
-            "../viewWE/*.js",
-            "test/unit/*.test.js"
+            "../viewWE/background.js",
+            "test/unit/background.test.js"
           ]
         },
-        preprocessors: {"../viewWE/*.js": ["coverage"]}
+        preprocessors: {"../viewWE/background.js": ["coverage"]}
       },
       toolbar: {
         files: {
           src: [
-            "../viewWE/toolbar/*.js",
-            "test/unit/toolbar/*.test.js"
+            "../viewWE/toolbar/toolbar.js",
+            "test/unit/toolbar/toolbar.test.js"
           ]
         },
         preprocessors: {
-          "../viewWE/toolbar/*.js": ["coverage"],
+          "../viewWE/toolbar/toolbar.js": ["coverage"],
           "**/toolbar.html": ["html2js"]
         }
       },
       viewOptions: {
         files: {
           src: [
-            "../viewWE/options/*.js",
-            "test/unit/options/*.test.js"
+            "../viewWE/options/options.js",
+            "test/unit/options/options.test.js"
           ]
         },
         preprocessors: {
-          "../viewWE/options/*.js": ["coverage"],
+          "../viewWE/options/options.js": ["coverage"],
           "**/options.html": ["html2js"]
         }
       },
       view: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/selector-cache.js",
             "../viewWE/content_scripts/js/view.js",
             "../viewWE/content_scripts/js/lib.js",
             "../viewWE/content_scripts/js/interaction.js",
@@ -89,7 +88,6 @@ module.exports = function(grunt) {
       viewMenu: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/selector-cache.js",
             "../viewWE/content_scripts/js/view.js",
             "../viewWE/content_scripts/js/lib.js",
             "../viewWE/content_scripts/js/about.js",
@@ -105,7 +103,6 @@ module.exports = function(grunt) {
       activityColor: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/selector-cache.js",
             "../viewWE/content_scripts/js/view.js",
             "../viewWE/content_scripts/js/selector.js",
             "../viewWE/content_scripts/js/activities/color.js",
@@ -120,7 +117,6 @@ module.exports = function(grunt) {
       activityClick: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/selector-cache.js",
             "../viewWE/content_scripts/js/view.js",
             "../viewWE/content_scripts/js/selector.js",
             "../viewWE/content_scripts/js/lib.js",
@@ -138,7 +134,6 @@ module.exports = function(grunt) {
       activityMc: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/selector-cache.js",
             "../viewWE/content_scripts/js/view.js",
             "../viewWE/content_scripts/js/selector.js",
             "../viewWE/content_scripts/js/lib.js",
@@ -156,7 +151,6 @@ module.exports = function(grunt) {
       activityCloze: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/selector-cache.js",
             "../viewWE/content_scripts/js/view.js",
             "../viewWE/content_scripts/js/selector.js",
             "../viewWE/content_scripts/js/lib.js",
@@ -174,7 +168,6 @@ module.exports = function(grunt) {
       activityHelper: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/selector-cache.js",
             "../viewWE/content_scripts/js/view.js",
             "../viewWE/content_scripts/js/selector.js",
             "../viewWE/content_scripts/js/lib.js",
@@ -194,7 +187,6 @@ module.exports = function(grunt) {
       tracker: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/selector-cache.js",
             "../viewWE/content_scripts/js/view.js",
             "../viewWE/content_scripts/js/lib.js",
             "../viewWE/content_scripts/js/activities/tracker.js",
@@ -204,6 +196,19 @@ module.exports = function(grunt) {
         },
         preprocessors: {
           "../viewWE/content_scripts/js/activities/tracker.js": ["coverage"],
+          "**/ru-nouns-mc-and-cloze.html": ["html2js"]
+        }
+      },
+      selector: {
+        files: {
+          src: [
+            "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/selector.js",
+            "test/unit/content_scripts/selector.test.js"
+          ]
+        },
+        preprocessors: {
+          "../viewWE/content_scripts/js/selector.js": ["coverage"],
           "**/ru-nouns-mc-and-cloze.html": ["html2js"]
         }
       }
