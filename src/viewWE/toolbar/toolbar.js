@@ -61,7 +61,7 @@ const toolbar = {
 
     toolbar.initTopicMenu();
 
-    toolbar.initActivityMenu();
+    toolbar.initFilterAndActivityMenu();
 
     toolbar.initActivitySelectors();
 
@@ -354,10 +354,12 @@ const toolbar = {
   },
 
   /**
-   * Initialize the activity menu handler.
+   * Initialize the filter and activity menu handler.
    */
-  initActivityMenu: function() {
-    toolbar.$cache.get(".wertiview-toolbar-menu").on("change",
+  initFilterAndActivityMenu: function() {
+    toolbar.$cache.get(
+      toolbar.selectorStart + "filter-menu, " +
+      toolbar.selectorStart + "activity-menu").on("change",
       toolbar.toggleEnhanceButton
     );
   },
