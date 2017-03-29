@@ -526,13 +526,6 @@ function processMessage(request, sender, sendResponse) {
     case "hide VIEW Menu":
       background.hideVIEWMenu();
       break;
-    case "create unselectedNotification":
-      background.createBasicNotification(
-        "unselected-notification",
-        "Unselected language, topic or activity!",
-        "You need to pick a language, topic and activity!"
-      );
-      break;
     case "call startToEnhance":
       background.callStartToEnhance();
       break;
