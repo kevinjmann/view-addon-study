@@ -1,6 +1,7 @@
 view.selector = {
   select: function(filter) {
-    if("all" === filter){
+    if("all" === filter ||
+        "no-filter" === filter){
       $("viewenhancement").addClass("selected");
     }
     else{
