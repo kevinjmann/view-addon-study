@@ -5,15 +5,15 @@ view.interaction = {
    * Create the toolbar ui iframe and inject it in the current page
    */
   initToolbar: function() {
-    var $iframe = $("<iframe>");
+    const $iframe = $("<iframe>");
     $iframe.attr("id", "view-toolbar-iframe");
     $iframe.attr("src", chrome.runtime.getURL("toolbar/toolbar.html"));
 
-    var $body = $("body");
+    const $body = $("body");
 
-    var $bodyContainer = $("<div id='wertiview-body-container'>");
+    const $bodyContainer = $("<div id='wertiview-body-container'>");
 
-    var $bodyContent = $("<div id='wertiview-body-content'>");
+    let $bodyContent = $("<div id='wertiview-body-content'>");
 
     $body.children().wrapAll($bodyContent);
 
@@ -39,11 +39,11 @@ view.interaction = {
    */
   toggleToolbar: function(request) {
     console.log("toggle toolbar: received '" + request.msg + "'");
-    var toolbarUI = view.interaction.toolbarUI;
+    const toolbarUI = view.interaction.toolbarUI;
     if (toolbarUI) {
       toolbarUI.toggle();
 
-      var $bodyContainer = $("#wertiview-body-container");
+      const $bodyContainer = $("#wertiview-body-container");
 
       if (toolbarUI.is(":visible")) {
         $bodyContainer.addClass("down");
@@ -80,7 +80,7 @@ view.interaction = {
     }
 
     // identify context document under consideration
-    var contextDoc = document;
+    const contextDoc = document;
 
     if (view.showInst) {
       // Construct the instruction for the given topic and activity
@@ -109,7 +109,7 @@ view.interaction = {
    */
   getTopicName: function(topic) {
     // figure out corresponding topic name
-    var topicName = topic.toLowerCase();
+    let topicName = topic.toLowerCase();
 
     // exceptions:
     //  - e.g. Arts and Dets and Preps use the 'pos' topic
@@ -175,17 +175,17 @@ view.interaction = {
   constructInstruction: function(topicName, activityTyp) {
     console.log("constructInstruction()");
 
-    var topics = view.topics;
+    const topics = view.topics;
 
-    var language = view.language;
+    const language = view.language;
 
-    var topic = view.topic;
+    const topic = view.topic;
 
-    var activity = view.activity;
+    const activity = view.activity;
 
-    var activities = topics[topic][language].activities;
+    const activities = topics[topic][language].activities;
 
-    var instruction = activities[activity].description.text;
+    const instruction = activities[activity].description.text;
 
     if (instruction !== "") {
       // construct the instruction for the given topic and activity, can also be avoided by the user
@@ -203,7 +203,7 @@ view.interaction = {
   createActivityData: function(contextDoc) {
     console.log("createActivityData(contextDoc)");
 
-    var activityData = {};
+    const activityData = {};
     activityData["url"] = view.url;
     activityData["language"] = view.language;
     activityData["topic"] = view.topic;
@@ -311,9 +311,9 @@ view.interaction = {
     console.log("abort()");
 
     // find out the enhancement ID of this page
-    var enhId = $("body").data("wertiview-enhId");
+    const enhId = $("body").data("wertiview-enhId");
 
-    var requestData = {};
+    const requestData = {};
     requestData["url"] = view.url;
     requestData["language"] = view.language;
     requestData["topic"] = view.topic;
@@ -359,7 +359,7 @@ view.interaction = {
   restoreToOriginal: function() {
     console.log("restoreToOriginal()");
 
-    var topicName = view.interaction.getTopicName($("body").data("wertiview-topic"));
+    const topicName = view.interaction.getTopicName($("body").data("wertiview-topic"));
 
     $("body").removeData("wertiview-language");
     $("body").removeData("wertiview-topic");
