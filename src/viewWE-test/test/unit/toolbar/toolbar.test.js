@@ -841,30 +841,56 @@ describe("toolbar.js", function() {
       });
     });
 
-    describe("initActivityMenu", function() {
+    describe("initFilterAndActivityMenu", function() {
       it("should initialize the activity menu handler", function() {
         const selectorSpy = sandbox.spy(toolbar.$cache, "get");
         const eventSpy = sandbox.spy($.fn, "on");
 
-        toolbar.initActivityMenu();
+        toolbar.initFilterAndActivityMenu();
 
         sinon.assert.calledOnce(selectorSpy);
-        sinon.assert.calledWithExactly(selectorSpy, ".wertiview-toolbar-menu");
+        sinon.assert.calledWithExactly(selectorSpy,
+          toolbar.selectorStart + "filter-menu, " +
+          toolbar.selectorStart + "activity-menu"
+        );
 
         sinon.assert.calledOnce(eventSpy);
         sinon.assert.calledWith(eventSpy, "change");
       });
 
-      it("should call toggleEnhanceButton() on toolbar menu option change", function() {
+      it("should call toggleEnhanceButton() on filter change", function() {
         const toggleEnhanceButtonSpy = sandbox.spy(toolbar, "toggleEnhanceButton");
-        const language = "en";
-        const topic = "articles";
+        const language = "ru";
+        const topic = "nouns";
+        const filter = "Sg";
 
-        toolbar.initActivityMenu();
+        toolbar.initFilterAndActivityMenu();
 
         $(toolbar.selectorStart + "language-menu").val(language);
 
-        $(toolbar.selectorStart + "topic-menu-" + language).val(topic).trigger("change");
+        $(toolbar.selectorStart + "topic-menu-" + language).val(topic);
+
+        $(toolbar.selectorStart + "filter-menu").val(filter).trigger("change");
+
+        sinon.assert.calledOnce(toggleEnhanceButtonSpy);
+      });
+
+      it("should call toggleEnhanceButton() on activity change", function() {
+        const toggleEnhanceButtonSpy = sandbox.spy(toolbar, "toggleEnhanceButton");
+        const language = "ru";
+        const topic = "nouns";
+        const filter = "Sg";
+        const activity = "color";
+
+        toolbar.initFilterAndActivityMenu();
+
+        $(toolbar.selectorStart + "language-menu").val(language);
+
+        $(toolbar.selectorStart + "topic-menu-" + language).val(topic);
+
+        $(toolbar.selectorStart + "filter-menu").val(filter);
+
+        $(toolbar.selectorStart + "activity-menu").val(activity).trigger("change");
 
         sinon.assert.calledOnce(toggleEnhanceButtonSpy);
       });
