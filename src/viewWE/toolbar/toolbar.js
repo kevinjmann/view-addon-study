@@ -61,6 +61,8 @@ const toolbar = {
 
     toolbar.initTopicMenu();
 
+    toolbar.initFilterAndActivityMenu();
+
     toolbar.initActivitySelectors();
 
     toolbar.initialInteractionState();
@@ -194,36 +196,20 @@ const toolbar = {
    * Select the topic menu according to the language option.
    * Hide all other topic menus.
    *
-   * @param {string} language the language selected by the user
-   */
-  selectTopicMenu: function(language) {
-    toolbar.$cache.get(toolbar.selectorStart + "language-menu").find("option").each(function() {
-      toolbar.toggleTopicMenu(language, $(this).val());
-    });
-  },
-
-  /**
-   * Toggles the topic menu in question according to the selected language
-   * and the current language option. If they are equal the topic menu will
-   * be shown, otherwise it will be hidden.
-   *
    * @param {string} selectedLanguage the language selected by the user
-   * @param {string} currentLanguage any of the language options
    */
-  toggleTopicMenu: function(selectedLanguage, currentLanguage) {
-    const $topicMenu = toolbar.$cache.get(toolbar.selectorStart + "topic-menu-" + currentLanguage);
+  selectTopicMenu: function(selectedLanguage) {
+    const $topicMenu = toolbar.$cache.get(toolbar.selectorStart + "topic-menu-" + selectedLanguage);
     const selectedTopicMenu = "selected-toolbar-topic-menu";
 
-    if (selectedLanguage === currentLanguage) {
-      $topicMenu.addClass(selectedTopicMenu).show();
+    $(".wertiview-topic-menu").removeClass(selectedTopicMenu).hide();
 
-      const topic = $topicMenu.val();
+    $topicMenu.addClass(selectedTopicMenu).show();
 
-      toolbar.checkForFilters(selectedLanguage, topic);
-      toolbar.updateActivities(selectedLanguage, topic);
-    } else {
-      $topicMenu.removeClass(selectedTopicMenu).hide();
-    }
+    const topic = $topicMenu.val();
+
+    toolbar.checkForFilters(selectedLanguage, topic);
+    toolbar.updateActivities(selectedLanguage, topic);
   },
 
   /**
@@ -306,6 +292,24 @@ const toolbar = {
       toolbar.topics[topic][language]) {
       toolbar.enableAndShowActivities(language, topic);
     }
+
+    toolbar.toggleEnhanceButton();
+  },
+
+  /**
+   * Toggle the enhance button depending on activity selection
+   * and eventually filter selection.
+   */
+  toggleEnhanceButton: function() {
+    const $EnhanceButton = toolbar.$cache.get(toolbar.selectorStart + "enhance-button");
+
+    if(toolbar.$cache.get(toolbar.selectorStart + "filter-menu").val() === "unselected" ||
+      toolbar.$cache.get(toolbar.selectorStart + "activity-menu").val() === "unselected"){
+      $EnhanceButton.hide();
+    }
+    else{
+      $EnhanceButton.show();
+    }
   },
 
   /**
@@ -350,6 +354,17 @@ const toolbar = {
   },
 
   /**
+   * Initialize the filter and activity menu handler.
+   */
+  initFilterAndActivityMenu: function() {
+    toolbar.$cache.get(
+      toolbar.selectorStart + "filter-menu, " +
+      toolbar.selectorStart + "activity-menu").on("change",
+      toolbar.toggleEnhanceButton
+    );
+  },
+
+  /**
    * Init all activity selectors in order to retrieve
    * the proper activity options for a topic.
    */
@@ -385,7 +400,6 @@ const toolbar = {
    * Set language, topic, activity and timestamp if none of the activities
    * are "unselected".
    * Afterwards prepare to enhance the page.
-   * Otherwise create a unselected notification for the user.
    */
   setSelectionsAndPrepareToEnhance: function() {
     const timestamp = Date.now();
@@ -393,22 +407,14 @@ const toolbar = {
     const topic = $(".selected-toolbar-topic-menu").val();
     const filter = toolbar.$cache.get(toolbar.selectorStart + "filter-menu").val();
     const activity = toolbar.$cache.get(toolbar.selectorStart + "activity-menu").val();
-    const unselected = "unselected";
 
-    if (language.startsWith(unselected) ||
-      topic.startsWith(unselected) ||
-      activity.startsWith(unselected)) {
-      chrome.runtime.sendMessage({msg: "create unselectedNotification"}, toolbar.noResponse);
-    }
-    else{
-      chrome.storage.local.set({
-        language: language,
-        topic: topic,
-        filter: filter,
-        activity: activity,
-        timestamp: timestamp
-      }, toolbar.prepareToEnhance);
-    }
+    chrome.storage.local.set({
+      language: language,
+      topic: topic,
+      filter: filter,
+      activity: activity,
+      timestamp: timestamp
+    }, toolbar.prepareToEnhance);
   },
 
   /**
@@ -546,6 +552,8 @@ const toolbar = {
       const enabled = res.enabled || false;
 
       toolbar.restoreSelectionMenus(language, topic, filter, activity);
+
+      toolbar.toggleEnhanceButton();
 
       toolbar.verifySignInStatus(userEmail);
 

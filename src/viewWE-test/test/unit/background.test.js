@@ -227,22 +227,6 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message 'create unselectedNotification'", function() {
-      const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
-
-      const id = "unselected-notification";
-      const title = "Unselected language, topic or activity!";
-      const message = "You need to pick a language, topic and activity!";
-
-      const request = {msg: "create unselectedNotification"};
-      const sender = {tab: {id: 5}};
-
-      chrome.runtime.onMessage.trigger(request, sender);
-
-      sinon.assert.calledOnce(createBasicNotificationSpy);
-      sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
-    });
-
     it("should process the message 'call startToEnhance'", function() {
       const callStartToEnhanceSpy = sandbox.spy(background, "callStartToEnhance");
 

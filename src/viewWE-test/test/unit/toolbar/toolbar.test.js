@@ -402,35 +402,32 @@ describe("toolbar.js", function() {
         sinon.assert.calledWithExactly(selectTopicMenuSpy, language);
       });
 
-      it("should go through all topic menus and call toggleTopicMenu(l1, l2)", function() {
-        const selectorSpy = sandbox.spy(toolbar.$cache, "get");
-        const findSpy = sandbox.spy($.fn, "find");
-        const toggleTopicMenuSpy = sandbox.spy(toolbar, "toggleTopicMenu");
-        const language = "en";
+      describe("selectTopicMenu", function() {
+        it("should un-select and hide the topic menu", function() {
+          const selectedLanguage = "en";
+          const previousLanguage = "ru";
+          const previousTopicMenu = toolbar.selectorStart + "topic-menu-" + previousLanguage;
+          const selectedTopicMenu = "selected-toolbar-topic-menu";
 
-        toolbar.selectTopicMenu(language);
+          toolbar.selectTopicMenu(previousLanguage);
 
-        sinon.assert.calledOnce(selectorSpy.withArgs(toolbar.selectorStart + "language-menu"));
+          expect($(previousTopicMenu).hasClass(selectedTopicMenu)).to.be.true;
 
-        sinon.assert.calledWithExactly(findSpy.getCall(0), "option");
+          toolbar.selectTopicMenu(selectedLanguage);
 
-        sinon.assert.callCount(toggleTopicMenuSpy, 4);
-        sinon.assert.calledWithExactly(toggleTopicMenuSpy.getCall(0), language, "unselected");
-        sinon.assert.calledWithExactly(toggleTopicMenuSpy.getCall(1), language, "──────────");
-        sinon.assert.calledWithExactly(toggleTopicMenuSpy.getCall(2), language, "en");
-        sinon.assert.calledWithExactly(toggleTopicMenuSpy.getCall(3), language, "ru");
-      });
+          expect($(previousTopicMenu).hasClass(selectedTopicMenu)).to.be.false;
 
-      describe("toggleTopicMenu", function() {
+          expect($(previousTopicMenu).is(":hidden")).to.be.true;
+        });
+
         it("should show the selected topic menu", function() {
           const selectedLanguage = "en";
-          const currentLanguage = "en";
-          const topicMenu = toolbar.selectorStart + "topic-menu-" + currentLanguage;
+          const topicMenu = toolbar.selectorStart + "topic-menu-" + selectedLanguage;
           const topic = "articles";
 
           $(topicMenu).val(topic);
 
-          toolbar.toggleTopicMenu(selectedLanguage, currentLanguage);
+          toolbar.selectTopicMenu(selectedLanguage);
 
           expect($(topicMenu).hasClass("selected-toolbar-topic-menu")).to.be.true;
 
@@ -440,13 +437,12 @@ describe("toolbar.js", function() {
         it("should call checkForFilters(language, topic)", function() {
           const checkForFiltersSpy = sandbox.spy(toolbar, "checkForFilters");
           const selectedLanguage = "en";
-          const currentLanguage = "en";
-          const topicMenu = toolbar.selectorStart + "topic-menu-" + currentLanguage;
+          const topicMenu = toolbar.selectorStart + "topic-menu-" + selectedLanguage;
           const topic = "articles";
 
           $(topicMenu).val(topic);
 
-          toolbar.toggleTopicMenu(selectedLanguage, currentLanguage);
+          toolbar.selectTopicMenu(selectedLanguage);
 
           sinon.assert.calledOnce(checkForFiltersSpy);
           sinon.assert.calledWithExactly(checkForFiltersSpy, selectedLanguage, topic);
@@ -598,32 +594,15 @@ describe("toolbar.js", function() {
         it("should call updateActivities(language, topic)", function() {
           const updateActivitiesSpy = sandbox.spy(toolbar, "updateActivities");
           const selectedLanguage = "en";
-          const currentLanguage = "en";
-          const topicMenu = toolbar.selectorStart + "topic-menu-" + currentLanguage;
+          const topicMenu = toolbar.selectorStart + "topic-menu-" + selectedLanguage;
           const topic = "articles";
 
           $(topicMenu).val(topic);
 
-          toolbar.toggleTopicMenu(selectedLanguage, currentLanguage);
+          toolbar.selectTopicMenu(selectedLanguage);
 
           sinon.assert.calledOnce(updateActivitiesSpy);
           sinon.assert.calledWithExactly(updateActivitiesSpy, selectedLanguage, topic);
-        });
-
-        it("should un-select and hide the topic menu", function() {
-          const selectedLanguage = "en";
-          const currentLanguage = "unselected";
-          const topicMenu = toolbar.selectorStart + "topic-menu-" + currentLanguage;
-          const selectedTopicMenu = "selected-toolbar-topic-menu";
-
-          $(topicMenu).addClass(selectedTopicMenu);
-          expect($(topicMenu).hasClass(selectedTopicMenu)).to.be.true;
-
-          toolbar.toggleTopicMenu(selectedLanguage, currentLanguage);
-
-          expect($(topicMenu).hasClass(selectedTopicMenu)).to.be.false;
-
-          expect($(topicMenu).is(":hidden")).to.be.true;
         });
       });
 
@@ -771,6 +750,43 @@ describe("toolbar.js", function() {
             expect($(toolbar.selectorStart + "activity-menu").val()).to.equal("unselected");
           });
         });
+
+        it("should call toggleEnhanceButton()", function() {
+          const toggleEnhanceButtonSpy = sandbox.spy(toolbar, "toggleEnhanceButton");
+          const language = "en";
+          const topic = "articles";
+
+          toolbar.updateActivities(language, topic);
+
+          sinon.assert.calledOnce(toggleEnhanceButtonSpy);
+        });
+
+        describe("toggleEnhanceButton", function() {
+          it("should hide the enhance button, as the filter option was 'unselected'", function() {
+            $(toolbar.selectorStart + "filter-menu").val("unselected");
+
+            toolbar.toggleEnhanceButton();
+
+            expect($(toolbar.selectorStart + "enhance-button").is(":hidden")).to.be.true;
+          });
+
+          it("should hide the enhance button, as the activity option was 'unselected'", function() {
+            $(toolbar.selectorStart + "activity-menu").val("unselected");
+
+            toolbar.toggleEnhanceButton();
+
+            expect($(toolbar.selectorStart + "enhance-button").is(":hidden")).to.be.true;
+          });
+
+          it("should show the enhance button, as the filter and activity option are not 'unselected'", function() {
+            $(toolbar.selectorStart + "filter-menu").val("Pl");
+            $(toolbar.selectorStart + "activity-menu").val("color");
+
+            toolbar.toggleEnhanceButton();
+
+            expect($(toolbar.selectorStart + "enhance-button").is(":visible")).to.be.true;
+          });
+        });
       });
     });
 
@@ -822,6 +838,61 @@ describe("toolbar.js", function() {
 
         sinon.assert.calledOnce(updateActivitiesSpy);
         sinon.assert.calledWithExactly(updateActivitiesSpy, language, topic);
+      });
+    });
+
+    describe("initFilterAndActivityMenu", function() {
+      it("should initialize the activity menu handler", function() {
+        const selectorSpy = sandbox.spy(toolbar.$cache, "get");
+        const eventSpy = sandbox.spy($.fn, "on");
+
+        toolbar.initFilterAndActivityMenu();
+
+        sinon.assert.calledOnce(selectorSpy);
+        sinon.assert.calledWithExactly(selectorSpy,
+          toolbar.selectorStart + "filter-menu, " +
+          toolbar.selectorStart + "activity-menu"
+        );
+
+        sinon.assert.calledOnce(eventSpy);
+        sinon.assert.calledWith(eventSpy, "change");
+      });
+
+      it("should call toggleEnhanceButton() on filter change", function() {
+        const toggleEnhanceButtonSpy = sandbox.spy(toolbar, "toggleEnhanceButton");
+        const language = "ru";
+        const topic = "nouns";
+        const filter = "Sg";
+
+        toolbar.initFilterAndActivityMenu();
+
+        $(toolbar.selectorStart + "language-menu").val(language);
+
+        $(toolbar.selectorStart + "topic-menu-" + language).val(topic);
+
+        $(toolbar.selectorStart + "filter-menu").val(filter).trigger("change");
+
+        sinon.assert.calledOnce(toggleEnhanceButtonSpy);
+      });
+
+      it("should call toggleEnhanceButton() on activity change", function() {
+        const toggleEnhanceButtonSpy = sandbox.spy(toolbar, "toggleEnhanceButton");
+        const language = "ru";
+        const topic = "nouns";
+        const filter = "Sg";
+        const activity = "color";
+
+        toolbar.initFilterAndActivityMenu();
+
+        $(toolbar.selectorStart + "language-menu").val(language);
+
+        $(toolbar.selectorStart + "topic-menu-" + language).val(topic);
+
+        $(toolbar.selectorStart + "filter-menu").val(filter);
+
+        $(toolbar.selectorStart + "activity-menu").val(activity).trigger("change");
+
+        sinon.assert.calledOnce(toggleEnhanceButtonSpy);
       });
     });
 
@@ -877,63 +948,6 @@ describe("toolbar.js", function() {
       });
 
       describe("setSelectionsAndPrepareToEnhance", function() {
-        it("should create an unselectedNotification as the language was not selected", function() {
-          const language = "unselected";
-          const topic = "unselected";
-          const activity = "unselected";
-
-          $(toolbar.selectorStart + "language-menu").val(language);
-
-          $(toolbar.selectorStart + "topic-menu-" + language)
-          .addClass("selected-toolbar-topic-menu")
-          .val(topic);
-
-          $(toolbar.selectorStart + "activity-menu").val(activity);
-
-          toolbar.setSelectionsAndPrepareToEnhance();
-
-          sinon.assert.calledOnce(chrome.runtime.sendMessage);
-          sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "create unselectedNotification"});
-        });
-
-        it("should create an unselectedNotification as the topic was not selected", function() {
-          const language = "en";
-          const topic = "unselected-en";
-          const activity = "unselected";
-
-          $(toolbar.selectorStart + "language-menu").val(language);
-
-          $(toolbar.selectorStart + "topic-menu-" + language)
-          .addClass("selected-toolbar-topic-menu")
-          .val(topic);
-
-          $(toolbar.selectorStart + "activity-menu").val(activity);
-
-          toolbar.setSelectionsAndPrepareToEnhance();
-
-          sinon.assert.calledOnce(chrome.runtime.sendMessage);
-          sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "create unselectedNotification"});
-        });
-
-        it("should create an unselectedNotification as the activity was not selected", function() {
-          const language = "en";
-          const topic = "articles";
-          const activity = "unselected";
-
-          $(toolbar.selectorStart + "language-menu").val(language);
-
-          $(toolbar.selectorStart + "topic-menu-" + language)
-          .addClass("selected-toolbar-topic-menu")
-          .val(topic);
-
-          $(toolbar.selectorStart + "activity-menu").val(activity);
-
-          toolbar.setSelectionsAndPrepareToEnhance();
-
-          sinon.assert.calledOnce(chrome.runtime.sendMessage);
-          sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "create unselectedNotification"});
-        });
-
         it("should set language, topic, filter, activity, timestamp and call prepareToEnhance()", function() {
           const prepareToEnhanceSpy = sandbox.spy(toolbar, "prepareToEnhance");
           const dateNowSpy = sandbox.spy(Date, "now");
@@ -1186,7 +1200,7 @@ describe("toolbar.js", function() {
     describe("restoreSelections", function() {
       it("should call all restoration functions with default values", function() {
         const restoreSelectionMenusSpy = sandbox.spy(toolbar, "restoreSelectionMenus");
-        const selectTopicMenuSpy = sandbox.spy(toolbar, "selectTopicMenu");
+        const toggleEnhanceButtonSpy = sandbox.spy(toolbar, "toggleEnhanceButton");
         const verifySignInStatusSpy = sandbox.spy(toolbar, "verifySignInStatus");
         const restoreAutoEnhanceSpy = sandbox.spy(toolbar, "restoreAutoEnhance");
 
@@ -1204,8 +1218,7 @@ describe("toolbar.js", function() {
         sinon.assert.calledOnce(restoreSelectionMenusSpy);
         sinon.assert.calledWithExactly(restoreSelectionMenusSpy, language, topic, filter, activity);
 
-        sinon.assert.calledOnce(selectTopicMenuSpy);
-        sinon.assert.calledWithExactly(selectTopicMenuSpy, language);
+        sinon.assert.called(toggleEnhanceButtonSpy);
 
         sinon.assert.calledOnce(verifySignInStatusSpy);
         sinon.assert.calledWithExactly(verifySignInStatusSpy, userEmail);
@@ -1216,7 +1229,7 @@ describe("toolbar.js", function() {
 
       it("should call all restoration functions with stored values", function() {
         const restoreSelectionMenusSpy = sandbox.spy(toolbar, "restoreSelectionMenus");
-        const selectTopicMenuSpy = sandbox.spy(toolbar, "selectTopicMenu");
+        const toggleEnhanceButtonSpy = sandbox.spy(toolbar, "toggleEnhanceButton");
         const verifySignInStatusSpy = sandbox.spy(toolbar, "verifySignInStatus");
         const restoreAutoEnhanceSpy = sandbox.spy(toolbar, "restoreAutoEnhance");
 
@@ -1247,8 +1260,7 @@ describe("toolbar.js", function() {
         sinon.assert.calledOnce(restoreSelectionMenusSpy);
         sinon.assert.calledWithExactly(restoreSelectionMenusSpy, language, topic, filter, activity);
 
-        sinon.assert.calledOnce(selectTopicMenuSpy);
-        sinon.assert.calledWithExactly(selectTopicMenuSpy, language);
+        sinon.assert.called(toggleEnhanceButtonSpy);
 
         sinon.assert.calledOnce(verifySignInStatusSpy);
         sinon.assert.calledWithExactly(verifySignInStatusSpy, userEmail);
@@ -1258,6 +1270,26 @@ describe("toolbar.js", function() {
       });
 
       describe("restoreSelectionMenus", function() {
+        it("should call all restoration functions with stored values", function() {
+          const selectTopicMenuSpy = sandbox.spy(toolbar, "selectTopicMenu");
+          const language = "ru";
+          const topic = "nouns";
+          const filter = "Sg";
+          const activity = "color";
+          const selected = "selected";
+
+          const jsonData = fixture.load("fixtures/json/nouns.json", true);
+
+          toolbar.topics = {nouns: jsonData};
+
+          toolbar.initActivitySelectors();
+
+          toolbar.restoreSelectionMenus(language, topic, filter, activity);
+
+          sinon.assert.calledOnce(selectTopicMenuSpy);
+          sinon.assert.calledWithExactly(selectTopicMenuSpy, language);
+        });
+
         it("should restore all usual selections of the selection menus", function() {
           const language = "ru";
           const topic = "nouns";
