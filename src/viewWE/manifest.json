@@ -54,6 +54,7 @@
         "lib/jquery-ui.min.js",
         "content_scripts/js/view.js",
         "content_scripts/js/selector.js",
+        "content_scripts/js/toolbar-utils.js",
         "content_scripts/js/interaction.js",
         "content_scripts/js/view-menu.js",
         "content_scripts/js/about.js",
