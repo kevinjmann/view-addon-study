@@ -28,7 +28,7 @@ view.sidebar = {
 
     $sidebarcontainerdiv.append($sidebarbottomdiv);
 
-    var $bodyContainer = $("#wertiview-body-container");
+    var $bodyContainer = $("#wertiview-container");
 
     $bodyContainer.prepend($sidebardiv);
 

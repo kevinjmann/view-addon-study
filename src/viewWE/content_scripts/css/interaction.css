@@ -7,11 +7,11 @@
     height: 45px;
 }
 
-#wertiview-body-container.down {
+#wertiview-container.down {
     margin-top: 48px;
 }
 
-#wertiview-body-content {
+#wertiview-content {
     position: relative;
     overflow: auto;
 }

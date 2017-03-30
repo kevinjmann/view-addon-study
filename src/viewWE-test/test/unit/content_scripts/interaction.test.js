@@ -20,7 +20,7 @@ describe("interaction.js", function() {
     chrome.extension.getURL.reset();
     view.interaction.toolbarUI = undefined;
     $("#view-toolbar-iframe").remove();
-    $("#wertiview-body-container").remove();
+    $("#wertiview-container").remove();
     fixture.cleanup();
   });
 
@@ -88,7 +88,7 @@ describe("interaction.js", function() {
 
         view.interaction.addChildContainer(fixtureBody);
 
-        expect($("#wertiview-body-content").html())
+        expect($("#wertiview-content").html())
         .to.equal(fixtureContentInnerHTML);
 
         fixtureBody.remove();
@@ -105,10 +105,10 @@ describe("interaction.js", function() {
 
         view.interaction.addChildContainer(fixtureBody);
 
-        const bodyContainerSelector = "#wertiview-body-container";
+        const bodyContainerSelector = "#wertiview-container";
 
         expect($(bodyContainerSelector).html())
-        .to.equal("<div id=\"wertiview-body-content\">" + fixtureContentInnerHTML + "</div>");
+        .to.equal("<div id=\"wertiview-content\">" + fixtureContentInnerHTML + "</div>");
 
         fixtureBody.remove();
       });
@@ -123,7 +123,7 @@ describe("interaction.js", function() {
 
         view.interaction.addChildContainer(fixtureBody);
 
-        expect($("#wertiview-body-container").hasClass("down")).to.be.true;
+        expect($("#wertiview-container").hasClass("down")).to.be.true;
 
         fixtureBody.remove();
       });
