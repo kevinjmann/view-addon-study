@@ -43,7 +43,7 @@ describe("container.js", function() {
     });
   });
 
-  describe("addContainer", function() {
+  describe("add", function() {
     it("should wrap all body content of 'ru-no-markup.html' into a new element", function() {
       fixture.load("/fixtures/ru-no-markup.html");
 
@@ -54,7 +54,7 @@ describe("container.js", function() {
 
       $("body").append($FixtureBody);
 
-      view.container.addContainer($FixtureBody);
+      view.container.add($FixtureBody);
 
       expect($("#wertiview-content").html()).to.equal(fixtureInnerHTML);
 
@@ -71,7 +71,7 @@ describe("container.js", function() {
 
       $("body").append($FixtureBody);
 
-      view.container.addContainer($FixtureBody);
+      view.container.add($FixtureBody);
 
       const bodyContainerSelector = "#wertiview-container";
 
@@ -91,7 +91,7 @@ describe("container.js", function() {
 
       $("body").append($FixtureBody);
 
-      view.container.addContainer($FixtureBody);
+      view.container.add($FixtureBody);
 
       expect($("#wertiview-container").hasClass("down")).to.be.true;
 
@@ -99,13 +99,13 @@ describe("container.js", function() {
     });
   });
 
-  describe("moveContainer", function() {
+  describe("move", function() {
     it("should find the class 'down' inside the container, as the toolbar is visible", function() {
       view.toolbarIframe.init();
 
       $("#wertiview-container").removeClass("down");
 
-      view.container.moveContainer();
+      view.container.move();
 
       expect($("#wertiview-container").hasClass("down")).to.be.true;
     });
@@ -117,7 +117,7 @@ describe("container.js", function() {
 
       $("#view-toolbar-iframe").hide();
 
-      view.container.moveContainer();
+      view.container.move();
 
       sinon.assert.called(hideSpy);
     });
@@ -129,7 +129,7 @@ describe("container.js", function() {
 
       expect($("#wertiview-container").hasClass("down")).to.be.true;
 
-      view.container.moveContainer();
+      view.container.move();
 
       expect($("#wertiview-container").hasClass("down")).to.be.false;
     });

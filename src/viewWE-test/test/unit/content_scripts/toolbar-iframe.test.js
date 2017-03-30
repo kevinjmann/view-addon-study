@@ -64,12 +64,12 @@ describe("toolbar-iframe.js", function() {
       sinon.assert.calledWith(attrSpy.getCall(1), "src");
     });
 
-    it("should call addContainer(selector)", function() {
-      const addContainerSpy = sandbox.spy(view.container, "addContainer");
+    it("should call add(selector)", function() {
+      const addSpy = sandbox.spy(view.container, "add");
 
       view.toolbarIframe.init();
 
-      sinon.assert.calledOnce(addContainerSpy);
+      sinon.assert.calledOnce(addSpy);
     });
 
     it("should call VIEWmenu.add()", function() {
@@ -101,14 +101,14 @@ describe("toolbar-iframe.js", function() {
       sinon.assert.called(toggleSpy);
     });
 
-    it("should call moveContainer(), as the toolbar exists", function() {
-      const moveContainerSpy = sandbox.spy(view.container, "moveContainer");
+    it("should call move(), as the toolbar exists", function() {
+      const moveSpy = sandbox.spy(view.container, "move");
 
       view.toolbarIframe.init();
 
       view.toolbarIframe.toggle();
 
-      sinon.assert.called(moveContainerSpy);
+      sinon.assert.called(moveSpy);
     });
 
     it("should call setGeneralOptions(), as the toolbar doesn't exists yet", function() {

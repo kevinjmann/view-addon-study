@@ -13,7 +13,7 @@ view.toolbarIframe = {
 
     const $Body = $("body");
 
-    view.container.addContainer($Body);
+    view.container.add($Body);
 
     view.VIEWmenu.add();
 
@@ -29,7 +29,7 @@ view.toolbarIframe = {
     const toolbar = $("#view-toolbar-iframe");
     if (toolbar.length) {
       toolbar.toggle();
-      view.container.moveContainer();
+      view.container.move();
     } else {
       view.setGeneralOptions();
       view.toolbarIframe.init();

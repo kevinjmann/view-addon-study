@@ -5,7 +5,7 @@ view.container = {
    *
    * @param {Object} $Element the parent element
    */
-  addContainer: function($Element) {
+  add: function($Element) {
     const $Container = $("<div id='wertiview-container'>");
 
     let $Content = $("<div id='wertiview-content'>");
@@ -25,7 +25,7 @@ view.container = {
    * Move the container down when the toolbar is visible,
    * but move it back and hide the VIEW menu otherwise.
    */
-  moveContainer: function() {
+  move: function() {
     const $Container = $("#wertiview-container");
 
     if ($("#view-toolbar-iframe").is(":visible")) {
