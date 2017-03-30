@@ -254,8 +254,9 @@ view.activityHelper = {
    * @param {number} capType the capitalization type of the original word
    */
   getCorrectAnswer: function($hit, capType) {
-    if (view.language === "ru") {
-      return view.lib.matchCapitalization($hit.data("correctform"), capType);
+    const correctform = $hit.data("correctform");
+    if (correctform) {
+      return view.lib.matchCapitalization(correctform, capType);
     }
     else {
       return $hit.text();
