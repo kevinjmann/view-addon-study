@@ -1,6 +1,8 @@
 view.interaction = {
   toolbarUI: undefined,
 
+  isAborted: false,
+
   /**
    * Create the toolbar ui iframe and inject it in the current page.
    *
@@ -31,13 +33,13 @@ view.interaction = {
    * @param {Object} $Element the parent element
    */
   addChildContainer: function($Element) {
-    const $Container = $("<div id='wertiview-body-container'>");
+    const $Container = $("<div id='wertiview-container'>");
 
-    let $Content = $("<div id='wertiview-body-content'>");
+    let $Content = $("<div id='wertiview-content'>");
 
     $Element.children().wrapAll($Content);
 
-    $Content = $("#wertiview-body-content");
+    $Content = $("#wertiview-content");
 
     $Container.append($Content);
 
@@ -46,33 +48,37 @@ view.interaction = {
     $Element.append($Container);
   },
 
-  /*
+  /**
    * Toggle the toolbar directly if it already exists,
    * initialize it otherwise.
    * Hide the view menu in case it is still open.
    */
-  toggleToolbar: function(request) {
-    console.log("toggle toolbar: received '" + request.msg + "'");
+  toggleToolbar: function() {
     const toolbarUI = view.interaction.toolbarUI;
     if (toolbarUI) {
       toolbarUI.toggle();
-
-      const $bodyContainer = $("#wertiview-body-container");
-
-      if (toolbarUI.is(":visible")) {
-        $bodyContainer.addClass("down");
-      }
-      else {
-        view.VIEWmenu.hide();
-        $bodyContainer.removeClass("down");
-      }
+      view.interaction.moveContainer();
     } else {
       view.setGeneralOptions();
       view.interaction.initToolbar();
     }
   },
 
-  isAborted: false,
+  /**
+   * Move the container down when the toolbar is visible,
+   * but move it back and hide the VIEW menu otherwise.
+   */
+  moveContainer: function() {
+    const $Container = $("#wertiview-container");
+
+    if (view.interaction.toolbarUI.is(":visible")) {
+      $Container.addClass("down");
+    }
+    else {
+      view.VIEWmenu.hide();
+      $Container.removeClass("down");
+    }
+  },
 
   /*
    * Start the enhancement process by creating the request data.
@@ -223,7 +229,7 @@ view.interaction = {
     activityData["topic"] = view.topic;
     activityData["filter"] = view.filter;
     activityData["activity"] = view.activity;
-    activityData["document"] = $("#wertiview-body-content").html();
+    activityData["document"] = $("#wertiview-content").html();
 
     // send a request to the background script, to send the activity data to the server for processing
     console.log("createActivityData: request 'send activityData'");
@@ -257,7 +263,7 @@ view.interaction = {
   addServerMarkup: function(data) {
     console.log("addServerMarkup(data)");
 
-    $("#wertiview-body-content").html(data);
+    $("#wertiview-content").html(data);
 
     view.selector.select(view.filter);
     view.interaction.runActivity();
