@@ -1,12 +1,12 @@
 view.toolbarUtils = {
-  toolbarUI: undefined,
+  toolbar: undefined,
 
   /**
-   * Create the toolbar ui iframe and inject it in the current page.
+   * Create the toolbar ui toolbar and inject it in the current page.
    *
-   * @returns the iframe containing the toolbar
+   * @returns the toolbar containing the toolbar
    */
-  initToolbar: function() {
+  init: function() {
     const toolbarHTML = chrome.runtime.getURL("toolbar/toolbar.html");
 
     const $iframe = $("<iframe>");
@@ -21,7 +21,7 @@ view.toolbarUtils = {
 
     $Body.prepend($iframe);
 
-    return view.toolbarUtils.toolbarUI = $iframe;
+    return view.toolbarUtils.toolbar = $iframe;
   },
 
   /**
@@ -51,14 +51,14 @@ view.toolbarUtils = {
    * initialize it otherwise.
    * Hide the view menu in case it is still open.
    */
-  toggleToolbar: function() {
-    const toolbarUI = view.toolbarUtils.toolbarUI;
-    if (toolbarUI) {
-      toolbarUI.toggle();
+  toggle: function() {
+    const toolbar = view.toolbarUtils.toolbar;
+    if (toolbar) {
+      toolbar.toggle();
       view.toolbarUtils.moveContainer();
     } else {
       view.setGeneralOptions();
-      view.toolbarUtils.initToolbar();
+      view.toolbarUtils.init();
     }
   },
 
@@ -69,7 +69,7 @@ view.toolbarUtils = {
   moveContainer: function() {
     const $Container = $("#wertiview-container");
 
-    if (view.toolbarUtils.toolbarUI.is(":visible")) {
+    if (view.toolbarUtils.toolbar.is(":visible")) {
       $Container.addClass("down");
     }
     else {

@@ -5,7 +5,7 @@
 function processMessage(request) {
   switch (request.msg) {
     case "toggle toolbar":
-      view.toolbarUtils.toggleToolbar();
+      view.toolbarUtils.toggle();
       break;
     case "toggle VIEW Menu":
       view.VIEWmenu.toggle();

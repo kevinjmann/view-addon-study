@@ -18,7 +18,7 @@ describe("toolbar-utils.js", function() {
   afterEach(function() {
     sandbox.restore();
     chrome.extension.getURL.reset();
-    view.toolbarUtils.toolbarUI = undefined;
+    view.toolbarUtils.toolbar = undefined;
     $("#view-toolbar-iframe").remove();
     $("body").append($("#ru-no-markup-body"));
     $("#wertiview-container").remove();
@@ -35,7 +35,7 @@ describe("toolbar-utils.js", function() {
       // the selectors below can be freely used in the tests without problems
       fixture.load("/fixtures/ru-no-markup.html");
 
-      view.toolbarUtils.initToolbar();
+      view.toolbarUtils.init();
 
       expect($("#view-toolbar-iframe").length).to.be.above(0);
       expect($("#wertiview-container").length).to.be.above(0);
@@ -44,9 +44,9 @@ describe("toolbar-utils.js", function() {
     });
   });
 
-  describe("initToolbar", function() {
+  describe("init", function() {
     it("should get the correct url", function() {
-      view.toolbarUtils.initToolbar();
+      view.toolbarUtils.init();
 
       sinon.assert.called(chrome.runtime.getURL);
       sinon.assert.calledWithExactly(chrome.runtime.getURL, "toolbar/toolbar.html");
@@ -55,7 +55,7 @@ describe("toolbar-utils.js", function() {
     it("should assign the correct id", function() {
       const attrSpy = sandbox.spy($.fn, "attr");
 
-      view.toolbarUtils.initToolbar();
+      view.toolbarUtils.init();
 
       sinon.assert.called(attrSpy);
       sinon.assert.calledWithExactly(attrSpy.getCall(0),
@@ -67,7 +67,7 @@ describe("toolbar-utils.js", function() {
     it("should assign a src", function() {
       const attrSpy = sandbox.spy($.fn, "attr");
 
-      view.toolbarUtils.initToolbar();
+      view.toolbarUtils.init();
 
       sinon.assert.called(attrSpy);
       sinon.assert.calledWith(attrSpy.getCall(1), "src");
@@ -76,7 +76,7 @@ describe("toolbar-utils.js", function() {
     it("should call addContainer(selector)", function() {
       const addContainerSpy = sandbox.spy(view.toolbarUtils, "addContainer");
 
-      view.toolbarUtils.initToolbar();
+      view.toolbarUtils.init();
 
       sinon.assert.calledOnce(addContainerSpy);
     });
@@ -140,33 +140,33 @@ describe("toolbar-utils.js", function() {
     it("should call VIEWmenu.add()", function() {
       const addSpy = sandbox.spy(view.VIEWmenu, "add");
 
-      view.toolbarUtils.initToolbar();
+      view.toolbarUtils.init();
 
       sinon.assert.calledOnce(addSpy);
     });
 
-    it("should call prepend(iframe)", function() {
+    it("should call prepend(toolbar)", function() {
       const prependSpy = sandbox.spy($.fn, "prepend");
 
-      view.toolbarUtils.initToolbar();
+      view.toolbarUtils.init();
 
       sinon.assert.called(prependSpy);
       expect($(prependSpy.getCall(1).args[0]).attr("id")).to.equal("view-toolbar-iframe");
     });
 
-    it("should return the iframe", function() {
-      view.toolbarUtils.initToolbar();
-      expect($(view.toolbarUtils.toolbarUI).attr("id")).to.equal("view-toolbar-iframe");
+    it("should return the toolbar", function() {
+      view.toolbarUtils.init();
+      expect($(view.toolbarUtils.toolbar).attr("id")).to.equal("view-toolbar-iframe");
     });
   });
 
-  describe("toggleToolbar", function() {
+  describe("toggle", function() {
     it("should toggle the toolbar, as it already exists", function() {
       const toggleSpy = sandbox.spy($.fn, "toggle");
 
-      view.toolbarUtils.initToolbar();
+      view.toolbarUtils.init();
 
-      view.toolbarUtils.toggleToolbar();
+      view.toolbarUtils.toggle();
 
       sinon.assert.called(toggleSpy);
     });
@@ -174,16 +174,16 @@ describe("toolbar-utils.js", function() {
     it("should call moveContainer(), as the toolbar exists", function() {
       const moveContainerSpy = sandbox.spy(view.toolbarUtils, "moveContainer");
 
-      view.toolbarUtils.initToolbar();
+      view.toolbarUtils.init();
 
-      view.toolbarUtils.toggleToolbar();
+      view.toolbarUtils.toggle();
 
       sinon.assert.called(moveContainerSpy);
     });
 
     describe("moveContainer", function() {
       it("should find the class 'down' inside the container, as the toolbar is visible", function() {
-        view.toolbarUtils.initToolbar();
+        view.toolbarUtils.init();
 
         $("#wertiview-container").removeClass("down");
 
@@ -195,7 +195,7 @@ describe("toolbar-utils.js", function() {
       it("should call VIEWmenu.hide(), as the toolbar is hidden", function() {
         const hideSpy = sandbox.spy(view.VIEWmenu, "hide");
 
-        view.toolbarUtils.initToolbar();
+        view.toolbarUtils.init();
 
         $("#view-toolbar-iframe").hide();
 
@@ -205,7 +205,7 @@ describe("toolbar-utils.js", function() {
       });
 
       it("should not find the class 'down' inside the container, as the toolbar is hidden", function() {
-        view.toolbarUtils.initToolbar();
+        view.toolbarUtils.init();
 
         $("#view-toolbar-iframe").hide();
 
@@ -220,15 +220,15 @@ describe("toolbar-utils.js", function() {
     it("should call setGeneralOptions(), as the toolbar doesn't exists yet", function() {
       const setGeneralOptionsSpy = sandbox.spy(view, "setGeneralOptions");
 
-      view.toolbarUtils.toggleToolbar();
+      view.toolbarUtils.toggle();
 
       sinon.assert.called(setGeneralOptionsSpy);
     });
 
-    it("should call initToolbar(), as the toolbar doesn't exists yet", function() {
-      const initToolbarSpy = sandbox.spy(view.toolbarUtils, "initToolbar");
+    it("should call init(), as the toolbar doesn't exists yet", function() {
+      const initToolbarSpy = sandbox.spy(view.toolbarUtils, "init");
 
-      view.toolbarUtils.toggleToolbar();
+      view.toolbarUtils.toggle();
 
       sinon.assert.called(initToolbarSpy);
     });
