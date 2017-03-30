@@ -1,4 +1,4 @@
-view.toolbarUtils = {
+view.toolbarIframe = {
   /**
    * Create the toolbar ui toolbar and inject it in the current page.
    *
@@ -32,7 +32,7 @@ view.toolbarUtils = {
       view.container.moveContainer();
     } else {
       view.setGeneralOptions();
-      view.toolbarUtils.init();
+      view.toolbarIframe.init();
     }
   }
 };
