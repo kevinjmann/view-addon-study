@@ -85,7 +85,7 @@ const background = {
 
   /**
    * There was a request to toggle the toolbar.
-   * Pass it on to interaction.js.
+   * Pass it on to enhancement.js.
    */
   toggleToolbar: function() {
     chrome.tabs.sendMessage(background.currentTabId, {msg: "toggle toolbar"});
@@ -93,7 +93,7 @@ const background = {
 
   /**
    * The toolbar ui send the message to toggle the VIEW menu.
-   * Pass it on to interaction.js.
+   * Pass it on to enhancement.js.
    */
   toggleVIEWMenu: function() {
     chrome.tabs.sendMessage(background.currentTabId, {msg: "toggle VIEW Menu"});
@@ -101,7 +101,7 @@ const background = {
 
   /**
    * The toolbar ui send the message to hide the VIEW menu.
-   * Pass it on to interaction.js.
+   * Pass it on to enhancement.js.
    */
   hideVIEWMenu: function() {
     chrome.tabs.sendMessage(background.currentTabId, {msg: "hide VIEW Menu"});
@@ -140,7 +140,7 @@ const background = {
 
   /**
    * The toolbar ui send the message to call abort().
-   * Pass it on to interaction.js.
+   * Pass it on to enhancement.js.
    */
   callAbort: function() {
     chrome.tabs.sendMessage(background.currentTabId, {msg: "call abort"});
@@ -148,7 +148,7 @@ const background = {
 
   /**
    * The toolbar ui send the message to call restoreToOriginal().
-   * Pass it on to interaction.js.
+   * Pass it on to enhancement.js.
    */
   callRestoreToOriginal: function() {
     chrome.tabs.sendMessage(background.currentTabId, {msg: "call restoreToOriginal"});
@@ -199,10 +199,10 @@ const background = {
   },
 
   /**
-   * Send the activity data from interaction.js to the
+   * Send the activity data from enhancement.js to the
    * server for processing.
    * If successful, request a call of addServerMarkup
-   * in interaction.js.
+   * in enhancement.js.
    *
    * @param {*} request the message sent by the calling script
    */
@@ -224,7 +224,7 @@ const background = {
   },
 
   /**
-   * Send html markup data from the server to interaction.js so that
+   * Send html markup data from the server to enhancement.js so that
    * the addServerMarkup method there will be called.
    *
    * @param {string} data the html markup to be added to the current page
@@ -283,10 +283,10 @@ const background = {
   },
 
   /**
-   * Send the request data from interaction.js to the
+   * Send the request data from enhancement.js to the
    * server for processing.
    * If successful, request a call of saveDataAndInsertSpans
-   * in interaction.js.
+   * in enhancement.js.
    *
    * @param {*} request the message sent by the calling script
    */
@@ -504,8 +504,8 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 });
 
 /**
- * Processes all messages received from interaction.js and toolbar.js.
- * Sends requests to interaction.js, toolbar.js or the server depending on the
+ * Processes all messages received from enhancement.js and toolbar.js.
+ * Sends requests to enhancement.js, toolbar.js or the server depending on the
  * message.
  *
  * @param {*} request the message sent by the calling script

@@ -26,7 +26,7 @@ view.rusverbaspect = {
       hitList.push($(this));
     });
 
-    view.interaction.mcHandler(hitList,
+    view.enhancement.mcHandler(hitList,
       view[view.topicName].inputHandler,
       view[view.topicName].hintHandler,
       view[view.topicName].getOptions,
@@ -47,7 +47,7 @@ view.rusverbaspect = {
       hitList.push($(this));
     });
 
-    view.interaction.clozeHandler(hitList,
+    view.enhancement.clozeHandler(hitList,
       view[view.topicName].inputHandler,
       view[view.topicName].hintHandler,
       view[view.topicName].getCorrectAnswer,
@@ -104,11 +104,11 @@ view.rusverbaspect = {
 
     if (userid) {	// if the user is logged in (userid is not null)
       // collect info data before page update
-      infos = view.interaction.collectInfoData(
+      infos = view.enhancement.collectInfoData(
         element,
         false, // usedHint: only true when hint handler
-        view.interaction.collectInputData,
-        view.interaction.collectAnswerData);
+        view.enhancement.collectInputData,
+        view.enhancement.collectAnswerData);
     }
 
     // if the answer is correct, turn into text, else color text within input
@@ -140,8 +140,8 @@ view.rusverbaspect = {
       var info = infos.info;
       var elementInfo = infos.elementInfo;
 
-      // collect and send interaction data after page update
-      view.interaction.collectInteractionData(
+      // collect and send enhancement data after page update
+      view.enhancement.collectInteractionData(
         info,
         elementInfo,
         countsAsCorrect,
@@ -164,11 +164,11 @@ view.rusverbaspect = {
 
     if (userid) {	// if the user is logged in (userid is not null)
       // collect info data before page update
-      infos = view.interaction.collectInfoData(
+      infos = view.enhancement.collectInfoData(
         element,
         true, // usedHint: only true when hint handler
-        view.interaction.collectInputData,
-        view.interaction.collectAnswerData);
+        view.enhancement.collectInputData,
+        view.enhancement.collectAnswerData);
     }
 
     // fill in the answer by replacing input with text
@@ -187,8 +187,8 @@ view.rusverbaspect = {
       var info = infos.info;
       var elementInfo = infos.elementInfo;
 
-      // collect and send interaction data after page update
-      view.interaction.collectInteractionData(
+      // collect and send enhancement data after page update
+      view.enhancement.collectInteractionData(
         info,
         elementInfo,
         true, // if the user used a hint, then it is definitely a correct answer

@@ -221,17 +221,17 @@ view.rusassistivereading = {
 
     if (view.userid) {	// if the user is logged in (userid is not null)
       // collect info data before page update
-      infos = view.interaction.collectInfoData(
+      infos = view.enhancement.collectInfoData(
         element,
         false, // usedHint: only true when hint handler
-        view.interaction.collectInputData,
-        view.interaction.collectAnswerData);
+        view.enhancement.collectInputData,
+        view.enhancement.collectAnswerData);
 
       var info = infos.info;
       var elementInfo = infos.elementInfo;
 
-      // collect and send interaction data after page update
-      view.interaction.collectInteractionData(
+      // collect and send enhancement data after page update
+      view.enhancement.collectInteractionData(
         info,
         elementInfo,
         countsAsCorrect,

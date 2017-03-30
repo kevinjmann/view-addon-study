@@ -17,28 +17,28 @@ function processMessage(request) {
       view.startToEnhance();
       break;
     case "call initialInteractionState":
-      view.interaction.callInitialInteractionState(request);
+      view.enhancement.callInitialInteractionState(request);
       break;
     case "call addServerMarkup":
-      view.interaction.callAddServerMarkup(request);
+      view.enhancement.callAddServerMarkup(request);
       break;
     case "call setTaskId":
       view.setTaskId(request.taskId);
       break;
     case "call abort":
-      view.interaction.callAbort(request);
+      view.enhancement.callAbort(request);
       break;
     case "call abortEnhancement":
-      view.interaction.abortEnhancement(request);
+      view.enhancement.abortEnhancement(request);
       break;
     case "call restoreToOriginal":
-      view.interaction.callRestoreToOriginal(request);
+      view.enhancement.callRestoreToOriginal(request);
       break;
     case "call signOut":
-      view.interaction.signOutUser(request);
+      view.enhancement.signOutUser(request);
       break;
     case "call signIn":
-      view.interaction.signInUser(request);
+      view.enhancement.signInUser(request);
   }
 }
 

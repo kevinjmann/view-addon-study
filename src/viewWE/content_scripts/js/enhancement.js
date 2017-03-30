@@ -1,4 +1,4 @@
-view.interaction = {
+view.enhancement = {
   isAborted: false,
 
   /*
@@ -12,7 +12,7 @@ view.interaction = {
     // remove any previous wertiview markup an restore the page to the original
     if ($("viewenhancement").length > 0 ||
       $("viewtoken").length > 0) {
-      view.interaction.restoreToOriginal();
+      view.enhancement.restoreToOriginal();
     }
 
     // blur the page for cloze activity
@@ -25,7 +25,7 @@ view.interaction = {
 
     if (view.showInst) {
       // Construct the instruction for the given topic and activity
-      view.interaction.constructInstruction();
+      view.enhancement.constructInstruction();
     }
 
     // save the options used in the page
@@ -42,7 +42,7 @@ view.interaction = {
     }, view.lib.noResponse);
 
     // create the activity data from the copy with the spans in it
-    view.interaction.createActivityData(contextDoc);
+    view.enhancement.createActivityData(contextDoc);
   },
 
   /*
@@ -86,7 +86,7 @@ view.interaction = {
    */
   callInitialInteractionState: function(request) {
     console.log("callinitialInteractionState: received '" + request.msg + "'");
-    view.interaction.initialInteractionState();
+    view.enhancement.initialInteractionState();
   },
 
   /*
@@ -169,12 +169,12 @@ view.interaction = {
     console.log("callAddServerMarkup: received '" + request.msg + "'");
     // once the server has finished processing the
     // enhancement, the user can no longer stop it
-    if (!view.interaction.isAborted) {
+    if (!view.enhancement.isAborted) {
       chrome.runtime.sendMessage({
         msg: "hide element",
         selector: "#wertiview-toolbar-abort-button"
       });
-      view.interaction.addServerMarkup(request.data);
+      view.enhancement.addServerMarkup(request.data);
     }
   },
 
@@ -187,8 +187,8 @@ view.interaction = {
     $("#wertiview-content").html(data);
 
     view.selector.select(view.filter);
-    view.interaction.runActivity();
-    view.interaction.initialInteractionState();
+    view.enhancement.runActivity();
+    view.enhancement.initialInteractionState();
     chrome.runtime.sendMessage({
       msg: "show element",
       selector: "#wertiview-toolbar-restore-button"
@@ -242,7 +242,7 @@ view.interaction = {
    */
   callAbort: function(request) {
     console.log("callAbort: received '" + request.msg + "'");
-    view.interaction.abort();
+    view.enhancement.abort();
   },
 
   /*
@@ -278,8 +278,8 @@ view.interaction = {
     console.log("abortEnhancement: received '" + request.msg + "'");
     //always revert to the Enhance button, no matter whether the
     // server process was stopped successfully
-    view.interaction.initialInteractionState();
-    view.interaction.isAborted = true;
+    view.enhancement.initialInteractionState();
+    view.enhancement.isAborted = true;
   },
 
   /*
@@ -287,7 +287,7 @@ view.interaction = {
    */
   callRestoreToOriginal: function(request) {
     console.log("callAbort: received '" + request.msg + "'");
-    view.interaction.restoreToOriginal();
+    view.enhancement.restoreToOriginal();
   },
 
   /*
@@ -300,7 +300,7 @@ view.interaction = {
   restoreToOriginal: function() {
     console.log("restoreToOriginal()");
 
-    const topicName = view.interaction.getTopicName($("body").data("wertiview-topic"));
+    const topicName = view.enhancement.getTopicName($("body").data("wertiview-topic"));
 
     $("body").removeData("wertiview-language");
     $("body").removeData("wertiview-topic");

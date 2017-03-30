@@ -136,7 +136,7 @@ view.lib = {
    * Illegal value for a preference (e.g., user edited about:config)
    */
   prefError: function(message) {
-    view.interaction.initialInteractionState();
+    view.enhancement.initialInteractionState();
 
     if (message) {
       alert(message);
