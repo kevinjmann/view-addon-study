@@ -212,18 +212,19 @@ module.exports = function(grunt) {
           "**/ru-nouns-mc-and-cloze.html": ["html2js"]
         }
       },
-      toolbarUtils: {
+      toolbarIframe: {
         files: {
           src: [
             "../viewWE/content_scripts/js/view.js",
-            "../viewWE/content_scripts/js/toolbar-utils.js",
+            "../viewWE/content_scripts/js/toolbar-iframe.js",
+            "../viewWE/content_scripts/js/container.js",
             "../viewWE/content_scripts/js/view-menu.js",
             "../viewWE/content_scripts/js/about.js",
-            "test/unit/content_scripts/toolbar-utils.test.js"
+            "test/unit/content_scripts/toolbar-iframe.test.js"
           ]
         },
         preprocessors: {
-          "../viewWE/content_scripts/js/toolbar-utils.js": ["coverage"],
+          "../viewWE/content_scripts/js/toolbar-iframe.js": ["coverage"],
           "**/ru-no-markup.html": ["html2js"]
         }
       },
