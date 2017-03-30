@@ -708,13 +708,11 @@ describe("activityHelper.js", function() {
   });
   
   describe("getCorrectAnswer", function() {
-    it("should call matchCapitalization($hit.data('correctform'), capType) as the language is 'ru'", function() {
+    it("should call matchCapitalization(correctform, capType) as 'correctform' does exist", function() {
       const getCorrectAnswerSpy = sandbox.spy(view.activityHelper, "getCorrectAnswer");
       const matchCapitalizationSpy = sandbox.spy(view.lib, "matchCapitalization");
 
       const $hit = $("[data-type='hit']").first();
-
-      view.language = "ru";
 
       view.activityHelper.getCorrectAnswer($hit, 2);
 
@@ -727,12 +725,12 @@ describe("activityHelper.js", function() {
       expect(getCorrectAnswerSpy.firstCall.returnValue).to.equal("Усвоение");
     });
 
-    it("should return the hit text as the language is not 'ru'", function() {
+    it("should return the hit text as 'correctform' does not exist", function() {
       const getCorrectAnswerSpy = sandbox.spy(view.activityHelper, "getCorrectAnswer");
 
       const $hit = $("[data-type='hit']").first();
 
-      view.language = "en";
+      $hit.removeAttr("data-correctform");
 
       view.activityHelper.getCorrectAnswer($hit, 2);
 
