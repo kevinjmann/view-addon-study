@@ -36,10 +36,6 @@ const view = {
   filter: "unselected",
   activity: "unselected",
 
-  // the topic name which is used to call the topic modules
-  // e.g. topic = "articles", topic name = "pos"
-  topicName: "unselected",
-
   /**
    * Save general options to the storage
    * and retrieve changed options.
@@ -168,8 +164,6 @@ const view = {
       view.setSelections(storageItems);
 
       view.setTimestamp(storageItems.timestamp);
-
-      view.topicName = view.enhancer.getTopicName(storageItems.topic);
 
       view.enhancer.enhance();
     });
