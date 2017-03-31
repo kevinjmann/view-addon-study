@@ -1,132 +1,70 @@
 view.enhancer = {
   isAborted: false,
 
-  /*
+  /**
    * Start the enhancement process by creating the request data.
    * Send the request data to background.js for further processing
    * on the server side.
    */
   enhance: function() {
-    console.log("enhance()");
-
-    // remove any previous wertiview markup an restore the page to the original
-    if ($("viewenhancement").length > 0 ||
-      $("viewtoken").length > 0) {
+    if ($("viewenhancement").length > 0) {
       view.enhancer.restoreToOriginal();
     }
 
-    // blur the page for cloze activity
-    if (view.activity == "cloze") {
+    if ("cloze" === view.activity) {
       view.blur.add();
     }
 
-    // identify context document under consideration
-    const contextDoc = document;
-
     if (view.showInst) {
-      // Construct the instruction for the given topic and activity
       view.enhancer.constructInstruction();
     }
 
-    // save the options used in the page
-    $("body").data("wertiview-language", view.language);
-    $("body").data("wertiview-topic", view.topic);
-    $("body").data("wertiview-activity", view.activity);
+    view.enhancer.requestToToggleElement(
+      "show element",
+      "#wertiview-toolbar-abort-button"
+    );
 
-    console.log("enhance: body(data): " + JSON.stringify($("body").data()));
-
-    // only enable the abort button once we have stored the enhId
-    chrome.runtime.sendMessage({
-      msg: "show element",
-      selector: "#wertiview-toolbar-abort-button"
-    }, view.lib.noResponse);
-
-    // create the activity data from the copy with the spans in it
-    view.enhancer.createActivityData(contextDoc);
+    view.enhancer.createActivityData();
   },
 
-  /*
-   * Get the topic name from the topic.
+  /**
+   * Start to remove the wertiview markup and
+   * restore the original page.
    */
-  getTopicName: function(topic) {
-    // figure out corresponding topic name
-    let topicName = topic.toLowerCase();
+  restoreToOriginal: function() {
+    console.log("restoreToOriginal()");
 
-    // exceptions:
-    //  - e.g. Arts and Dets and Preps use the 'pos' topic
-    switch (topic) {
-      case "articles":
-      case "determiners":
-      case "Preps":
-        topicName = "pos";
-        break;
-      case "nouns-singular":
-      case "nouns-plural":
-        topicName = "nouns";
-        break;
-      case "RusAdjectiveFeminine":
-      case "RusAdjectiveMasculine":
-      case "RusAdjectiveNeutral":
-        topicName = "rusadjectives";
-        break;
-      case "RusVerbPastTense":
-      case "RusVerbPresentTense":
-      case "RusVerbPerfective":
-      case "RusVerbImperfective":
-        topicName = "rusverbs";
-        break;
-      default:
-        break;
-    }
-    return topicName;
-  },
+    view.activityHelper.restore();
 
-  /*
-   * The extension send the message to call initialInteractionState().
-   */
-  callInitialInteractionState: function(request) {
-    console.log("callinitialInteractionState: received '" + request.msg + "'");
-    view.enhancer.initialInteractionState();
-  },
+    $("viewenhancement").each(function() {
+      $(this).replaceWith($(this).data("original-text"));
+    });
 
-  /*
-   * Returns to initial interaction state, where the loading image and abort
-   * button are hidden and the enhance button is enabled. Blur overlay is removed.
-   */
-  initialInteractionState: function() {
-    chrome.runtime.sendMessage({
-      msg: "hide element",
-      selector: "#wertiview-toolbar-loading-image"
-    });
-    chrome.runtime.sendMessage({
-      msg: "hide element",
-      selector: "#wertiview-toolbar-abort-button"
-    });
-    chrome.runtime.sendMessage({
-      msg: "show element",
-      selector: "#wertiview-toolbar-enhance-button"
-    });
+    view.lib.enableAnchors();
+
+    view.enhancer.requestToToggleElement(
+      "hide element",
+      "#wertiview-toolbar-restore-button"
+    );
+
+    view.notification.remove();
     view.blur.remove();
+
+    $("#wertiview-inst-notification").remove();
   },
 
-  /*
+  /**
    * Constructs the instruction when the page is being enhanced for the given
    * topic and activity when the preference "show instructions" is enabled.
    */
-  constructInstruction: function(topicName, activityTyp) {
+  constructInstruction: function() {
     console.log("constructInstruction()");
-
-    const topics = view.topics;
-
-    const language = view.language;
 
     const topic = view.topic;
 
-    const activity = view.activity;
+    const activities = view.topics[topic][view.language].activities;
 
-    const activities = topics[topic][language].activities;
-
-    const instruction = activities[activity].description.text;
+    const instruction = activities[view.activity].description.text;
 
     if (instruction !== "") {
       // construct the instruction for the given topic and activity, can also be avoided by the user
@@ -137,11 +75,25 @@ view.enhancer = {
     }
   },
 
-  /*
+  /**
+   * Send a request to toolbar.js to toggle (show/hide) the element with the
+   * given selector.
+   *
+   * @param {String} msg the request message "show/hide element"
+   * @param {String} selector the selector of the element to toggle
+   */
+  requestToToggleElement: function(msg, selector) {
+    chrome.runtime.sendMessage({
+      msg: msg,
+      selector: selector
+    }, view.lib.noResponse);
+  },
+
+  /**
    * Creates the activity data to be send to background.js
    * for further processing on the server side.
    */
-  createActivityData: function(contextDoc) {
+  createActivityData: function() {
     console.log("createActivityData(contextDoc)");
 
     const activityData = {};
@@ -163,6 +115,34 @@ view.enhancer = {
   },
 
   /*
+   * The extension send the message to call initialInteractionState().
+   */
+  callInitialInteractionState: function(request) {
+    console.log("callinitialInteractionState: received '" + request.msg + "'");
+    view.enhancer.initialInteractionState();
+  },
+
+  /*
+   * Returns to initial interaction state, where the loading image and abort
+   * button are hidden and the enhance button is enabled. Blur overlay is removed.
+   */
+  initialInteractionState: function() {
+    view.enhancer.requestToToggleElement(
+      "hide element",
+      "#wertiview-toolbar-loading-image"
+    );
+    view.enhancer.requestToToggleElement(
+      "hide element",
+      "#wertiview-toolbar-abort-button"
+    );
+    view.enhancer.requestToToggleElement(
+      "show element",
+      "#wertiview-toolbar-enhance-button"
+    );
+    view.blur.remove();
+  },
+
+  /*
    * The extension send the message to call addServerMarkup(data, options).
    */
   callAddServerMarkup: function(request) {
@@ -170,10 +150,10 @@ view.enhancer = {
     // once the server has finished processing the
     // enhancement, the user can no longer stop it
     if (!view.enhancer.isAborted) {
-      chrome.runtime.sendMessage({
-        msg: "hide element",
-        selector: "#wertiview-toolbar-abort-button"
-      });
+      view.enhancer.requestToToggleElement(
+        "hide element",
+        "#wertiview-toolbar-abort-button"
+      );
       view.enhancer.addServerMarkup(request.data);
     }
   },
@@ -189,10 +169,10 @@ view.enhancer = {
     view.selector.select(view.filter);
     view.enhancer.runActivity();
     view.enhancer.initialInteractionState();
-    chrome.runtime.sendMessage({
-      msg: "show element",
-      selector: "#wertiview-toolbar-restore-button"
-    });
+    view.enhancer.requestToToggleElement(
+      "show element",
+      "#wertiview-toolbar-restore-button"
+    );
   },
 
   /*
@@ -251,9 +231,6 @@ view.enhancer = {
   abort: function() {
     console.log("abort()");
 
-    // find out the enhancement ID of this page
-    const enhId = $("body").data("wertiview-enhId");
-
     const requestData = {};
     requestData["url"] = view.url;
     requestData["language"] = view.language;
@@ -288,47 +265,6 @@ view.enhancer = {
   callRestoreToOriginal: function(request) {
     console.log("callAbort: received '" + request.msg + "'");
     view.enhancer.restoreToOriginal();
-  },
-
-  /*
-   * Start to remove the wertiview markup and
-   * restore the original page.
-   * TODO: BUG: in the cloze activity not everything
-   * gets restored: for instance when the wrong answer is left alone and
-   * enhance is pressed, the token count increases, same with correct answers.
-   */
-  restoreToOriginal: function() {
-    console.log("restoreToOriginal()");
-
-    const topicName = view.enhancer.getTopicName($("body").data("wertiview-topic"));
-
-    $("body").removeData("wertiview-language");
-    $("body").removeData("wertiview-topic");
-    $("body").removeData("wertiview-activity");
-
-    // if we can't find a topic name, skip the rest of the removal
-    if (topicName == null) {
-      return;
-    }
-
-    // remove activity specific markup
-    view.activityHelper.restore();
-
-    $("viewenhancement").each(function() {
-      $(this).replaceWith($(this).data("original-text"));
-    });
-
-    view.lib.enableAnchors();
-
-    chrome.runtime.sendMessage({
-      msg: "hide element",
-      selector: "#wertiview-toolbar-restore-button"
-    }, view.lib.noResponse);
-
-    view.notification.remove();
-    view.blur.remove();
-
-    $("#wertiview-inst-notification").remove();
   },
 
   /*
