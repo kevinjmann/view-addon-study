@@ -254,8 +254,15 @@ const background = {
         background.ajaxError(xhr, "no-task-id");
       }
     })
-    .fail(function(xhr, textStatus) {
-      background.ajaxError(xhr, textStatus);
+    .fail(function() {
+      background.signOutUser();
+      background.createBasicNotification(
+        "auth-token-expired",
+        "The auth token expired!",
+        "The token for user authentication expired, " +
+        "you will be signed out automatically. " +
+        "Please sign in again!"
+      );
     });
   },
 

@@ -606,8 +606,8 @@ describe("background.js", function() {
           expect(ajaxErrorSpy.firstCall.args[1]).to.equal("no-task-id");
         });
 
-        it("should fail to send task data", function() {
-          const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
+        it("should fail to send task data, and call signOutUser()", function() {
+          const signOutUserSpy = sandbox.spy(background, "signOutUser");
 
           const serverTaskURL = "https://view.aleks.bg/act/task";
 
@@ -626,8 +626,37 @@ describe("background.js", function() {
 
           sandbox.server.respond();
 
-          sinon.assert.calledOnce(ajaxErrorSpy);
-          expect(ajaxErrorSpy.firstCall.args[1]).to.equal("error");
+          sinon.assert.calledOnce(signOutUserSpy);
+        });
+
+        it("should fail to send task data, and create a 'auth-token-expired' notification", function() {
+          const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
+
+          const serverTaskURL = "https://view.aleks.bg/act/task";
+
+          const request = {
+            msg: "send taskData and get taskId",
+            serverTaskURL: serverTaskURL,
+            taskData: "some task data"
+          };
+
+          sandbox.useFakeServer();
+
+          sandbox.server.respondWith("POST", serverTaskURL,
+            [404, {}, ""]);
+
+          background.sendTaskDataAndGetTaskId(request);
+
+          sandbox.server.respond();
+
+          sinon.assert.calledOnce(createBasicNotificationSpy);
+          sinon.assert.calledWithExactly(createBasicNotificationSpy,
+            "auth-token-expired",
+            "The auth token expired!",
+            "The token for user authentication expired, " +
+            "you will be signed out automatically. " +
+            "Please sign in again!"
+          );
         });
       });
 
