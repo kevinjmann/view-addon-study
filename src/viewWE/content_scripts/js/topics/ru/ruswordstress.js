@@ -201,7 +201,7 @@ view.ruswordstress = {
       hitList.push($(this));
     });
 
-    view.enhancement.mcHandler(hitList,
+    view.enhancer.mcHandler(hitList,
       view[view.topicName].inputHandler,
       view[view.topicName].hintHandler,
       view[view.topicName].getOptions,
@@ -328,17 +328,17 @@ view.ruswordstress = {
 
     if (view.userid) {	// if the user is logged in (userid is not null)
       // collect info data before page update
-      infos = view.enhancement.collectInfoData(
+      infos = view.enhancer.collectInfoData(
         element,
         false, // usedHint: only true when hint handler
-        view.enhancement.collectInputData,
-        view.enhancement.collectAnswerData);
+        view.enhancer.collectInputData,
+        view.enhancer.collectAnswerData);
 
       var info = infos.info;
       var elementInfo = infos.elementInfo;
 
-      // collect and send enhancement data after page update
-      view.enhancement.collectInteractionData(
+      // collect and send enhancer data after page update
+      view.enhancer.collectInteractionData(
         info,
         elementInfo,
         countsAsCorrect,
@@ -362,11 +362,11 @@ view.ruswordstress = {
 
     if (userid) {	// if the user is logged in (userid is not null)
       // collect info data before page update
-      infos = view.enhancement.collectInfoData(
+      infos = view.enhancer.collectInfoData(
         element,
         false, // usedHint: only true when hint handler
-        view.enhancement.collectInputData,
-        view.enhancement.collectAnswerData);
+        view.enhancer.collectInputData,
+        view.enhancer.collectAnswerData);
     }
 
     var contClass = $(element).parent().attr("contClass");
@@ -437,8 +437,8 @@ view.ruswordstress = {
       var info = infos.info;
       var elementInfo = infos.elementInfo;
 
-      // collect and send enhancement data after page update
-      view.enhancement.collectInteractionData(
+      // collect and send enhancer data after page update
+      view.enhancer.collectInteractionData(
         info,
         elementInfo,
         countsAsCorrect,
@@ -461,11 +461,11 @@ view.ruswordstress = {
 
     if (userid) {	// if the user is logged in (userid is not null)
       // collect info data before page update
-      infos = view.enhancement.collectInfoData(
+      infos = view.enhancer.collectInfoData(
         element,
         true, // usedHint: only true when hint handler
-        view.enhancement.collectInputData,
-        view.enhancement.collectAnswerData);
+        view.enhancer.collectInputData,
+        view.enhancer.collectAnswerData);
     }
 
     // fill in the answer by replacing input with text
@@ -484,8 +484,8 @@ view.ruswordstress = {
       var info = infos.info;
       var elementInfo = infos.elementInfo;
 
-      // collect and send enhancement data after page update
-      view.enhancement.collectInteractionData(
+      // collect and send enhancer data after page update
+      view.enhancer.collectInteractionData(
         info,
         elementInfo,
         true, // if the user used a hint, then it is definitely a correct answer

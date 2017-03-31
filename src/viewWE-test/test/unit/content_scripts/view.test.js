@@ -333,7 +333,7 @@ describe("view.js", function() {
     });
 
     it("should call getTopicName(view.topic)", function() {
-      const getTopicNameSpy = sandbox.spy(view.enhancement, "getTopicName");
+      const getTopicNameSpy = sandbox.spy(view.enhancer, "getTopicName");
 
       const topic = "articles";
       const storageItems = {topic: "articles"};
@@ -351,7 +351,7 @@ describe("view.js", function() {
     });
 
     it("should call enhance()", function() {
-      const enhanceSpy = sandbox.spy(view.enhancement, "enhance");
+      const enhanceSpy = sandbox.spy(view.enhancer, "enhance");
 
       const storageItems = {topic: "articles"};
 

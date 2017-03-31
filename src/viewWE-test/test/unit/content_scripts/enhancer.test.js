@@ -6,7 +6,7 @@
 
 "use strict";
 
-describe("enhancement.js", function() {
+describe("enhancer.js", function() {
   let sandbox;
 
   beforeEach(function() {

@@ -169,9 +169,9 @@ const view = {
 
       view.setTimestamp(storageItems.timestamp);
 
-      view.topicName = view.enhancement.getTopicName(storageItems.topic);
+      view.topicName = view.enhancer.getTopicName(storageItems.topic);
 
-      view.enhancement.enhance();
+      view.enhancer.enhance();
     });
   },
 

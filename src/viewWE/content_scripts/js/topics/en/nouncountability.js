@@ -55,7 +55,7 @@ view.nouncountability = {
     var noncountRatio = 20 / 100.0;
 
     // non count
-    view.enhancement.mcHandler(noncountHitList,
+    view.enhancer.mcHandler(noncountHitList,
       view[view.topicName].inputHandler,
       view[view.topicName].hintHandler,
       view[view.topicName].getOptions,
@@ -65,7 +65,7 @@ view.nouncountability = {
       noncountRatio);
 
     // count
-    view.enhancement.mcHandler(countHitList,
+    view.enhancer.mcHandler(countHitList,
       view[view.topicName].inputHandler,
       view[view.topicName].hintHandler,
       view[view.topicName].getOptions,
@@ -119,17 +119,17 @@ view.nouncountability = {
 
     if (view.userid) {	// if the user is logged in (userid is not null)
       // collect info data before page update
-      infos = view.enhancement.collectInfoData(
+      infos = view.enhancer.collectInfoData(
         element,
         false, // usedHint: only true when hint handler
-        view.enhancement.collectInputData,
-        view.enhancement.collectAnswerData);
+        view.enhancer.collectInputData,
+        view.enhancer.collectAnswerData);
 
       var info = infos.info;
       var elementInfo = infos.elementInfo;
 
-      // collect and send enhancement data after page update
-      view.enhancement.collectInteractionData(
+      // collect and send enhancer data after page update
+      view.enhancer.collectInteractionData(
         info,
         elementInfo,
         countsAsCorrect,
@@ -153,11 +153,11 @@ view.nouncountability = {
 
     if (userid) {	// if the user is logged in (userid is not null)
       // collect info data before page update
-      infos = view.enhancement.collectInfoData(
+      infos = view.enhancer.collectInfoData(
         element,
         false, // usedHint: only true when hint handler
-        view.enhancement.collectInputData,
-        view.enhancement.collectAnswerData);
+        view.enhancer.collectInputData,
+        view.enhancer.collectAnswerData);
     }
 
     // if the answer is correct, turn into text, else color text within input
@@ -192,8 +192,8 @@ view.nouncountability = {
       var info = infos.info;
       var elementInfo = infos.elementInfo;
 
-      // collect and send enhancement data after page update
-      view.enhancement.collectInteractionData(
+      // collect and send enhancer data after page update
+      view.enhancer.collectInteractionData(
         info,
         elementInfo,
         countsAsCorrect,
@@ -216,11 +216,11 @@ view.nouncountability = {
 
     if (userid) {	// if the user is logged in (userid is not null)
       // collect info data before page update
-      infos = view.enhancement.collectInfoData(
+      infos = view.enhancer.collectInfoData(
         element,
         true, // usedHint: only true when hint handler
-        view.enhancement.collectInputData,
-        view.enhancement.collectAnswerData);
+        view.enhancer.collectInputData,
+        view.enhancer.collectAnswerData);
     }
 
     // fill in the answer by replacing input with text
@@ -242,8 +242,8 @@ view.nouncountability = {
       var info = infos.info;
       var elementInfo = infos.elementInfo;
 
-      // collect and send enhancement data after page update
-      view.enhancement.collectInteractionData(
+      // collect and send enhancer data after page update
+      view.enhancer.collectInteractionData(
         info,
         elementInfo,
         true, // if the user used a hint, then it is definitely a correct answer

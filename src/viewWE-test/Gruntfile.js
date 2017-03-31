@@ -79,7 +79,7 @@ module.exports = function(grunt) {
           src: [
             "../viewWE/content_scripts/js/view.js",
             "../viewWE/content_scripts/js/lib.js",
-            "../viewWE/content_scripts/js/enhancement.js",
+            "../viewWE/content_scripts/js/enhancer.js",
             "test/unit/content_scripts/view.test.js"
           ]
         },
@@ -244,12 +244,12 @@ module.exports = function(grunt) {
           "**/ru-no-markup.html": ["html2js"]
         }
       },
-      enhancement: {
+      enhancer: {
         files: {
           src: [
             "../viewWE/content_scripts/js/view.js",
             "../viewWE/content_scripts/js/selector.js",
-            "../viewWE/content_scripts/js/enhancement.js",
+            "../viewWE/content_scripts/js/enhancer.js",
             "../viewWE/content_scripts/js/view-menu.js",
             "../viewWE/content_scripts/js/about.js",
             "../viewWE/content_scripts/js/blur.js",
@@ -260,11 +260,11 @@ module.exports = function(grunt) {
             "../viewWE/content_scripts/js/activities/click.js",
             "../viewWE/content_scripts/js/activities/mc.js",
             "../viewWE/content_scripts/js/activities/cloze.js",
-            "test/unit/content_scripts/enhancement.test.js"
+            "test/unit/content_scripts/enhancer.test.js"
           ]
         },
         preprocessors: {
-          "../viewWE/content_scripts/js/enhancement.js": ["coverage"],
+          "../viewWE/content_scripts/js/enhancer.js": ["coverage"],
           "**/ru-no-markup.html": ["html2js"]
         }
       }

@@ -713,7 +713,7 @@ describe("background.js", function() {
           sinon.assert.calledOnce(callAbortEnhancementSpy);
         });
 
-        it("should send a request to the content script to abort the enhancement", function() {
+        it("should send a request to the content script to abort the enhancer", function() {
           background.currentTabId = 5;
 
           background.callAbortEnhancement();
@@ -860,7 +860,7 @@ describe("background.js", function() {
         });
 
         it("should trigger error 494, but nothing should happen", function() {
-          // enhancement was stopped on client's request, we do nothing
+          // enhancer was stopped on client's request, we do nothing
           // to not scare off the user
           background.ajaxError({status: 494}, "error");
         });
