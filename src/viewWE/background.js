@@ -284,8 +284,8 @@ const background = {
 
   /**
    * Send the request data from enhancer.js to the
-   * server for processing.
-   * If successful, request a call of saveDataAndInsertSpans
+   * server to abort the processing.
+   * If successful, request a call of abortEnhancement()
    * in enhancer.js.
    *
    * @param {*} request the message sent by the calling script
