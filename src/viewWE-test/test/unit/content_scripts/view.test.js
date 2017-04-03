@@ -132,8 +132,8 @@ describe("view.js", function() {
             sinon.assert.calledWithExactly(chrome.storage.local.set, {
               userEmail: "",
               userid: "",
-              user: "Eduard",
-              token: "authtoken"
+              user: "",
+              token: ""
             });
           });
 
