@@ -603,7 +603,7 @@ describe("background.js", function() {
           sandbox.server.respond();
 
           sinon.assert.calledOnce(ajaxErrorSpy);
-          expect(ajaxErrorSpy.firstCall.args[1]).to.equal("no-task-id");
+          expect(ajaxErrorSpy.firstCall.args[1]).to.equal("no-task-data");
         });
 
         it("should fail to send task data, and call signOutUser()", function() {
@@ -684,7 +684,7 @@ describe("background.js", function() {
           const interactionData = "some interaction data";
 
           const request = {
-            msg: "send taskData and get taskId",
+            msg: "send interactionData",
             serverTrackingURL: serverTrackingURL,
             interactionData: interactionData
           };
@@ -697,6 +697,58 @@ describe("background.js", function() {
             interactionData,
             10000
           );
+        });
+
+        it("should succeed to send interaction data, get the performance data and call callShowPerformance(data)", function() {
+          const callShowPerformanceSpy = sandbox.spy(background, "callShowPerformance");
+
+          const serverTrackingURL = "https://view.aleks.bg/act/tracking";
+          const interactionData = "some interaction data";
+
+          const request = {
+            msg: "send interactionData",
+            serverTrackingURL: serverTrackingURL,
+            interactionData: interactionData
+          };
+
+          sandbox.useFakeServer();
+
+          const performanceData = "some performance data";
+
+          sandbox.server.respondWith("POST", serverTrackingURL,
+            [200, {"Content-Type": "application/json"}, JSON.stringify(performanceData)]);
+
+          background.sendInteractionData(request);
+
+          sandbox.server.respond();
+
+          sinon.assert.calledOnce(callShowPerformanceSpy);
+          sinon.assert.calledWithExactly(callShowPerformanceSpy, performanceData);
+        });
+
+        it("should succeed to send interaction data, but fail to receive data from the server", function() {
+          const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
+
+          const serverTrackingURL = "https://view.aleks.bg/act/tracking";
+          const interactionData = "some interaction data";
+
+          const request = {
+            msg: "send interactionData",
+            serverTrackingURL: serverTrackingURL,
+            interactionData: interactionData
+          };
+
+          sandbox.useFakeServer();
+
+          sandbox.server.respondWith("POST", serverTrackingURL,
+            [200, {"Content-Type": "application/json"}, ""]);
+
+          background.sendInteractionData(request);
+
+          sandbox.server.respond();
+
+          sinon.assert.calledOnce(ajaxErrorSpy);
+          expect(ajaxErrorSpy.firstCall.args[1]).to.equal("no-performance-data");
         });
       });
 
@@ -801,14 +853,27 @@ describe("background.js", function() {
           sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
         });
 
-        it("should create the 'no-task-id'", function() {
+        it("should create the 'no-task-data-notification'", function() {
           const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
 
-          const id = "no-task-id-notification";
-          const title = "No task id!";
-          const message = "The VIEW server did not send the task id.";
+          const id = "no-task-data-notification";
+          const title = "No task data!";
+          const message = "The VIEW server did not send the task data.";
 
-          background.ajaxError({}, "no-task-id");
+          background.ajaxError({}, "no-task-data");
+
+          sinon.assert.calledOnce(createBasicNotificationSpy);
+          sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
+        });
+
+        it("should create the 'no-performance-data-notification'", function() {
+          const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
+
+          const id = "no-performance-data-notification";
+          const title = "No performance data!";
+          const message = "The VIEW server did not send the performance data.";
+
+          background.ajaxError({}, "no-performance-data");
 
           sinon.assert.calledOnce(createBasicNotificationSpy);
           sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
