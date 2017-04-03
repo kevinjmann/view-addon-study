@@ -14,7 +14,7 @@ view.notification = {
     $messagediv.attr("id", "wertiview-notification-message");
 
     // add message text to div
-    $messagediv.text(notice);
+    $messagediv.html(notice);
 
     $noticediv.append($messagediv);
 

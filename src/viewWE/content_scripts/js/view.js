@@ -13,8 +13,8 @@ const view = {
   userid: "",
 
   // task data
-  user: "Eduard",
-  token: "authtoken",
+  user: "",
+  token: "",
   url: document.baseURI,
   timestamp: "",
   numberOfExercises: 0,

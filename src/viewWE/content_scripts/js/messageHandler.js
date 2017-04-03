@@ -25,6 +25,9 @@ function processMessage(request) {
     case "call setTaskId":
       view.setTaskId(request.taskId);
       break;
+    case "call showPerformance":
+      view.feedbacker.showPerformance(request.performanceData);
+      break;
     case "call abort":
       view.interaction.callAbort(request);
       break;

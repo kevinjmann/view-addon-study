@@ -238,7 +238,7 @@ const background = {
 
   /**
    * Send the task data from view.js to the server for processing.
-   * If successful, request to call setTaskId in view.js.
+   * If successful, request to call setTaskId(taskId) in view.js.
    *
    * @param {*} request the message sent by the calling script
    */
@@ -248,10 +248,10 @@ const background = {
       10000)
     .done(function(data, textStatus, xhr) {
       if (data) {
-        const jsObject = JSON.parse(data);
-          background.callSetTaskId(jsObject["task-id"]);
+        const taskData = JSON.parse(data);
+          background.callSetTaskId(taskData["task-id"]);
       } else {
-        background.ajaxError(xhr, "no-task-id");
+        background.ajaxError(xhr, "no-task-data");
       }
     })
     .fail(function() {
@@ -280,13 +280,35 @@ const background = {
 
   /**
    * Send the interaction data to the server for processing.
+   * If successful, request to call showPerformance(performanceData)
+   * in feedbacker.js.
    *
    * @param {*} request the message sent by the calling script
    */
   sendInteractionData: function(request) {
     background.ajaxPost(request.serverTrackingURL,
       request.interactionData,
-      10000);
+      10000)
+    .done(function(data, textStatus, xhr) {
+      if (data) {
+        const performanceData = JSON.parse(data);
+        background.callShowPerformance(performanceData);
+      } else {
+        background.ajaxError(xhr, "no-performance-data");
+      }
+    });
+  },
+
+  /**
+   * Request to call showPerformance(performanceData) in feedbacker.js.
+   *
+   * @param {Object} performanceData the task id from the server
+   */
+  callShowPerformance: function(performanceData) {
+    chrome.tabs.sendMessage(background.currentTabId, {
+      msg: "call showPerformance",
+      performanceData: performanceData
+    });
   },
 
   /**
@@ -343,11 +365,18 @@ const background = {
           "The VIEW server did not send any data."
         );
         break;
-      case "no-task-id":
+      case "no-task-data":
         background.createBasicNotification(
-          "no-task-id-notification",
-          "No task id!",
-          "The VIEW server did not send the task id."
+          "no-task-data-notification",
+          "No task data!",
+          "The VIEW server did not send the task data."
+        );
+        break;
+      case "no-performance-data":
+        background.createBasicNotification(
+          "no-performance-data-notification",
+          "No performance data!",
+          "The VIEW server did not send the performance data."
         );
         break;
       case "timeout":
