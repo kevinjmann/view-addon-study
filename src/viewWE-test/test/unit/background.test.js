@@ -554,7 +554,7 @@ describe("background.js", function() {
           );
         });
 
-        it("should succeed to send task data, get the task id and call callSetTaskId(data)", function() {
+        it("should succeed to send task data, get the task id and call callSetTaskId(taskId)", function() {
           const callSetTaskIdSpy = sandbox.spy(background, "callSetTaskId");
 
           const serverTaskURL = "https://view.aleks.bg/act/task";
@@ -567,7 +567,7 @@ describe("background.js", function() {
 
           sandbox.useFakeServer();
 
-          const taskId = "some-task-id";
+          const taskId = 1;
 
           const serverData = {"task-id": taskId};
 
@@ -580,6 +580,20 @@ describe("background.js", function() {
 
           sinon.assert.calledOnce(callSetTaskIdSpy);
           sinon.assert.calledWithExactly(callSetTaskIdSpy, taskId);
+        });
+
+        it("should send a request to call setTaskId(taskId)", function() {
+          const taskId = 1;
+
+          background.currentTabId = 5;
+
+          background.callSetTaskId(taskId);
+
+          sinon.assert.calledOnce(chrome.tabs.sendMessage);
+          sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
+            msg: "call setTaskId",
+            taskId: taskId
+          });
         });
 
         it("should succeed to send task data, but fail to receive data from the server", function() {
@@ -724,6 +738,20 @@ describe("background.js", function() {
 
           sinon.assert.calledOnce(callShowPerformanceSpy);
           sinon.assert.calledWithExactly(callShowPerformanceSpy, performanceData);
+        });
+
+        it("should send a request to call showPerformance(data)", function() {
+          const performanceData = "some performance data";
+
+          background.currentTabId = 5;
+
+          background.callShowPerformance(performanceData);
+
+          sinon.assert.calledOnce(chrome.tabs.sendMessage);
+          sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
+            msg: "call showPerformance",
+            performanceData: performanceData
+          });
         });
 
         it("should succeed to send interaction data, but fail to receive data from the server", function() {
