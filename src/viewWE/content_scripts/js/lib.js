@@ -6,6 +6,28 @@ view.lib = {
     // This is intentional
   },
 
+  /**
+   * Close the dropdown menu if the user clicks outside of it.
+   */
+  initHideMenuHandler: function() {
+    $(window).on("click", function() {
+        view.VIEWmenu.hide();
+        view.statisticsMenu.hide();
+    });
+  },
+
+  /**
+   * Add all items to a given list element.
+   *
+   * @param {Object} $List the list element the items are added to
+   * @param {Array} allItems the items to add
+   */
+  addItems: function($List, allItems) {
+    $.each(allItems, function(index) {
+      $List.append($("<li>").text(allItems[index]));
+    });
+  },
+
   /*
    * Get random numbers up to the variable "max".
    */
