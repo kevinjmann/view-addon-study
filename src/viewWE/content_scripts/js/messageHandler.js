@@ -50,7 +50,7 @@ function processMessage(request) {
       view.interaction.callRestoreToOriginal(request);
       break;
     case "call signOut":
-      view.signOutUser(request);
+      view.signOutUser();
       break;
     case "call signIn":
       view.signInUser(request);
