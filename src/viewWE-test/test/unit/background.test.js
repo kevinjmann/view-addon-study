@@ -227,6 +227,34 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
+    it("should process the message 'toggle statistics menu'", function() {
+      const toggleStatisticsMenuSpy = sandbox.spy(background, "toggleStatisticsMenu");
+
+      const request = {msg: "toggle statistics menu"};
+      const sender = {tab: {id: 5}};
+
+      chrome.runtime.onMessage.trigger(request, sender);
+
+      sinon.assert.calledOnce(toggleStatisticsMenuSpy);
+
+      sinon.assert.calledOnce(chrome.tabs.sendMessage);
+      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
+    });
+
+    it("should process the message 'hide statistics menu'", function() {
+      const hideStatisticsMenuSpy = sandbox.spy(background, "hideStatisticsMenu");
+
+      const request = {msg: "hide statistics menu"};
+      const sender = {tab: {id: 5}};
+
+      chrome.runtime.onMessage.trigger(request, sender);
+
+      sinon.assert.calledOnce(hideStatisticsMenuSpy);
+
+      sinon.assert.calledOnce(chrome.tabs.sendMessage);
+      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
+    });
+
     it("should process the message 'call startToEnhance'", function() {
       const callStartToEnhanceSpy = sandbox.spy(background, "callStartToEnhance");
 
@@ -389,446 +417,700 @@ describe("background.js", function() {
     });
 
     describe("ajax related functions", function() {
-      it("should call ajaxPost with expected values", function() {
-        const $PostSpy = sandbox.spy($, "post");
-
-        const serverURL = "https://some.url";
-        const data = {data: "some data"};
-        const ajaxTimeout = 10000;
-
-        background.ajaxPost(serverURL, data, ajaxTimeout);
-
-        sinon.assert.calledOnce($PostSpy);
-        sinon.assert.calledWithExactly($PostSpy, {
-          url: serverURL,
-          data: JSON.stringify(data),
-          dataType: "text",
-          processData: false,
-          timeout: ajaxTimeout
-        });
-      });
-
-      describe("sendActivityData", function() {
-        it("should process the message 'send activityData'", function() {
-          const sendActivityDataSpy = sandbox.spy(background, "sendActivityData");
-
-          const request = {
-            msg: "send activityData",
-            ajaxTimeout: 10000,
-            servletURL: "https://some.url",
-            activityData: "some activity data"
-          };
-          const sender = {tab: {id: 5}};
-
-          chrome.runtime.onMessage.trigger(request, sender);
-
-          sinon.assert.calledOnce(sendActivityDataSpy);
-          sinon.assert.calledWithExactly(sendActivityDataSpy, request);
-        });
-
-        it("should succeed to send activity data and call addServerMarkup(data)", function() {
-          const callAddServerMarkupSpy = sandbox.spy(background, "callAddServerMarkup");
-
-          const request = {
-            msg: "send activityData",
-            servletURL: "https://some.url",
-            activityData: "some activity data"
-            // ajaxTimeout not given by request to test "or branch"
-          };
-
-          sandbox.useFakeServer();
+      describe("ajax post", function() {
+        it("should call ajaxPost with expected values", function() {
+          const $PostSpy = sandbox.spy($, "post");
 
           const serverURL = "https://some.url";
-          const serverData = "some server data";
+          const data = {data: "some data"};
+          const ajaxTimeout = 10000;
 
-          sandbox.server.respondWith("POST", serverURL,
-            [200, {"Content-Type": "text"}, serverData]);
+          background.ajaxPost(serverURL, data, ajaxTimeout);
 
-          background.sendActivityData(request);
-
-          sandbox.server.respond();
-
-          sinon.assert.calledOnce(callAddServerMarkupSpy);
-          sinon.assert.calledWithExactly(callAddServerMarkupSpy, serverData);
-        });
-
-        it("should send a request to the content script to add server markup", function() {
-          const serverData = "some server data";
-
-          background.currentTabId = 5;
-
-          background.callAddServerMarkup(serverData);
-
-          sinon.assert.calledOnce(chrome.tabs.sendMessage);
-          sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
-            msg: "call addServerMarkup",
-            data: serverData
+          sinon.assert.calledOnce($PostSpy);
+          sinon.assert.calledWithExactly($PostSpy, {
+            url: serverURL,
+            data: JSON.stringify(data),
+            dataType: "text",
+            processData: false,
+            timeout: ajaxTimeout
           });
         });
 
-        it("should succeed to send activity data but fail to receive data from the server", function() {
-          const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
+        describe("sendActivityData", function() {
+          it("should process the message 'send activityData'", function() {
+            const sendActivityDataSpy = sandbox.spy(background, "sendActivityData");
 
-          const request = {
-            msg: "send activityData",
-            servletURL: "https://some.url",
-            activityData: "some activity data"
-          };
+            const request = {
+              msg: "send activityData",
+              ajaxTimeout: 10000,
+              servletURL: "https://some.url",
+              activityData: "some activity data"
+            };
+            const sender = {tab: {id: 5}};
 
-          sandbox.useFakeServer();
+            chrome.runtime.onMessage.trigger(request, sender);
 
-          const serverURL = "https://some.url";
+            sinon.assert.calledOnce(sendActivityDataSpy);
+            sinon.assert.calledWithExactly(sendActivityDataSpy, request);
+          });
 
-          sandbox.server.respondWith("POST", serverURL,
-            [200, {"Content-Type": "text"}, ""]);
+          it("should succeed to send activity data and call addServerMarkup(data)", function() {
+            const callAddServerMarkupSpy = sandbox.spy(background, "callAddServerMarkup");
 
-          background.sendActivityData(request);
+            const request = {
+              msg: "send activityData",
+              servletURL: "https://some.url",
+              activityData: "some activity data"
+              // ajaxTimeout not given by request to test "or branch"
+            };
 
-          sandbox.server.respond();
+            sandbox.useFakeServer();
 
-          sinon.assert.calledOnce(ajaxErrorSpy);
-          expect(ajaxErrorSpy.firstCall.args[1]).to.equal("nodata");
-        });
+            const serverURL = "https://some.url";
+            const serverData = "some server data";
 
-        it("should fail to send activity data", function() {
-          const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
+            sandbox.server.respondWith("POST", serverURL,
+              [200, {"Content-Type": "text"}, serverData]);
 
-          const request = {
-            msg: "send activityData",
-            servletURL: "https://some.url",
-            activityData: "some activity data"
-          };
+            background.sendActivityData(request);
 
-          sandbox.useFakeServer();
+            sandbox.server.respond();
 
-          const serverURL = "https://some.url";
+            sinon.assert.calledOnce(callAddServerMarkupSpy);
+            sinon.assert.calledWithExactly(callAddServerMarkupSpy, serverData);
+          });
 
-          sandbox.server.respondWith("POST", serverURL,
-            [404, {}, ""]);
+          it("should send a request to the content script to add server markup", function() {
+            const serverData = "some server data";
 
-          background.sendActivityData(request);
+            background.currentTabId = 5;
 
-          sandbox.server.respond();
+            background.callAddServerMarkup(serverData);
 
-          sinon.assert.calledOnce(ajaxErrorSpy);
-          expect(ajaxErrorSpy.firstCall.args[1]).to.equal("error");
-        });
-      });
+            sinon.assert.calledOnce(chrome.tabs.sendMessage);
+            sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
+              msg: "call addServerMarkup",
+              data: serverData
+            });
+          });
 
-      describe("sendTaskDataAndGetTaskId", function() {
-        it("should process the message 'send taskData and get taskId'", function() {
-          const sendTaskDataAndGetTaskIdSpy = sandbox.spy(background, "sendTaskDataAndGetTaskId");
+          it("should succeed to send activity data but fail to receive data from the server", function() {
+            const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
 
-          const request = {
-            msg: "send taskData and get taskId",
-            serverTaskURL: "https://view.aleks.bg/act/task",
-            taskData: "some task data"
-          };
-          const sender = {tab: {id: 5}};
+            const request = {
+              msg: "send activityData",
+              servletURL: "https://some.url",
+              activityData: "some activity data"
+            };
 
-          chrome.runtime.onMessage.trigger(request, sender);
+            sandbox.useFakeServer();
 
-          sinon.assert.calledOnce(sendTaskDataAndGetTaskIdSpy);
-          sinon.assert.calledWithExactly(sendTaskDataAndGetTaskIdSpy, request);
-        });
+            const serverURL = "https://some.url";
 
-        it("should call ajaxPost(url, data, ajaxTimeout)", function() {
-          const ajaxPostSpy = sandbox.spy(background, "ajaxPost");
+            sandbox.server.respondWith("POST", serverURL,
+              [200, {"Content-Type": "text"}, ""]);
 
-          const serverTaskURL = "https://view.aleks.bg/act/task";
-          const taskData = "some task data";
+            background.sendActivityData(request);
 
-          const request = {
-            msg: "send taskData and get taskId",
-            serverTaskURL: serverTaskURL,
-            taskData: taskData
-          };
+            sandbox.server.respond();
 
-          background.sendTaskDataAndGetTaskId(request);
+            sinon.assert.calledOnce(ajaxErrorSpy);
+            expect(ajaxErrorSpy.firstCall.args[1]).to.equal("nodata");
+          });
 
-          sinon.assert.calledOnce(ajaxPostSpy);
-          sinon.assert.calledWithExactly(ajaxPostSpy,
-            serverTaskURL,
-            taskData,
-            10000
-          );
-        });
+          it("should fail to send activity data", function() {
+            const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
 
-        it("should succeed to send task data, get the task id and call callSetTaskId(taskId)", function() {
-          const callSetTaskIdSpy = sandbox.spy(background, "callSetTaskId");
+            const request = {
+              msg: "send activityData",
+              servletURL: "https://some.url",
+              activityData: "some activity data"
+            };
 
-          const serverTaskURL = "https://view.aleks.bg/act/task";
+            sandbox.useFakeServer();
 
-          const request = {
-            msg: "send taskData and get taskId",
-            serverTaskURL: serverTaskURL,
-            taskData: "some task data"
-          };
+            const serverURL = "https://some.url";
 
-          sandbox.useFakeServer();
+            sandbox.server.respondWith("POST", serverURL,
+              [404, {}, ""]);
 
-          const taskId = 1;
+            background.sendActivityData(request);
 
-          const serverData = {"task-id": taskId};
+            sandbox.server.respond();
 
-          sandbox.server.respondWith("POST", serverTaskURL,
-            [200, {"Content-Type": "application/json"}, JSON.stringify(serverData)]);
-
-          background.sendTaskDataAndGetTaskId(request);
-
-          sandbox.server.respond();
-
-          sinon.assert.calledOnce(callSetTaskIdSpy);
-          sinon.assert.calledWithExactly(callSetTaskIdSpy, taskId);
-        });
-
-        it("should send a request to call setTaskId(taskId)", function() {
-          const taskId = 1;
-
-          background.currentTabId = 5;
-
-          background.callSetTaskId(taskId);
-
-          sinon.assert.calledOnce(chrome.tabs.sendMessage);
-          sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
-            msg: "call setTaskId",
-            taskId: taskId
+            sinon.assert.calledOnce(ajaxErrorSpy);
+            expect(ajaxErrorSpy.firstCall.args[1]).to.equal("error");
           });
         });
 
-        it("should succeed to send task data, but fail to receive data from the server", function() {
-          const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
+        describe("sendTaskDataAndGetTaskId", function() {
+          it("should process the message 'send taskData and get taskId'", function() {
+            const sendTaskDataAndGetTaskIdSpy = sandbox.spy(background, "sendTaskDataAndGetTaskId");
 
-          const serverTaskURL = "https://view.aleks.bg/act/task";
+            const request = {
+              msg: "send taskData and get taskId",
+              serverTaskURL: "https://view.aleks.bg/act/task",
+              taskData: "some task data"
+            };
+            const sender = {tab: {id: 5}};
 
-          const request = {
-            msg: "send taskData and get taskId",
-            serverTaskURL: serverTaskURL,
-            taskData: "some task data"
-          };
+            chrome.runtime.onMessage.trigger(request, sender);
 
-          sandbox.useFakeServer();
+            sinon.assert.calledOnce(sendTaskDataAndGetTaskIdSpy);
+            sinon.assert.calledWithExactly(sendTaskDataAndGetTaskIdSpy, request);
+          });
 
-          sandbox.server.respondWith("POST", serverTaskURL,
-            [200, {"Content-Type": "application/json"}, ""]);
+          it("should call ajaxPost(url, data, ajaxTimeout)", function() {
+            const ajaxPostSpy = sandbox.spy(background, "ajaxPost");
 
-          background.sendTaskDataAndGetTaskId(request);
+            const serverTaskURL = "https://view.aleks.bg/act/task";
+            const taskData = "some task data";
 
-          sandbox.server.respond();
+            const request = {
+              msg: "send taskData and get taskId",
+              serverTaskURL: serverTaskURL,
+              taskData: taskData
+            };
 
-          sinon.assert.calledOnce(ajaxErrorSpy);
-          expect(ajaxErrorSpy.firstCall.args[1]).to.equal("no-task-data");
-        });
+            background.sendTaskDataAndGetTaskId(request);
 
-        it("should fail to send task data, and call signOutUser()", function() {
-          const signOutUserSpy = sandbox.spy(background, "signOutUser");
+            sinon.assert.calledOnce(ajaxPostSpy);
+            sinon.assert.calledWithExactly(ajaxPostSpy,
+              serverTaskURL,
+              taskData,
+              10000
+            );
+          });
 
-          const serverTaskURL = "https://view.aleks.bg/act/task";
+          it("should succeed to send task data, get the task id and call callSetTaskId(taskId)", function() {
+            const callSetTaskIdSpy = sandbox.spy(background, "callSetTaskId");
 
-          const request = {
-            msg: "send taskData and get taskId",
-            serverTaskURL: serverTaskURL,
-            taskData: "some task data"
-          };
+            const serverTaskURL = "https://view.aleks.bg/act/task";
 
-          sandbox.useFakeServer();
+            const request = {
+              msg: "send taskData and get taskId",
+              serverTaskURL: serverTaskURL,
+              taskData: "some task data"
+            };
 
-          sandbox.server.respondWith("POST", serverTaskURL,
-            [404, {}, ""]);
+            sandbox.useFakeServer();
 
-          background.sendTaskDataAndGetTaskId(request);
+            const taskId = 1;
 
-          sandbox.server.respond();
+            const serverData = {"task-id": taskId};
 
-          sinon.assert.calledOnce(signOutUserSpy);
-        });
+            sandbox.server.respondWith("POST", serverTaskURL,
+              [200, {"Content-Type": "application/json"}, JSON.stringify(serverData)]);
 
-        it("should fail to send task data, and create a 'auth-token-expired' notification", function() {
-          const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
+            background.sendTaskDataAndGetTaskId(request);
 
-          const serverTaskURL = "https://view.aleks.bg/act/task";
+            sandbox.server.respond();
 
-          const request = {
-            msg: "send taskData and get taskId",
-            serverTaskURL: serverTaskURL,
-            taskData: "some task data"
-          };
+            sinon.assert.calledOnce(callSetTaskIdSpy);
+            sinon.assert.calledWithExactly(callSetTaskIdSpy, taskId);
+          });
 
-          sandbox.useFakeServer();
+          it("should send a request to call setTaskId(taskId)", function() {
+            const taskId = 1;
 
-          sandbox.server.respondWith("POST", serverTaskURL,
-            [404, {}, ""]);
+            background.currentTabId = 5;
 
-          background.sendTaskDataAndGetTaskId(request);
+            background.callSetTaskId(taskId);
 
-          sandbox.server.respond();
+            sinon.assert.calledOnce(chrome.tabs.sendMessage);
+            sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
+              msg: "call setTaskId",
+              taskId: taskId
+            });
+          });
 
-          sinon.assert.calledOnce(createBasicNotificationSpy);
-          sinon.assert.calledWithExactly(createBasicNotificationSpy,
-            "auth-token-expired",
-            "The auth token expired!",
-            "The token for user authentication expired, " +
-            "you will be signed out automatically. " +
-            "Please sign in again!"
-          );
-        });
-      });
+          it("should succeed to send task data, but fail to receive data from the server", function() {
+            const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
 
-      describe("sendInteractionData", function() {
-        it("should process the message 'send interactionData'", function() {
-          const sendInteractionDataSpy = sandbox.spy(background, "sendInteractionData");
+            const serverTaskURL = "https://view.aleks.bg/act/task";
 
-          const request = {
-            msg: "send interactionData",
-            serverTrackingURL: "https://view.aleks.bg/act/tracking",
-            interactionData: "some interaction data"
-          };
-          const sender = {tab: {id: 5}};
+            const request = {
+              msg: "send taskData and get taskId",
+              serverTaskURL: serverTaskURL,
+              taskData: "some task data"
+            };
 
-          chrome.runtime.onMessage.trigger(request, sender);
+            sandbox.useFakeServer();
 
-          sinon.assert.calledOnce(sendInteractionDataSpy);
-          sinon.assert.calledWithExactly(sendInteractionDataSpy, request);
-        });
+            sandbox.server.respondWith("POST", serverTaskURL,
+              [200, {"Content-Type": "application/json"}, ""]);
 
-        it("should call ajaxPost(url, data, ajaxTimeout)", function() {
-          const ajaxPostSpy = sandbox.spy(background, "ajaxPost");
+            background.sendTaskDataAndGetTaskId(request);
 
-          const serverTrackingURL = "https://view.aleks.bg/act/tracking";
-          const interactionData = "some interaction data";
+            sandbox.server.respond();
 
-          const request = {
-            msg: "send interactionData",
-            serverTrackingURL: serverTrackingURL,
-            interactionData: interactionData
-          };
+            sinon.assert.calledOnce(ajaxErrorSpy);
+            expect(ajaxErrorSpy.firstCall.args[1]).to.equal("no-task-data");
+          });
 
-          background.sendInteractionData(request);
+          it("should fail to send task data, and call signOutUser()", function() {
+            const signOutUserSpy = sandbox.spy(background, "signOutUser");
 
-          sinon.assert.calledOnce(ajaxPostSpy);
-          sinon.assert.calledWithExactly(ajaxPostSpy,
-            serverTrackingURL,
-            interactionData,
-            10000
-          );
-        });
+            const serverTaskURL = "https://view.aleks.bg/act/task";
 
-        it("should succeed to send interaction data, get the performance data and call callShowPerformance(data)", function() {
-          const callShowPerformanceSpy = sandbox.spy(background, "callShowPerformance");
+            const request = {
+              msg: "send taskData and get taskId",
+              serverTaskURL: serverTaskURL,
+              taskData: "some task data"
+            };
 
-          const serverTrackingURL = "https://view.aleks.bg/act/tracking";
-          const interactionData = "some interaction data";
+            sandbox.useFakeServer();
 
-          const request = {
-            msg: "send interactionData",
-            serverTrackingURL: serverTrackingURL,
-            interactionData: interactionData
-          };
+            sandbox.server.respondWith("POST", serverTaskURL,
+              [404, {}, ""]);
 
-          sandbox.useFakeServer();
+            background.sendTaskDataAndGetTaskId(request);
 
-          const performanceData = "some performance data";
+            sandbox.server.respond();
 
-          sandbox.server.respondWith("POST", serverTrackingURL,
-            [200, {"Content-Type": "application/json"}, JSON.stringify(performanceData)]);
+            sinon.assert.calledOnce(signOutUserSpy);
+          });
 
-          background.sendInteractionData(request);
+          it("should fail to send task data, and create a 'auth-token-expired' notification", function() {
+            const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
 
-          sandbox.server.respond();
+            const serverTaskURL = "https://view.aleks.bg/act/task";
 
-          sinon.assert.calledOnce(callShowPerformanceSpy);
-          sinon.assert.calledWithExactly(callShowPerformanceSpy, performanceData);
-        });
+            const request = {
+              msg: "send taskData and get taskId",
+              serverTaskURL: serverTaskURL,
+              taskData: "some task data"
+            };
 
-        it("should send a request to call showPerformance(data)", function() {
-          const performanceData = "some performance data";
+            sandbox.useFakeServer();
 
-          background.currentTabId = 5;
+            sandbox.server.respondWith("POST", serverTaskURL,
+              [404, {}, ""]);
 
-          background.callShowPerformance(performanceData);
+            background.sendTaskDataAndGetTaskId(request);
 
-          sinon.assert.calledOnce(chrome.tabs.sendMessage);
-          sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
-            msg: "call showPerformance",
-            performanceData: performanceData
+            sandbox.server.respond();
+
+            sinon.assert.calledOnce(createBasicNotificationSpy);
+            sinon.assert.calledWithExactly(createBasicNotificationSpy,
+              "auth-token-expired",
+              "The auth token expired!",
+              "The token for user authentication expired, " +
+              "you will be signed out automatically. " +
+              "Please sign in again!"
+            );
           });
         });
 
-        it("should succeed to send interaction data, but fail to receive data from the server", function() {
-          const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
+        describe("sendInteractionData", function() {
+          it("should process the message 'send interactionData'", function() {
+            const sendInteractionDataSpy = sandbox.spy(background, "sendInteractionData");
 
-          const serverTrackingURL = "https://view.aleks.bg/act/tracking";
-          const interactionData = "some interaction data";
+            const request = {
+              msg: "send interactionData",
+              serverTrackingURL: "https://view.aleks.bg/act/tracking",
+              interactionData: "some interaction data"
+            };
+            const sender = {tab: {id: 5}};
 
-          const request = {
-            msg: "send interactionData",
-            serverTrackingURL: serverTrackingURL,
-            interactionData: interactionData
-          };
+            chrome.runtime.onMessage.trigger(request, sender);
 
-          sandbox.useFakeServer();
+            sinon.assert.calledOnce(sendInteractionDataSpy);
+            sinon.assert.calledWithExactly(sendInteractionDataSpy, request);
+          });
 
-          sandbox.server.respondWith("POST", serverTrackingURL,
-            [200, {"Content-Type": "application/json"}, ""]);
+          it("should call ajaxPost(url, data, ajaxTimeout)", function() {
+            const ajaxPostSpy = sandbox.spy(background, "ajaxPost");
 
-          background.sendInteractionData(request);
+            const serverTrackingURL = "https://view.aleks.bg/act/tracking";
+            const interactionData = "some interaction data";
 
-          sandbox.server.respond();
+            const request = {
+              msg: "send interactionData",
+              serverTrackingURL: serverTrackingURL,
+              interactionData: interactionData
+            };
 
-          sinon.assert.calledOnce(ajaxErrorSpy);
-          expect(ajaxErrorSpy.firstCall.args[1]).to.equal("no-performance-data");
+            background.sendInteractionData(request);
+
+            sinon.assert.calledOnce(ajaxPostSpy);
+            sinon.assert.calledWithExactly(ajaxPostSpy,
+              serverTrackingURL,
+              interactionData,
+              10000
+            );
+          });
+
+          it("should succeed to send interaction data, get the performance data and call callShowPerformance(data)", function() {
+            const callShowPerformanceSpy = sandbox.spy(background, "callShowPerformance");
+
+            const serverTrackingURL = "https://view.aleks.bg/act/tracking";
+            const interactionData = "some interaction data";
+
+            const request = {
+              msg: "send interactionData",
+              serverTrackingURL: serverTrackingURL,
+              interactionData: interactionData
+            };
+
+            sandbox.useFakeServer();
+
+            const performanceData = "some performance data";
+
+            sandbox.server.respondWith("POST", serverTrackingURL,
+              [200, {"Content-Type": "application/json"}, JSON.stringify(performanceData)]);
+
+            background.sendInteractionData(request);
+
+            sandbox.server.respond();
+
+            sinon.assert.calledOnce(callShowPerformanceSpy);
+            sinon.assert.calledWithExactly(callShowPerformanceSpy, performanceData);
+          });
+
+          it("should send a request to call showPerformance(data)", function() {
+            const performanceData = "some performance data";
+
+            background.currentTabId = 5;
+
+            background.callShowPerformance(performanceData);
+
+            sinon.assert.calledOnce(chrome.tabs.sendMessage);
+            sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
+              msg: "call showPerformance",
+              performanceData: performanceData
+            });
+          });
+
+          it("should succeed to send interaction data, but fail to receive data from the server", function() {
+            const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
+
+            const serverTrackingURL = "https://view.aleks.bg/act/tracking";
+            const interactionData = "some interaction data";
+
+            const request = {
+              msg: "send interactionData",
+              serverTrackingURL: serverTrackingURL,
+              interactionData: interactionData
+            };
+
+            sandbox.useFakeServer();
+
+            sandbox.server.respondWith("POST", serverTrackingURL,
+              [200, {"Content-Type": "application/json"}, ""]);
+
+            background.sendInteractionData(request);
+
+            sandbox.server.respond();
+
+            sinon.assert.calledOnce(ajaxErrorSpy);
+            expect(ajaxErrorSpy.firstCall.args[1]).to.equal("no-performance-data");
+          });
+        });
+
+        describe("sendRequestDataAbort", function() {
+          it("should process the message 'send requestData abort'", function() {
+            const sendRequestDataAbortSpy = sandbox.spy(background, "sendRequestDataAbort");
+
+            const request = {
+              msg: "send requestData abort",
+              ajaxTimeout: 10000,
+              servletURL: "https://some.url",
+              requestData: "some request data"
+            };
+            const sender = {tab: {id: 5}};
+
+            chrome.runtime.onMessage.trigger(request, sender);
+
+            sinon.assert.calledOnce(sendRequestDataAbortSpy);
+            sinon.assert.calledWithExactly(sendRequestDataAbortSpy, request);
+          });
+
+          it("should succeed to send request data and call abortEnhancement()", function() {
+            const callAbortEnhancementSpy = sandbox.spy(background, "callAbortEnhancement");
+
+            const request = {
+              msg: "send activityData",
+              servletURL: "https://some.url",
+              requestData: "some request data"
+              // ajaxTimeout not given by request to test "or branch"
+            };
+
+            sandbox.useFakeServer();
+
+            const serverURL = "https://some.url";
+
+            sandbox.server.respondWith("POST", serverURL,
+              [200, {"Content-Type": "text"}, ""]);
+
+            background.sendRequestDataAbort(request);
+
+            sandbox.server.respond();
+
+            sinon.assert.calledOnce(callAbortEnhancementSpy);
+          });
+
+          it("should send a request to the content script to abort the enhancement", function() {
+            background.currentTabId = 5;
+
+            background.callAbortEnhancement();
+
+            sinon.assert.calledOnce(chrome.tabs.sendMessage);
+            sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {msg: "call abortEnhancement"});
+          });
         });
       });
 
-      describe("sendRequestDataAbort", function() {
-        it("should process the message 'send requestData abort'", function() {
-          const sendRequestDataAbortSpy = sandbox.spy(background, "sendRequestDataAbort");
+      describe("ajax get", function() {
+        it("should call ajaxGet with expected values", function() {
+          const $GetSpy = sandbox.spy($, "get");
 
-          const request = {
-            msg: "send requestData abort",
-            ajaxTimeout: 10000,
-            servletURL: "https://some.url",
-            requestData: "some request data"
-          };
-          const sender = {tab: {id: 5}};
+          const serverTaskURL = "https://view.aleks.bg/act/task";
+          const queryParam = "?token=token";
+          const ajaxTimeout = 10000;
 
-          chrome.runtime.onMessage.trigger(request, sender);
+          background.ajaxGet(serverTaskURL, queryParam, ajaxTimeout);
 
-          sinon.assert.calledOnce(sendRequestDataAbortSpy);
-          sinon.assert.calledWithExactly(sendRequestDataAbortSpy, request);
+          sinon.assert.calledOnce($GetSpy);
+          sinon.assert.calledWithExactly($GetSpy, {
+            url: serverTaskURL + queryParam,
+            timeout: ajaxTimeout
+          });
         });
 
-        it("should succeed to send request data and call abortEnhancement()", function() {
-          const callAbortEnhancementSpy = sandbox.spy(background, "callAbortEnhancement");
+        describe("getAllTasks", function() {
+          it("should process the message 'get all tasks'", function() {
+            const getAllTasksSpy = sandbox.spy(background, "getAllTasks");
 
-          const request = {
-            msg: "send activityData",
-            servletURL: "https://some.url",
-            requestData: "some request data"
-            // ajaxTimeout not given by request to test "or branch"
-          };
+            const request = {
+              msg: "get all tasks",
+              ajaxTimeout: 10000,
+              serverTaskURL: "https://view.aleks.bg/act/task",
+              queryParam: "?token=token"
+            };
+            const sender = {tab: {id: 5}};
 
-          sandbox.useFakeServer();
+            chrome.runtime.onMessage.trigger(request, sender);
 
-          const serverURL = "https://some.url";
+            sinon.assert.calledOnce(getAllTasksSpy);
+            sinon.assert.calledWithExactly(getAllTasksSpy, request);
+          });
 
-          sandbox.server.respondWith("POST", serverURL,
-            [200, {"Content-Type": "text"}, ""]);
+          it("should succeed to get all tasks and call callShowAllTasks(data)", function() {
+            const callShowAllTasksSpy = sandbox.spy(background, "callShowAllTasks");
 
-          background.sendRequestDataAbort(request);
+            const serverTaskURL= "https://view.aleks.bg/act/task";
+            const queryParam = "?token=token";
 
-          sandbox.server.respond();
+            const request = {
+              msg: "get all tasks",
+              serverTaskURL: serverTaskURL,
+              queryParam: queryParam
+              // ajaxTimeout not given by request to test "or branch"
+            };
 
-          sinon.assert.calledOnce(callAbortEnhancementSpy);
+            sandbox.useFakeServer();
+
+            const serverURL = serverTaskURL + queryParam;
+            const serverData = "some server data";
+
+            sandbox.server.respondWith("GET", serverURL,
+              [200, {"Content-Type": "text"}, serverData]);
+
+            background.getAllTasks(request);
+
+            sandbox.server.respond();
+
+            sinon.assert.calledOnce(callShowAllTasksSpy);
+            sinon.assert.calledWithExactly(callShowAllTasksSpy, serverData);
+          });
+
+          it("should send a request to the content script to call showAllTasks(data)", function() {
+            const serverData = "some server data";
+
+            background.currentTabId = 5;
+
+            background.callShowAllTasks(serverData);
+
+            sinon.assert.calledOnce(chrome.tabs.sendMessage);
+            sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
+              msg: "call showAllTasks",
+              tasksData: serverData
+            });
+          });
+
+          it("should succeed to get all tasks but fail to receive data from the server", function() {
+            const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
+
+            const serverTaskURL= "https://view.aleks.bg/act/task";
+            const queryParam = "?token=token";
+
+            const request = {
+              msg: "get all tasks",
+              ajaxTimeout: 10000,
+              serverTaskURL: serverTaskURL,
+              queryParam: queryParam
+            };
+
+            sandbox.useFakeServer();
+
+            const serverURL = serverTaskURL + queryParam;
+
+            sandbox.server.respondWith("GET", serverURL,
+              [200, {"Content-Type": "text"}, ""]);
+
+            background.getAllTasks(request);
+
+            sandbox.server.respond();
+
+            sinon.assert.calledOnce(ajaxErrorSpy);
+            expect(ajaxErrorSpy.firstCall.args[1]).to.equal("no-task-data");
+          });
+
+          it("should fail to send activity data", function() {
+            const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
+
+            const serverTaskURL= "https://view.aleks.bg/act/task";
+            const queryParam = "?token=token";
+
+            const request = {
+              msg: "get all tasks",
+              ajaxTimeout: 10000,
+              serverTaskURL: serverTaskURL,
+              queryParam: queryParam
+            };
+
+            sandbox.useFakeServer();
+
+            const serverURL = serverTaskURL + queryParam;
+
+            sandbox.server.respondWith("GET", serverURL,
+              [404, {}, ""]);
+
+            background.getAllTasks(request);
+
+            sandbox.server.respond();
+
+            sinon.assert.calledOnce(ajaxErrorSpy);
+            expect(ajaxErrorSpy.firstCall.args[1]).to.equal("error");
+          });
         });
 
-        it("should send a request to the content script to abort the enhancement", function() {
-          background.currentTabId = 5;
+        describe("getTask", function() {
+          it("should process the message 'get task'", function() {
+            const getTaskSpy = sandbox.spy(background, "getTask");
 
-          background.callAbortEnhancement();
+            const request = {
+              msg: "get task",
+              ajaxTimeout: 10000,
+              serverTrackingURL: "https://view.aleks.bg/act/tracking",
+              queryParam: "?token=token&taskId=7"
+            };
+            const sender = {tab: {id: 5}};
 
-          sinon.assert.calledOnce(chrome.tabs.sendMessage);
-          sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {msg: "call abortEnhancement"});
+            chrome.runtime.onMessage.trigger(request, sender);
+
+            sinon.assert.calledOnce(getTaskSpy);
+            sinon.assert.calledWithExactly(getTaskSpy, request);
+          });
+
+          it("should succeed to get the task and call callShowTask(data)", function() {
+            const ccallShowTaskSpy = sandbox.spy(background, "callShowTask");
+
+            const serverTrackingURL= "https://view.aleks.bg/act/tracking";
+            const queryParam = "?token=token&taskId=7";
+
+            const request = {
+              msg: "get task",
+              serverTrackingURL: serverTrackingURL,
+              queryParam: queryParam
+              // ajaxTimeout not given by request to test "or branch"
+            };
+
+            sandbox.useFakeServer();
+
+            const serverURL = serverTrackingURL + queryParam;
+            const serverData = "some server data";
+
+            sandbox.server.respondWith("GET", serverURL,
+              [200, {"Content-Type": "text"}, serverData]);
+
+            background.getTask(request);
+
+            sandbox.server.respond();
+
+            sinon.assert.calledOnce(ccallShowTaskSpy);
+            sinon.assert.calledWithExactly(ccallShowTaskSpy, serverData);
+          });
+
+          it("should send a request to the content script to call callShowTask(data)", function() {
+            const serverData = "some server data";
+
+            background.currentTabId = 5;
+
+            background.callShowTask(serverData);
+
+            sinon.assert.calledOnce(chrome.tabs.sendMessage);
+            sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
+              msg: "call showTask",
+              performancesData: serverData
+            });
+          });
+
+          it("should succeed to get all tasks but fail to receive data from the server", function() {
+            const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
+
+            const serverTrackingURL= "https://view.aleks.bg/act/tracking";
+            const queryParam = "?token=token&taskId=7";
+
+            const request = {
+              msg: "get task",
+              serverTrackingURL: serverTrackingURL,
+              queryParam: queryParam
+            };
+
+            sandbox.useFakeServer();
+
+            const serverURL = serverTrackingURL + queryParam;
+
+            sandbox.server.respondWith("GET", serverURL,
+              [200, {"Content-Type": "text"}, ""]);
+
+            background.getTask(request);
+
+            sandbox.server.respond();
+
+            sinon.assert.calledOnce(ajaxErrorSpy);
+            expect(ajaxErrorSpy.firstCall.args[1]).to.equal("no-performance-data");
+          });
+
+          it("should fail to send activity data", function() {
+            const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
+
+            const serverTrackingURL= "https://view.aleks.bg/act/tracking";
+            const queryParam = "?token=token&taskId=7";
+
+            const request = {
+              msg: "get task",
+              serverTrackingURL: serverTrackingURL,
+              queryParam: queryParam
+            };
+
+            sandbox.useFakeServer();
+
+            const serverURL = serverTrackingURL + queryParam;
+
+            sandbox.server.respondWith("GET", serverURL,
+              [404, {}, ""]);
+
+            background.getTask(request);
+
+            sandbox.server.respond();
+
+            sinon.assert.calledOnce(ajaxErrorSpy);
+            expect(ajaxErrorSpy.firstCall.args[1]).to.equal("error");
+          });
         });
       });
 
@@ -886,7 +1168,7 @@ describe("background.js", function() {
 
           const id = "no-task-data-notification";
           const title = "No task data!";
-          const message = "The VIEW server did not send the task data.";
+          const message = "The VIEW server did not send any task data.";
 
           background.ajaxError({}, "no-task-data");
 
@@ -899,7 +1181,7 @@ describe("background.js", function() {
 
           const id = "no-performance-data-notification";
           const title = "No performance data!";
-          const message = "The VIEW server did not send the performance data.";
+          const message = "The VIEW server did not send any performance data.";
 
           background.ajaxError({}, "no-performance-data");
 
@@ -1081,7 +1363,8 @@ describe("background.js", function() {
         userEmail: "",
         userid: "",
         user: "",
-        token: ""
+        token: "",
+        taskId: ""
       });
 
       sinon.assert.calledOnce(chrome.tabs.sendMessage);
@@ -1090,6 +1373,10 @@ describe("background.js", function() {
 
     it("should set user email and id and send a request to sign in the user", function() {
       const userData = "user/email/id/authtoken";
+      const userEmail = "email";
+      const userid = "id";
+      const user = "user";
+      const token = "authtoken";
 
       background.currentTabId = 5;
 
@@ -1097,16 +1384,19 @@ describe("background.js", function() {
 
       sinon.assert.calledOnce(chrome.storage.local.set);
       sinon.assert.calledWith(chrome.storage.local.set, {
-        userEmail: "email",
-        userid: "id",
-        user: "user",
-        token: "authtoken"
+        userEmail: userEmail,
+        userid: userid,
+        user: user,
+        token: token
       });
 
       sinon.assert.calledOnce(chrome.tabs.sendMessage);
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
         msg: "call signIn",
-        userEmail: "email"
+        userEmail: userEmail,
+        userid: userid,
+        user: user,
+        token: token
       });
     });
   });
