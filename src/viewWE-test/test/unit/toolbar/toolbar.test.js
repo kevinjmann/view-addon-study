@@ -133,14 +133,16 @@ describe("toolbar.js", function() {
       expect($(toolbar.selectorStart + "abort-button").length).to.be.above(0);
       expect($(toolbar.selectorStart + "loading-image").length).to.be.above(0);
 
+      $(identityIdStart + "signinlink").attr("link", "");
+      $(identityIdStart + "signoutlink").attr("link", "");
+
       chrome.storage.local.get.yields({ serverURL: globalServerURL });
       toolbar.initSignInOutInterfaces(); // adds the link attribute
 
       expect($(identityIdStart + "signinlink").attr("link")).to.equal(authenticatorURL);
       expect($(identityIdStart + "signedinstatus").length).to.be.above(0);
       expect($(identityIdStart + "signedinuseremail").length).to.be.above(0);
-      expect($(identityIdStart + "signoutlink").attr("link"))
-      .to.equal(authenticatorURL);
+      expect($(identityIdStart + "signoutlink").attr("link")).to.equal(authenticatorURL);
 
       expect($(toolbar.selectorStart + "toggle-button").length).to.be.above(0);
     });
@@ -392,6 +394,9 @@ describe("toolbar.js", function() {
         });
 
         it("should turn off auto enhance", function() {
+          $(toolbar.selectorStart + "enabled").show();
+          $(toolbar.selectorStart + "disabled").hide();
+
           toolbar.turnOffAutoEnhance();
 
           expect($(toolbar.selectorStart + "enabled").is(":hidden")).to.be.true;
@@ -456,15 +461,14 @@ describe("toolbar.js", function() {
       });
 
       describe("selectTopicMenu", function() {
-        it("should un-select and hide the topic menu", function() {
+        it("should un-select and hide the previous topic menu", function() {
           const selectedLanguage = "en";
           const previousLanguage = "ru";
           const previousTopicMenu = toolbar.selectorStart + "topic-menu-" + previousLanguage;
           const selectedTopicMenu = "selected-toolbar-topic-menu";
 
-          toolbar.selectTopicMenu(previousLanguage);
-
-          expect($(previousTopicMenu).hasClass(selectedTopicMenu)).to.be.true;
+          $(previousTopicMenu).addClass(selectedTopicMenu);
+          $(previousTopicMenu).show();
 
           toolbar.selectTopicMenu(selectedLanguage);
 
@@ -503,12 +507,16 @@ describe("toolbar.js", function() {
 
         describe("checkForFilters", function() {
           it("should hide the filter menu", function() {
+            $(toolbar.selectorStart + "filter-menu").show();
+
             toolbar.checkForFilters("ru", "nouns");
 
             expect($(toolbar.selectorStart + "filter-menu").is(":hidden")).to.be.true;
           });
 
           it("should select the 'no-filter' option", function() {
+            $(toolbar.selectorStart + "filter-menu").val("unselected");
+
             toolbar.checkForFilters("ru", "nouns");
 
             expect($(toolbar.selectorStart + "filter-menu").val()).to.equal("no-filter");
@@ -551,6 +559,8 @@ describe("toolbar.js", function() {
               const jsonData = fixture.load("fixtures/json/nouns.json", true);
 
               const filters = jsonData.ru.filters;
+
+              $(toolbar.selectorStart + "filter-menu").val("no-filter");
 
               toolbar.showFilterMenu(filters);
 
@@ -796,6 +806,8 @@ describe("toolbar.js", function() {
 
             toolbar.topics = {articles: jsonData};
 
+            $(toolbar.selectorStart + "activity-menu").val("color");
+
             toolbar.initActivitySelectors();
 
             toolbar.updateActivities(language, topic);
@@ -826,6 +838,8 @@ describe("toolbar.js", function() {
           it("should hide the enhance button, as the activity option was 'unselected'", function() {
             $(toolbar.selectorStart + "activity-menu").val("unselected");
 
+            $(toolbar.selectorStart + "enhance-button").show();
+
             toolbar.toggleEnhanceButton();
 
             expect($(toolbar.selectorStart + "enhance-button").is(":hidden")).to.be.true;
@@ -834,6 +848,7 @@ describe("toolbar.js", function() {
           it("should show the enhance button, as the filter and activity option are not 'unselected'", function() {
             $(toolbar.selectorStart + "filter-menu").val("Pl");
             $(toolbar.selectorStart + "activity-menu").val("color");
+            $(toolbar.selectorStart + "enhance-button").hide();
 
             toolbar.toggleEnhanceButton();
 
@@ -967,6 +982,11 @@ describe("toolbar.js", function() {
 
     describe("initialInteractionState", function() {
       it("should put the toolbar into the initial interaction state", function() {
+        $(toolbar.selectorStart + "enhance-button").hide();
+        $(toolbar.selectorStart + "restore-button").show();
+        $(toolbar.selectorStart + "abort-button").show();
+        $(toolbar.selectorStart + "loading-image").show();
+
         toolbar.initialInteractionState();
 
         expect($(toolbar.selectorStart + "enhance-button").is(":visible")).to.be.true;
@@ -1047,6 +1067,10 @@ describe("toolbar.js", function() {
         });
 
         it("should prepare and request to call startToEnhance()", function() {
+          $(toolbar.selectorStart + "enhance-button").show();
+          $(toolbar.selectorStart + "restore-button").show();
+          $(toolbar.selectorStart + "loading-image").hide();
+
           toolbar.prepareToEnhance();
 
           expect($(toolbar.selectorStart + "enhance-button").is(":hidden")).to.be.true;
@@ -1126,6 +1150,9 @@ describe("toolbar.js", function() {
     describe("initSignInOutInterfaces", function() {
       it("should initialize the sign in and sign out interfaces", function() {
         const link = authenticatorURL;
+
+        $(toolbar.selectorStart + "identity-signinlink").attr("link", "");
+        $(toolbar.selectorStart + "identity-signoutlink").attr("link", "");
 
         toolbar.initSignInOutInterfaces();
 
@@ -1458,6 +1485,8 @@ describe("toolbar.js", function() {
         selector: toolbar.selectorStart + "restore-button"
       };
 
+      $(request.selector).show();
+
       chrome.runtime.onMessage.trigger(request);
 
       expect($(request.selector).is(":hidden")).to.be.true;
@@ -1482,6 +1511,14 @@ describe("toolbar.js", function() {
 
       it("should sign in the user", function() {
         const userEmail = "some.email";
+
+        $(identityIdStart + "signinlink").show();
+
+        $(identityIdStart + "signedinstatus").hide();
+        $(identityIdStart + "signedinuseremail").hide();
+        $(identityIdStart + "signoutlink").hide();
+
+        $(identityIdStart + "signedinuseremail").text("");
 
         toolbar.signIn(userEmail);
 
@@ -1517,6 +1554,14 @@ describe("toolbar.js", function() {
       });
 
       it("should sign out the user", function() {
+        $(identityIdStart + "signinlink").hide();
+
+        $(identityIdStart + "signedinstatus").show();
+        $(identityIdStart + "signedinuseremail").show();
+        $(identityIdStart + "signoutlink").show();
+
+        $(identityIdStart + "signedinuseremail").text("some.email");
+
         toolbar.signOut();
 
         expect($(identityIdStart + "signinlink").is(":visible")).to.be.true;
