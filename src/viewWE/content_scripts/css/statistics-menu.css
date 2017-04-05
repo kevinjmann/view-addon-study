@@ -1,4 +1,4 @@
-.view-tasks-btn {
+.view-task-btn {
     background-color: #4CAF50;
     color: white;
     padding: 5px;
@@ -16,7 +16,7 @@
     width: 150px
 }
 
-.view-tasks-btn:hover, .view-tasks-btn:focus,
+.view-task-btn:hover, .view-task-btn:focus,
 .view-performances-btn:hover, .view-performances-btn:focus{
     background-color: #3e8e41;
 }
