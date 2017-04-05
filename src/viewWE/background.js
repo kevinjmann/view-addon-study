@@ -108,6 +108,22 @@ const background = {
   },
 
   /**
+   * The toolbar ui send the message to toggle the statistics menu.
+   * Pass it on to statistics-menu.js.
+   */
+  toggleStatisticsMenu: function() {
+    chrome.tabs.sendMessage(background.currentTabId, {msg: "toggle statistics menu"});
+  },
+
+  /**
+   * The toolbar ui send the message to hide the statistics menu.
+   * Pass it on to statistics-menu.js.
+   */
+  hideStatisticsMenu: function() {
+    chrome.tabs.sendMessage(background.currentTabId, {msg: "hide statistics menu"});
+  },
+
+  /**
    * The toolbar ui send the message to call startToEnhance().
    * Pass it on to view.js.
    */
@@ -336,6 +352,102 @@ const background = {
     chrome.tabs.sendMessage(background.currentTabId, {msg: "call abortEnhancement"});
   },
 
+
+
+  /**
+   * Helper function for ajax get requests.
+   *
+   * @param {string} url the server url
+   * @param {Object} queryParam the query parameter(s)
+   * @param {number} ajaxTimeout the amount of time given for the server
+   * to respond
+   *
+   * @returns ajax get request to the server with the default options
+   */
+  ajaxGet: function(url, queryParam, ajaxTimeout) {
+    return $.get({
+      url: url + queryParam,
+      timeout: ajaxTimeout
+    });
+  },
+
+  /**
+   * Send the request from statistics-menu.js to the
+   * server to get all tasks.
+   * If successful, request a call of showAllTasks(data)
+   * in statistics-menu.js.
+   *
+   * @param {*} request the message sent by the calling script
+   */
+  getAllTasks: function(request) {
+    const ajaxTimeout = request.ajaxTimeout || 120000;
+    background.ajaxGet(request.serverTaskURL,
+      request.queryParam,
+      ajaxTimeout)
+    .done(function(data, textStatus, xhr) {
+      if (data) {
+        background.callShowAllTasks(data);
+      } else {
+        background.ajaxError(xhr, "no-task-data");
+      }
+    })
+    .fail(function(xhr, textStatus) {
+      background.ajaxError(xhr, textStatus);
+    });
+  },
+
+  /**
+   * Send task data from the server to statistics-menu.js so that
+   * the showAllTasks method there will be called.
+   *
+   * @param {string} tasksData data containing all tasks
+   */
+  callShowAllTasks: function(tasksData) {
+    chrome.tabs.sendMessage(background.currentTabId, {
+      msg: "call showAllTasks",
+      tasksData: tasksData
+    });
+  },
+
+  /**
+   * Send the request from statistics-menu.js to the
+   * server to get a list of performances for a task.
+   * If successful, request a call of showTask(data)
+   * in statistics-menu.js.
+   *
+   * @param {*} request the message sent by the calling script
+   */
+  getTask: function(request) {
+    const ajaxTimeout = request.ajaxTimeout || 120000;
+    background.ajaxGet(request.serverTrackingURL,
+      request.queryParam,
+      ajaxTimeout)
+    .done(function(data, textStatus, xhr) {
+      if (data) {
+        background.callShowTask(data);
+      } else {
+        background.ajaxError(xhr, "no-performance-data");
+      }
+    })
+    .fail(function(xhr, textStatus) {
+      background.ajaxError(xhr, textStatus);
+    });
+  },
+
+  /**
+   * Send task data from the server to statistics-menu.js so that
+   * the showTask method there will be called.
+   *
+   * @param {string} performancesData data containing all performances for
+   * a task
+   */
+  callShowTask: function(performancesData) {
+    chrome.tabs.sendMessage(background.currentTabId, {
+      msg: "call showTask",
+      performancesData: performancesData
+    });
+  },
+
   /**
    * Fire an ajaxError if anything went wrong when sending data from the
    * extension to the server.
@@ -369,14 +481,14 @@ const background = {
         background.createBasicNotification(
           "no-task-data-notification",
           "No task data!",
-          "The VIEW server did not send the task data."
+          "The VIEW server did not send any task data."
         );
         break;
       case "no-performance-data":
         background.createBasicNotification(
           "no-performance-data-notification",
           "No performance data!",
-          "The VIEW server did not send the performance data."
+          "The VIEW server did not send any performance data."
         );
         break;
       case "timeout":
@@ -475,7 +587,7 @@ const background = {
   },
 
   /**
-   * Reset user email and user id and send a request to the toolbar to
+   * Reset user related information and send a request to the toolbar to
    * sign out the user afterwards.
    */
   signOutUser: function(){
@@ -483,7 +595,8 @@ const background = {
       userEmail: "",
       userid: "",
       user: "",
-      token: ""
+      token: "",
+      taskId: ""
     }, function() {
       chrome.tabs.sendMessage(background.currentTabId, {msg: "call signOut"});
     });
@@ -513,7 +626,10 @@ const background = {
     }, function() {
       chrome.tabs.sendMessage(background.currentTabId, {
         msg: "call signIn",
-        userEmail: userEmail
+        userEmail: userEmail,
+        userid: userid,
+        user: user,
+        token: authtoken
       });
     });
   }
@@ -562,6 +678,12 @@ function processMessage(request, sender, sendResponse) {
     case "hide VIEW Menu":
       background.hideVIEWMenu();
       break;
+    case "toggle statistics menu":
+      background.toggleStatisticsMenu();
+      break;
+    case "hide statistics menu":
+      background.hideStatisticsMenu();
+      break;
     case "call startToEnhance":
       background.callStartToEnhance();
       break;
@@ -599,6 +721,12 @@ function processMessage(request, sender, sendResponse) {
     case "send requestData abort":
       background.sendRequestDataAbort(request);
       break;
+    case "get all tasks":
+      background.getAllTasks(request);
+      break;
+    case "get task":
+      background.getTask(request);
+      break;
     default:
       background.createBasicNotification(
         "unhandled-message-notification",
@@ -618,8 +746,8 @@ chrome.runtime.onMessage.addListener(processMessage);
  * reason for its change
  */
 function observeUserId(changeInfo) {
-  if (changeInfo.cookie.name == "wertiview_userid") {
-    background.processUserIdCookie(changeInfo);
+  if ("wertiview_userid" === changeInfo.cookie.name) {
+  background.processUserIdCookie(changeInfo);
   }
 }
 
