@@ -27,6 +27,10 @@ view.interaction = {
 
     view.VIEWmenu.add();
 
+    view.statisticsMenu.add();
+
+    view.lib.initHideMenuHandler();
+
     $body.prepend($iframe);
 
     return view.interaction.toolbarUI = $iframe;
@@ -388,21 +392,5 @@ view.interaction = {
     view.blur.remove();
 
     $("#wertiview-inst-notification").remove();
-  },
-
-  /*
-   * The extension send the message to sign out the user.
-   */
-  signOutUser: function(request) {
-    console.log("signOutUser: received '" + request.msg + "'");
-    view.userid = "";
-  },
-
-  /*
-   * The extension send the message to sign in the user.
-   */
-  signInUser: function(request) {
-    console.log("signInUser: received '" + request.msg + "'");
-    view.userid = request.userid;
   }
 };
