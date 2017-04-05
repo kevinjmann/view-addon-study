@@ -1560,8 +1560,6 @@ describe("toolbar.js", function() {
         $(identityIdStart + "signedinuseremail").show();
         $(identityIdStart + "signoutlink").show();
 
-        $(identityIdStart + "signedinuseremail").text("some.email");
-
         toolbar.signOut();
 
         expect($(identityIdStart + "signinlink").is(":visible")).to.be.true;
