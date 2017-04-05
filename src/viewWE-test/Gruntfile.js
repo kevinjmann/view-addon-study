@@ -211,6 +211,21 @@ module.exports = function(grunt) {
           "../viewWE/content_scripts/js/selector.js": ["coverage"],
           "**/ru-nouns-mc-and-cloze.html": ["html2js"]
         }
+      },
+      statisticsMenu: {
+        files: {
+          src: [
+            "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/lib.js",
+            "../viewWE/content_scripts/js/view-menu.js",
+            "../viewWE/content_scripts/js/statistics-menu.js",
+            "test/unit/content_scripts/statistics-menu.test.js"
+          ]
+        },
+        preprocessors: {
+          "../viewWE/content_scripts/js/statistics-menu.js": ["coverage"],
+          "**/statistics-menu.html": ["html2js"]
+        }
       }
     }
   });
