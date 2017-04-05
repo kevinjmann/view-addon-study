@@ -1,0 +1,22 @@
+.view-tasks-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100px
+}
+
+.view-performances-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 150px
+}
+
+.view-tasks-btn:hover, .view-tasks-btn:focus,
+.view-performances-btn:hover, .view-performances-btn:focus{
+    background-color: #3e8e41;
+}
