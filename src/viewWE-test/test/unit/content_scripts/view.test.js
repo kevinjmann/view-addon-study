@@ -21,7 +21,27 @@ describe("view.js", function() {
     view.topics = {};
     view.userEmail = "";
     view.userid = "";
+    view.user = "";
+    view.token = "";
+    view.taskId = "";
     view.enabled = false;
+
+    view.timestamp = "";
+    view.numberOfExercises = 0;
+
+    view.fixedOrPercentage = 0;
+    view.fixedNumberOfExercises = 25;
+    view.percentageOfExercises = 100;
+    view.choiceMode = 0;
+    view.firstOffset = 0;
+    view.intervalSize = 1;
+    view.showInst = false;
+
+    view.enabled = false; // should the page be enhanced right away?
+    view.language = "unselected";
+    view.topic = "unselected";
+    view.filter = "unselected";
+    view.activity = "unselected";
   });
 
   describe("setGeneralOptions", function() {
@@ -45,6 +65,7 @@ describe("view.js", function() {
         "userid",
         "user",
         "token",
+        "taskId",
         "enabled"
       ]);
     });
@@ -83,8 +104,6 @@ describe("view.js", function() {
 
       it("should set all fixed general options", function() {
         const topics = "some topics data";
-
-        expect(view.topics).to.be.empty;
 
         view.setFixedGeneralOptions(topics);
 
@@ -175,6 +194,23 @@ describe("view.js", function() {
 
           sinon.assert.calledOnce(chrome.storage.local.set);
           sinon.assert.calledWithExactly(chrome.storage.local.set, {enabled: false});
+        });
+
+        describe("setLatestTaskId", function() {
+          it("should set the latest task id to the default, as the task id is undefined", function() {
+            view.setLatestTaskId(undefined);
+
+            sinon.assert.calledOnce(chrome.storage.local.set);
+            sinon.assert.calledWithExactly(chrome.storage.local.set, {taskId: ""});
+          });
+
+          it("should set the latest task id from storage, as the task id is defined", function() {
+            const taskId = 5;
+
+            view.setLatestTaskId(taskId);
+
+            expect(view.taskId).to.equal(taskId);
+          });
         });
       });
     });
@@ -365,8 +401,6 @@ describe("view.js", function() {
 
   describe("setNumberOfExercises", function() {
     it("should set the number of exercises", function() {
-      expect(view.numberOfExercises).to.equal(0);
-
       view.setNumberOfExercises(10);
 
       expect(view.numberOfExercises).to.equal(10);
@@ -431,13 +465,52 @@ describe("view.js", function() {
 
   describe("setTaskId", function() {
     it("should set the task id", function() {
-      expect(view.taskId).to.be.empty;
-
       const taskId = "some-task-id";
+
+      chrome.storage.local.set.yields(taskId);
 
       view.setTaskId(taskId);
 
       expect(view.taskId).to.equal(taskId);
     });
-  })
+  });
+
+  describe("signInUser", function() {
+    it("should sign in the user", function() {
+      const userEmail = "some.email";
+      const userid = "someid";
+      const user = "some user";
+      const token = "some token";
+
+      const request = {
+        userEmail,
+        userid,
+        user,
+        token
+      };
+
+      view.signInUser(request);
+
+      expect(view.userEmail).to.equal(userEmail);
+      expect(view.userid).to.equal(userid);
+      expect(view.user).to.equal(user);
+      expect(view.token).to.equal(token);
+    });
+
+    it("should sign out the user", function() {
+      view.userEmail = "some.email";
+      view.userid = "someid";
+      view.user = "some user";
+      view.token = "some token";
+      view.taskId = 5;
+
+      view.signOutUser();
+
+      expect(view.userEmail).to.equal("");
+      expect(view.userid).to.equal("");
+      expect(view.user).to.equal("");
+      expect(view.token).to.equal("");
+      expect(view.taskId).to.equal("");
+    });
+  });
 });
