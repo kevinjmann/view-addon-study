@@ -19,7 +19,7 @@ view.statisticsMenu = {
    */
   init: function() {
     view.statisticsMenu.initRequestAllTasks();
-    view.statisticsMenu.initRequestCurrentTask();
+    view.statisticsMenu.initRequestLatestTask();
   },
 
   /**
@@ -43,10 +43,10 @@ view.statisticsMenu = {
   },
 
   /**
-   * Request the current task when in the statistics menu "Current Task" was clicked.
+   * Request the latest task when in the statistics menu "Latest Task" was clicked.
    */
-  initRequestCurrentTask: function() {
-    $(view.statisticsMenu.selectorStart + "current-task").on("click", function() {
+  initRequestLatestTask: function() {
+    $(view.statisticsMenu.selectorStart + "latest-task").on("click", function() {
       view.statisticsMenu.requestToGetTask(view.taskId);
     });
   },
@@ -66,24 +66,26 @@ view.statisticsMenu = {
 
   /**
    * Toggle the statistics menu.
-   * Verify the current task option.
+   * Verify the latest task option.
    */
   toggle: function() {
-    view.statisticsMenu.verifyCurrentTask();
+    view.statisticsMenu.verifyLatestTask();
 
     $(view.statisticsMenu.selectorStart + "content").toggle();
   },
 
   /**
-   * Verify whether the current task option can be selected.
+   * Verify whether the latest task option can be selected.
    * If so, show the option, otherwise hide it.
    */
-  verifyCurrentTask: function() {
+  verifyLatestTask: function() {
+    const $LatestTask = $(view.statisticsMenu.selectorStart + "latest-task");
+
     if (!view.taskId) {
-      $(view.statisticsMenu.selectorStart + "current-task").hide();
+      $LatestTask.hide();
     }
     else {
-      $(view.statisticsMenu.selectorStart + "current-task").show();
+      $LatestTask.show();
     }
   },
 
@@ -269,7 +271,7 @@ view.statisticsMenu = {
     const $InfoList = view.lib.createList(viewPerformanceId + "-info", [
       "Correct answer: " + performanceData["correct-answer"],
       "Number of tries: " + performanceData["number-of-tries"],
-      "Used help function: " + performanceData["used-help-function"],
+      "Used solution: " + performanceData["used-solution"],
       "Assessment: " + performanceData["assessment"]
     ]);
 

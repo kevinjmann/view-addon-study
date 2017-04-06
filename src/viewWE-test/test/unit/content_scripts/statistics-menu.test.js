@@ -39,7 +39,7 @@ describe("statistics-menu.js", function() {
       "task-id": 1,
       "correct-answer": "submission",
       "number-of-tries": 1,
-      "used-help-function": false,
+      "used-solution": false,
       "assessment": "CORRECT"
     },
     {
@@ -47,7 +47,7 @@ describe("statistics-menu.js", function() {
       "task-id": 1,
       "correct-answer": "submission",
       "number-of-tries": 2,
-      "used-help-function": false,
+      "used-solution": false,
       "assessment": "CORRECT"
     }
   ];
@@ -78,7 +78,7 @@ describe("statistics-menu.js", function() {
 
       expect($(view.statisticsMenu.selectorStart + "content").length).to.be.above(0);
       expect($(view.statisticsMenu.selectorStart + "all-tasks").length).to.be.above(0);
-      expect($(view.statisticsMenu.selectorStart + "current-task").length).to.be.above(0);
+      expect($(view.statisticsMenu.selectorStart + "latest-task").length).to.be.above(0);
     });
   });
 
@@ -173,27 +173,27 @@ describe("statistics-menu.js", function() {
         });
       });
 
-      it("should call initRequestCurrentTask()", function() {
-        const initRequestCurrentTaskSpy = sandbox.spy(
+      it("should call initRequestLatestTask()", function() {
+        const initRequestLatestTaskSpy = sandbox.spy(
           view.statisticsMenu,
-          "initRequestCurrentTask"
+          "initRequestLatestTask"
         );
 
         view.statisticsMenu.init();
 
-        sinon.assert.calledOnce(initRequestCurrentTaskSpy);
+        sinon.assert.calledOnce(initRequestLatestTaskSpy);
       });
 
-      describe("initRequestCurrentTask", function() {
-        it("should initialize the show current task handler", function() {
+      describe("initRequestLatestTask", function() {
+        it("should initialize the show latest task handler", function() {
           const selectorSpy = sandbox.spy(document, "getElementById");
           const eventSpy = sandbox.spy($.fn, "on");
 
-          view.statisticsMenu.initRequestCurrentTask();
+          view.statisticsMenu.initRequestLatestTask();
 
           sinon.assert.calledOnce(selectorSpy);
           sinon.assert.calledWithExactly(selectorSpy,
-            view.statisticsMenu.selectorStart.substr(1) + "current-task");
+            view.statisticsMenu.selectorStart.substr(1) + "latest-task");
 
           sinon.assert.calledOnce(eventSpy);
           sinon.assert.calledWith(eventSpy, "click");
@@ -207,9 +207,9 @@ describe("statistics-menu.js", function() {
 
           view.taskId = 3;
 
-          view.statisticsMenu.initRequestCurrentTask();
+          view.statisticsMenu.initRequestLatestTask();
 
-          $(view.statisticsMenu.selectorStart + "current-task").trigger("click");
+          $(view.statisticsMenu.selectorStart + "latest-task").trigger("click");
 
           sinon.assert.calledOnce(requestToGetTaskSpy);
           sinon.assert.calledWithExactly(requestToGetTaskSpy, 3);
@@ -236,33 +236,33 @@ describe("statistics-menu.js", function() {
     });
 
     describe("toggle", function() {
-      it("should call verifyCurrentTask()", function() {
-        const verifyCurrentTaskSpy = sandbox.spy(view.statisticsMenu, "verifyCurrentTask");
+      it("should call verifyLatestTask()", function() {
+        const verifyLatestTaskSpy = sandbox.spy(view.statisticsMenu, "verifyLatestTask");
 
         view.statisticsMenu.toggle();
 
-        sinon.assert.calledOnce(verifyCurrentTaskSpy);
+        sinon.assert.calledOnce(verifyLatestTaskSpy);
       });
 
-      describe("verifyCurrentTask", function() {
-        it("should hide the current task option, as there is no task id", function() {
+      describe("verifyLatestTask", function() {
+        it("should hide the latest task option, as there is no task id", function() {
           view.taskId = "";
 
-          $(view.statisticsMenu.selectorStart + "current-task").show();
+          $(view.statisticsMenu.selectorStart + "latest-task").show();
 
-          view.statisticsMenu.verifyCurrentTask();
+          view.statisticsMenu.verifyLatestTask();
 
-          expect($(view.statisticsMenu.selectorStart + "current-task").is(":hidden")).to.be.true;
+          expect($(view.statisticsMenu.selectorStart + "latest-task").is(":hidden")).to.be.true;
         });
 
-        it("should show the current task option, as there is a task id", function() {
+        it("should show the latest task option, as there is a task id", function() {
           view.taskId = 3;
 
-          $(view.statisticsMenu.selectorStart + "current-task").hide();
+          $(view.statisticsMenu.selectorStart + "latest-task").hide();
 
-          view.statisticsMenu.verifyCurrentTask();
+          view.statisticsMenu.verifyLatestTask();
 
-          expect($(view.statisticsMenu.selectorStart + "current-task").css("display")).to.equal("block");
+          expect($(view.statisticsMenu.selectorStart + "latest-task").css("display")).to.equal("block");
         });
       });
 
@@ -714,7 +714,7 @@ describe("statistics-menu.js", function() {
             [
               "Correct answer: " + performanceData["correct-answer"],
               "Number of tries: " + performanceData["number-of-tries"],
-              "Used help function: " + performanceData["used-help-function"],
+              "Used solution: " + performanceData["used-solution"],
               "Assessment: " + performanceData["assessment"]
             ]
           );

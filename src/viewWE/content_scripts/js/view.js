@@ -256,7 +256,7 @@ const view = {
   /**
    * Create task data to be sent to the server.
    *
-   * @returns {object} the data of the current task
+   * @returns {object} the data of the latest task
    */
   createTaskData: function() {
     return {
