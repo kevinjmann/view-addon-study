@@ -265,7 +265,8 @@ module.exports = function(grunt) {
         },
         preprocessors: {
           "../viewWE/content_scripts/js/enhancer.js": ["coverage"],
-          "**/ru-no-markup.html": ["html2js"]
+          "**/ru-no-markup.html": ["html2js"],
+          "**/ru-nouns-mc-and-cloze.html": ["html2js"]
         }
       }
     }
