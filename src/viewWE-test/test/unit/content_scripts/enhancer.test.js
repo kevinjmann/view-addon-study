@@ -47,15 +47,85 @@ describe("enhancer.js", function() {
 
   describe("init", function() {
     it("should call restoreToOriginal(), as there is still server markup in the page", function() {
+      fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
       const restoreToOriginalSpy = sandbox.spy(view.enhancer, "restoreToOriginal");
-
-      $("body").append("<viewenhancement>");
 
       view.enhancer.enhance();
 
       sinon.assert.calledOnce(restoreToOriginalSpy);
+    });
 
-      $("viewenhancement").remove();
+    describe("restoreToOriginal", function() {
+      it("should call activityHelper.restore()", function() {
+        const restoreSpy = sandbox.spy(view.activityHelper, "restore");
+
+        view.enhancer.restoreToOriginal();
+
+        sinon.assert.calledOnce(restoreSpy);
+      });
+
+      it("should replace a viewenhancement element with the original text", function() {
+        fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
+
+        expect($("p").contents().get(5).nodeType).to.equal(1);
+        expect($("p").contents().get(5).nodeName).to.equal("VIEWENHANCEMENT");
+        expect($("p").contents().get(5).textContent).to.equal("процесс");
+
+        view.enhancer.restoreToOriginal();
+
+        expect($("p").contents().get(5).nodeType).to.equal(3);
+        expect($("p").contents().get(5).nodeName).to.equal("#text");
+        expect($("p").contents().get(5).textContent).to.equal("процесс");
+      });
+
+      it("should call lib.enableAnchors()", function() {
+        const enableAnchorsSpy = sandbox.spy(view.lib, "enableAnchors");
+
+        view.enhancer.restoreToOriginal();
+
+        sinon.assert.calledOnce(enableAnchorsSpy);
+      });
+
+      it("should call requestToToggleElement(msg, selector): hide restore button", function() {
+        const requestToToggleElementSpy = sandbox.spy(view.enhancer, "requestToToggleElement");
+
+        view.enhancer.restoreToOriginal();
+
+        sinon.assert.calledOnce(requestToToggleElementSpy);
+        sinon.assert.calledWithExactly(requestToToggleElementSpy,
+          "hide element",
+          "#wertiview-toolbar-restore-button"
+        );
+      });
+
+      it("should call notification.remove()", function() {
+        const removeSpy = sandbox.spy(view.notification, "remove");
+
+        view.enhancer.restoreToOriginal();
+
+        sinon.assert.calledOnce(removeSpy);
+      });
+
+      it("should call blur.remove()", function() {
+        const removeSpy = sandbox.spy(view.blur, "remove");
+
+        view.enhancer.restoreToOriginal();
+
+        sinon.assert.calledOnce(removeSpy);
+      });
+
+      it("should remove the instruction notification", function() {
+        const $Notification = $("<div>");
+        $Notification.attr("id", "wertiview-inst-notification");
+
+        $("body").append($Notification);
+
+        expect($("#wertiview-inst-notification").length).to.be.above(0);
+
+        view.enhancer.restoreToOriginal();
+
+        expect($("#wertiview-inst-notification").length).to.equal(0);
+      });
     });
 
     it("should call blur.add(), as the activity is 'cloze'", function() {
@@ -70,7 +140,7 @@ describe("enhancer.js", function() {
 
     it("should call constructInstruction(), as showInst is enabled", function() {
       const constructInstructionSpy = sandbox.spy(view.enhancer, "constructInstruction");
-      const jsonData = fixture.load("fixtures/json/nouns.json", true);
+      const jsonData = fixture.load("fixtures/json/nouns.json");
 
       view.showInst = true;
       view.topic = "nouns";
@@ -83,7 +153,7 @@ describe("enhancer.js", function() {
       sinon.assert.calledOnce(constructInstructionSpy);
     });
 
-    it("should call requestToToggleElement(msg, selector)", function() {
+    it("should call requestToToggleElement(msg, selector): show abort button", function() {
       const requestToToggleElementSpy = sandbox.spy(view.enhancer, "requestToToggleElement");
 
       view.enhancer.enhance();
