@@ -384,7 +384,7 @@ describe("activityHelper.js", function() {
         const $EnhancementElement = $ElementBox.parent();
         const submission = "some value";
         const isCorrect = true;
-        const usedHint = true;
+        const usedSolution = true;
 
         $ElementBox.val(submission);
 
@@ -397,7 +397,7 @@ describe("activityHelper.js", function() {
           $EnhancementElement,
           submission,
           isCorrect,
-          usedHint
+          usedSolution
         );
       });
 
@@ -411,7 +411,7 @@ describe("activityHelper.js", function() {
         const $EnhancementElement = $ElementBox.parent();
         const submission = "no submission";
         const isCorrect = true;
-        const usedHint = true;
+        const usedSolution = true;
 
         $Hint.trigger("click");
 
@@ -422,7 +422,7 @@ describe("activityHelper.js", function() {
           $EnhancementElement,
           submission,
           isCorrect,
-          usedHint
+          usedSolution
         );
       });
     });
@@ -468,7 +468,7 @@ describe("activityHelper.js", function() {
       sinon.assert.calledWithExactly(processIncorrectSpy, $ElementBox);
     });
 
-    it("should call trackData($Enhancement, submission, isCorrect, usedHint)", function() {
+    it("should call trackData($Enhancement, submission, isCorrect, usedSolution)", function() {
       const trackDataSpy = sandbox.spy(view.tracker, "trackData");
 
       view.mc.run();
@@ -477,7 +477,7 @@ describe("activityHelper.js", function() {
       const $EnhancementElement = $ElementBox.parent();
       const answer = $ElementBox.data("view-answer");
       const isCorrect = true;
-      const usedHint = false;
+      const usedSolution = false;
 
       $ElementBox.val(answer).trigger("change");
 
@@ -488,7 +488,7 @@ describe("activityHelper.js", function() {
         $EnhancementElement,
         answer,
         isCorrect,
-        usedHint
+        usedSolution
       );
     });
 

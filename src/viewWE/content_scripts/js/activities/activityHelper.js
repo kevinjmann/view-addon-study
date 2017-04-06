@@ -127,7 +127,7 @@ view.activityHelper = {
     const $EnhancementElement = $ElementBox.parent();
     const submission = $ElementBox.val() || "no submission";
     const isCorrect = true;
-    const usedHint = true;
+    const usedSolution = true;
 
     view.activityHelper.processCorrect($ElementBox, "provided");
 
@@ -135,7 +135,7 @@ view.activityHelper = {
       $EnhancementElement,
       submission,
       isCorrect,
-      usedHint
+      usedSolution
     );
   },
 
@@ -152,7 +152,7 @@ view.activityHelper = {
     const $ElementBox = $(e.target);
     const $EnhancementElement = $ElementBox.parent();
     const submission = $ElementBox.val();
-    const usedHint = false;
+    const usedSolution = false;
 
     if (submission.toLowerCase() === $ElementBox.data("view-answer").toLowerCase()) {
       isCorrect = true;
@@ -166,7 +166,7 @@ view.activityHelper = {
       $EnhancementElement,
       submission,
       isCorrect,
-      usedHint
+      usedSolution
     );
   },
 

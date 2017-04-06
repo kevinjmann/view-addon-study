@@ -21,7 +21,7 @@ view.click = {
 
     let isCorrect = false;
     const $EnhancementElement = $(this);
-    const usedHint = false;
+    const usedSolution = false;
 
     if ($EnhancementElement.is("viewenhancement[data-type!='miss'].selected")) {
       isCorrect = true;
@@ -36,7 +36,7 @@ view.click = {
       $EnhancementElement,
       $EnhancementElement.text(),
       isCorrect,
-      usedHint
+      usedSolution
     );
 
     $EnhancementElement.off("click");
