@@ -365,7 +365,7 @@ view.whquestions = {
       // collect info data before page update
       infos = view.interaction.collectInfoData(
         element,
-        false, // usedHint: only true when hint handler
+        false, // usedSolution: only true when hint handler
         view.interaction.collectInputData,
         view.interaction.collectAnswerData);
 
@@ -377,7 +377,7 @@ view.whquestions = {
         info,
         elementInfo,
         countsAsCorrect,
-        false); // usedHint: only true when hint handler
+        false); // usedSolution: only true when hint handler
     }
 
     // prevent execution of further event listeners
@@ -414,7 +414,7 @@ view.whquestions = {
       // collect info data before page update
       infos = view.interaction.collectInfoData(
         element,
-        false, // usedHint: only true when hint handler
+        false, // usedSolution: only true when hint handler
         view.interaction.collectInputData,
         view.interaction.collectAnswerData);
 
@@ -426,7 +426,7 @@ view.whquestions = {
         info,
         elementInfo,
         countsAsCorrect,
-        false); // usedHint: only true when hint handler
+        false); // usedSolution: only true when hint handler
     }
 
     // prevent execution of further event listeners
@@ -474,7 +474,7 @@ view.whquestions = {
       // collect info data before page update
       infos = view.interaction.collectInfoData(
         element,
-        false, // usedHint: only true when hint handler
+        false, // usedSolution: only true when hint handler
         view[view.topicName].clozeGetInput,
         view[view.topicName].clozeGetCorrectAnswer);
     }
@@ -507,7 +507,7 @@ view.whquestions = {
         info,
         elementInfo,
         countsAsCorrect,
-        false); // usedHint: only true when hint handler
+        false); // usedSolution: only true when hint handler
     }
 
     // prevent execution of further event listeners
@@ -528,7 +528,7 @@ view.whquestions = {
       // collect info data before page update
       infos = view.interaction.collectInfoData(
         element,
-        true, // usedHint: only true when hint handler
+        true, // usedSolution: only true when hint handler
         view[view.topicName].clozeGetInput,
         view[view.topicName].clozeGetCorrectAnswer);
     }
@@ -548,7 +548,7 @@ view.whquestions = {
         info,
         elementInfo,
         true, // if the user used a hint, then it is definitely a correct answer
-        true); // usedHint: only true when hint handler
+        true); // usedSolution: only true when hint handler
     }
 
     // prevent execution of further event listeners
@@ -559,7 +559,7 @@ view.whquestions = {
    * Returns the input using the parameters.
    * Used in the collectInfoData function.
    */
-  clozeGetInput: function(element, usedHint, isClick) {
+  clozeGetInput: function(element, usedSolution, isClick) {
     var $qParent = element.parents('.wertiviewQ');
     var $input = $qParent.find('.wertiviewinput');
     return $input.val();
@@ -569,7 +569,7 @@ view.whquestions = {
    * Returns the correct answer using the paramters.
    * Used in the collectInfoData function.
    */
-  clozeGetCorrectAnswer: function(element, usedHint) {
+  clozeGetCorrectAnswer: function(element, usedSolution) {
     var $qParent = element.parents('.wertiviewQ');
     return $qParent.data('wertiview-target-text');
   },

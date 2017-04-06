@@ -44,7 +44,7 @@ describe("tracker.js", function() {
       const $EnhancementElement = $("[data-type='hit']").first();
       const submission = "Усвоением";
       const isCorrect = false;
-      const usedHint = false;
+      const usedSolution = false;
 
       view.activity = "mc";
       view.userid = "";
@@ -53,7 +53,7 @@ describe("tracker.js", function() {
         $EnhancementElement,
         submission,
         isCorrect,
-        usedHint
+        usedSolution
       );
 
       sinon.assert.notCalled(detectCapitalizationSpy);
@@ -65,7 +65,7 @@ describe("tracker.js", function() {
       const $EnhancementElement = $("[data-type='hit']").first();
       const submission = "Усвоением";
       const isCorrect = false;
-      const usedHint = false;
+      const usedSolution = false;
 
       view.activity = "mc";
 
@@ -73,7 +73,7 @@ describe("tracker.js", function() {
         $EnhancementElement,
         submission,
         isCorrect,
-        usedHint
+        usedSolution
       );
 
       sinon.assert.calledOnce(detectCapitalizationSpy);
@@ -86,7 +86,7 @@ describe("tracker.js", function() {
       const $EnhancementElement = $("[data-type='hit']").first();
       const submission = "Усвоением";
       const isCorrect = false;
-      const usedHint = false;
+      const usedSolution = false;
       const capType = 2;
 
       view.activity = "mc";
@@ -95,7 +95,7 @@ describe("tracker.js", function() {
         $EnhancementElement,
         submission,
         isCorrect,
-        usedHint
+        usedSolution
       );
 
       sinon.assert.calledOnce(getCorrectAnswerSpy);
@@ -114,7 +114,7 @@ describe("tracker.js", function() {
       const isCorrect = false;
       const timestamp = 99;
       const correctAnswer = "Усвоение";
-      const usedHint = false;
+      const usedSolution = false;
 
       const interactionData = {};
 
@@ -124,7 +124,7 @@ describe("tracker.js", function() {
       interactionData["submission"] = submission;
       interactionData["is-correct"] = isCorrect;
       interactionData["correct-answer"] = correctAnswer;
-      interactionData["used-hint"] = usedHint;
+      interactionData["used-solution"] = usedSolution;
       interactionData["timestamp"] = timestamp;
 
       view.token = token;
@@ -136,7 +136,7 @@ describe("tracker.js", function() {
         $EnhancementElement,
         submission,
         isCorrect,
-        usedHint
+        usedSolution
       );
 
       sinon.assert.calledOnce(requestToSendInteractionDataSpy);
@@ -154,7 +154,7 @@ describe("tracker.js", function() {
       const correctAnswer = "Усвоение";
       const isCorrect = false;
       const timestamp = 99;
-      const usedHint = false;
+      const usedSolution = false;
 
       const interactionData = {};
 
@@ -165,7 +165,7 @@ describe("tracker.js", function() {
       interactionData["is-correct"] = isCorrect;
       interactionData["timestamp"] = timestamp;
       interactionData["correct-answer"] = correctAnswer;
-      interactionData["used-hint"] = usedHint;
+      interactionData["used-solution"] = usedSolution;
 
       view.token = token;
       view.taskId = taskId;
@@ -176,7 +176,7 @@ describe("tracker.js", function() {
         $EnhancementElement,
         submission,
         isCorrect,
-        usedHint
+        usedSolution
       );
 
       sinon.assert.calledOnce(requestToSendInteractionDataSpy);

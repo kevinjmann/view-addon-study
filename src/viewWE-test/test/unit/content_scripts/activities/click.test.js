@@ -135,12 +135,12 @@ describe("click.js", function() {
         expect($EnhancementElement.hasClass(clickStylePointer)).to.be.false;
       });
 
-      it("should call trackData($Enhancement,submission, isCorrect, usedHint)", function() {
+      it("should call trackData($Enhancement,submission, isCorrect, usedSolution)", function() {
         const trackDataSpy = sandbox.spy(view.tracker, "trackData");
 
         const $EnhancementElement = $("[data-type='hit'].selected").first();
         const isCorrect = true;
-        const usedHint = false;
+        const usedSolution = false;
 
         view.click.run();
 
@@ -153,7 +153,7 @@ describe("click.js", function() {
           $EnhancementElement,
           $EnhancementElement.text(),
           isCorrect,
-          usedHint
+          usedSolution
         );
       });
 

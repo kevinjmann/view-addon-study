@@ -57,7 +57,7 @@ view.conditionals = {
       // collect info data before page update
       infos = view.interaction.collectInfoData(
         element,
-        false, // usedHint: only true when hint handler
+        false, // usedSolution: only true when hint handler
         view.interaction.collectInputData,
         view.interaction.collectAnswerData);
 
@@ -69,7 +69,7 @@ view.conditionals = {
         info,
         elementInfo,
         countsAsCorrect,
-        false); // usedHint: only true when hint handler
+        false); // usedSolution: only true when hint handler
     }
 
     // prevent execution of further event listeners

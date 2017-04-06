@@ -164,7 +164,7 @@ view.serestar = {
       // collect info data before page update
       infos = view.interaction.collectInfoData(
         element,
-        false, // usedHint: only true when hint handler
+        false, // usedSolution: only true when hint handler
         view.interaction.collectInputData,
         view.interaction.collectAnswerData);
 
@@ -176,7 +176,7 @@ view.serestar = {
         info,
         elementInfo,
         countsAsCorrect,
-        false); // usedHint: only true when hint handler
+        false); // usedSolution: only true when hint handler
     }
 
     // prevent execution of further event listeners
@@ -198,7 +198,7 @@ view.serestar = {
       // collect info data before page update
       infos = view.interaction.collectInfoData(
         element,
-        false, // usedHint: only true when hint handler
+        false, // usedSolution: only true when hint handler
         view.interaction.collectInputData,
         view.interaction.collectAnswerData);
     }
@@ -235,7 +235,7 @@ view.serestar = {
         info,
         elementInfo,
         countsAsCorrect,
-        false); // usedHint: only true when hint handler
+        false); // usedSolution: only true when hint handler
     }
 
     // prevent execution of further event listeners
@@ -256,7 +256,7 @@ view.serestar = {
       // collect info data before page update
       infos = view.interaction.collectInfoData(
         element,
-        true, // usedHint: only true when hint handler
+        true, // usedSolution: only true when hint handler
         view.interaction.collectInputData,
         view.interaction.collectAnswerData);
     }
@@ -280,7 +280,7 @@ view.serestar = {
         info,
         elementInfo,
         true, // if the user used a hint, then it is definitely a correct answer
-        true); // usedHint: only true when hint handler
+        true); // usedSolution: only true when hint handler
     }
 
     // prevent execution of further event listeners

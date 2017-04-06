@@ -8,9 +8,9 @@ view.tracker = {
    * @param {string} submission the submission obtained from the user action
    * @param {boolean} isCorrect true if the answer is correct,
    * false otherwise
-   * @param usedHint true if a hint was used, false otherwise
+   * @param usedSolution true if a hint was used, false otherwise
    */
-  trackData: function($EnhancementElement, submission, isCorrect, usedHint) {
+  trackData: function($EnhancementElement, submission, isCorrect, usedSolution) {
     if (view.userid) {
       const interactionData = {};
 
@@ -22,7 +22,7 @@ view.tracker = {
 
       const capType = view.lib.detectCapitalization($EnhancementElement.text());
       interactionData["correct-answer"] = view.activityHelper.getCorrectAnswer($EnhancementElement, capType);
-      interactionData["used-hint"] = usedHint;
+      interactionData["used-solution"] = usedSolution;
 
       interactionData["timestamp"] = view.timestamp;
 
