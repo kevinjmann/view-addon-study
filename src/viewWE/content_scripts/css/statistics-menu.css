@@ -7,15 +7,7 @@
     width: 100px
 }
 
-.view-performances-btn {
-    background-color: #4CAF50;
-    color: white;
-    padding: 5px;
-    font-size: 16px;
-    cursor: pointer;
-    width: 150px
-}
-
+.view-performances-btn,
 .view-performance-btn {
     background-color: #4CAF50;
     color: white;
