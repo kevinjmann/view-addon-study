@@ -15,20 +15,11 @@ view.VIEWmenu = {
    * Init the handlers for the view menu.
    */
   init: function() {
-    view.VIEWmenu.initHideMenuHandler();
-
     view.VIEWmenu.initOpenOptionsPageHandler();
 
     view.VIEWmenu.initOpenHelpPageHandler();
 
     view.VIEWmenu.initOpenAboutDialogHandler();
-  },
-
-  /**
-   * Close the dropdown menu if the user clicks outside of it.
-   */
-  initHideMenuHandler: function() {
-    $(window).on("click", view.VIEWmenu.hide);
   },
 
   /**

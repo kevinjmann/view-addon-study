@@ -6,6 +6,65 @@ view.lib = {
     // This is intentional
   },
 
+  /**
+   * Close the dropdown menu if the user clicks outside of it.
+   */
+  initHideMenuHandler: function() {
+    $(window).on("click", function() {
+        view.VIEWmenu.hide();
+        view.statisticsMenu.hide();
+    });
+  },
+
+  /**
+   * Create a button element with a given id, class and text.
+   *
+   * @param {string} id the id of the button
+   * @param {string} aClass the class of the button
+   * @param {string} text the text of the button
+   * @returns {*|jQuery|HTMLElement} the button element
+   */
+  createButton: function(id, aClass, text) {
+    const $Button = $("<button>");
+    $Button.attr("id", id);
+    $Button.addClass(aClass);
+    $Button.text(text);
+
+    return $Button;
+  },
+
+  /**
+   * Create a list element with a given id and containing
+   * an array of items.
+   *
+   * @param {string} id the id of the list element
+   * @param {Array} allItems the list items of the list element
+   * @returns {*|jQuery|HTMLElement} the list element with items
+   */
+  createList: function(id, allItems) {
+    const $List = $("<ul>");
+    $List.attr("id", id);
+
+    view.lib.addItems(
+      $List,
+      allItems
+    );
+
+    return $List;
+  },
+
+  /**
+   * Add all items to a given list element.
+   *
+   * @param {Object} $List the list element the items are added to
+   * @param {Array} allItems the items to add
+   */
+  addItems: function($List, allItems) {
+    $.each(allItems, function(index) {
+      $List.append($("<li>").text(allItems[index]));
+    });
+  },
+
   /*
    * Get random numbers up to the variable "max".
    */

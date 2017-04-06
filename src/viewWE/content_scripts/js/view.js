@@ -15,10 +15,10 @@ const view = {
   // task data
   user: "",
   token: "",
+  taskId: "",
   url: document.baseURI,
   timestamp: "",
   numberOfExercises: 0,
-  taskId: "",
 
   // user options (defaults)
   fixedOrPercentage: 0,
@@ -53,6 +53,7 @@ const view = {
           "userid",
           "user",
           "token",
+          "taskId",
           "enabled"
         ], function(storageItems) {
           view.setAllGeneralOptions(storageItems, response.topics);
@@ -98,6 +99,7 @@ const view = {
   setMutableGeneralOptions: function(storageItems) {
     view.setAuthenticationDetails(storageItems);
     view.setAutoEnhance(storageItems.enabled);
+    view.setLatestTaskId(storageItems.taskId);
   },
 
   /**
@@ -123,6 +125,20 @@ const view = {
       view.userid = storageItems.userid;
       view.user = storageItems.user;
       view.token = storageItems.token;
+    }
+  },
+
+  /**
+   * Set the latest known task id, if there is one.
+   *
+   * @param {number} taskId the task id from storage
+   */
+  setLatestTaskId: function(taskId) {
+    if (taskId === undefined) {
+      chrome.storage.local.set({taskId: view.taskId});
+    }
+    else {
+      view.taskId = taskId;
     }
   },
 
@@ -240,7 +256,7 @@ const view = {
   /**
    * Create task data to be sent to the server.
    *
-   * @returns {object} the data of the current task
+   * @returns {object} the data of the latest task
    */
   createTaskData: function() {
     return {
@@ -262,6 +278,31 @@ const view = {
    * @param {string} taskId the task id from the server
    */
   setTaskId: function(taskId) {
+    chrome.storage.local.set({taskId: taskId}, function() {
       view.taskId = taskId;
+    });
+  },
+
+  /**
+   * The extension send the message to sign in the user.
+   *
+   * @param {*} request the message sent by the calling script
+   */
+  signInUser: function(request) {
+    view.userEmail = request.userEmail;
+    view.userid = request.userid;
+    view.user = request.user;
+    view.token = request.token;
+  },
+
+  /**
+   * The extension send the message to sign out the user.
+   */
+  signOutUser: function() {
+    view.userEmail = "";
+    view.userid = "";
+    view.user = "";
+    view.token = "";
+    view.taskId = "";
   }
 };

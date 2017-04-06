@@ -53,7 +53,11 @@ const toolbar = {
   init: function(topics) {
     toolbar.topics = topics;
 
-    toolbar.initViewMenu();
+    toolbar.initViewMenuBtn();
+
+    toolbar.initStatisticsMenuBtn();
+
+    toolbar.initHideViewMenuAndStatistics();
 
     toolbar.initAutoEnhance();
 
@@ -85,31 +89,12 @@ const toolbar = {
   },
 
   /**
-   * Init the open and hide view menu handlers.
-   */
-  initViewMenu: function() {
-    toolbar.initOpenViewMenu();
-    toolbar.initHideViewMenu();
-  },
-
-  /**
    * Init the view menu handler. Toggle between hiding and showing
    * the drop down content on click.
    */
-  initOpenViewMenu: function() {
+  initViewMenuBtn: function() {
     toolbar.$cache.get("#wertiview-VIEW-menu-btn").on("click",
       toolbar.requestToToggleViewMenu);
-  },
-
-  /**
-   * Hide the view menu when anything but the view menu button was clicked.
-   */
-  initHideViewMenu: function() {
-    toolbar.$cache.get(window).on("click", function(event) {
-      if (!$(event.target).closest("#wertiview-VIEW-menu-btn").length) {
-        toolbar.requestToHideViewMenu();
-      }
-    });
   },
 
   /**
@@ -121,6 +106,45 @@ const toolbar = {
   },
 
   /**
+   * A function that is supposed to be a placeholder for a response callback.
+   */
+  noResponse: function() {
+    // This is intentional
+  },
+
+  /**
+   * Init the handler for the statistics button.
+   * Call requestToToggleStatisticsMenu() on click.
+   */
+  initStatisticsMenuBtn: function() {
+    toolbar.$cache.get(toolbar.selectorStart + "statistics-menu-button").on("click",
+      toolbar.requestToToggleStatisticsMenu);
+  },
+
+  /**
+   * Send a request to the background script to pass on the message to
+   * toggle the statistics menu.
+   */
+  requestToToggleStatisticsMenu: function() {
+    chrome.runtime.sendMessage({msg: "toggle statistics menu"}, toolbar.noResponse);
+  },
+
+  /**
+   * Hide the view menu when anything but the view menu button was clicked.
+   */
+  initHideViewMenuAndStatistics: function() {
+    toolbar.$cache.get(window).on("click", function(event) {
+      const $Target = $(event.target);
+      if (!$Target.closest("#wertiview-VIEW-menu-btn").length) {
+        toolbar.requestToHideViewMenu();
+      }
+      if (!$Target.closest(toolbar.selectorStart + "statistics-menu-button").length) {
+        toolbar.requestToHideStatisticsMenu();
+      }
+    });
+  },
+
+  /**
    * Send a request to the background script to pass on the message to
    * hide the VIEW menu.
    */
@@ -129,10 +153,11 @@ const toolbar = {
   },
 
   /**
-   * A function that is supposed to be a placeholder for a response callback.
+   * Send a request to the background script to pass on the message to
+   * hide the statistics menu.
    */
-  noResponse: function() {
-    // This is intentional
+  requestToHideStatisticsMenu: function() {
+    chrome.runtime.sendMessage({msg: "hide statistics menu"}, toolbar.noResponse);
   },
 
   /**
@@ -598,8 +623,8 @@ const toolbar = {
    * @param {string} userEmail the email address of the user
    */
   verifySignInStatus: function(userEmail) {
-    if (userEmail === "") {
-      toolbar.signOut();
+    if (!userEmail) {
+      toolbar.signOut()
     }
     else {
       toolbar.signIn(userEmail);
@@ -640,6 +665,9 @@ const toolbar = {
     toolbar.$cache.get(identityIdStart + "signoutlink").show();
 
     $UserEmailID.text(userEmail);
+
+    toolbar.$cache.get(
+      toolbar.selectorStart + "statistics-menu-button").show();
   },
 
   /**
@@ -654,6 +682,9 @@ const toolbar = {
     toolbar.$cache.get(identityIdStart + "signedinstatus").hide();
     toolbar.$cache.get(identityIdStart + "signedinuseremail").hide();
     toolbar.$cache.get(identityIdStart + "signoutlink").hide();
+
+    toolbar.$cache.get(
+      toolbar.selectorStart + "statistics-menu-button").hide();
   }
 };
 

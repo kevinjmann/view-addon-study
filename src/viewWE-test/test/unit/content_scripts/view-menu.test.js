@@ -60,48 +60,15 @@ describe("view-menu.js", function() {
 
     describe("init", function() {
       it("should initialize all view menu handlers", function() {
-        const initHideMenuHandlerSpy = sandbox.spy(view.VIEWmenu, "initHideMenuHandler");
         const initOpenOptionsPageHandlerSpy = sandbox.spy(view.VIEWmenu, "initOpenOptionsPageHandler");
         const initOpenHelpPageHandlerSpy = sandbox.spy(view.VIEWmenu, "initOpenHelpPageHandler");
         const initOpenAboutDialogHandlerSpy = sandbox.spy(view.VIEWmenu, "initOpenAboutDialogHandler");
 
         view.VIEWmenu.init();
 
-        sinon.assert.calledOnce(initHideMenuHandlerSpy);
         sinon.assert.calledOnce(initOpenOptionsPageHandlerSpy);
         sinon.assert.calledOnce(initOpenHelpPageHandlerSpy);
         sinon.assert.calledOnce(initOpenAboutDialogHandlerSpy);
-      });
-
-      describe("initHideMenuHandler", function() {
-        it("should initialize the hide menu handler", function() {
-          const eventSpy = sandbox.spy($.fn, "on");
-
-          view.VIEWmenu.initHideMenuHandler();
-
-          sinon.assert.calledOnce(eventSpy);
-          sinon.assert.calledWith(eventSpy, "click");
-        });
-
-        it("should call hide() on click", function() {
-          const hideSpy = sandbox.spy(view.VIEWmenu, "hide");
-
-          view.VIEWmenu.initHideMenuHandler();
-
-          $(window).trigger("click");
-
-          sinon.assert.calledOnce(hideSpy);
-        });
-
-        it("should hide the view menu", function() {
-          view.VIEWmenu.toggle();
-
-          expect($(view.VIEWmenu.selectorStart + "content").is(":visible")).to.be.true;
-
-          view.VIEWmenu.hide();
-
-          expect($(view.VIEWmenu.selectorStart + "content").is(":hidden")).to.be.true;
-        });
       });
 
       describe("initOpenOptionsPageHandler", function() {
@@ -200,13 +167,23 @@ describe("view-menu.js", function() {
 
       describe("toggle", function() {
         it("should toggle the view menu", function() {
-          expect($(view.VIEWmenu.selectorStart + "content").is(":hidden")).to.be.true;
+          $(view.VIEWmenu.selectorStart + "content").hide();
 
           view.VIEWmenu.toggle();
 
           expect($(view.VIEWmenu.selectorStart + "content").is(":visible")).to.be.true;
 
           view.VIEWmenu.toggle();
+
+          expect($(view.VIEWmenu.selectorStart + "content").is(":hidden")).to.be.true;
+        });
+      });
+
+      describe("hide", function() {
+        it("should hide the view menu", function() {
+          $(view.VIEWmenu.selectorStart + "content").show();
+
+          view.VIEWmenu.hide();
 
           expect($(view.VIEWmenu.selectorStart + "content").is(":hidden")).to.be.true;
         });

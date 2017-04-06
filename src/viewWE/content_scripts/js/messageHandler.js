@@ -13,6 +13,12 @@ function processMessage(request) {
     case "hide VIEW Menu":
       view.VIEWmenu.hide();
       break;
+    case "toggle statistics menu":
+      view.statisticsMenu.toggle();
+      break;
+    case "hide statistics menu":
+      view.statisticsMenu.hide();
+      break;
     case "call startToEnhance":
       view.startToEnhance();
       break;
@@ -28,6 +34,12 @@ function processMessage(request) {
     case "call showPerformance":
       view.feedbacker.showPerformance(request.performanceData);
       break;
+    case "call showAllTasks":
+      view.statisticsMenu.showAllTasks(request.tasksData);
+      break;
+    case "call showTask":
+      view.statisticsMenu.showTask(request.performancesData);
+      break;
     case "call abort":
       view.interaction.callAbort(request);
       break;
@@ -38,10 +50,10 @@ function processMessage(request) {
       view.interaction.callRestoreToOriginal(request);
       break;
     case "call signOut":
-      view.interaction.signOutUser(request);
+      view.signOutUser();
       break;
     case "call signIn":
-      view.interaction.signInUser(request);
+      view.signInUser(request);
   }
 }
 
