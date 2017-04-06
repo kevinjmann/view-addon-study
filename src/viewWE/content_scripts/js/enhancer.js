@@ -32,8 +32,6 @@ view.enhancer = {
    * restore the original page.
    */
   restoreToOriginal: function() {
-    console.log("restoreToOriginal()");
-
     view.activityHelper.restore();
 
     $("viewenhancement").each(function() {
