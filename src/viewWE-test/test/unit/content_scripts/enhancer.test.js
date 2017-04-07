@@ -357,5 +357,13 @@ describe("enhancer.js", function() {
         "#wertiview-toolbar-enhance-button"
       );
     });
+
+    it("should call blur.remove()", function() {
+      const removeSpy = sandbox.spy(view.blur, "remove");
+
+      view.enhancer.initialInteractionState();
+
+      sinon.assert.calledOnce(removeSpy);
+    });
   });
 });
