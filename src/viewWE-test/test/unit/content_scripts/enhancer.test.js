@@ -16,11 +16,14 @@ describe("enhancer.js", function() {
   afterEach(function() {
     sandbox.restore();
     fixture.cleanup();
+    chrome.runtime.sendMessage.reset();
     view.activity = "";
     view.showInst = false;
     view.topics = {};
     view.topic = "";
     view.language = "";
+    view.url = "";
+    view.filter = "";
   });
 
   describe("jquery selectors", function() {
@@ -232,6 +235,89 @@ describe("enhancer.js", function() {
       view.enhancer.enhance();
 
       sinon.assert.calledOnce(createActivityDataSpy);
+    });
+
+    it("should return the activity data", function() {
+      const url = "some-url";
+      const language = "ru";
+      const topic = "nouns";
+      const filter = "Pl";
+      const activity = "color";
+
+      const activityData = {
+        url,
+        language,
+        topic,
+        filter,
+        activity,
+        document: $("#wertiview-content").html()
+      };
+
+      view.url = url;
+      view.language = language;
+      view.topic = topic;
+      view.filter = filter;
+      view.activity = activity;
+
+      const returnedActivityData = view.enhancer.createActivityData();
+
+      expect(activityData).to.eql(returnedActivityData);
+    });
+
+    it("should call requestToSendActivityDataAndGetEnhancementMarkup(activityData)", function() {
+      const requestToSendActivityDataAndGetEnhancementMarkupSpy =
+        sandbox.spy(view.enhancer, "requestToSendActivityDataAndGetEnhancementMarkup");
+
+      const url = "some-url";
+      const language = "ru";
+      const topic = "nouns";
+      const filter = "Pl";
+      const activity = "color";
+
+      view.url = url;
+      view.language = language;
+      view.topic = topic;
+      view.filter = filter;
+      view.activity = activity;
+
+      view.enhancer.enhance();
+
+      sinon.assert.calledOnce(requestToSendActivityDataAndGetEnhancementMarkupSpy);
+      sinon.assert.calledWithExactly(requestToSendActivityDataAndGetEnhancementMarkupSpy, {
+        url: url,
+        language: language,
+        topic: topic,
+        filter: filter,
+        activity: activity,
+        document: $("#wertiview-content").html()
+      });
+    });
+
+    it("should send a request to send activity data and get enhancement markup", function() {
+      const url = "some-url";
+      const language = "ru";
+      const topic = "nouns";
+      const filter = "Pl";
+      const activity = "color";
+
+      const activityData = {
+        url,
+        language,
+        topic,
+        filter,
+        activity,
+        document: $("#wertiview-content").html()
+      };
+
+      view.enhancer.requestToSendActivityDataAndGetEnhancementMarkup(activityData);
+
+      sinon.assert.calledOnce(chrome.runtime.sendMessage);
+      sinon.assert.calledWith(chrome.runtime.sendMessage, {
+        msg: "send activityData and get enhancement markup",
+        activityData: activityData,
+        ajaxTimeout: 60000,
+        servletURL: "https://view.aleks.bg/view"
+      });
     });
   });
 });
