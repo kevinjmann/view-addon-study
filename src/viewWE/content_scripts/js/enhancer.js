@@ -143,37 +143,29 @@ view.enhancer = {
     view.blur.remove();
   },
 
-  /*
-   * The extension send the message to call addEnhancementMarkup(data, options).
+  /**
+   * Adds the enhancement markup sent from the server to the page.
+   * Will only proceed if the user didn't abort the enhancement.
+   *
+   * @param {string} enhancementMarkup the markup from the server
    */
-  callAddEnhancementMarkup: function(request) {
-    console.log("callAddEnhancementMarkup: received '" + request.msg + "'");
-    // once the server has finished processing the
-    // enhancement, the user can no longer stop it
+  addEnhancementMarkup: function(enhancementMarkup) {
     if (!view.enhancer.isAborted) {
       view.enhancer.requestToToggleElement(
         "hide element",
         "#wertiview-toolbar-abort-button"
       );
-      view.enhancer.addEnhancementMarkup(request.data);
+
+      $("#wertiview-content").html(enhancementMarkup);
+
+      view.selector.select(view.filter);
+      view.enhancer.runActivity();
+      view.enhancer.initialInteractionState();
+      view.enhancer.requestToToggleElement(
+        "show element",
+        "#wertiview-toolbar-restore-button"
+      );
     }
-  },
-
-  /*
-   * Adds the html markup sent from the server to the page.
-   */
-  addEnhancementMarkup: function(data) {
-    console.log("addEnhancementMarkup(data)");
-
-    $("#wertiview-content").html(data);
-
-    view.selector.select(view.filter);
-    view.enhancer.runActivity();
-    view.enhancer.initialInteractionState();
-    view.enhancer.requestToToggleElement(
-      "show element",
-      "#wertiview-toolbar-restore-button"
-    );
   },
 
   /*
