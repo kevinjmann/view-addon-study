@@ -17,7 +17,7 @@ function processMessage(request) {
       view.startToEnhance();
       break;
     case "call initialInteractionState":
-      view.enhancer.callInitialInteractionState(request);
+      view.enhancer.initialInteractionState();
       break;
     case "call addEnhancementMarkup":
       view.enhancer.callAddEnhancementMarkup(request);
