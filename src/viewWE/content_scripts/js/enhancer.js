@@ -24,7 +24,9 @@ view.enhancer = {
       "#wertiview-toolbar-abort-button"
     );
 
-    view.enhancer.createActivityData();
+    const activityData = view.enhancer.createActivityData();
+
+    view.enhancer.requestToSendActivityDataAndGetEnhancementMarkup(activityData);
   },
 
   /**
@@ -49,6 +51,20 @@ view.enhancer = {
     view.blur.remove();
 
     $("#wertiview-inst-notification").remove();
+  },
+
+  /**
+   * Send a request to toolbar.js to toggle (show/hide) the element with the
+   * given selector.
+   *
+   * @param {String} msg the request message "show/hide element"
+   * @param {String} selector the selector of the element to toggle
+   */
+  requestToToggleElement: function(msg, selector) {
+    chrome.runtime.sendMessage({
+      msg: msg,
+      selector: selector
+    }, view.lib.noResponse);
   },
 
   /**
@@ -77,38 +93,30 @@ view.enhancer = {
   },
 
   /**
-   * Send a request to toolbar.js to toggle (show/hide) the element with the
-   * given selector.
+   * Creates the activity data to be send to the server.
    *
-   * @param {String} msg the request message "show/hide element"
-   * @param {String} selector the selector of the element to toggle
+   * @returns {object} the activity data to be send
    */
-  requestToToggleElement: function(msg, selector) {
-    chrome.runtime.sendMessage({
-      msg: msg,
-      selector: selector
-    }, view.lib.noResponse);
+  createActivityData: function() {
+    return {
+      url: view.url,
+      language: view.language,
+      topic: view.topic,
+      filter: view.filter,
+      activity: view.activity,
+      document: $("#wertiview-content").html()
+    };
   },
 
   /**
-   * Creates the activity data to be send to background.js
-   * for further processing on the server side.
+   * Send a request to the background script to pass on the activity data
+   * to the server and get the enhancement markup.
+   *
+   * @param {object} activityData the data to pass on to the server
    */
-  createActivityData: function() {
-    console.log("createActivityData(contextDoc)");
-
-    const activityData = {};
-    activityData["url"] = view.url;
-    activityData["language"] = view.language;
-    activityData["topic"] = view.topic;
-    activityData["filter"] = view.filter;
-    activityData["activity"] = view.activity;
-    activityData["document"] = $("#wertiview-content").html();
-
-    // send a request to the background script, to send the activity data to the server for processing
-    console.log("createActivityData: request 'send activityData'");
+  requestToSendActivityDataAndGetEnhancementMarkup: function(activityData) {
     chrome.runtime.sendMessage({
-      msg: "send activityData",
+      msg: "send activityData and get enhancement markup",
       activityData: activityData,
       ajaxTimeout: view.ajaxTimeout,
       servletURL: view.servletURL
@@ -144,10 +152,10 @@ view.enhancer = {
   },
 
   /*
-   * The extension send the message to call addServerMarkup(data, options).
+   * The extension send the message to call addEnhancementMarkup(data, options).
    */
-  callAddServerMarkup: function(request) {
-    console.log("callAddServerMarkup: received '" + request.msg + "'");
+  callAddEnhancementMarkup: function(request) {
+    console.log("callAddEnhancementMarkup: received '" + request.msg + "'");
     // once the server has finished processing the
     // enhancement, the user can no longer stop it
     if (!view.enhancer.isAborted) {
@@ -155,15 +163,15 @@ view.enhancer = {
         "hide element",
         "#wertiview-toolbar-abort-button"
       );
-      view.enhancer.addServerMarkup(request.data);
+      view.enhancer.addEnhancementMarkup(request.data);
     }
   },
 
   /*
    * Adds the html markup sent from the server to the page.
    */
-  addServerMarkup: function(data) {
-    console.log("addServerMarkup(data)");
+  addEnhancementMarkup: function(data) {
+    console.log("addEnhancementMarkup(data)");
 
     $("#wertiview-content").html(data);
 
