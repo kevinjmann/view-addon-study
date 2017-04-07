@@ -48,7 +48,7 @@ describe("enhancer.js", function() {
     });
   });
 
-  describe("init", function() {
+  describe("enhance", function() {
     it("should call restoreToOriginal(), as there is still server markup in the page", function() {
       fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
       const restoreToOriginalSpy = sandbox.spy(view.enhancer, "restoreToOriginal");
@@ -318,6 +318,44 @@ describe("enhancer.js", function() {
         ajaxTimeout: 60000,
         servletURL: "https://view.aleks.bg/view"
       });
+    });
+  });
+
+  describe("initialInteractionState", function() {
+    it("should call requestToToggleElement(msg, selector): hide loading image", function() {
+      const requestToToggleElementSpy = sandbox.spy(view.enhancer, "requestToToggleElement");
+
+      view.enhancer.initialInteractionState();
+
+      sinon.assert.called(requestToToggleElementSpy);
+      sinon.assert.calledWithExactly(requestToToggleElementSpy.getCall(0),
+        "hide element",
+        "#wertiview-toolbar-loading-image"
+      );
+    });
+
+    it("should call requestToToggleElement(msg, selector): hide abort button", function() {
+      const requestToToggleElementSpy = sandbox.spy(view.enhancer, "requestToToggleElement");
+
+      view.enhancer.initialInteractionState();
+
+      sinon.assert.called(requestToToggleElementSpy);
+      sinon.assert.calledWithExactly(requestToToggleElementSpy.getCall(1),
+        "hide element",
+        "#wertiview-toolbar-abort-button"
+      );
+    });
+
+    it("should call requestToToggleElement(msg, selector): show enhance button", function() {
+      const requestToToggleElementSpy = sandbox.spy(view.enhancer, "requestToToggleElement");
+
+      view.enhancer.initialInteractionState();
+
+      sinon.assert.called(requestToToggleElementSpy);
+      sinon.assert.calledWithExactly(requestToToggleElementSpy.getCall(2),
+        "show element",
+        "#wertiview-toolbar-enhance-button"
+      );
     });
   });
 });
