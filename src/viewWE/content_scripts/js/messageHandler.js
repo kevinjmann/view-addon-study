@@ -20,7 +20,7 @@ function processMessage(request) {
       view.enhancer.initialInteractionState();
       break;
     case "call addEnhancementMarkup":
-      view.enhancer.callAddEnhancementMarkup(request);
+      view.enhancer.addEnhancementMarkup(request.data);
       break;
     case "call setTaskId":
       view.setTaskId(request.taskId);
