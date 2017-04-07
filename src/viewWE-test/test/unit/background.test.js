@@ -408,12 +408,13 @@ describe("background.js", function() {
         });
       });
 
-      describe("sendActivityData", function() {
-        it("should process the message 'send activityData'", function() {
-          const sendActivityDataSpy = sandbox.spy(background, "sendActivityData");
+      describe("sendActivityDataAndGetEnhancementMarkup", function() {
+        it("should process the message 'send activityData and get enhancement markup'", function() {
+          const sendActivityDataAndGetEnhancementMarkupSpy =
+            sandbox.spy(background, "sendActivityDataAndGetEnhancementMarkup");
 
           const request = {
-            msg: "send activityData",
+            msg: "send activityData and get enhancement markup",
             ajaxTimeout: 10000,
             servletURL: "https://some.url",
             activityData: "some activity data"
@@ -422,15 +423,15 @@ describe("background.js", function() {
 
           chrome.runtime.onMessage.trigger(request, sender);
 
-          sinon.assert.calledOnce(sendActivityDataSpy);
-          sinon.assert.calledWithExactly(sendActivityDataSpy, request);
+          sinon.assert.calledOnce(sendActivityDataAndGetEnhancementMarkupSpy);
+          sinon.assert.calledWithExactly(sendActivityDataAndGetEnhancementMarkupSpy, request);
         });
 
-        it("should succeed to send activity data and call addServerMarkup(data)", function() {
-          const callAddServerMarkupSpy = sandbox.spy(background, "callAddServerMarkup");
+        it("should succeed to send activity data and call addEnhancementMarkup(data)", function() {
+          const callAddEnhancementMarkupSpy = sandbox.spy(background, "callAddEnhancementMarkup");
 
           const request = {
-            msg: "send activityData",
+            msg: "send activityData and get enhancement markup",
             servletURL: "https://some.url",
             activityData: "some activity data"
             // ajaxTimeout not given by request to test "or branch"
@@ -444,12 +445,12 @@ describe("background.js", function() {
           sandbox.server.respondWith("POST", serverURL,
             [200, {"Content-Type": "text"}, serverData]);
 
-          background.sendActivityData(request);
+          background.sendActivityDataAndGetEnhancementMarkup(request);
 
           sandbox.server.respond();
 
-          sinon.assert.calledOnce(callAddServerMarkupSpy);
-          sinon.assert.calledWithExactly(callAddServerMarkupSpy, serverData);
+          sinon.assert.calledOnce(callAddEnhancementMarkupSpy);
+          sinon.assert.calledWithExactly(callAddEnhancementMarkupSpy, serverData);
         });
 
         it("should send a request to the content script to add server markup", function() {
@@ -457,11 +458,11 @@ describe("background.js", function() {
 
           background.currentTabId = 5;
 
-          background.callAddServerMarkup(serverData);
+          background.callAddEnhancementMarkup(serverData);
 
           sinon.assert.calledOnce(chrome.tabs.sendMessage);
           sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
-            msg: "call addServerMarkup",
+            msg: "call addEnhancementMarkup",
             data: serverData
           });
         });
@@ -470,7 +471,7 @@ describe("background.js", function() {
           const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
 
           const request = {
-            msg: "send activityData",
+            msg: "send activityData and get enhancement markup",
             servletURL: "https://some.url",
             activityData: "some activity data"
           };
@@ -482,7 +483,7 @@ describe("background.js", function() {
           sandbox.server.respondWith("POST", serverURL,
             [200, {"Content-Type": "text"}, ""]);
 
-          background.sendActivityData(request);
+          background.sendActivityDataAndGetEnhancementMarkup(request);
 
           sandbox.server.respond();
 
@@ -494,7 +495,7 @@ describe("background.js", function() {
           const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
 
           const request = {
-            msg: "send activityData",
+            msg: "send activityData and get enhancement markup",
             servletURL: "https://some.url",
             activityData: "some activity data"
           };
@@ -506,7 +507,7 @@ describe("background.js", function() {
           sandbox.server.respondWith("POST", serverURL,
             [404, {}, ""]);
 
-          background.sendActivityData(request);
+          background.sendActivityDataAndGetEnhancementMarkup(request);
 
           sandbox.server.respond();
 
@@ -693,7 +694,7 @@ describe("background.js", function() {
           const callAbortEnhancementSpy = sandbox.spy(background, "callAbortEnhancement");
 
           const request = {
-            msg: "send activityData",
+            msg: "send activityData and get enhancement markup",
             servletURL: "https://some.url",
             requestData: "some request data"
             // ajaxTimeout not given by request to test "or branch"

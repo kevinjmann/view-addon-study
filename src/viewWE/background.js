@@ -201,19 +201,19 @@ const background = {
   /**
    * Send the activity data from enhancer.js to the
    * server for processing.
-   * If successful, request a call of addServerMarkup
+   * If successful, request a call of addEnhancementMarkup
    * in enhancer.js.
    *
    * @param {*} request the message sent by the calling script
    */
-  sendActivityData: function(request) {
+  sendActivityDataAndGetEnhancementMarkup: function(request) {
     const ajaxTimeout = request.ajaxTimeout || 120000;
     background.ajaxPost(request.servletURL,
       request.activityData,
       ajaxTimeout)
     .done(function(data, textStatus, xhr) {
       if (data) {
-        background.callAddServerMarkup(data);
+        background.callAddEnhancementMarkup(data);
       } else {
         background.ajaxError(xhr, "nodata");
       }
@@ -224,14 +224,14 @@ const background = {
   },
 
   /**
-   * Send html markup data from the server to enhancer.js so that
-   * the addServerMarkup method there will be called.
+   * Send enhancement markup data from the server to enhancer.js so that
+   * the addEnhancementMarkup method there will be called.
    *
    * @param {string} data the html markup to be added to the current page
    */
-  callAddServerMarkup: function(data){
+  callAddEnhancementMarkup: function(data){
     chrome.tabs.sendMessage(background.currentTabId, {
-      msg: "call addServerMarkup",
+      msg: "call addEnhancementMarkup",
       data: data
     });
   },
@@ -552,8 +552,8 @@ function processMessage(request, sender, sendResponse) {
     case "open help page":
       background.openHelpPage();
       break;
-    case "send activityData":
-      background.sendActivityData(request);
+    case "send activityData and get enhancement markup":
+      background.sendActivityDataAndGetEnhancementMarkup(request);
       break;
     case "send taskData and get taskId":
       background.sendTaskDataAndGetTaskId(request);
