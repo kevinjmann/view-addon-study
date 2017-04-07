@@ -56,20 +56,23 @@ view.enhancer = {
    * topic and activity when the preference "show instructions" is enabled.
    */
   constructInstruction: function() {
-    console.log("constructInstruction()");
-
     const topic = view.topic;
 
     const activities = view.topics[topic][view.language].activities;
 
-    const instruction = activities[view.activity].description.text;
+    const instruction = activities[view.activity].instruction;
 
-    if (instruction !== "") {
-      // construct the instruction for the given topic and activity, can also be avoided by the user
-      view.notification.addInst(instruction, true);
-    }
-    else {
-      console.log("constructInstruction: the instruction is missing for the topic '" + topic + "'!");
+    if(instruction){
+      const instructionText = instruction.text;
+
+      if (instructionText) {
+        view.notification.addInst(instructionText, true);
+      }
+      else {
+        view.notification.addInst("The instruction for the topic " +
+          "<span class='colorize-style-" + topic + "'>" + topic + "</span>" +
+          " is missing!", false);
+      }
     }
   },
 
