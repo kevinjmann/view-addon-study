@@ -9,7 +9,16 @@
 describe("enhancer.js", function() {
   let sandbox;
 
+  const $NoMarkup = $("<div>");
+
+  before(function() {
+    fixture.load("/fixtures/ru-no-markup.html");
+    $NoMarkup.html($("#ru-no-markup-body").html());
+    $("body").append($("<div id='wertiview-content'>"));
+  });
+
   beforeEach(function() {
+    $("#wertiview-content").html($NoMarkup.html());
     sandbox = sinon.sandbox.create();
   });
 
@@ -24,6 +33,7 @@ describe("enhancer.js", function() {
     view.language = "";
     view.url = "";
     view.filter = "";
+    view.enhancer.isAborted = false;
   });
 
   describe("jquery selectors", function() {
@@ -34,15 +44,6 @@ describe("enhancer.js", function() {
       // maintain this test, if there are additions or changes
       // the expectations below don't need to be tested in other tests again
       // the selectors below can be freely used in the tests without problems
-      fixture.load("/fixtures/ru-no-markup.html");
-
-      const fixtureInnerHTML = $("#ru-no-markup-body").html();
-      const $FixtureBody = $("<div id='wertiview-content'>");
-
-      $FixtureBody.html(fixtureInnerHTML);
-
-      $("body").append($FixtureBody);
-
       expect($("#wertiview-content").length).to.be.above(0);
       expect($("#ru-no-markup-body").length).to.be.above(0);
     });
@@ -364,6 +365,84 @@ describe("enhancer.js", function() {
       view.enhancer.initialInteractionState();
 
       sinon.assert.calledOnce(removeSpy);
+    });
+  });
+
+  describe("addEnhancementMarkup", function() {
+    it("should call requestToToggleElement(msg, selector): hide abort button", function() {
+      fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
+      const requestToToggleElementSpy = sandbox.spy(view.enhancer, "requestToToggleElement");
+
+      view.enhancer.addEnhancementMarkup($("p").html());
+
+      sinon.assert.called(requestToToggleElementSpy);
+      sinon.assert.calledWithExactly(requestToToggleElementSpy.getCall(0),
+        "hide element",
+        "#wertiview-toolbar-abort-button"
+      );
+    });
+
+    it("should have the enhancement markup in the expected location", function() {
+      fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
+      const enhancementMarkup = $("p").html();
+
+      view.enhancer.addEnhancementMarkup(enhancementMarkup);
+
+      expect($("#wertiview-content").html()).to.equal(enhancementMarkup);
+    });
+
+    it("should call selector.select(filter)", function() {
+      fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
+      const selectSpy = sandbox.spy(view.selector, "select");
+
+      view.filter = "Pl";
+
+      view.enhancer.addEnhancementMarkup($("p").html());
+
+      sinon.assert.calledOnce(selectSpy);
+      sinon.assert.calledWithExactly(selectSpy, "Pl");
+    });
+
+    it("should call runActivity()", function() {
+      fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
+      const runActivitySpy = sandbox.spy(view.enhancer, "runActivity");
+
+      view.enhancer.addEnhancementMarkup($("p").html());
+
+      sinon.assert.calledOnce(runActivitySpy);
+    });
+
+    it("should call initialInteractionState()", function() {
+      fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
+      const initialInteractionStateSpy = sandbox.spy(view.enhancer, "initialInteractionState");
+
+      view.enhancer.addEnhancementMarkup($("p").html());
+
+      sinon.assert.calledOnce(initialInteractionStateSpy);
+    });
+
+    it("should call requestToToggleElement(msg, selector): show restore button", function() {
+      fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
+      const requestToToggleElementSpy = sandbox.spy(view.enhancer, "requestToToggleElement");
+
+      view.enhancer.addEnhancementMarkup($("p").html());
+
+      sinon.assert.called(requestToToggleElementSpy);
+      sinon.assert.calledWithExactly(requestToToggleElementSpy.getCall(4),
+        "show element",
+        "#wertiview-toolbar-restore-button"
+      );
+    });
+
+    it("should not call runActivity() as the enhancement was aborted", function() {
+      fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
+      const runActivitySpy = sandbox.spy(view.enhancer, "runActivity");
+
+      view.enhancer.isAborted = true;
+
+      view.enhancer.addEnhancementMarkup($("p").html());
+
+      sinon.assert.notCalled(runActivitySpy);
     });
   });
 });
