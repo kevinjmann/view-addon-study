@@ -19,8 +19,8 @@ function processMessage(request) {
     case "call initialInteractionState":
       view.enhancer.callInitialInteractionState(request);
       break;
-    case "call addServerMarkup":
-      view.enhancer.callAddServerMarkup(request);
+    case "call addEnhancementMarkup":
+      view.enhancer.callAddEnhancementMarkup(request);
       break;
     case "call setTaskId":
       view.setTaskId(request.taskId);
