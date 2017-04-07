@@ -42,7 +42,7 @@
       "matches": ["<all_urls>"],
       "css": [
         "lib/jquery-ui.min.css",
-        "content_scripts/css/interaction.css",
+        "content_scripts/css/view.css",
         "content_scripts/css/view-menu.css",
         "content_scripts/css/about.css",
         "content_scripts/css/notification.css",
