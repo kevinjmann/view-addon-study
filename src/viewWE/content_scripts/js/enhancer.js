@@ -123,15 +123,7 @@ view.enhancer = {
     }, view.lib.noResponse);
   },
 
-  /*
-   * The extension send the message to call initialInteractionState().
-   */
-  callInitialInteractionState: function(request) {
-    console.log("callinitialInteractionState: received '" + request.msg + "'");
-    view.enhancer.initialInteractionState();
-  },
-
-  /*
+  /**
    * Returns to initial interaction state, where the loading image and abort
    * button are hidden and the enhance button is enabled. Blur overlay is removed.
    */
