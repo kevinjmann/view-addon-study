@@ -153,6 +153,67 @@ describe("enhancer.js", function() {
       sinon.assert.calledOnce(constructInstructionSpy);
     });
 
+    describe("constructInstruction", function() {
+      it("should call notification.addInst(instruction, isAvoidable), as the instruction was found in topics", function() {
+        const addInstSpy = sandbox.spy(view.notification, "addInst");
+        const jsonData = fixture.load("fixtures/json/nouns.json");
+
+        view.topic = "nouns";
+        view.language = "ru";
+        view.activity = "color";
+        view.topics = {nouns: jsonData};
+
+        view.enhancer.constructInstruction();
+
+        sinon.assert.calledOnce(addInstSpy);
+        sinon.assert.calledWithExactly(addInstSpy,
+          "In the text, VIEW shows you the <span class='colorize-style-nouns'>Russian nouns</span>.",
+          true
+        );
+      });
+
+      it("should call notification.addInst(instruction, isAvoidable), as the instruction text was not found in topics", function() {
+        const addInstSpy = sandbox.spy(view.notification, "addInst");
+        const jsonData = fixture.load("fixtures/json/nouns.json");
+
+        view.topic = "nouns";
+        view.language = "ru";
+        view.activity = "color";
+        view.topics = {nouns: jsonData};
+
+        const activities = view.topics[view.topic][view.language].activities;
+
+        delete activities[view.activity].instruction.text;
+
+        view.enhancer.constructInstruction();
+
+        sinon.assert.calledOnce(addInstSpy);
+        sinon.assert.calledWithExactly(addInstSpy,
+          "The instruction for the topic " +
+          "<span class='colorize-style-" + view.topic + "'>" + view.topic + "</span>" +
+          " is missing!", false
+        );
+      });
+
+      it("should not call notification.addInst(instruction, isAvoidable), as the instruction was not found in topics", function() {
+        const addInstSpy = sandbox.spy(view.notification, "addInst");
+        const jsonData = fixture.load("fixtures/json/nouns.json");
+
+        view.topic = "nouns";
+        view.language = "ru";
+        view.activity = "color";
+        view.topics = {nouns: jsonData};
+
+        const activities = view.topics[view.topic][view.language].activities;
+
+        delete activities[view.activity].instruction;
+
+        view.enhancer.constructInstruction();
+
+        sinon.assert.notCalled(addInstSpy);
+      });
+    });
+
     it("should call requestToToggleElement(msg, selector): show abort button", function() {
       const requestToToggleElementSpy = sandbox.spy(view.enhancer, "requestToToggleElement");
 
