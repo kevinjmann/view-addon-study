@@ -809,58 +809,6 @@ describe("background.js", function() {
             expect(ajaxErrorSpy.firstCall.args[1]).to.equal("no-performance-data");
           });
         });
-
-        describe("sendRequestDataAbort", function() {
-          it("should process the message 'send requestData abort'", function() {
-            const sendRequestDataAbortSpy = sandbox.spy(background, "sendRequestDataAbort");
-
-            const request = {
-              msg: "send requestData abort",
-              ajaxTimeout: 10000,
-              servletURL: "https://some.url",
-              requestData: "some request data"
-            };
-            const sender = {tab: {id: 5}};
-
-            chrome.runtime.onMessage.trigger(request, sender);
-
-            sinon.assert.calledOnce(sendRequestDataAbortSpy);
-            sinon.assert.calledWithExactly(sendRequestDataAbortSpy, request);
-          });
-
-          it("should succeed to send request data and call abortEnhancement()", function() {
-            const callAbortEnhancementSpy = sandbox.spy(background, "callAbortEnhancement");
-
-            const request = {
-              msg: "send activityData and get enhancement markup",
-              servletURL: "https://some.url",
-              requestData: "some request data"
-              // ajaxTimeout not given by request to test "or branch"
-            };
-
-            sandbox.useFakeServer();
-
-            const serverURL = "https://some.url";
-
-            sandbox.server.respondWith("POST", serverURL,
-              [200, {"Content-Type": "text"}, ""]);
-
-            background.sendRequestDataAbort(request);
-
-            sandbox.server.respond();
-
-            sinon.assert.calledOnce(callAbortEnhancementSpy);
-          });
-
-          it("should send a request to the content script to abort the enhancer", function() {
-            background.currentTabId = 5;
-
-            background.callAbortEnhancement();
-
-            sinon.assert.calledOnce(chrome.tabs.sendMessage);
-            sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {msg: "call abortEnhancement"});
-          });
-        });
       });
 
       describe("ajax get", function() {
@@ -1190,9 +1138,9 @@ describe("background.js", function() {
           sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
         });
 
-        it("should create the 'timeout-notification' and call abortEnhancement()", function() {
+        it("should create the 'timeout-notification' and call callAbort()", function() {
           const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
-          const callAbortEnhancementSpy = sandbox.spy(background, "callAbortEnhancement");
+          const callAbortSpy = sandbox.spy(background, "callAbort");
 
           const id = "timeout-notification";
           const title = "Timeout!";
@@ -1203,7 +1151,7 @@ describe("background.js", function() {
           sinon.assert.calledOnce(createBasicNotificationSpy);
           sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
 
-          sinon.assert.calledOnce(callAbortEnhancementSpy);
+          sinon.assert.calledOnce(callAbortSpy);
         });
 
         it("should create the 'error-490-notification'", function() {
