@@ -168,12 +168,10 @@ view.enhancer = {
     }
   },
 
-  /*
-   * Runs the activity selected and informs user when finished with processing
+  /**
+   * Runs the activity selected and informs user when finished with processing.
    */
   runActivity: function() {
-    console.log("runActivity()");
-
     switch (view.activity) {
       case "color":
 
@@ -205,8 +203,8 @@ view.enhancer = {
         view.blur.remove();
         break;
       default:
-        view.blur.remove();
-        alert("Invalid activity");
+        view.notification.add(
+          "The activity '" + view.activity + "' is not implemented!");
     }
   },
 
