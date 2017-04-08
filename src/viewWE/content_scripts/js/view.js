@@ -257,5 +257,28 @@ const view = {
    */
   setTaskId: function(taskId) {
       view.taskId = taskId;
+  },
+
+  /**
+   * The extension send the message to sign in the user.
+   *
+   * @param {*} request the message sent by the calling script
+   */
+  signInUser: function(request) {
+    view.userEmail = request.userEmail;
+    view.userid = request.userid;
+    view.user = request.user;
+    view.token = request.token;
+  },
+
+  /**
+   * The extension send the message to sign out the user.
+   */
+  signOutUser: function() {
+    view.userEmail = "";
+    view.userid = "";
+    view.user = "";
+    view.token = "";
+    view.taskId = "";
   }
 };
