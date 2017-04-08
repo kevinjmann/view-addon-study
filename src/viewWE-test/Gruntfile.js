@@ -79,7 +79,7 @@ module.exports = function(grunt) {
           src: [
             "../viewWE/content_scripts/js/view.js",
             "../viewWE/content_scripts/js/lib.js",
-            "../viewWE/content_scripts/js/interaction.js",
+            "../viewWE/content_scripts/js/enhancer.js",
             "test/unit/content_scripts/view.test.js"
           ]
         },
@@ -209,6 +209,63 @@ module.exports = function(grunt) {
         },
         preprocessors: {
           "../viewWE/content_scripts/js/selector.js": ["coverage"],
+          "**/ru-nouns-mc-and-cloze.html": ["html2js"]
+        }
+      },
+      toolbarIframe: {
+        files: {
+          src: [
+            "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/toolbar-iframe.js",
+            "../viewWE/content_scripts/js/container.js",
+            "../viewWE/content_scripts/js/view-menu.js",
+            "../viewWE/content_scripts/js/about.js",
+            "test/unit/content_scripts/toolbar-iframe.test.js"
+          ]
+        },
+        preprocessors: {
+          "../viewWE/content_scripts/js/toolbar-iframe.js": ["coverage"],
+          "**/ru-no-markup.html": ["html2js"]
+        }
+      },
+      container: {
+        files: {
+          src: [
+            "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/toolbar-iframe.js",
+            "../viewWE/content_scripts/js/container.js",
+            "../viewWE/content_scripts/js/view-menu.js",
+            "../viewWE/content_scripts/js/about.js",
+            "test/unit/content_scripts/container.test.js"
+          ]
+        },
+        preprocessors: {
+          "../viewWE/content_scripts/js/container.js": ["coverage"],
+          "**/ru-no-markup.html": ["html2js"]
+        }
+      },
+      enhancer: {
+        files: {
+          src: [
+            "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/selector.js",
+            "../viewWE/content_scripts/js/enhancer.js",
+            "../viewWE/content_scripts/js/view-menu.js",
+            "../viewWE/content_scripts/js/about.js",
+            "../viewWE/content_scripts/js/blur.js",
+            "../viewWE/content_scripts/js/notification.js",
+            "../viewWE/content_scripts/js/lib.js",
+            "../viewWE/content_scripts/js/activities/activityHelper.js",
+            "../viewWE/content_scripts/js/activities/color.js",
+            "../viewWE/content_scripts/js/activities/click.js",
+            "../viewWE/content_scripts/js/activities/mc.js",
+            "../viewWE/content_scripts/js/activities/cloze.js",
+            "test/unit/content_scripts/enhancer.test.js"
+          ]
+        },
+        preprocessors: {
+          "../viewWE/content_scripts/js/enhancer.js": ["coverage"],
+          "**/ru-no-markup.html": ["html2js"],
           "**/ru-nouns-mc-and-cloze.html": ["html2js"]
         }
       },

@@ -368,26 +368,8 @@ describe("view.js", function() {
       expect(view.timestamp).to.equal(timestamp);
     });
 
-    it("should call getTopicName(view.topic)", function() {
-      const getTopicNameSpy = sandbox.spy(view.interaction, "getTopicName");
-
-      const topic = "articles";
-      const storageItems = {topic: "articles"};
-
-      chrome.storage.local.get.yields(storageItems);
-
-      view.topic = topic;
-
-      view.startToEnhance();
-
-      sinon.assert.calledOnce(getTopicNameSpy);
-      sinon.assert.calledWithExactly(getTopicNameSpy, topic);
-
-      expect(view.topicName).to.equal("pos");
-    });
-
     it("should call enhance()", function() {
-      const enhanceSpy = sandbox.spy(view.interaction, "enhance");
+      const enhanceSpy = sandbox.spy(view.enhancer, "enhance");
 
       const storageItems = {topic: "articles"};
 

@@ -5,7 +5,7 @@
 function processMessage(request) {
   switch (request.msg) {
     case "toggle toolbar":
-      view.interaction.toggleToolbar(request);
+      view.toolbarIframe.toggle();
       break;
     case "toggle VIEW Menu":
       view.VIEWmenu.toggle();
@@ -23,10 +23,10 @@ function processMessage(request) {
       view.startToEnhance();
       break;
     case "call initialInteractionState":
-      view.interaction.callInitialInteractionState(request);
+      view.enhancer.initialInteractionState();
       break;
-    case "call addServerMarkup":
-      view.interaction.callAddServerMarkup(request);
+    case "call addEnhancementMarkup":
+      view.enhancer.addEnhancementMarkup(request.data);
       break;
     case "call setTaskId":
       view.setTaskId(request.taskId);
@@ -41,13 +41,10 @@ function processMessage(request) {
       view.statisticsMenu.showTask(request.performancesData);
       break;
     case "call abort":
-      view.interaction.callAbort(request);
-      break;
-    case "call abortEnhancement":
-      view.interaction.abortEnhancement(request);
+      view.enhancer.abort();
       break;
     case "call restoreToOriginal":
-      view.interaction.callRestoreToOriginal(request);
+      view.enhancer.restoreToOriginal();
       break;
     case "call signOut":
       view.signOutUser();

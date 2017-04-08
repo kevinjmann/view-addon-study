@@ -85,7 +85,7 @@ const background = {
 
   /**
    * There was a request to toggle the toolbar.
-   * Pass it on to interaction.js.
+   * Pass it on to toolbar-iframe.js.
    */
   toggleToolbar: function() {
     chrome.tabs.sendMessage(background.currentTabId, {msg: "toggle toolbar"});
@@ -93,7 +93,7 @@ const background = {
 
   /**
    * The toolbar ui send the message to toggle the VIEW menu.
-   * Pass it on to interaction.js.
+   * Pass it on to view-menu.js.
    */
   toggleVIEWMenu: function() {
     chrome.tabs.sendMessage(background.currentTabId, {msg: "toggle VIEW Menu"});
@@ -101,7 +101,7 @@ const background = {
 
   /**
    * The toolbar ui send the message to hide the VIEW menu.
-   * Pass it on to interaction.js.
+   * Pass it on to view-menu.js.
    */
   hideVIEWMenu: function() {
     chrome.tabs.sendMessage(background.currentTabId, {msg: "hide VIEW Menu"});
@@ -156,7 +156,7 @@ const background = {
 
   /**
    * The toolbar ui send the message to call abort().
-   * Pass it on to interaction.js.
+   * Pass it on to enhancer.js.
    */
   callAbort: function() {
     chrome.tabs.sendMessage(background.currentTabId, {msg: "call abort"});
@@ -164,7 +164,7 @@ const background = {
 
   /**
    * The toolbar ui send the message to call restoreToOriginal().
-   * Pass it on to interaction.js.
+   * Pass it on to enhancer.js.
    */
   callRestoreToOriginal: function() {
     chrome.tabs.sendMessage(background.currentTabId, {msg: "call restoreToOriginal"});
@@ -215,21 +215,21 @@ const background = {
   },
 
   /**
-   * Send the activity data from interaction.js to the
+   * Send the activity data from enhancer.js to the
    * server for processing.
-   * If successful, request a call of addServerMarkup
-   * in interaction.js.
+   * If successful, request a call of addEnhancementMarkup
+   * in enhancer.js.
    *
    * @param {*} request the message sent by the calling script
    */
-  sendActivityData: function(request) {
+  sendActivityDataAndGetEnhancementMarkup: function(request) {
     const ajaxTimeout = request.ajaxTimeout || 120000;
     background.ajaxPost(request.servletURL,
       request.activityData,
       ajaxTimeout)
     .done(function(data, textStatus, xhr) {
       if (data) {
-        background.callAddServerMarkup(data);
+        background.callAddEnhancementMarkup(data);
       } else {
         background.ajaxError(xhr, "nodata");
       }
@@ -240,14 +240,14 @@ const background = {
   },
 
   /**
-   * Send html markup data from the server to interaction.js so that
-   * the addServerMarkup method there will be called.
+   * Send enhancement markup data from the server to enhancer.js so that
+   * the addEnhancementMarkup method there will be called.
    *
    * @param {string} data the html markup to be added to the current page
    */
-  callAddServerMarkup: function(data){
+  callAddEnhancementMarkup: function(data){
     chrome.tabs.sendMessage(background.currentTabId, {
-      msg: "call addServerMarkup",
+      msg: "call addEnhancementMarkup",
       data: data
     });
   },
@@ -328,10 +328,10 @@ const background = {
   },
 
   /**
-   * Send the request data from interaction.js to the
-   * server for processing.
-   * If successful, request a call of saveDataAndInsertSpans
-   * in interaction.js.
+   * Send the request data from enhancer.js to the
+   * server to abort the processing.
+   * If successful, request a call of abortEnhancement()
+   * in enhancer.js.
    *
    * @param {*} request the message sent by the calling script
    */
@@ -656,9 +656,10 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 });
 
 /**
- * Processes all messages received from interaction.js and toolbar.js.
- * Sends requests to interaction.js, toolbar.js or the server depending on the
- * message.
+ * Processes all messages received from enhancer.js, toolbar-iframe.js and
+ * toolbar.js.
+ * Sends requests to enhancer.js, toolbar-iframe.js, toolbar.js or the server
+ * depending on the message.
  *
  * @param {*} request the message sent by the calling script
  * @param {Object} sender the MessageSender Object containing sender info
@@ -709,8 +710,8 @@ function processMessage(request, sender, sendResponse) {
     case "open help page":
       background.openHelpPage();
       break;
-    case "send activityData":
-      background.sendActivityData(request);
+    case "send activityData and get enhancement markup":
+      background.sendActivityDataAndGetEnhancementMarkup(request);
       break;
     case "send taskData and get taskId":
       background.sendTaskDataAndGetTaskId(request);
