@@ -29,13 +29,13 @@ function processMessage(request) {
       view.enhancer.abort();
       break;
     case "call restoreToOriginal":
-      view.enhancer.callRestoreToOriginal(request);
+      view.enhancer.restoreToOriginal();
       break;
     case "call signOut":
-      view.enhancer.signOutUser(request);
+      view.signOutUser();
       break;
     case "call signIn":
-      view.enhancer.signInUser(request);
+      view.signInUser(request);
   }
 }
 
