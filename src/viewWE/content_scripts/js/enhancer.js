@@ -150,7 +150,10 @@ view.enhancer = {
    * @param {string} enhancementMarkup the markup from the server
    */
   addEnhancementMarkup: function(enhancementMarkup) {
-    if (!view.enhancer.isAborted) {
+    if (view.enhancer.isAborted) {
+      view.enhancer.isAborted = false;
+    }
+    else{
       view.enhancer.requestToToggleElement(
         "hide element",
         "#wertiview-toolbar-abort-button"
