@@ -216,9 +216,11 @@ module.exports = function(grunt) {
         files: {
           src: [
             "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/lib.js",
             "../viewWE/content_scripts/js/toolbar-iframe.js",
             "../viewWE/content_scripts/js/container.js",
             "../viewWE/content_scripts/js/view-menu.js",
+            "../viewWE/content_scripts/js/statistics-menu.js",
             "../viewWE/content_scripts/js/about.js",
             "test/unit/content_scripts/toolbar-iframe.test.js"
           ]
