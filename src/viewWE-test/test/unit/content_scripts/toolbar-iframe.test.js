@@ -80,13 +80,29 @@ describe("toolbar-iframe.js", function() {
       sinon.assert.calledOnce(addSpy);
     });
 
+    it("should call statisticsMenu.add()", function() {
+      const addSpy = sandbox.spy(view.statisticsMenu, "add");
+
+      view.toolbarIframe.init();
+
+      sinon.assert.calledOnce(addSpy);
+    });
+
+    it("should call lib.initHideMenuHandler()", function() {
+      const initHideMenuHandlerSpy = sandbox.spy(view.lib, "initHideMenuHandler");
+
+      view.toolbarIframe.init();
+
+      sinon.assert.calledOnce(initHideMenuHandlerSpy);
+    });
+
     it("should call prepend(toolbar)", function() {
       const prependSpy = sandbox.spy($.fn, "prepend");
 
       view.toolbarIframe.init();
 
       sinon.assert.called(prependSpy);
-      expect($(prependSpy.getCall(1).args[0]).attr("id")).to.equal("view-toolbar-iframe");
+      expect($(prependSpy.getCall(2).args[0]).attr("id")).to.equal("view-toolbar-iframe");
     });
   });
 
