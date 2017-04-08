@@ -26,10 +26,7 @@ function processMessage(request) {
       view.setTaskId(request.taskId);
       break;
     case "call abort":
-      view.enhancer.callAbort(request);
-      break;
-    case "call abortEnhancement":
-      view.enhancer.abortEnhancement(request);
+      view.enhancer.abort();
       break;
     case "call restoreToOriginal":
       view.enhancer.callRestoreToOriginal(request);

@@ -208,44 +208,10 @@ view.enhancer = {
     }
   },
 
-  /*
-   * The extension send the message to call abort().
-   */
-  callAbort: function(request) {
-    console.log("callAbort: received '" + request.msg + "'");
-    view.enhancer.abort();
-  },
-
-  /*
+  /**
    * Abort the enhancement process.
    */
   abort: function() {
-    console.log("abort()");
-
-    const requestData = {};
-    requestData["url"] = view.url;
-    requestData["language"] = view.language;
-    requestData["topic"] = view.topic;
-    requestData["filter"] = view.filter;
-    requestData["activity"] = view.activity;
-
-    // send a request to the background script, to send the request data to the server for processing
-    console.log("abort: request 'send requestData abort'");
-    chrome.runtime.sendMessage({
-      msg: "send requestData abort",
-      requestData: requestData,
-      ajaxTimeout: view.ajaxTimeout,
-      servletURL: view.servletURL
-    });
-  },
-
-  /*
-   * The extension send the message to abort the enhancement.
-   */
-  abortEnhancement: function(request) {
-    console.log("abortEnhancement: received '" + request.msg + "'");
-    //always revert to the Enhance button, no matter whether the
-    // server process was stopped successfully
     view.enhancer.initialInteractionState();
     view.enhancer.isAborted = true;
   },
