@@ -328,33 +328,6 @@ const background = {
   },
 
   /**
-   * Send the request data from enhancer.js to the
-   * server to abort the processing.
-   * If successful, request a call of abortEnhancement()
-   * in enhancer.js.
-   *
-   * @param {*} request the message sent by the calling script
-   */
-  sendRequestDataAbort: function(request) {
-    const ajaxTimeout = request.ajaxTimeout || 120000;
-    background.ajaxPost(request.servletURL,
-      request.requestData,
-      ajaxTimeout)
-    .done(function() {
-      background.callAbortEnhancement();
-    });
-  },
-
-  /**
-   * Send a request to the content script to call abortEnhancement().
-   */
-  callAbortEnhancement: function(){
-    chrome.tabs.sendMessage(background.currentTabId, {msg: "call abortEnhancement"});
-  },
-
-
-
-  /**
    * Helper function for ajax get requests.
    *
    * @param {string} url the server url
@@ -497,8 +470,7 @@ const background = {
           "Timeout!",
           "The VIEW server is taking too long to respond."
         );
-        // when the add-on has timed out, tell the server to stop
-        background.callAbortEnhancement();
+        background.callAbort();
         break;
       case "error":
         switch (xhr.status) {
@@ -718,9 +690,6 @@ function processMessage(request, sender, sendResponse) {
       break;
     case "send interactionData":
       background.sendInteractionData(request);
-      break;
-    case "send requestData abort":
-      background.sendRequestDataAbort(request);
       break;
     case "get all tasks":
       background.getAllTasks(request);
