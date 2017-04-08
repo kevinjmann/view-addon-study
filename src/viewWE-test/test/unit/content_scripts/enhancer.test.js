@@ -412,6 +412,173 @@ describe("enhancer.js", function() {
       sinon.assert.calledOnce(runActivitySpy);
     });
 
+    describe("runActivity", function() {
+      describe("color", function() {
+        it("should call color.run(topic)", function() {
+          const runSpy = sandbox.spy(view.color, "run");
+
+          const topic = "nouns";
+
+          view.topic = topic;
+          view.activity = "color";
+
+          view.enhancer.runActivity();
+
+          sinon.assert.called(runSpy);
+          sinon.assert.calledWithExactly(runSpy, topic);
+        });
+
+        it("should call notification.add(notice)", function() {
+          const addSpy = sandbox.spy(view.notification, "add");
+
+          view.topic = "nouns";
+          view.activity = "color";
+
+          view.enhancer.runActivity();
+
+          sinon.assert.calledOnce(addSpy);
+          sinon.assert.calledWithExactly(addSpy, "VIEW Colorize Activity Ready");
+        });
+      });
+
+      describe("click", function() {
+        it("should call lib.disableAnchors()", function() {
+          const disableAnchorsSpy = sandbox.spy(view.lib, "disableAnchors");
+
+          view.topic = "nouns";
+          view.activity = "click";
+
+          view.enhancer.runActivity();
+
+          sinon.assert.called(disableAnchorsSpy);
+        });
+
+        it("should call click.run()", function() {
+          const runSpy = sandbox.spy(view.click, "run");
+
+          view.topic = "nouns";
+          view.activity = "click";
+
+          view.enhancer.runActivity();
+
+          sinon.assert.called(runSpy);
+        });
+
+        it("should call notification.add(notice)", function() {
+          const addSpy = sandbox.spy(view.notification, "add");
+
+          view.topic = "nouns";
+          view.activity = "click";
+
+          view.enhancer.runActivity();
+
+          sinon.assert.calledOnce(addSpy);
+          sinon.assert.calledWithExactly(addSpy, "VIEW Click Activity Ready");
+        });
+      });
+
+      describe("mc", function() {
+        it("should call lib.disableAnchors()", function() {
+          const disableAnchorsSpy = sandbox.spy(view.lib, "disableAnchors");
+
+          view.topic = "nouns";
+          view.activity = "mc";
+
+          view.enhancer.runActivity();
+
+          sinon.assert.called(disableAnchorsSpy);
+        });
+
+        it("should call mc.run()", function() {
+          const runSpy = sandbox.spy(view.mc, "run");
+
+          view.topic = "nouns";
+          view.activity = "mc";
+
+          view.enhancer.runActivity();
+
+          sinon.assert.called(runSpy);
+        });
+
+        it("should call notification.add(notice)", function() {
+          const addSpy = sandbox.spy(view.notification, "add");
+
+          view.topic = "nouns";
+          view.activity = "mc";
+
+          view.enhancer.runActivity();
+
+          sinon.assert.calledOnce(addSpy);
+          sinon.assert.calledWithExactly(addSpy, "VIEW Multiple Choice Activity Ready");
+        });
+      });
+
+      describe("cloze", function() {
+        it("should call lib.disableAnchors()", function() {
+          const disableAnchorsSpy = sandbox.spy(view.lib, "disableAnchors");
+
+          view.topic = "nouns";
+          view.activity = "cloze";
+
+          view.enhancer.runActivity();
+
+          sinon.assert.called(disableAnchorsSpy);
+        });
+
+        it("should call cloze.run()", function() {
+          const runSpy = sandbox.spy(view.cloze, "run");
+
+          view.topic = "nouns";
+          view.activity = "cloze";
+
+          view.enhancer.runActivity();
+
+          sinon.assert.called(runSpy);
+        });
+
+        it("should call notification.add(notice)", function() {
+          const addSpy = sandbox.spy(view.notification, "add");
+
+          view.topic = "nouns";
+          view.activity = "cloze";
+
+          view.enhancer.runActivity();
+
+          sinon.assert.calledOnce(addSpy);
+          sinon.assert.calledWithExactly(addSpy, "VIEW Practice Activity Ready");
+        });
+
+        it("should call blur.remove()", function() {
+          const removeSpy = sandbox.spy(view.blur, "remove");
+
+          view.topic = "nouns";
+          view.activity = "cloze";
+
+          view.enhancer.runActivity();
+
+          sinon.assert.calledOnce(removeSpy);
+        });
+      });
+
+      describe("default", function() {
+        it("should call notification.add(notice)", function() {
+          const addSpy = sandbox.spy(view.notification, "add");
+
+          const activity = "unknown";
+
+          view.topic = "nouns";
+          view.activity = activity;
+
+          view.enhancer.runActivity();
+
+          sinon.assert.calledOnce(addSpy);
+          sinon.assert.calledWithExactly(addSpy,
+            "The activity '" + activity + "' is not implemented!"
+          );
+        });
+      });
+    });
+
     it("should call initialInteractionState()", function() {
       fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
       const initialInteractionStateSpy = sandbox.spy(view.enhancer, "initialInteractionState");
