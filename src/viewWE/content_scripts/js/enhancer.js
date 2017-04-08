@@ -214,29 +214,5 @@ view.enhancer = {
   abort: function() {
     view.enhancer.initialInteractionState();
     view.enhancer.isAborted = true;
-  },
-
-  /*
-   * The extension send the message to call restoreToOriginal().
-   */
-  callRestoreToOriginal: function(request) {
-    console.log("callAbort: received '" + request.msg + "'");
-    view.enhancer.restoreToOriginal();
-  },
-
-  /*
-   * The extension send the message to sign out the user.
-   */
-  signOutUser: function(request) {
-    console.log("signOutUser: received '" + request.msg + "'");
-    view.userid = "";
-  },
-
-  /*
-   * The extension send the message to sign in the user.
-   */
-  signInUser: function(request) {
-    console.log("signInUser: received '" + request.msg + "'");
-    view.userid = request.userid;
   }
 };
