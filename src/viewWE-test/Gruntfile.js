@@ -118,8 +118,8 @@ module.exports = function(grunt) {
         files: {
           src: [
             "../viewWE/content_scripts/js/view.js",
-            "../viewWE/content_scripts/js/selector.js",
             "../viewWE/content_scripts/js/lib.js",
+            "../viewWE/content_scripts/js/selector.js",
             "../viewWE/content_scripts/js/activities/tracker.js",
             "../viewWE/content_scripts/js/activities/activityHelper.js",
             "../viewWE/content_scripts/js/activities/click.js",
@@ -135,8 +135,8 @@ module.exports = function(grunt) {
         files: {
           src: [
             "../viewWE/content_scripts/js/view.js",
-            "../viewWE/content_scripts/js/selector.js",
             "../viewWE/content_scripts/js/lib.js",
+            "../viewWE/content_scripts/js/selector.js",
             "../viewWE/content_scripts/js/activities/tracker.js",
             "../viewWE/content_scripts/js/activities/activityHelper.js",
             "../viewWE/content_scripts/js/activities/mc.js",
@@ -152,8 +152,8 @@ module.exports = function(grunt) {
         files: {
           src: [
             "../viewWE/content_scripts/js/view.js",
-            "../viewWE/content_scripts/js/selector.js",
             "../viewWE/content_scripts/js/lib.js",
+            "../viewWE/content_scripts/js/selector.js",
             "../viewWE/content_scripts/js/activities/tracker.js",
             "../viewWE/content_scripts/js/activities/activityHelper.js",
             "../viewWE/content_scripts/js/activities/cloze.js",
@@ -169,8 +169,8 @@ module.exports = function(grunt) {
         files: {
           src: [
             "../viewWE/content_scripts/js/view.js",
-            "../viewWE/content_scripts/js/selector.js",
             "../viewWE/content_scripts/js/lib.js",
+            "../viewWE/content_scripts/js/selector.js",
             "../viewWE/content_scripts/js/activities/tracker.js",
             "../viewWE/content_scripts/js/activities/activityHelper.js",
             "test/unit/content_scripts/activities/activityHelper.test.js",
@@ -234,9 +234,11 @@ module.exports = function(grunt) {
         files: {
           src: [
             "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/lib.js",
             "../viewWE/content_scripts/js/toolbar-iframe.js",
             "../viewWE/content_scripts/js/container.js",
             "../viewWE/content_scripts/js/view-menu.js",
+            "../viewWE/content_scripts/js/statistics-menu.js",
             "../viewWE/content_scripts/js/about.js",
             "test/unit/content_scripts/container.test.js"
           ]
@@ -250,13 +252,13 @@ module.exports = function(grunt) {
         files: {
           src: [
             "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/lib.js",
             "../viewWE/content_scripts/js/selector.js",
             "../viewWE/content_scripts/js/enhancer.js",
             "../viewWE/content_scripts/js/view-menu.js",
             "../viewWE/content_scripts/js/about.js",
             "../viewWE/content_scripts/js/blur.js",
             "../viewWE/content_scripts/js/notification.js",
-            "../viewWE/content_scripts/js/lib.js",
             "../viewWE/content_scripts/js/activities/activityHelper.js",
             "../viewWE/content_scripts/js/activities/color.js",
             "../viewWE/content_scripts/js/activities/click.js",
