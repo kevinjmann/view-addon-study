@@ -601,15 +601,30 @@ describe("enhancer.js", function() {
       );
     });
 
-    it("should not call runActivity() as the enhancement was aborted", function() {
+    it("should set 'isAborted' to false as the enhancement was aborted", function() {
       fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
-      const runActivitySpy = sandbox.spy(view.enhancer, "runActivity");
 
-      view.enhancer.isAborted = true;
+      view.enhancer.abort();
 
       view.enhancer.addEnhancementMarkup($("p").html());
 
-      sinon.assert.notCalled(runActivitySpy);
+      expect(view.enhancer.isAborted).to.be.false;
+    });
+  });
+
+  describe("abort", function() {
+    it("should call initialInteractionState()", function() {
+      const initialInteractionStateSpy = sandbox.spy(view.enhancer, "initialInteractionState");
+
+      view.enhancer.abort();
+
+      sinon.assert.called(initialInteractionStateSpy);
+    });
+
+    it("should set 'isAborted' to true", function() {
+      view.enhancer.abort();
+
+      expect(view.enhancer.isAborted).to.be.true;
     });
   });
 });
