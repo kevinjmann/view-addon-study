@@ -649,7 +649,7 @@ describe("statistics-menu.js", function() {
 
           sinon.assert.called(createButtonSpy);
           sinon.assert.calledWithExactly(createButtonSpy,
-            "view-performance-1-btn",
+            "bar-btn",
             "view-performance-btn",
             "Performance 1"
           );
@@ -667,7 +667,7 @@ describe("statistics-menu.js", function() {
 
           sinon.assert.calledOnce(createListSpy);
           sinon.assert.calledWithExactly(createListSpy,
-            "view-performance-1-info",
+            "bar-info",
             [
               "Correct answer: " + performanceData["correct-answer"],
               "Number of tries: " + performanceData["number-of-tries"],
@@ -694,7 +694,7 @@ describe("statistics-menu.js", function() {
 
           view.statisticsMenu.addPerformanceData($Dialog, performancesData[0], 0);
 
-          expect($Dialog.find("#view-performance-1").length).to.be.above(0);
+          expect($Dialog.find("#bar-performance").length).to.be.above(0);
         });
 
         it("should find the performance button inside the div element", function() {
@@ -705,7 +705,7 @@ describe("statistics-menu.js", function() {
 
           $("body").append($Dialog);
 
-          expect($("#view-performance-1").find("#view-performance-1-btn").length)
+          expect($("#bar-performance").find("#bar-btn").length)
           .to.be.above(0);
         });
 
@@ -717,7 +717,7 @@ describe("statistics-menu.js", function() {
 
           $("body").append($Dialog);
 
-          expect($("#view-performance-1").find("#view-performance-1-info").length).to.be.above(0);
+          expect($("#bar-performance").find("#bar-info").length).to.be.above(0);
         });
 
         it("should call initPerformanceBtn($PerformanceBtn, $InfoList)", function() {
@@ -732,8 +732,8 @@ describe("statistics-menu.js", function() {
 
           sinon.assert.called(initPerformanceBtnSpy);
           sinon.assert.calledWithExactly(initPerformanceBtnSpy,
-            $("#view-performance-1-btn"),
-            $("#view-performance-1-info")
+            $("#bar-btn"),
+            $("#bar-info")
           );
         });
 
@@ -749,8 +749,8 @@ describe("statistics-menu.js", function() {
             const eventSpy = sandbox.spy($.fn, "on");
 
             view.statisticsMenu.initPerformanceBtn(
-              $("#view-performance-1-btn"),
-              $("#view-performance-1-info")
+              $("#bar-btn"),
+              $("#bar-info")
             );
 
             sinon.assert.calledOnce(eventSpy);
@@ -765,8 +765,8 @@ describe("statistics-menu.js", function() {
 
             $("body").append($Dialog);
 
-            const $PerformanceBtn = $("#view-performance-1-btn");
-            const infoListSelector = "#view-performance-1-info";
+            const $PerformanceBtn = $("#bar-btn");
+            const infoListSelector = "#bar-info";
 
             $(infoListSelector).show();
 
