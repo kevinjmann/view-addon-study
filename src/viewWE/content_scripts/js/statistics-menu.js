@@ -109,9 +109,17 @@ view.statisticsMenu = {
       view.statisticsMenu.addTaskData($Dialog, taskData);
     });
 
-    view.statisticsMenu.dialogSetup($Dialog, "All Tasks");
+    const title = "All Tasks";
+    const height = $(window).height() * 0.8;
+    const position = {
+      my: "left",
+      at: "left",
+      of: window
+    };
 
-    view.statisticsMenu.initDialogClose($Dialog);
+    view.lib.dialogSetup($Dialog, title, height, position);
+
+    view.lib.initDialogClose($Dialog);
   },
 
   /**
@@ -199,37 +207,6 @@ view.statisticsMenu = {
   },
 
   /**
-   * Define a setup for the given dialog element.
-   *
-   * @param $Dialog the dialog element
-   * @param title the title of the dialog
-   */
-  dialogSetup: function($Dialog, title) {
-    $Dialog.dialog({
-      modal: true,
-      title: title,
-      overlay: {opacity: 0.1, background: "black"},
-      width: "auto",
-      height: $(window).height() * 0.8,
-      position: {my: "left center", at: "left center", of: window},
-      draggable: true,
-      resizable: true
-    });
-  },
-
-  /**
-   * Init the given dialog element with a dialogclose event.
-   * Will remove the given dialog element on dialogclose.
-   *
-   * @param $Dialog the dialog element
-   */
-  initDialogClose: function($Dialog) {
-    $Dialog.on("dialogclose", function() {
-      $(this).remove();
-    });
-  },
-
-  /**
    * Show the statistics for a task.
    */
   showTask: function(performancesData) {
@@ -242,9 +219,17 @@ view.statisticsMenu = {
       view.statisticsMenu.addPerformanceData($Dialog, performanceData, index);
     });
 
-    view.statisticsMenu.dialogSetup($Dialog, "Task Performances");
+    const title = "Task Performances";
+    const height = $(window).height() * 0.8;
+    const position = {
+      my: "left",
+      at: "left",
+      of: window
+    };
 
-    view.statisticsMenu.initDialogClose($Dialog);
+    view.lib.dialogSetup($Dialog, title, height, position);
+
+    view.lib.initDialogClose($Dialog);
   },
 
   /**
