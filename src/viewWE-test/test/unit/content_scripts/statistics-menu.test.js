@@ -814,7 +814,7 @@ describe("statistics-menu.js", function() {
         );
       });
 
-      it("should find the all tasks dialog", function() {
+      it("should find the task dialog", function() {
         view.statisticsMenu.showTask(performancesData);
 
         expect($("#view-task-dialog").length).to.be.above(0);
