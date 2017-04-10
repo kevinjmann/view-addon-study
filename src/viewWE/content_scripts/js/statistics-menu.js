@@ -242,18 +242,18 @@ view.statisticsMenu = {
    */
   addPerformanceData: function($Dialog, performanceData, index) {
     const performanceId = index + 1;
-    const viewPerformanceId = "view-performance-" + performanceId;
+    const enhancementId = performanceData["enhancement-id"];
 
     const $PerformanceDiv = $("<div>");
-    $PerformanceDiv.attr("id", viewPerformanceId);
+    $PerformanceDiv.attr("id", enhancementId + "-performance");
 
     const $PerformanceBtn = view.lib.createButton(
-      viewPerformanceId + "-btn",
+      enhancementId + "-btn",
       "view-performance-btn",
       "Performance " + performanceId
     );
 
-    const $InfoList = view.lib.createList(viewPerformanceId + "-info", [
+    const $InfoList = view.lib.createList(enhancementId + "-info", [
       "Correct answer: " + performanceData["correct-answer"],
       "Number of tries: " + performanceData["number-of-tries"],
       "Used solution: " + performanceData["used-solution"],
