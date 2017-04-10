@@ -65,11 +65,51 @@ view.lib = {
     });
   },
 
-  /*
-   * Get random numbers up to the variable "max".
+  /**
+   * Define a setup for the given dialog element.
+   *
+   * @param {object} $Dialog the dialog element
+   * @param {string} title the title of the dialog
+   * @param {*} height the height of the dialog
+   * @param {object} position the position at which the dialog will appear
    */
-  getRandom: function(max) {
-    return Math.floor(Math.random() * (max + 1));
+  dialogSetup: function($Dialog, title, height, position) {
+    $Dialog.dialog({
+      modal: true,
+      title: title,
+      overlay: {opacity: 0.1, background: "black"},
+      width: "auto",
+      height: height,
+      position: position,
+      draggable: true,
+      resizable: true,
+      buttons: {
+        Ok: function() {
+          view.lib.removeDialog($Dialog);
+        }
+      }
+    });
+  },
+
+  /**
+   * Remove the given dialog.
+   *
+   * @param {Object} $Dialog the dialog to be removed
+   */
+  removeDialog: function($Dialog) {
+    $Dialog.remove();
+  },
+
+  /**
+   * Init the given dialog element with a dialogclose event.
+   * Will remove the given dialog element on dialogclose.
+   *
+   * @param $Dialog the dialog element
+   */
+  initDialogClose: function($Dialog) {
+    $Dialog.on("dialogclose", function(){
+      view.lib.removeDialog($Dialog);
+    });
   },
 
   /**
@@ -91,8 +131,10 @@ view.lib = {
     });
   },
 
-  /*
-   * Fisher-Yates shuffle, rearrange an array
+  /**
+   * Fisher-Yates shuffle, rearrange an array.
+   *
+   * @param {Array} elemList the array to rearrange
    */
   shuffleList: function(elemList) {
     let i, j, tempElem;
@@ -104,12 +146,15 @@ view.lib = {
     }
   },
 
-  /*
-   * Detect capitalization pattern in target word
+  /**
+   * Detect capitalization pattern in target word.
    *
    * 0 = not capitalized or weird enough to leave alone
    * 1 = all caps
    * 2 = first letter capitalized
+   *
+   * @param {String} word the target for detecting capitalization
+   * @return {number} the capitalization type
    */
   detectCapitalization: function(word) {
     if (word === word.toUpperCase()) {
@@ -123,8 +168,11 @@ view.lib = {
     }
   },
 
-  /*
-   * Parallel capitalization (for multiple choice drop-downs)
+  /**
+   * Parallel capitalization (for multiple choice drop-downs).
+   *
+   * @param {string} word the target to be matched with the cap type
+   * @param {number} type the capitalization type
    */
   matchCapitalization: function(word, type) {
     switch (type) {

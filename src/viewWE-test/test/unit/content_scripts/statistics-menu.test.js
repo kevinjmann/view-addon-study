@@ -579,44 +579,30 @@ describe("statistics-menu.js", function() {
         });
       });
 
-      it("should call dialogSetup($Dialog, 'All Tasks')", function() {
-        const dialogSetupSpy = sandbox.spy(view.statisticsMenu, "dialogSetup");
+      it("should call lib.dialogSetup($Dialog, title, height, position)", function() {
+        const dialogSetupSpy = sandbox.spy(view.lib, "dialogSetup");
+
+        const title = "All Tasks";
+        const height = $(window).height() * 0.8;
+        const position = {
+          my: "left",
+          at: "left",
+          of: window
+        };
 
         view.statisticsMenu.showAllTasks(tasksData);
 
         sinon.assert.calledOnce(dialogSetupSpy);
         sinon.assert.calledWithExactly(dialogSetupSpy,
           $("#view-all-tasks-dialog"),
-          "All Tasks"
+          title,
+          height,
+          position
         );
       });
 
-      it("should call dialogSetup($Dialog, 'All Tasks')", function() {
-        const dialogSpy = sandbox.spy($.fn, "dialog");
-
-        const $Dialog = $("<div>");
-        $Dialog.attr("id", "view-all-tasks-dialog");
-
-        const title = "All Tasks";
-
-        view.statisticsMenu.dialogSetup($Dialog, title);
-
-        sinon.assert.calledOnce(dialogSpy);
-        sinon.assert.calledWithExactly(dialogSpy, {
-            modal: true,
-            title: title,
-            overlay: {opacity: 0.1, background: "black"},
-            width: "auto",
-            height: $(window).height() * 0.8,
-            position: {my: "left center", at: "left center", of: window},
-            draggable: true,
-            resizable: true
-          }
-        );
-      });
-
-      it("should call initDialogClose($Dialog)", function() {
-        const initDialogCloseSpy = sandbox.spy(view.statisticsMenu, "initDialogClose");
+      it("should call lib.initDialogClose($Dialog)", function() {
+        const initDialogCloseSpy = sandbox.spy(view.lib, "initDialogClose");
 
         view.statisticsMenu.showAllTasks(tasksData);
 
@@ -624,35 +610,6 @@ describe("statistics-menu.js", function() {
         sinon.assert.calledWithExactly(initDialogCloseSpy,
           $("#view-all-tasks-dialog")
         );
-      });
-
-      describe("initDialogClose", function() {
-        it("should init the dialog with a dialogclose handler", function() {
-          const eventSpy = sandbox.spy($.fn, "on");
-
-          const $Dialog = $("<div>");
-          $Dialog.attr("id", "view-all-tasks-dialog");
-
-          view.statisticsMenu.initDialogClose($Dialog);
-
-          sinon.assert.calledOnce(eventSpy);
-          sinon.assert.calledWith(eventSpy, "dialogclose");
-        });
-
-        it("should remove the dialog on click on dialogclose", function() {
-          const $Dialog = $("<div>");
-          $Dialog.attr("id", "view-all-tasks-dialog");
-
-          view.statisticsMenu.initDialogClose($Dialog);
-
-          $("body").append($Dialog);
-
-          expect($("#view-all-tasks-dialog").length).to.be.above(0);
-
-          $Dialog.trigger("dialogclose");
-
-          expect($("#view-all-tasks-dialog").length).to.equal(0);
-        });
       });
 
       it("should find the all tasks dialog", function() {
@@ -692,7 +649,7 @@ describe("statistics-menu.js", function() {
 
           sinon.assert.called(createButtonSpy);
           sinon.assert.calledWithExactly(createButtonSpy,
-            "view-performance-1-btn",
+            "bar-btn",
             "view-performance-btn",
             "Performance 1"
           );
@@ -710,7 +667,7 @@ describe("statistics-menu.js", function() {
 
           sinon.assert.calledOnce(createListSpy);
           sinon.assert.calledWithExactly(createListSpy,
-            "view-performance-1-info",
+            "bar-info",
             [
               "Correct answer: " + performanceData["correct-answer"],
               "Number of tries: " + performanceData["number-of-tries"],
@@ -737,7 +694,7 @@ describe("statistics-menu.js", function() {
 
           view.statisticsMenu.addPerformanceData($Dialog, performancesData[0], 0);
 
-          expect($Dialog.find("#view-performance-1").length).to.be.above(0);
+          expect($Dialog.find("#bar-performance").length).to.be.above(0);
         });
 
         it("should find the performance button inside the div element", function() {
@@ -748,7 +705,7 @@ describe("statistics-menu.js", function() {
 
           $("body").append($Dialog);
 
-          expect($("#view-performance-1").find("#view-performance-1-btn").length)
+          expect($("#bar-performance").find("#bar-btn").length)
           .to.be.above(0);
         });
 
@@ -760,7 +717,7 @@ describe("statistics-menu.js", function() {
 
           $("body").append($Dialog);
 
-          expect($("#view-performance-1").find("#view-performance-1-info").length).to.be.above(0);
+          expect($("#bar-performance").find("#bar-info").length).to.be.above(0);
         });
 
         it("should call initPerformanceBtn($PerformanceBtn, $InfoList)", function() {
@@ -775,8 +732,8 @@ describe("statistics-menu.js", function() {
 
           sinon.assert.called(initPerformanceBtnSpy);
           sinon.assert.calledWithExactly(initPerformanceBtnSpy,
-            $("#view-performance-1-btn"),
-            $("#view-performance-1-info")
+            $("#bar-btn"),
+            $("#bar-info")
           );
         });
 
@@ -792,8 +749,8 @@ describe("statistics-menu.js", function() {
             const eventSpy = sandbox.spy($.fn, "on");
 
             view.statisticsMenu.initPerformanceBtn(
-              $("#view-performance-1-btn"),
-              $("#view-performance-1-info")
+              $("#bar-btn"),
+              $("#bar-info")
             );
 
             sinon.assert.calledOnce(eventSpy);
@@ -808,8 +765,8 @@ describe("statistics-menu.js", function() {
 
             $("body").append($Dialog);
 
-            const $PerformanceBtn = $("#view-performance-1-btn");
-            const infoListSelector = "#view-performance-1-info";
+            const $PerformanceBtn = $("#bar-btn");
+            const infoListSelector = "#bar-info";
 
             $(infoListSelector).show();
 
@@ -824,20 +781,30 @@ describe("statistics-menu.js", function() {
         });
       });
 
-      it("should call dialogSetup($Dialog, 'Task Performances')", function() {
-        const dialogSetupSpy = sandbox.spy(view.statisticsMenu, "dialogSetup");
+      it("should call lib.dialogSetup($Dialog, title, height, position)", function() {
+        const dialogSetupSpy = sandbox.spy(view.lib, "dialogSetup");
+
+        const title = "Task Performances";
+        const height = $(window).height() * 0.8;
+        const position = {
+          my: "left",
+          at: "left",
+          of: window
+        };
 
         view.statisticsMenu.showTask(performancesData);
 
         sinon.assert.calledOnce(dialogSetupSpy);
         sinon.assert.calledWithExactly(dialogSetupSpy,
           $("#view-task-dialog"),
-          "Task Performances"
+          title,
+          height,
+          position
         );
       });
 
-      it("should call initDialogClose($Dialog)", function() {
-        const initDialogCloseSpy = sandbox.spy(view.statisticsMenu, "initDialogClose");
+      it("should call lib.initDialogClose($Dialog)", function() {
+        const initDialogCloseSpy = sandbox.spy(view.lib, "initDialogClose");
 
         view.statisticsMenu.showTask(performancesData);
 
@@ -847,7 +814,7 @@ describe("statistics-menu.js", function() {
         );
       });
 
-      it("should find the all tasks dialog", function() {
+      it("should find the task dialog", function() {
         view.statisticsMenu.showTask(performancesData);
 
         expect($("#view-task-dialog").length).to.be.above(0);
