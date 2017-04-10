@@ -287,6 +287,31 @@ module.exports = function(grunt) {
           "../viewWE/content_scripts/js/statistics-menu.js": ["coverage"],
           "**/statistics-menu.html": ["html2js"]
         }
+      },
+      feedbacker: {
+        files: {
+          src: [
+            "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/lib.js",
+            "../viewWE/content_scripts/js/feedbacker.js",
+            "test/unit/content_scripts/feedbacker.test.js"
+          ]
+        },
+        preprocessors: {
+          "../viewWE/content_scripts/js/feedbacker.js": ["coverage"]
+        }
+      },
+      lib: {
+        files: {
+          src: [
+            "../viewWE/content_scripts/js/view.js",
+            "../viewWE/content_scripts/js/lib.js",
+            "test/unit/content_scripts/lib.test.js"
+          ]
+        },
+        preprocessors: {
+          "../viewWE/content_scripts/js/lib.js": ["coverage"]
+        }
       }
     }
   });
