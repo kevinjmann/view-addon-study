@@ -4,10 +4,39 @@ view.feedbacker = {
    * current performance to the user.
    */
   showPerformance: function(performanceData) {
-    const performance =
-      "Number of tries: " + performanceData["number-of-tries"] + "<br>" +
-      "Assessment: " + performanceData["assessment"];
+    const $Dialog = $("<div>");
+    $Dialog.attr("id", "view-performance-dialog");
 
-    view.notification.add(performance);
+    view.feedbacker.addPerformanceData($Dialog, performanceData);
+
+    const title = "Performance";
+    const height = "auto";
+    const position = {
+      my: "left top",
+      at: "right bottom",
+      of: "#" + performanceData["enhancement-id"]
+    };
+
+    view.lib.dialogSetup($Dialog, title, height, position);
+
+    view.lib.initDialogClose($Dialog);
+  },
+
+  /**
+   * Add performance data to the given dialog using the performance
+   * data.
+   *
+   * @param {Object} $Dialog the dialog the task data is added to
+   * @param {Object} performanceData the performance data to add
+   */
+  addPerformanceData: function($Dialog, performanceData) {
+    const enhancementId = performanceData["enhancement-id"];
+
+    const $InfoList = view.lib.createList(enhancementId + "-info", [
+      "Number of tries: " + performanceData["number-of-tries"],
+      "Assessment: " + performanceData["assessment"]
+    ]);
+
+    $Dialog.append($InfoList);
   }
 };
