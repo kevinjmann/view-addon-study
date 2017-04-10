@@ -604,7 +604,7 @@ describe("statistics-menu.js", function() {
       it("should call lib.initDialogClose($Dialog)", function() {
         const initDialogCloseSpy = sandbox.spy(view.lib, "initDialogClose");
 
-        view.statisticsMenu.showAllTasks(performancesData);
+        view.statisticsMenu.showAllTasks(tasksData);
 
         sinon.assert.calledOnce(initDialogCloseSpy);
         sinon.assert.calledWithExactly(initDialogCloseSpy,
