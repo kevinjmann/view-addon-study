@@ -158,8 +158,8 @@ describe("lib.js", function() {
       );
     });
 
-    it("should call dialogRemove($Dialog) when the 'Ok' button was pressed", function() {
-      const dialogRemoveSpy = sandbox.spy(view.lib, "dialogRemove");
+    it("should call removeDialog($Dialog) when the 'Ok' button was pressed", function() {
+      const removeDialogSpy = sandbox.spy(view.lib, "removeDialog");
 
       const $Dialog = $("<div>");
       $Dialog.attr("id", "view-dialog");
@@ -177,8 +177,8 @@ describe("lib.js", function() {
       // trigger a click on the 'Ok' button
       $Dialog.dialog("option", "buttons").Ok();
 
-      sinon.assert.calledOnce(dialogRemoveSpy);
-      sinon.assert.calledWith(dialogRemoveSpy, $Dialog);
+      sinon.assert.calledOnce(removeDialogSpy);
+      sinon.assert.calledWith(removeDialogSpy, $Dialog);
     });
 
     it("should remove the dialog", function() {
@@ -189,7 +189,7 @@ describe("lib.js", function() {
 
       expect($("#view-dialog").length).to.be.above(0);
 
-      view.lib.dialogRemove($Dialog);
+      view.lib.removeDialog($Dialog);
 
       expect($("#view-dialog").length).to.equal(0);
     });
@@ -209,7 +209,7 @@ describe("lib.js", function() {
     });
 
     it("should call removeDialog($Dialog) on dialogclose", function() {
-      const dialogRemoveSpy = sandbox.spy(view.lib, "dialogRemove");
+      const removeDialogSpy = sandbox.spy(view.lib, "removeDialog");
 
       const $Dialog = $("<div>");
       $Dialog.attr("id", "view-dialog");
@@ -218,8 +218,8 @@ describe("lib.js", function() {
 
       $Dialog.trigger("dialogclose");
 
-      sinon.assert.calledOnce(dialogRemoveSpy);
-      sinon.assert.calledWith(dialogRemoveSpy, $Dialog);
+      sinon.assert.calledOnce(removeDialogSpy);
+      sinon.assert.calledWith(removeDialogSpy, $Dialog);
     });
   });
 

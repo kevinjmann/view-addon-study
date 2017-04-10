@@ -85,7 +85,7 @@ view.lib = {
       resizable: true,
       buttons: {
         Ok: function() {
-          view.lib.dialogRemove($Dialog);
+          view.lib.removeDialog($Dialog);
         }
       }
     });
@@ -96,7 +96,7 @@ view.lib = {
    *
    * @param {Object} $Dialog the dialog to be removed
    */
-  dialogRemove: function($Dialog) {
+  removeDialog: function($Dialog) {
     $Dialog.remove();
   },
 
@@ -108,7 +108,7 @@ view.lib = {
    */
   initDialogClose: function($Dialog) {
     $Dialog.on("dialogclose", function(){
-      view.lib.dialogRemove($Dialog);
+      view.lib.removeDialog($Dialog);
     });
   },
 
