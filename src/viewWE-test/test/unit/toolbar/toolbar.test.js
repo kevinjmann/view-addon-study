@@ -180,7 +180,7 @@ describe("toolbar.js", function() {
     it("should set the topics, initialize toolbar events and restore prior selections", function() {
       const initViewMenuBtnSpy = sandbox.spy(toolbar, "initViewMenuBtn");
       const initStatisticsMenuBtnSpy = sandbox.spy(toolbar, "initStatisticsMenuBtn");
-      const initHideViewMenuAndStatisticsSpy = sandbox.spy(toolbar, "initHideViewMenuAndStatistics");
+      const initOnWindowClickSpy = sandbox.spy(toolbar, "initOnWindowClick");
       const initAutoEnhanceSpy = sandbox.spy(toolbar, "initAutoEnhance");
       const initLanguageMenuSpy = sandbox.spy(toolbar, "initLanguageMenu");
       const initTopicMenuSpy = sandbox.spy(toolbar, "initTopicMenu");
@@ -204,7 +204,7 @@ describe("toolbar.js", function() {
 
       sinon.assert.calledOnce(initViewMenuBtnSpy);
       sinon.assert.calledOnce(initStatisticsMenuBtnSpy);
-      sinon.assert.calledOnce(initHideViewMenuAndStatisticsSpy);
+      sinon.assert.calledOnce(initOnWindowClickSpy);
       sinon.assert.calledOnce(initAutoEnhanceSpy);
       sinon.assert.calledOnce(initLanguageMenuSpy);
       sinon.assert.calledOnce(initTopicMenuSpy);
@@ -285,12 +285,12 @@ describe("toolbar.js", function() {
       });
     });
 
-    describe("initHideViewMenuAndStatistics", function() {
+    describe("initOnWindowClick", function() {
       it("should initialize the hide VIEW menu and statistics handler", function() {
         const selectorSpy = sandbox.spy(toolbar.$cache, "get");
         const eventSpy = sandbox.spy($.fn, "on");
 
-        toolbar.initHideViewMenuAndStatistics();
+        toolbar.initOnWindowClick();
 
         sinon.assert.calledOnce(selectorSpy);
         sinon.assert.calledWithExactly(selectorSpy, window);
@@ -302,7 +302,7 @@ describe("toolbar.js", function() {
       it("should call requestToHideViewMenu(), as the toolbar body was clicked", function() {
         const requestToHideViewMenuSpy = sandbox.spy(toolbar, "requestToHideViewMenu");
 
-        toolbar.initHideViewMenuAndStatistics();
+        toolbar.initOnWindowClick();
 
         // anything but the view menu button can be the trigger here
         $("body").trigger("click");
@@ -313,7 +313,7 @@ describe("toolbar.js", function() {
       it("should not call requestToHideViewMenu(), as the view menu button was clicked", function() {
         const requestToHideViewMenuSpy = sandbox.spy(toolbar, "requestToHideViewMenu");
 
-        toolbar.initHideViewMenuAndStatistics();
+        toolbar.initOnWindowClick();
 
         $("#wertiview-VIEW-menu-btn").trigger("click");
 
@@ -330,7 +330,7 @@ describe("toolbar.js", function() {
       it("should call requestToHideStatisticsMenu(), as the toolbar body was clicked", function() {
         const requestToHideStatisticsMenuSpy = sandbox.spy(toolbar, "requestToHideStatisticsMenu");
 
-        toolbar.initHideViewMenuAndStatistics();
+        toolbar.initOnWindowClick();
 
         // anything but the view menu button can be the trigger here
         $("body").trigger("click");
@@ -341,7 +341,7 @@ describe("toolbar.js", function() {
       it("should not call requestToHideStatisticsMenu(), as the statistics menu button was clicked", function() {
         const requestToHideStatisticsMenuSpy = sandbox.spy(toolbar, "requestToHideStatisticsMenu");
 
-        toolbar.initHideViewMenuAndStatistics();
+        toolbar.initOnWindowClick();
 
         $(toolbar.selectorStart + "statistics-menu-button").trigger("click");
 
@@ -353,6 +353,23 @@ describe("toolbar.js", function() {
 
         sinon.assert.calledOnce(chrome.runtime.sendMessage);
         sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "hide statistics menu"});
+      });
+
+      it("should call requestToRemoveDialog(), as the toolbar body was clicked", function() {
+        const requestToRemoveDialogSpy = sandbox.spy(toolbar, "requestToRemoveDialog");
+
+        toolbar.initOnWindowClick();
+
+        $("body").trigger("click");
+
+        sinon.assert.calledOnce(requestToRemoveDialogSpy);
+      });
+
+      it("should request to remove the dialog", function() {
+        toolbar.requestToRemoveDialog();
+
+        sinon.assert.calledOnce(chrome.runtime.sendMessage);
+        sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "remove dialog"});
       });
     });
 
