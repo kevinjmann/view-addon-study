@@ -124,6 +124,14 @@ const background = {
   },
 
   /**
+   * The toolbar ui send the message to remove the dialog.
+   * Pass it on to statistics-menu.js.
+   */
+  removeDialog: function() {
+    chrome.tabs.sendMessage(background.currentTabId, {msg: "remove dialog"});
+  },
+
+  /**
    * The toolbar ui send the message to call startToEnhance().
    * Pass it on to view.js.
    */
@@ -656,6 +664,9 @@ function processMessage(request, sender, sendResponse) {
       break;
     case "hide statistics menu":
       background.hideStatisticsMenu();
+      break;
+    case "remove dialog":
+      background.removeDialog();
       break;
     case "call startToEnhance":
       background.callStartToEnhance();
