@@ -355,8 +355,8 @@ describe("toolbar.js", function() {
         sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "hide statistics menu"});
       });
 
-      it("should call requestToRemoveDialog(), as the toolbar body was clicked", function() {
-        const requestToRemoveDialogSpy = sandbox.spy(toolbar, "requestToRemoveDialog");
+      it("should call requestToRemovePerformanceDialog(), as the toolbar body was clicked", function() {
+        const requestToRemoveDialogSpy = sandbox.spy(toolbar, "requestToRemovePerformanceDialog");
 
         toolbar.initOnWindowClick();
 
@@ -365,11 +365,11 @@ describe("toolbar.js", function() {
         sinon.assert.calledOnce(requestToRemoveDialogSpy);
       });
 
-      it("should request to remove the dialog", function() {
-        toolbar.requestToRemoveDialog();
+      it("should request to remove the performance dialog", function() {
+        toolbar.requestToRemovePerformanceDialog();
 
         sinon.assert.calledOnce(chrome.runtime.sendMessage);
-        sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "remove dialog"});
+        sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "remove performance dialog"});
       });
     });
 

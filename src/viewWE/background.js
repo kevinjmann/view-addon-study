@@ -124,11 +124,11 @@ const background = {
   },
 
   /**
-   * The toolbar ui send the message to remove the dialog.
+   * The toolbar ui send the message to remove the performance dialog.
    * Pass it on to statistics-menu.js.
    */
-  removeDialog: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {msg: "remove dialog"});
+  removePerformanceDialog: function() {
+    chrome.tabs.sendMessage(background.currentTabId, {msg: "remove performance dialog"});
   },
 
   /**
@@ -665,8 +665,8 @@ function processMessage(request, sender, sendResponse) {
     case "hide statistics menu":
       background.hideStatisticsMenu();
       break;
-    case "remove dialog":
-      background.removeDialog();
+    case "remove performance dialog":
+      background.removePerformanceDialog();
       break;
     case "call startToEnhance":
       background.callStartToEnhance();
