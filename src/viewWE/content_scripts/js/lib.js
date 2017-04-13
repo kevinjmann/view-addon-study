@@ -8,11 +8,17 @@ view.lib = {
 
   /**
    * Close the dropdown menu if the user clicks outside of it.
+   * Remove the instant feedback dialog, if the user clicks outside of it.
    */
-  initHideMenuHandler: function() {
-    $(window).on("click", function() {
+  initOnWindowClick: function() {
+    $(window).on("click", function(event) {
         view.VIEWmenu.hide();
         view.statisticsMenu.hide();
+
+        const $Dialog = $("#view-performance-dialog").parent();
+        if(!$(event.target).closest($Dialog).length){
+          view.lib.removeDialog($Dialog);
+        }
     });
   },
 
