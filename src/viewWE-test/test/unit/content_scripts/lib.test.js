@@ -16,6 +16,7 @@ describe("lib.js", function() {
   afterEach(function() {
     sandbox.restore();
     $("#view-dialog").remove();
+    $("#view-performance-dialog").remove();
     $(window).off("click");
     $("a").remove();
   });
@@ -30,12 +31,12 @@ describe("lib.js", function() {
     });
   });
 
-  describe("initHideMenuHandler", function() {
+  describe("initOnWindowClick", function() {
     it("should initialize hide menu handler", function() {
       const selectorSpy = sandbox.spy($.fn, "init");
       const eventSpy = sandbox.spy($.fn, "on");
 
-      view.lib.initHideMenuHandler();
+      view.lib.initOnWindowClick();
 
       sinon.assert.calledOnce(selectorSpy);
       sinon.assert.calledWith(selectorSpy, window);
@@ -47,7 +48,7 @@ describe("lib.js", function() {
     it("should call VIEWmenu.hide() on click", function() {
       const hideSpy = sandbox.spy(view.VIEWmenu, "hide");
 
-      view.lib.initHideMenuHandler();
+      view.lib.initOnWindowClick();
 
       $(window).trigger("click");
 
@@ -57,11 +58,42 @@ describe("lib.js", function() {
     it("should call statisticsMenu.hide() on click", function() {
       const hideSpy = sandbox.spy(view.statisticsMenu, "hide");
 
-      view.lib.initHideMenuHandler();
+      view.lib.initOnWindowClick();
 
       $(window).trigger("click");
 
       sinon.assert.calledOnce(hideSpy);
+    });
+
+    it("should call lib.removeDialog($Dialog) on click, as the dialog was not clicked", function() {
+      const removeDialogSpy = sandbox.spy(view.lib, "removeDialog");
+
+      view.lib.initOnWindowClick();
+
+      const $Dialog = $("<div id='view-performance-dialog'>");
+      const $Body = $("body");
+
+      $Dialog.wrap($("<div>"));
+
+      $Body.append($Dialog.parent());
+
+      $Body.trigger("click");
+
+      sinon.assert.calledOnce(removeDialogSpy);
+    });
+
+    it("should not call lib.removeDialog($Dialog) on click, as the dialog was clicked", function() {
+      const removeDialogSpy = sandbox.spy(view.lib, "removeDialog");
+
+      view.lib.initOnWindowClick();
+
+      const $Dialog = $("<div id='view-performance-dialog'>");
+
+      $("body").append($Dialog);
+
+      $Dialog.trigger("click");
+
+      sinon.assert.notCalled(removeDialogSpy);
     });
   });
 
