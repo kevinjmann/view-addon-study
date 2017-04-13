@@ -19,7 +19,7 @@ view.toolbarIframe = {
 
     view.statisticsMenu.add();
 
-    view.lib.initHideMenuHandler();
+    view.lib.initOnWindowClick();
 
     $Body.prepend($iframe);
   },
