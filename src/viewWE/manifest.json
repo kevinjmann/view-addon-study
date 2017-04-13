@@ -72,17 +72,6 @@
         "content_scripts/js/activities/click.js",
         "content_scripts/js/activities/mc.js",
         "content_scripts/js/activities/cloze.js",
-        "content_scripts/js/topics/ru/rusadjectives.js",
-        "content_scripts/js/topics/ru/rusverbs.js",
-        "content_scripts/js/topics/ru/rusverbaspect.js",
-        "content_scripts/js/topics/ru/rusparticiples.js",
-        "content_scripts/js/topics/ru/ruswordstress.js",
-        "content_scripts/js/topics/ru/rusassistivereading.js",
-        "content_scripts/js/topics/es/serestar.js",
-        "content_scripts/js/topics/en/gerunds.js",
-        "content_scripts/js/topics/en/nouncountability.js",
-        "content_scripts/js/topics/en/phrasalverbs.js",
-        "content_scripts/js/topics/en/whquestions.js",
         "content_scripts/js/messageHandler.js"
       ],
       "run_at": "document_idle"
