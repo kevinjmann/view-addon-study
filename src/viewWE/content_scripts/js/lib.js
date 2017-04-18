@@ -74,14 +74,16 @@ view.lib = {
   /**
    * Define a setup for the given dialog element.
    *
+   * @param {boolean} isModal if the dialog should be modal or not
    * @param {object} $Dialog the dialog element
    * @param {string} title the title of the dialog
    * @param {*} height the height of the dialog
    * @param {object} position the position at which the dialog will appear
+   * @param {object} buttons the buttons inside the dialog
    */
-  dialogSetup: function($Dialog, title, height, position) {
+  dialogSetup: function(isModal, $Dialog, title, height, position, buttons) {
     $Dialog.dialog({
-      modal: true,
+      modal: isModal,
       title: title,
       overlay: {opacity: 0.1, background: "black"},
       width: "auto",
@@ -89,11 +91,7 @@ view.lib = {
       position: position,
       draggable: true,
       resizable: true,
-      buttons: {
-        Ok: function() {
-          view.lib.removeDialog($Dialog);
-        }
-      }
+      buttons: buttons
     });
   },
 

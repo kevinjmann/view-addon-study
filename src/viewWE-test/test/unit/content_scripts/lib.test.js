@@ -162,6 +162,7 @@ describe("lib.js", function() {
       const $Dialog = $("<div>");
       $Dialog.attr("id", "view-dialog");
 
+      const isModal = true;
       const title = "All Tasks";
       const height = $(window).height() * 0.8;
       const position = {
@@ -169,8 +170,13 @@ describe("lib.js", function() {
         at: "left",
         of: window
       };
+      const buttons = {
+        Ok: function() {
+          view.lib.removeDialog($("#view-dialog"));
+        }
+      };
 
-      view.lib.dialogSetup($Dialog, title, height, position);
+      view.lib.dialogSetup(isModal, $Dialog, title, height, position, buttons);
 
       // the test fails with this property, probably because it has
       // an anonymous function
@@ -178,7 +184,7 @@ describe("lib.js", function() {
 
       sinon.assert.calledOnce(dialogSpy);
       sinon.assert.calledWithExactly(dialogSpy, {
-          modal: true,
+          modal: isModal,
           title: title,
           overlay: {opacity: 0.1, background: "black"},
           width: "auto",
@@ -196,6 +202,7 @@ describe("lib.js", function() {
       const $Dialog = $("<div>");
       $Dialog.attr("id", "view-dialog");
 
+      const isModal = true;
       const title = "All Tasks";
       const height = $(window).height() * 0.8;
       const position = {
@@ -203,8 +210,13 @@ describe("lib.js", function() {
         at: "left",
         of: window
       };
+      const buttons = {
+        Ok: function() {
+          view.lib.removeDialog($("#view-dialog"));
+        }
+      };
 
-      view.lib.dialogSetup($Dialog, title, height, position);
+      view.lib.dialogSetup(isModal, $Dialog, title, height, position, buttons);
 
       // trigger a click on the 'Ok' button
       $Dialog.dialog("option", "buttons").Ok();
