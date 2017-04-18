@@ -22,3 +22,7 @@
 .view-performance-btn:hover, .view-performance-btn:focus{
     background-color: #3e8e41;
 }
+
+.view-enhancement-info-style {
+    font-weight: bold;
+}
