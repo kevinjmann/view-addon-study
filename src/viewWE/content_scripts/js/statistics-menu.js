@@ -109,6 +109,7 @@ view.statisticsMenu = {
       view.statisticsMenu.addTaskData($Dialog, taskData);
     });
 
+    const isModal = true;
     const title = "All Tasks";
     const height = $(window).height() * 0.8;
     const position = {
@@ -116,8 +117,13 @@ view.statisticsMenu = {
       at: "left",
       of: window
     };
+    const buttons = {
+      Ok: function() {
+        view.lib.removeDialog($Dialog);
+      }
+    };
 
-    view.lib.dialogSetup($Dialog, title, height, position);
+    view.lib.dialogSetup(isModal, $Dialog, title, height, position, buttons);
 
     view.lib.initDialogClose($Dialog);
   },
@@ -219,6 +225,7 @@ view.statisticsMenu = {
       view.statisticsMenu.addPerformanceData($Dialog, performanceData, index);
     });
 
+    const isModal = true;
     const title = "Task Performances";
     const height = $(window).height() * 0.8;
     const position = {
@@ -226,8 +233,13 @@ view.statisticsMenu = {
       at: "left",
       of: window
     };
+    const buttons = {
+      Ok: function() {
+        view.lib.removeDialog($Dialog);
+      }
+    };
 
-    view.lib.dialogSetup($Dialog, title, height, position);
+    view.lib.dialogSetup(isModal, $Dialog, title, height, position, buttons);
 
     view.lib.initDialogClose($Dialog);
   },
