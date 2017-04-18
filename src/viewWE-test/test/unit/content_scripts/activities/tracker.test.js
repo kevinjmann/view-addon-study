@@ -79,7 +79,8 @@ describe("tracker.js", function() {
 
       sinon.assert.calledOnce(extractRawSentenceWithMarkedElementSpy);
       sinon.assert.calledWithExactly(extractRawSentenceWithMarkedElementSpy,
-        "#" + $EnhancementElement.attr("id")
+        $EnhancementElement,
+        $EnhancementElement.attr("id")
       );
     });
 
@@ -91,10 +92,11 @@ describe("tracker.js", function() {
 
       const enhancementId = $EnhancementElement.attr("id");
 
-      view.tracker.extractRawSentenceWithMarkedElement("#" + enhancementId);
+      view.tracker.extractRawSentenceWithMarkedElement($EnhancementElement, enhancementId);
 
       expect(extractRawSentenceWithMarkedElementSpy.firstCall.returnValue)
-      .to.equal("Text before element ñôŃßĘńŠēУсвое́ниеñôŃßĘńŠē and after element.")
+      .to.equal("<viewenhancement>Усвое́ние</viewenhancement> языка процесс " +
+        "обучения человека языку, исследуемый лингвистами.")
     });
 
     it("should call detectCapitalization(word)", function() {
@@ -149,7 +151,8 @@ describe("tracker.js", function() {
       const taskId = "fake-task-id";
       const enhancementId = $EnhancementElement.attr("id");
       const submission = "Усвоением";
-      const sentence = "Text before element ñôŃßĘńŠēУсвое́ниеñôŃßĘńŠē and after element.";
+      const sentence = "<viewenhancement>Усвое́ние</viewenhancement> языка процесс " +
+        "обучения человека языку, исследуемый лингвистами.";
       const isCorrect = false;
       const timestamp = 99;
       const correctAnswer = "Усвоение";
@@ -191,7 +194,8 @@ describe("tracker.js", function() {
       const taskId = "fake-task-id";
       const enhancementId = $EnhancementElement.attr("id");
       const submission = "Усвоением";
-      const sentence = "Text before element ñôŃßĘńŠēУсвое́ниеñôŃßĘńŠē and after element.";
+      const sentence = "<viewenhancement>Усвое́ние</viewenhancement> языка процесс " +
+        "обучения человека языку, исследуемый лингвистами.";
       const correctAnswer = "Усвоение";
       const isCorrect = false;
       const timestamp = 99;

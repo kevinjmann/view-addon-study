@@ -19,7 +19,10 @@ view.tracker = {
       trackingData["task-id"] = view.taskId;
       trackingData["enhancement-id"] = enhancementId;
       trackingData["submission"] = submission;
-      trackingData["sentence"] = view.tracker.extractRawSentenceWithMarkedElement("#" + enhancementId);
+      trackingData["sentence"] = view.tracker.extractRawSentenceWithMarkedElement(
+        $EnhancementElement,
+        enhancementId
+      );
       trackingData["is-correct"] = isCorrect;
 
       const capType = view.lib.detectCapitalization($EnhancementElement.text());
@@ -36,25 +39,29 @@ view.tracker = {
    * Get the sentence of the enhancement element, mark the enhancement element
    * and strip all markup from the sentence.
    *
-   * @param {string} enhancementSelector the selector of the element
+   * @param {object} $EnhancementElement the current enhancement element
+   * @param {string} enhancementId the id of the enhancement element
    *
    * @return {string} the raw sentence with the marked element
    */
-  extractRawSentenceWithMarkedElement: function(enhancementSelector) {
-    const $Sentence = $("<sentence>");
-    $Sentence.html(
-      "Text <b>before</b> element " +
-      $(enhancementSelector).prop("outerHTML") +
-      " and <b>after</b> element."
-    );
+  extractRawSentenceWithMarkedElement: function($EnhancementElement, enhancementId) {
+    const $OriginalSentence = $EnhancementElement.parent("sentence");
+    const $NewSentence = $("<sentence>").html($OriginalSentence.html());
 
-    const marker = "ñôŃßĘńŠē";
+    $NewSentence.find("*").each(function() {
+      const $Element = $(this);
+      if($Element.attr("id") === enhancementId){
+        $Element.replaceWith($("<viewenhancement>").text($EnhancementElement.data("original-text")));
+      }
+      else if($Element.is("viewenhancement")){
+        $Element.replaceWith($Element.data("original-text"));
+      }
+      else{
+        $Element.replaceWith($Element.text());
+      }
+    });
 
-    $Sentence
-    .find(enhancementSelector)
-    .text(marker + $(enhancementSelector).text() + marker);
-
-    return $Sentence.text();
+    return $NewSentence.html();
   },
 
   /**
