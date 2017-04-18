@@ -401,6 +401,7 @@ describe("view.js", function() {
     it("should create task data", function() {
       const token = "some token";
       const url = "some url";
+      const title = "some title";
       const language = "some language";
       const topic = "some topic";
       const filter = "some filter";
@@ -410,6 +411,7 @@ describe("view.js", function() {
 
       view.token = token;
       view.url = url;
+      view.title = title;
       view.language = language;
       view.topic = topic;
       view.filter = filter;
@@ -422,6 +424,7 @@ describe("view.js", function() {
       expect(returnedTaskData).to.eql({
         token,
         url,
+        title,
         language,
         topic,
         filter,
