@@ -271,8 +271,12 @@ view.statisticsMenu = {
       "Performance " + performanceId
     );
 
+    const sentence = performanceData["sentence"]
+    .replace("ñôŃßĘńŠē", "<b>")
+    .replace("ñôŃßĘńŠē", "</b>");
+
     const $InfoList = view.lib.createList(enhancementId + "-info", [
-      "Sentence: " + performanceData["sentence"],
+      "Sentence: " + sentence,
       "Correct answer: " + performanceData["correct-answer"],
       "Number of tries: " + performanceData["number-of-tries"],
       "Used solution: " + performanceData["used-solution"],

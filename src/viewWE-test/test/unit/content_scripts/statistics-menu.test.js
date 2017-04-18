@@ -42,7 +42,7 @@ describe("statistics-menu.js", function() {
       "correct-answer": "submission",
       "number-of-tries": 1,
       "used-solution": false,
-      "sentence": "the context sentence in which the enhancement is placed",
+      "sentence": "the context sentence in which the ñôŃßĘńŠēenhancementñôŃßĘńŠē is placed",
       "assessment": "CORRECT"
     },
     {
@@ -51,7 +51,7 @@ describe("statistics-menu.js", function() {
       "correct-answer": "submission",
       "number-of-tries": 2,
       "used-solution": false,
-      "sentence": "the context sentence in which the enhancement is placed",
+      "sentence": "the context sentence in which the ñôŃßĘńŠēenhancementñôŃßĘńŠē is placed",
       "assessment": "CORRECT"
     }
   ];
@@ -691,6 +691,9 @@ describe("statistics-menu.js", function() {
           $Dialog.attr("id", "view-task-dialog");
 
           const performanceData = performancesData[0];
+          const sentence = performanceData["sentence"]
+          .replace("ñôŃßĘńŠē", "<b>")
+          .replace("ñôŃßĘńŠē", "</b>");
 
           view.statisticsMenu.addPerformanceData($Dialog, performanceData, 0);
 
@@ -698,7 +701,7 @@ describe("statistics-menu.js", function() {
           sinon.assert.calledWithExactly(createListSpy,
             "bar-info",
             [
-              "Sentence: " + performanceData["sentence"],
+              "Sentence: " + sentence,
               "Correct answer: " + performanceData["correct-answer"],
               "Number of tries: " + performanceData["number-of-tries"],
               "Used solution: " + performanceData["used-solution"],
