@@ -102,8 +102,8 @@ describe("tracker.js", function() {
       sinon.assert.calledWithExactly(getCorrectAnswerSpy, $EnhancementElement, capType);
     });
 
-    it("should call requestToSendInteractionData(interactionData), 'mc' activity", function() {
-      const requestToSendInteractionDataSpy = sandbox.spy(view.tracker, "requestToSendInteractionData");
+    it("should call requestToSendTrackingData(trackingData), 'mc' activity", function() {
+      const requestToSendTrackingDataSpy = sandbox.spy(view.tracker, "requestToSendTrackingData");
 
       const $EnhancementElement = $("[data-type='hit']").first();
 
@@ -117,17 +117,17 @@ describe("tracker.js", function() {
       const correctAnswer = "Усвоение";
       const usedSolution = false;
 
-      const interactionData = {};
+      const trackingData = {};
 
-      interactionData["token"] = token;
-      interactionData["task-id"] = taskId;
-      interactionData["enhancement-id"] = enhancementId;
-      interactionData["submission"] = submission;
-      interactionData["sentence"] = sentence;
-      interactionData["is-correct"] = isCorrect;
-      interactionData["correct-answer"] = correctAnswer;
-      interactionData["used-solution"] = usedSolution;
-      interactionData["timestamp"] = timestamp;
+      trackingData["token"] = token;
+      trackingData["task-id"] = taskId;
+      trackingData["enhancement-id"] = enhancementId;
+      trackingData["submission"] = submission;
+      trackingData["sentence"] = sentence;
+      trackingData["is-correct"] = isCorrect;
+      trackingData["correct-answer"] = correctAnswer;
+      trackingData["used-solution"] = usedSolution;
+      trackingData["timestamp"] = timestamp;
 
       view.token = token;
       view.taskId = taskId;
@@ -141,12 +141,12 @@ describe("tracker.js", function() {
         usedSolution
       );
 
-      sinon.assert.calledOnce(requestToSendInteractionDataSpy);
-      sinon.assert.calledWithExactly(requestToSendInteractionDataSpy, interactionData);
+      sinon.assert.calledOnce(requestToSendTrackingDataSpy);
+      sinon.assert.calledWithExactly(requestToSendTrackingDataSpy, trackingData);
     });
 
-    it("should call requestToSendInteractionData(interactionData), 'click' activity", function() {
-      const requestToSendInteractionDataSpy = sandbox.spy(view.tracker, "requestToSendInteractionData");
+    it("should call requestToSendTrackingData(trackingData), 'click' activity", function() {
+      const requestToSendTrackingDataSpy = sandbox.spy(view.tracker, "requestToSendTrackingData");
 
       const $EnhancementElement = $("[data-type='hit']").first();
       const token = "some token";
@@ -159,17 +159,17 @@ describe("tracker.js", function() {
       const timestamp = 99;
       const usedSolution = false;
 
-      const interactionData = {};
+      const trackingData = {};
 
-      interactionData["token"] = token;
-      interactionData["task-id"] = taskId;
-      interactionData["enhancement-id"] = enhancementId;
-      interactionData["submission"] = submission;
-      interactionData["sentence"] = sentence;
-      interactionData["is-correct"] = isCorrect;
-      interactionData["timestamp"] = timestamp;
-      interactionData["correct-answer"] = correctAnswer;
-      interactionData["used-solution"] = usedSolution;
+      trackingData["token"] = token;
+      trackingData["task-id"] = taskId;
+      trackingData["enhancement-id"] = enhancementId;
+      trackingData["submission"] = submission;
+      trackingData["sentence"] = sentence;
+      trackingData["is-correct"] = isCorrect;
+      trackingData["timestamp"] = timestamp;
+      trackingData["correct-answer"] = correctAnswer;
+      trackingData["used-solution"] = usedSolution;
 
       view.token = token;
       view.taskId = taskId;
@@ -183,19 +183,19 @@ describe("tracker.js", function() {
         usedSolution
       );
 
-      sinon.assert.calledOnce(requestToSendInteractionDataSpy);
-      sinon.assert.calledWithExactly(requestToSendInteractionDataSpy, interactionData);
+      sinon.assert.calledOnce(requestToSendTrackingDataSpy);
+      sinon.assert.calledWithExactly(requestToSendTrackingDataSpy, trackingData);
     });
 
-    it("should send a request to send interaction data to the server", function() {
-      const interactionData = {data: "some data"};
+    it("should send a request to send tracking data to the server", function() {
+      const trackingData = {data: "some data"};
 
-      view.tracker.requestToSendInteractionData(interactionData);
+      view.tracker.requestToSendTrackingData(trackingData);
 
       sinon.assert.calledOnce(chrome.runtime.sendMessage);
       sinon.assert.calledWithExactly(chrome.runtime.sendMessage, {
-        msg: "send interactionData",
-        interactionData: interactionData,
+        msg: "send trackingData",
+        trackingData: trackingData,
         serverTrackingURL: "https://view.aleks.bg/act/tracking"
       });
     });

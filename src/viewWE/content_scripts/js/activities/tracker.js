@@ -12,35 +12,35 @@ view.tracker = {
    */
   trackData: function($EnhancementElement, submission, isCorrect, usedSolution) {
     if (view.userid) {
-      const interactionData = {};
+      const trackingData = {};
 
-      interactionData["token"] = view.token;
-      interactionData["task-id"] = view.taskId;
-      interactionData["enhancement-id"] = $EnhancementElement.attr("id");
-      interactionData["submission"] = submission;
-      interactionData["sentence"] = "fake-sentence";
-      interactionData["is-correct"] = isCorrect;
+      trackingData["token"] = view.token;
+      trackingData["task-id"] = view.taskId;
+      trackingData["enhancement-id"] = $EnhancementElement.attr("id");
+      trackingData["submission"] = submission;
+      trackingData["sentence"] = "fake-sentence";
+      trackingData["is-correct"] = isCorrect;
 
       const capType = view.lib.detectCapitalization($EnhancementElement.text());
-      interactionData["correct-answer"] = view.activityHelper.getCorrectAnswer($EnhancementElement, capType);
-      interactionData["used-solution"] = usedSolution;
+      trackingData["correct-answer"] = view.activityHelper.getCorrectAnswer($EnhancementElement, capType);
+      trackingData["used-solution"] = usedSolution;
 
-      interactionData["timestamp"] = view.timestamp;
+      trackingData["timestamp"] = view.timestamp;
 
-      view.tracker.requestToSendInteractionData(interactionData);
+      view.tracker.requestToSendTrackingData(trackingData);
     }
   },
 
   /**
-   * Send a request to the background script to send interaction data
+   * Send a request to the background script to send tracking data
    * to the server.
    *
-   * @param {object} interactionData the data to be sent
+   * @param {object} trackingData the data to be sent
    */
-  requestToSendInteractionData: function(interactionData) {
+  requestToSendTrackingData: function(trackingData) {
     chrome.runtime.sendMessage({
-      msg: "send interactionData",
-      interactionData: interactionData,
+      msg: "send trackingData",
+      trackingData: trackingData,
       serverTrackingURL: view.serverTrackingURL
     });
   }
