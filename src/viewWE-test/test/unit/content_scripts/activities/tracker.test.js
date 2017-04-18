@@ -111,6 +111,7 @@ describe("tracker.js", function() {
       const taskId = "fake-task-id";
       const enhancementId = $EnhancementElement.attr("id");
       const submission = "Усвоением";
+      const sentence = "fake-sentence";
       const isCorrect = false;
       const timestamp = 99;
       const correctAnswer = "Усвоение";
@@ -122,6 +123,7 @@ describe("tracker.js", function() {
       interactionData["task-id"] = taskId;
       interactionData["enhancement-id"] = enhancementId;
       interactionData["submission"] = submission;
+      interactionData["sentence"] = sentence;
       interactionData["is-correct"] = isCorrect;
       interactionData["correct-answer"] = correctAnswer;
       interactionData["used-solution"] = usedSolution;
@@ -151,6 +153,7 @@ describe("tracker.js", function() {
       const taskId = "fake-task-id";
       const enhancementId = $EnhancementElement.attr("id");
       const submission = "Усвоением";
+      const sentence = "fake-sentence";
       const correctAnswer = "Усвоение";
       const isCorrect = false;
       const timestamp = 99;
@@ -162,6 +165,7 @@ describe("tracker.js", function() {
       interactionData["task-id"] = taskId;
       interactionData["enhancement-id"] = enhancementId;
       interactionData["submission"] = submission;
+      interactionData["sentence"] = sentence;
       interactionData["is-correct"] = isCorrect;
       interactionData["timestamp"] = timestamp;
       interactionData["correct-answer"] = correctAnswer;
