@@ -42,6 +42,7 @@ describe("statistics-menu.js", function() {
       "correct-answer": "submission",
       "number-of-tries": 1,
       "used-solution": false,
+      "sentence": "the context sentence in which the enhancement is placed",
       "assessment": "CORRECT"
     },
     {
@@ -50,6 +51,7 @@ describe("statistics-menu.js", function() {
       "correct-answer": "submission",
       "number-of-tries": 2,
       "used-solution": false,
+      "sentence": "the context sentence in which the enhancement is placed",
       "assessment": "CORRECT"
     }
   ];
@@ -696,6 +698,7 @@ describe("statistics-menu.js", function() {
           sinon.assert.calledWithExactly(createListSpy,
             "bar-info",
             [
+              "Sentence: " + performanceData["sentence"],
               "Correct answer: " + performanceData["correct-answer"],
               "Number of tries: " + performanceData["number-of-tries"],
               "Used solution: " + performanceData["used-solution"],

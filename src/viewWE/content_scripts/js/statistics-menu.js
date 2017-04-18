@@ -272,6 +272,7 @@ view.statisticsMenu = {
     );
 
     const $InfoList = view.lib.createList(enhancementId + "-info", [
+      "Sentence: " + performanceData["sentence"],
       "Correct answer: " + performanceData["correct-answer"],
       "Number of tries: " + performanceData["number-of-tries"],
       "Used solution: " + performanceData["used-solution"],
