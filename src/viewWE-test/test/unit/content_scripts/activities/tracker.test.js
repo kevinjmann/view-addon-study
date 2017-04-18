@@ -59,6 +59,44 @@ describe("tracker.js", function() {
       sinon.assert.notCalled(detectCapitalizationSpy);
     });
 
+    it("should call extractRawSentenceWithMarkedElement(enhancementSelector)", function() {
+      const extractRawSentenceWithMarkedElementSpy = sandbox.spy(
+        view.tracker, "extractRawSentenceWithMarkedElement");
+
+      const $EnhancementElement = $("[data-type='hit']").first();
+      const submission = "Усвоением";
+      const isCorrect = false;
+      const usedSolution = false;
+
+      view.activity = "mc";
+
+      view.tracker.trackData(
+        $EnhancementElement,
+        submission,
+        isCorrect,
+        usedSolution
+      );
+
+      sinon.assert.calledOnce(extractRawSentenceWithMarkedElementSpy);
+      sinon.assert.calledWithExactly(extractRawSentenceWithMarkedElementSpy,
+        "#" + $EnhancementElement.attr("id")
+      );
+    });
+
+    it("should return the raw sentence with marked element", function() {
+      const extractRawSentenceWithMarkedElementSpy = sandbox.spy(
+        view.tracker, "extractRawSentenceWithMarkedElement");
+
+      const $EnhancementElement = $("[data-type='hit']").first();
+
+      const enhancementId = $EnhancementElement.attr("id");
+
+      view.tracker.extractRawSentenceWithMarkedElement("#" + enhancementId);
+
+      expect(extractRawSentenceWithMarkedElementSpy.firstCall.returnValue)
+      .to.equal("Text before element ñôŃßĘńŠēУсвое́ниеñôŃßĘńŠē and after element.")
+    });
+
     it("should call detectCapitalization(word)", function() {
       const detectCapitalizationSpy = sandbox.spy(view.lib, "detectCapitalization");
 

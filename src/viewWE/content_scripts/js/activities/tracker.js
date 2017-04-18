@@ -37,6 +37,7 @@ view.tracker = {
    * and strip all markup from the sentence.
    *
    * @param {string} enhancementSelector the selector of the element
+   *
    * @return {string} the raw sentence with the marked element
    */
   extractRawSentenceWithMarkedElement: function(enhancementSelector) {
