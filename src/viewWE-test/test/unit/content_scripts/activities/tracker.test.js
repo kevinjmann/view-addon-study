@@ -111,7 +111,7 @@ describe("tracker.js", function() {
       const taskId = "fake-task-id";
       const enhancementId = $EnhancementElement.attr("id");
       const submission = "Усвоением";
-      const sentence = "fake-sentence";
+      const sentence = "Text before element ñôŃßĘńŠēУсвое́ниеñôŃßĘńŠē and after element.";
       const isCorrect = false;
       const timestamp = 99;
       const correctAnswer = "Усвоение";
@@ -153,7 +153,7 @@ describe("tracker.js", function() {
       const taskId = "fake-task-id";
       const enhancementId = $EnhancementElement.attr("id");
       const submission = "Усвоением";
-      const sentence = "fake-sentence";
+      const sentence = "Text before element ñôŃßĘńŠēУсвое́ниеñôŃßĘńŠē and after element.";
       const correctAnswer = "Усвоение";
       const isCorrect = false;
       const timestamp = 99;

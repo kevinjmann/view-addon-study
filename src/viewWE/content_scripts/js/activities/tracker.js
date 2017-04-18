@@ -13,12 +13,13 @@ view.tracker = {
   trackData: function($EnhancementElement, submission, isCorrect, usedSolution) {
     if (view.userid) {
       const trackingData = {};
+      const enhancementId = $EnhancementElement.attr("id");
 
       trackingData["token"] = view.token;
       trackingData["task-id"] = view.taskId;
-      trackingData["enhancement-id"] = $EnhancementElement.attr("id");
+      trackingData["enhancement-id"] = enhancementId;
       trackingData["submission"] = submission;
-      trackingData["sentence"] = "fake-sentence";
+      trackingData["sentence"] = view.tracker.extractRawSentenceWithMarkedElement("#" + enhancementId);
       trackingData["is-correct"] = isCorrect;
 
       const capType = view.lib.detectCapitalization($EnhancementElement.text());
@@ -29,6 +30,30 @@ view.tracker = {
 
       view.tracker.requestToSendTrackingData(trackingData);
     }
+  },
+
+  /**
+   * Get the sentence of the enhancement element, mark the enhancement element
+   * and strip all markup from the sentence.
+   *
+   * @param {string} enhancementSelector the selector of the element
+   * @return {string} the raw sentence with the marked element
+   */
+  extractRawSentenceWithMarkedElement: function(enhancementSelector) {
+    const $Sentence = $("<sentence>");
+    $Sentence.html(
+      "Text <b>before</b> element " +
+      $(enhancementSelector).prop("outerHTML") +
+      " and <b>after</b> element."
+    );
+
+    const marker = "ñôŃßĘńŠē";
+
+    $Sentence
+    .find(enhancementSelector)
+    .text(marker + $(enhancementSelector).text() + marker);
+
+    return $Sentence.text();
   },
 
   /**
