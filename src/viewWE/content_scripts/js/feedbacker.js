@@ -9,6 +9,7 @@ view.feedbacker = {
 
     view.feedbacker.addPerformanceData($Dialog, performanceData);
 
+    const isModal = false;
     const title = "Performance";
     const height = "auto";
     const position = {
@@ -16,8 +17,9 @@ view.feedbacker = {
       at: "right bottom",
       of: "#" + performanceData["enhancement-id"]
     };
+    const buttons = {};
 
-    view.lib.dialogSetup($Dialog, title, height, position);
+    view.lib.dialogSetup(isModal, $Dialog, title, height, position, buttons);
 
     view.lib.initDialogClose($Dialog);
   },

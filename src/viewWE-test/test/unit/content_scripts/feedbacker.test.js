@@ -79,6 +79,7 @@ describe("feedbacker.js", function() {
     it("should call lib.dialogSetup($Dialog, title, height, position)", function() {
       const dialogSetupSpy = sandbox.spy(view.lib, "dialogSetup");
 
+      const isModal = false;
       const title = "Performance";
       const height = "auto";
       const position = {
@@ -86,15 +87,18 @@ describe("feedbacker.js", function() {
         at: "right bottom",
         of: "#" + performanceData["enhancement-id"]
       };
+      const buttons = {};
 
       view.feedbacker.showPerformance(performanceData);
 
       sinon.assert.calledOnce(dialogSetupSpy);
       sinon.assert.calledWithExactly(dialogSetupSpy,
+        isModal,
         $("#view-performance-dialog"),
         title,
         height,
-        position
+        position,
+        buttons
       );
     });
 

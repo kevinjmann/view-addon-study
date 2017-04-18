@@ -19,6 +19,9 @@ function processMessage(request) {
     case "hide statistics menu":
       view.statisticsMenu.hide();
       break;
+    case "remove performance dialog":
+      view.lib.removeDialog($("#view-performance-dialog"));
+      break;
     case "call startToEnhance":
       view.startToEnhance();
       break;

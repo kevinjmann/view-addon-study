@@ -88,12 +88,12 @@ describe("toolbar-iframe.js", function() {
       sinon.assert.calledOnce(addSpy);
     });
 
-    it("should call lib.initHideMenuHandler()", function() {
-      const initHideMenuHandlerSpy = sandbox.spy(view.lib, "initHideMenuHandler");
+    it("should call lib.initOnWindowClick()", function() {
+      const initOnWindowClickSpy = sandbox.spy(view.lib, "initOnWindowClick");
 
       view.toolbarIframe.init();
 
-      sinon.assert.calledOnce(initHideMenuHandlerSpy);
+      sinon.assert.calledOnce(initOnWindowClickSpy);
     });
 
     it("should call prepend(toolbar)", function() {

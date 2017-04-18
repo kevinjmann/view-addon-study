@@ -255,6 +255,20 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
+    it("should process the message 'remove performance dialog'", function() {
+      const removePerformanceDialogSpy = sandbox.spy(background, "removePerformanceDialog");
+
+      const request = {msg: "remove performance dialog"};
+      const sender = {tab: {id: 5}};
+
+      chrome.runtime.onMessage.trigger(request, sender);
+
+      sinon.assert.calledOnce(removePerformanceDialogSpy);
+
+      sinon.assert.calledOnce(chrome.tabs.sendMessage);
+      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
+    });
+
     it("should process the message 'call startToEnhance'", function() {
       const callStartToEnhanceSpy = sandbox.spy(background, "callStartToEnhance");
 

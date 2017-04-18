@@ -57,7 +57,7 @@ const toolbar = {
 
     toolbar.initStatisticsMenuBtn();
 
-    toolbar.initHideViewMenuAndStatistics();
+    toolbar.initOnWindowClick();
 
     toolbar.initAutoEnhance();
 
@@ -130,9 +130,10 @@ const toolbar = {
   },
 
   /**
-   * Hide the view menu when anything but the view menu button was clicked.
+   * Hide the view and statistics menu when anything but the menu buttons were clicked.
+   * Remove the instant feedback dialog.
    */
-  initHideViewMenuAndStatistics: function() {
+  initOnWindowClick: function() {
     toolbar.$cache.get(window).on("click", function(event) {
       const $Target = $(event.target);
       if (!$Target.closest("#wertiview-VIEW-menu-btn").length) {
@@ -141,6 +142,8 @@ const toolbar = {
       if (!$Target.closest(toolbar.selectorStart + "statistics-menu-button").length) {
         toolbar.requestToHideStatisticsMenu();
       }
+
+      toolbar.requestToRemovePerformanceDialog();
     });
   },
 
@@ -158,6 +161,14 @@ const toolbar = {
    */
   requestToHideStatisticsMenu: function() {
     chrome.runtime.sendMessage({msg: "hide statistics menu"}, toolbar.noResponse);
+  },
+
+  /**
+   * Send a request to the background script to pass on the message to
+   * remove the performance dialog.
+   */
+  requestToRemovePerformanceDialog: function() {
+    chrome.runtime.sendMessage({msg: "remove performance dialog"}, toolbar.noResponse);
   },
 
   /**
