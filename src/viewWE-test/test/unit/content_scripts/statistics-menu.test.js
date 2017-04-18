@@ -13,6 +13,7 @@ describe("statistics-menu.js", function() {
       "user-id": "useruid",
       "task-id": 4,
       "url": "http://example.com",
+      "title": "The <title> of the web page",
       "topic": "determiners",
       "activity": "click",
       "language": "en",
@@ -24,6 +25,7 @@ describe("statistics-menu.js", function() {
       "user-id": "useruid",
       "task-id": 5,
       "url": "http://example.com",
+      "title": "The <title> of the web page",
       "topic": "determiners",
       "activity": "click",
       "language": "en",
@@ -360,13 +362,19 @@ describe("statistics-menu.js", function() {
 
           const taskData = tasksData[0];
 
+          const $Webpage = $("<a>");
+          $Webpage.attr("href", taskData["url"]);
+          $Webpage.attr("target", "_blank");
+          $Webpage.css("color", "blue");
+          $Webpage.text(taskData["title"]);
+
           view.statisticsMenu.addTaskData($Dialog, taskData);
 
           sinon.assert.calledOnce(createListSpy);
           sinon.assert.calledWithExactly(createListSpy,
             "view-task-4-info",
             [
-              "Url: " + taskData["url"],
+              "Webpage: " + $Webpage.prop("outerHTML"),
               "Language: " + taskData["language"],
               "Topic: " + taskData["topic"],
               "Filter: " + taskData["filter"],

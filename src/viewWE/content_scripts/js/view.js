@@ -17,6 +17,7 @@ const view = {
   token: "",
   taskId: "",
   url: document.baseURI,
+  title: document.title,
   timestamp: "",
   numberOfExercises: 0,
 
@@ -256,6 +257,7 @@ const view = {
     return {
       token: view.token,
       url: view.url,
+      title: view.title,
       language: view.language,
       topic: view.topic,
       filter: view.filter,

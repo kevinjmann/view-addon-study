@@ -142,7 +142,7 @@ describe("lib.js", function() {
   describe("addItems", function() {
     it("should add all items to a given list element", function() {
       const allItems = [
-        "firstItem",
+        "<i>firstItem</i>",
         "secondItem"
       ];
 
@@ -150,8 +150,8 @@ describe("lib.js", function() {
 
       view.lib.addItems($List, allItems);
 
-      expect($List.find("li:eq(0)").text()).to.equal("firstItem");
-      expect($List.find("li:eq(1)").text()).to.equal("secondItem");
+      expect($List.find("li:eq(0)").html()).to.equal("<i>firstItem</i>");
+      expect($List.find("li:eq(1)").html()).to.equal("secondItem");
     });
   });
 

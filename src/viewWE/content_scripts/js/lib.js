@@ -67,7 +67,7 @@ view.lib = {
    */
   addItems: function($List, allItems) {
     $.each(allItems, function(index) {
-      $List.append($("<li>").text(allItems[index]));
+      $List.append($("<li>").html(allItems[index]));
     });
   },
 
