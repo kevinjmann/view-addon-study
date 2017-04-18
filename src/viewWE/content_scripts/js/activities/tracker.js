@@ -18,6 +18,7 @@ view.tracker = {
       interactionData["task-id"] = view.taskId;
       interactionData["enhancement-id"] = $EnhancementElement.attr("id");
       interactionData["submission"] = submission;
+      interactionData["sentence"] = "fake-sentence";
       interactionData["is-correct"] = isCorrect;
 
       const capType = view.lib.detectCapitalization($EnhancementElement.text());
