@@ -579,9 +579,10 @@ describe("statistics-menu.js", function() {
         });
       });
 
-      it("should call lib.dialogSetup($Dialog, title, height, position)", function() {
+      it("should call lib.dialogSetup(isModal, $Dialog, title, height, position, buttons)", function() {
         const dialogSetupSpy = sandbox.spy(view.lib, "dialogSetup");
 
+        const isModal = true;
         const title = "All Tasks";
         const height = $(window).height() * 0.8;
         const position = {
@@ -593,12 +594,30 @@ describe("statistics-menu.js", function() {
         view.statisticsMenu.showAllTasks(tasksData);
 
         sinon.assert.calledOnce(dialogSetupSpy);
-        sinon.assert.calledWithExactly(dialogSetupSpy,
+        sinon.assert.calledWith(dialogSetupSpy,
+          isModal,
           $("#view-all-tasks-dialog"),
           title,
           height,
           position
         );
+      });
+
+      it("should call removeDialog($Dialog) when the 'Ok' button was pressed", function() {
+        const removeDialogSpy = sandbox.spy(view.lib, "removeDialog");
+
+        let $Dialog = $("<div>");
+        $Dialog.attr("id", "view-all-tasks-dialog");
+
+        view.statisticsMenu.showAllTasks(performancesData);
+
+        $Dialog = $("#view-all-tasks-dialog");
+
+        // trigger a click on the 'Ok' button
+        $Dialog.dialog("option", "buttons").Ok();
+
+        sinon.assert.calledOnce(removeDialogSpy);
+        sinon.assert.calledWith(removeDialogSpy, $Dialog);
       });
 
       it("should call lib.initDialogClose($Dialog)", function() {
@@ -781,9 +800,10 @@ describe("statistics-menu.js", function() {
         });
       });
 
-      it("should call lib.dialogSetup($Dialog, title, height, position)", function() {
+      it("should call lib.dialogSetup(isModal, $Dialog, title, height, position, buttons)", function() {
         const dialogSetupSpy = sandbox.spy(view.lib, "dialogSetup");
 
+        const isModal = true;
         const title = "Task Performances";
         const height = $(window).height() * 0.8;
         const position = {
@@ -795,12 +815,30 @@ describe("statistics-menu.js", function() {
         view.statisticsMenu.showTask(performancesData);
 
         sinon.assert.calledOnce(dialogSetupSpy);
-        sinon.assert.calledWithExactly(dialogSetupSpy,
+        sinon.assert.calledWith(dialogSetupSpy,
+          isModal,
           $("#view-task-dialog"),
           title,
           height,
           position
         );
+      });
+
+      it("should call removeDialog($Dialog) when the 'Ok' button was pressed", function() {
+        const removeDialogSpy = sandbox.spy(view.lib, "removeDialog");
+
+        let $Dialog = $("<div>");
+        $Dialog.attr("id", "view-task-dialog");
+
+        view.statisticsMenu.showTask(performancesData);
+
+        $Dialog = $("#view-task-dialog");
+
+        // trigger a click on the 'Ok' button
+        $Dialog.dialog("option", "buttons").Ok();
+
+        sinon.assert.calledOnce(removeDialogSpy);
+        sinon.assert.calledWith(removeDialogSpy, $Dialog);
       });
 
       it("should call lib.initDialogClose($Dialog)", function() {
