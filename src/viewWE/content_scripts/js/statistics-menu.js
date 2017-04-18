@@ -271,12 +271,11 @@ view.statisticsMenu = {
       "Performance " + performanceId
     );
 
-    const sentence = performanceData["sentence"]
-    .replace("ñôŃßĘńŠē", "<b>")
-    .replace("ñôŃßĘńŠē", "</b>");
+    const $Sentence = $("<sentence>").html(performanceData["sentence"]);
+    $Sentence.find("viewenhancement").addClass("view-enhancement-info-style");
 
     const $InfoList = view.lib.createList(enhancementId + "-info", [
-      "Sentence: " + sentence,
+      "Sentence: " + $Sentence.html(),
       "Correct answer: " + performanceData["correct-answer"],
       "Number of tries: " + performanceData["number-of-tries"],
       "Used solution: " + performanceData["used-solution"],
