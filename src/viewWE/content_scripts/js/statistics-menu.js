@@ -155,8 +155,14 @@ view.statisticsMenu = {
 
     $PerformancesBtn.hide();
 
+    const $Webpage = $("<a>");
+    $Webpage.attr("href", taskData["url"]);
+    $Webpage.attr("target", "_blank");
+    $Webpage.css("color", "blue");
+    $Webpage.text(taskData["title"]);
+
     const $InfoList = view.lib.createList(viewTaskId + "-info", [
-      "Url: " + taskData["url"],
+      "Webpage: " + $Webpage.prop("outerHTML"),
       "Language: " + taskData["language"],
       "Topic: " + taskData["topic"],
       "Filter: " + taskData["filter"],
