@@ -88,15 +88,18 @@ describe("tracker.js", function() {
       const extractRawSentenceWithMarkedElementSpy = sandbox.spy(
         view.tracker, "extractRawSentenceWithMarkedElement");
 
-      const $EnhancementElement = $("[data-type='hit']").first();
+      // remove the text as to test if the original-text attribute is used as expected
+      $("viewenhancement").text("");
 
-      const enhancementId = $EnhancementElement.attr("id");
+      const enhancementId = "VIEW-N-Msc-Anim-Pl-Ins-3";
+
+      const $EnhancementElement = $("#" + enhancementId);
 
       view.tracker.extractRawSentenceWithMarkedElement($EnhancementElement, enhancementId);
 
       expect(extractRawSentenceWithMarkedElementSpy.firstCall.returnValue)
-      .to.equal("<viewenhancement>Усвое́ние</viewenhancement> языка процесс " +
-        "обучения человека языку, исследуемый лингвистами.")
+      .to.equal("Усвое́ние языка процесс обучения человека языку, исследуемый " +
+        "<viewenhancement>лингвистами</viewenhancement>.")
     });
 
     it("should call detectCapitalization(word)", function() {
