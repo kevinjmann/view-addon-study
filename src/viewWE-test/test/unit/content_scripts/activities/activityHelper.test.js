@@ -725,16 +725,18 @@ describe("activityHelper.js", function() {
       expect(getCorrectAnswerSpy.firstCall.returnValue).to.equal("Усвоение");
     });
 
-    it("should return the hit text as 'correctform' does not exist", function() {
+    it("should return the hit original text as 'correctform' does not exist", function() {
+      fixture.load("/fixtures/en-det-mc-and-cloze.html");
       const getCorrectAnswerSpy = sandbox.spy(view.activityHelper, "getCorrectAnswer");
 
       const $hit = $("[data-type='hit']").first();
 
-      $hit.removeAttr("data-correctform");
+      // test if data-original-text is used as expected
+      $hit.text("");
 
       view.activityHelper.getCorrectAnswer($hit, 2);
 
-      expect(getCorrectAnswerSpy.firstCall.returnValue).to.equal("Усвое́ние");
+      expect(getCorrectAnswerSpy.firstCall.returnValue).to.equal("a");
     });
   });
 
