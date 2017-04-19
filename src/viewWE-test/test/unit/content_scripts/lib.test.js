@@ -268,20 +268,6 @@ describe("lib.js", function() {
   });
 
   describe("disableAnchors", function() {
-    it("should store the 'href' attribute of all anchor elements in a data attribute", function() {
-      const href1 = "http://www.test.html";
-      const href2 = "http://www.test2.html";
-      const $Body = $("body");
-
-      $Body.append("<a href='" + href1 + "'>");
-      $Body.append("<a href='" + href2 + "'>");
-
-      view.lib.disableAnchors();
-
-      expect($("a:eq(0)").data("href")).to.equal(href1);
-      expect($("a:eq(1)").data("href")).to.equal(href2);
-    });
-
     it("should have removed the 'href' attribute from all anchor elements", function() {
       const href1 = "http://www.test.html";
       const href2 = "http://www.test2.html";
@@ -292,24 +278,6 @@ describe("lib.js", function() {
       view.lib.disableAnchors();
 
       expect($("a[href]").length).to.equal(0);
-    });
-  });
-
-  describe("enableAnchors", function() {
-    it("should recover the 'href' attribute of all anchor elements", function() {
-      const href1 = "http://www.test.html";
-      const href2 = "http://www.test2.html";
-      const $Body = $("body");
-
-      $Body.append("<a href='" + href1 + "'>");
-      $Body.append("<a href='" + href2 + "'>");
-
-      view.lib.disableAnchors();
-
-      view.lib.enableAnchors();
-
-      expect($("a:eq(0)").attr("href")).to.equal(href1);
-      expect($("a:eq(1)").attr("href")).to.equal(href2);
     });
   });
 

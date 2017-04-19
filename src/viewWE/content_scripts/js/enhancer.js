@@ -34,13 +34,7 @@ view.enhancer = {
    * restore the original page.
    */
   restoreToOriginal: function() {
-    view.activityHelper.restore();
-
-    $("viewenhancement").each(function() {
-      $(this).replaceWith($(this).data("original-text"));
-    });
-
-    view.lib.enableAnchors();
+    $("#wertiview-content").html(view.originalContent);
 
     view.enhancer.requestToToggleElement(
       "hide element",
