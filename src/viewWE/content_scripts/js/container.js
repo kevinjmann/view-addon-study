@@ -10,7 +10,11 @@ view.container = {
 
     let $Content = $("<div id='wertiview-content'>");
 
-    $Element.children().wrapAll($Content);
+    const $OriginalContent = $Element.children();
+
+    view.originalContent = $OriginalContent;
+
+    $OriginalContent.wrapAll($Content);
 
     $Content = $("#wertiview-content");
 
@@ -23,7 +27,7 @@ view.container = {
 
   /**
    * Move the container down when the toolbar is visible,
-   * but move it back and hide the VIEW menu otherwise.
+   * but move it back otherwise.
    */
   move: function() {
     const $Container = $("#wertiview-container");
@@ -32,7 +36,6 @@ view.container = {
       $Container.addClass("down");
     }
     else {
-      view.VIEWmenu.hide();
       $Container.removeClass("down");
     }
   }

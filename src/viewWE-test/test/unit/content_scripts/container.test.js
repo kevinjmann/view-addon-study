@@ -110,18 +110,6 @@ describe("container.js", function() {
       expect($("#wertiview-container").hasClass("down")).to.be.true;
     });
 
-    it("should call VIEWmenu.hide(), as the toolbar is hidden", function() {
-      const hideSpy = sandbox.spy(view.VIEWmenu, "hide");
-
-      view.toolbarIframe.init();
-
-      $("#view-toolbar-iframe").hide();
-
-      view.container.move();
-
-      sinon.assert.called(hideSpy);
-    });
-
     it("should not find the class 'down' inside the container, as the toolbar is hidden", function() {
       view.toolbarIframe.init();
 
