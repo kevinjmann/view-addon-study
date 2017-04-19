@@ -121,17 +121,7 @@ view.lib = {
    */
   disableAnchors: function() {
     $("a").each(function() {
-      $(this).data("href", $(this).attr("href"));
       $(this).removeAttr("href");
-    });
-  },
-
-  /**
-   * Enable all anchors, so that links can be followed again.
-   */
-  enableAnchors: function() {
-    $("a").each(function() {
-      $(this).attr("href", $(this).data("href"));
     });
   },
 
