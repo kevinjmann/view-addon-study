@@ -37,6 +37,9 @@ const view = {
   filter: "unselected",
   activity: "unselected",
 
+  // original web page content for restoration
+  originalContent: "",
+
   /**
    * Save general options to the storage
    * and retrieve changed options.
