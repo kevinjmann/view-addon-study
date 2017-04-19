@@ -42,6 +42,7 @@ describe("statistics-menu.js", function() {
       "correct-answer": "submission",
       "number-of-tries": 1,
       "used-solution": false,
+      "sentence": "the context sentence in which the <viewenhancement>enhancement</viewenhancement> is placed",
       "assessment": "CORRECT"
     },
     {
@@ -50,6 +51,7 @@ describe("statistics-menu.js", function() {
       "correct-answer": "submission",
       "number-of-tries": 2,
       "used-solution": false,
+      "sentence": "the context sentence in which the <viewenhancement>enhancement</viewenhancement> is placed",
       "assessment": "CORRECT"
     }
   ];
@@ -689,6 +691,8 @@ describe("statistics-menu.js", function() {
           $Dialog.attr("id", "view-task-dialog");
 
           const performanceData = performancesData[0];
+          const $Sentence = $("<sentence>").html(performanceData["sentence"]);
+          $Sentence.find("viewenhancement").addClass("view-enhancement-info-style");
 
           view.statisticsMenu.addPerformanceData($Dialog, performanceData, 0);
 
@@ -696,6 +700,7 @@ describe("statistics-menu.js", function() {
           sinon.assert.calledWithExactly(createListSpy,
             "bar-info",
             [
+              "Sentence: " + $Sentence.html(),
               "Correct answer: " + performanceData["correct-answer"],
               "Number of tries: " + performanceData["number-of-tries"],
               "Used solution: " + performanceData["used-solution"],
@@ -745,6 +750,17 @@ describe("statistics-menu.js", function() {
           $("body").append($Dialog);
 
           expect($("#bar-performance").find("#bar-info").length).to.be.above(0);
+        });
+
+        it("should find the class 'view-enhancement-info-style' inside the info list", function() {
+          const $Dialog = $("<div>");
+          $Dialog.attr("id", "view-task-dialog");
+
+          view.statisticsMenu.addPerformanceData($Dialog, performancesData[0], 0);
+
+          $("body").append($Dialog);
+
+          expect($("#bar-info").find(".view-enhancement-info-style").length).to.be.above(0);
         });
 
         it("should call initPerformanceBtn($PerformanceBtn, $InfoList)", function() {

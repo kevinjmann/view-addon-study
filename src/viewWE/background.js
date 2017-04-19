@@ -303,15 +303,15 @@ const background = {
   },
 
   /**
-   * Send the interaction data to the server for processing.
+   * Send the tracking data to the server for processing.
    * If successful, request to call showPerformance(performanceData)
    * in feedbacker.js.
    *
    * @param {*} request the message sent by the calling script
    */
-  sendInteractionData: function(request) {
+  sendTrackingData: function(request) {
     background.ajaxPost(request.serverTrackingURL,
-      request.interactionData,
+      request.trackingData,
       10000)
     .done(function(data, textStatus, xhr) {
       if (data) {
@@ -699,8 +699,8 @@ function processMessage(request, sender, sendResponse) {
     case "send taskData and get taskId":
       background.sendTaskDataAndGetTaskId(request);
       break;
-    case "send interactionData":
-      background.sendInteractionData(request);
+    case "send trackingData":
+      background.sendTrackingData(request);
       break;
     case "get all tasks":
       background.getAllTasks(request);

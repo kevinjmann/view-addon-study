@@ -12,35 +12,68 @@ view.tracker = {
    */
   trackData: function($EnhancementElement, submission, isCorrect, usedSolution) {
     if (view.userid) {
-      const interactionData = {};
+      const trackingData = {};
+      const enhancementId = $EnhancementElement.attr("id");
 
-      interactionData["token"] = view.token;
-      interactionData["task-id"] = view.taskId;
-      interactionData["enhancement-id"] = $EnhancementElement.attr("id");
-      interactionData["submission"] = submission;
-      interactionData["sentence"] = "fake-sentence";
-      interactionData["is-correct"] = isCorrect;
+      trackingData["token"] = view.token;
+      trackingData["task-id"] = view.taskId;
+      trackingData["enhancement-id"] = enhancementId;
+      trackingData["submission"] = submission;
+      trackingData["sentence"] = view.tracker.extractRawSentenceWithMarkedElement(
+        $EnhancementElement,
+        enhancementId
+      );
+      trackingData["is-correct"] = isCorrect;
 
       const capType = view.lib.detectCapitalization($EnhancementElement.text());
-      interactionData["correct-answer"] = view.activityHelper.getCorrectAnswer($EnhancementElement, capType);
-      interactionData["used-solution"] = usedSolution;
+      trackingData["correct-answer"] = view.activityHelper.getCorrectAnswer($EnhancementElement, capType);
+      trackingData["used-solution"] = usedSolution;
 
-      interactionData["timestamp"] = view.timestamp;
+      trackingData["timestamp"] = view.timestamp;
 
-      view.tracker.requestToSendInteractionData(interactionData);
+      view.tracker.requestToSendTrackingData(trackingData);
     }
   },
 
   /**
-   * Send a request to the background script to send interaction data
+   * Get the sentence of the enhancement element, mark the enhancement element
+   * and strip all markup from the sentence.
+   *
+   * @param {object} $EnhancementElement the current enhancement element
+   * @param {string} enhancementId the id of the enhancement element
+   *
+   * @return {string} the raw sentence with the marked element
+   */
+  extractRawSentenceWithMarkedElement: function($EnhancementElement, enhancementId) {
+    const $OriginalSentence = $EnhancementElement.parent("sentence");
+    const $NewSentence = $("<sentence>").html($OriginalSentence.html());
+
+    $NewSentence.find("*").each(function() {
+      const $Element = $(this);
+      if($Element.attr("id") === enhancementId){
+        $Element.replaceWith($("<viewenhancement>").text($EnhancementElement.data("original-text")));
+      }
+      else if($Element.is("viewenhancement")){
+        $Element.replaceWith($Element.data("original-text"));
+      }
+      else{
+        $Element.replaceWith($Element.text());
+      }
+    });
+
+    return $NewSentence.html();
+  },
+
+  /**
+   * Send a request to the background script to send tracking data
    * to the server.
    *
-   * @param {object} interactionData the data to be sent
+   * @param {object} trackingData the data to be sent
    */
-  requestToSendInteractionData: function(interactionData) {
+  requestToSendTrackingData: function(trackingData) {
     chrome.runtime.sendMessage({
-      msg: "send interactionData",
-      interactionData: interactionData,
+      msg: "send trackingData",
+      trackingData: trackingData,
       serverTrackingURL: view.serverTrackingURL
     });
   }

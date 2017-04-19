@@ -71,15 +71,19 @@ describe("enhancer.js", function() {
       it("should replace a viewenhancement element with the original text", function() {
         fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
 
-        expect($("p").contents().get(5).nodeType).to.equal(1);
-        expect($("p").contents().get(5).nodeName).to.equal("VIEWENHANCEMENT");
-        expect($("p").contents().get(5).textContent).to.equal("процесс");
+        const enhancementElementBefore = $("sentence:eq(0)").contents().get(4);
+
+        expect(enhancementElementBefore.nodeType).to.equal(1);
+        expect(enhancementElementBefore.nodeName).to.equal("VIEWENHANCEMENT");
+        expect(enhancementElementBefore.textContent).to.equal("процесс");
 
         view.enhancer.restoreToOriginal();
 
-        expect($("p").contents().get(5).nodeType).to.equal(3);
-        expect($("p").contents().get(5).nodeName).to.equal("#text");
-        expect($("p").contents().get(5).textContent).to.equal("процесс");
+        const enhancementElementAfter = $("sentence:eq(0)").contents().get(4);
+
+        expect(enhancementElementAfter.nodeType).to.equal(3);
+        expect(enhancementElementAfter.nodeName).to.equal("#text");
+        expect(enhancementElementAfter.textContent).to.equal("процесс");
       });
 
       it("should call lib.enableAnchors()", function() {

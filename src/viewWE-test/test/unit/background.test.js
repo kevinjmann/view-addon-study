@@ -718,55 +718,55 @@ describe("background.js", function() {
           });
         });
 
-        describe("sendInteractionData", function() {
-          it("should process the message 'send interactionData'", function() {
-            const sendInteractionDataSpy = sandbox.spy(background, "sendInteractionData");
+        describe("sendTrackingData", function() {
+          it("should process the message 'send trackingData'", function() {
+            const sendTrackingDataSpy = sandbox.spy(background, "sendTrackingData");
 
             const request = {
-              msg: "send interactionData",
+              msg: "send trackingData",
               serverTrackingURL: "https://view.aleks.bg/act/tracking",
-              interactionData: "some interaction data"
+              trackingData: "some tracking data"
             };
             const sender = {tab: {id: 5}};
 
             chrome.runtime.onMessage.trigger(request, sender);
 
-            sinon.assert.calledOnce(sendInteractionDataSpy);
-            sinon.assert.calledWithExactly(sendInteractionDataSpy, request);
+            sinon.assert.calledOnce(sendTrackingDataSpy);
+            sinon.assert.calledWithExactly(sendTrackingDataSpy, request);
           });
 
           it("should call ajaxPost(url, data, ajaxTimeout)", function() {
             const ajaxPostSpy = sandbox.spy(background, "ajaxPost");
 
             const serverTrackingURL = "https://view.aleks.bg/act/tracking";
-            const interactionData = "some interaction data";
+            const trackingData = "some tracking data";
 
             const request = {
-              msg: "send interactionData",
+              msg: "send trackingData",
               serverTrackingURL: serverTrackingURL,
-              interactionData: interactionData
+              trackingData: trackingData
             };
 
-            background.sendInteractionData(request);
+            background.sendTrackingData(request);
 
             sinon.assert.calledOnce(ajaxPostSpy);
             sinon.assert.calledWithExactly(ajaxPostSpy,
               serverTrackingURL,
-              interactionData,
+              trackingData,
               10000
             );
           });
 
-          it("should succeed to send interaction data, get the performance data and call callShowPerformance(data)", function() {
+          it("should succeed to send tracking data, get the performance data and call callShowPerformance(data)", function() {
             const callShowPerformanceSpy = sandbox.spy(background, "callShowPerformance");
 
             const serverTrackingURL = "https://view.aleks.bg/act/tracking";
-            const interactionData = "some interaction data";
+            const trackingData = "some tracking data";
 
             const request = {
-              msg: "send interactionData",
+              msg: "send trackingData",
               serverTrackingURL: serverTrackingURL,
-              interactionData: interactionData
+              trackingData: trackingData
             };
 
             sandbox.useFakeServer();
@@ -776,7 +776,7 @@ describe("background.js", function() {
             sandbox.server.respondWith("POST", serverTrackingURL,
               [200, {"Content-Type": "application/json"}, JSON.stringify(performanceData)]);
 
-            background.sendInteractionData(request);
+            background.sendTrackingData(request);
 
             sandbox.server.respond();
 
@@ -798,16 +798,16 @@ describe("background.js", function() {
             });
           });
 
-          it("should succeed to send interaction data, but fail to receive data from the server", function() {
+          it("should succeed to send tracking data, but fail to receive data from the server", function() {
             const ajaxErrorSpy = sandbox.spy(background, "ajaxError");
 
             const serverTrackingURL = "https://view.aleks.bg/act/tracking";
-            const interactionData = "some interaction data";
+            const trackingData = "some tracking data";
 
             const request = {
-              msg: "send interactionData",
+              msg: "send trackingData",
               serverTrackingURL: serverTrackingURL,
-              interactionData: interactionData
+              trackingData: trackingData
             };
 
             sandbox.useFakeServer();
@@ -815,7 +815,7 @@ describe("background.js", function() {
             sandbox.server.respondWith("POST", serverTrackingURL,
               [200, {"Content-Type": "application/json"}, ""]);
 
-            background.sendInteractionData(request);
+            background.sendTrackingData(request);
 
             sandbox.server.respond();
 
