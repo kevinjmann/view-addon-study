@@ -259,7 +259,7 @@ view.activityHelper = {
       return view.lib.matchCapitalization(correctform, capType);
     }
     else {
-      return $hit.text();
+      return $hit.data("original-text");
     }
   },
 
