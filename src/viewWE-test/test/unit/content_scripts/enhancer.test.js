@@ -15,11 +15,11 @@ describe("enhancer.js", function() {
     fixture.load("/fixtures/ru-no-markup.html");
     $NoMarkup.html($("#ru-no-markup-body").html());
     $("body").append($("<div id='wertiview-content'>"));
+    view.originalContent = $NoMarkup.children();
   });
 
   beforeEach(function() {
     $("#wertiview-content").html($NoMarkup.html());
-    view.originalContent = $NoMarkup.html();
     sandbox = sinon.sandbox.create();
   });
 
@@ -68,7 +68,10 @@ describe("enhancer.js", function() {
 
         view.enhancer.restoreToOriginal();
 
-        expect($("#wertiview-content").html()).to.equal(view.originalContent);
+        const $ContentChildren = $("#wertiview-content").children();
+
+        expect($ContentChildren.get(0)).to.equal(view.originalContent.get(0));
+        expect($ContentChildren.get(1)).to.equal(view.originalContent.get(1));
       });
 
       it("should call requestToToggleElement(msg, selector): hide restore button", function() {
