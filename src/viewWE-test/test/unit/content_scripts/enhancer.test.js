@@ -19,6 +19,7 @@ describe("enhancer.js", function() {
 
   beforeEach(function() {
     $("#wertiview-content").html($NoMarkup.html());
+    view.originalContent = $NoMarkup.html();
     sandbox = sinon.sandbox.create();
   });
 
@@ -60,38 +61,14 @@ describe("enhancer.js", function() {
     });
 
     describe("restoreToOriginal", function() {
-      it("should call activityHelper.restore()", function() {
-        const restoreSpy = sandbox.spy(view.activityHelper, "restore");
-
-        view.enhancer.restoreToOriginal();
-
-        sinon.assert.calledOnce(restoreSpy);
-      });
-
-      it("should replace a viewenhancement element with the original text", function() {
+      it("should restore the wertiview-content div to the original state", function() {
         fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
 
-        const enhancementElementBefore = $("sentence:eq(0)").contents().get(4);
-
-        expect(enhancementElementBefore.nodeType).to.equal(1);
-        expect(enhancementElementBefore.nodeName).to.equal("VIEWENHANCEMENT");
-        expect(enhancementElementBefore.textContent).to.equal("процесс");
+        $("#wertiview-content").html($("p"));
 
         view.enhancer.restoreToOriginal();
 
-        const enhancementElementAfter = $("sentence:eq(0)").contents().get(4);
-
-        expect(enhancementElementAfter.nodeType).to.equal(3);
-        expect(enhancementElementAfter.nodeName).to.equal("#text");
-        expect(enhancementElementAfter.textContent).to.equal("процесс");
-      });
-
-      it("should call lib.enableAnchors()", function() {
-        const enableAnchorsSpy = sandbox.spy(view.lib, "enableAnchors");
-
-        view.enhancer.restoreToOriginal();
-
-        sinon.assert.calledOnce(enableAnchorsSpy);
+        expect($("#wertiview-content").html()).to.equal(view.originalContent);
       });
 
       it("should call requestToToggleElement(msg, selector): hide restore button", function() {
