@@ -273,23 +273,5 @@ view.activityHelper = {
     $hint.addClass("view-style-hint");
     $hint.text("?");
     $hit.append($hint);
-  },
-
-  /**
-   * Remove activity specific markup.
-   */
-  restore: function() {
-    const $Hint = $("viewhint");
-
-    // click
-    $("viewenhancement").off("click");
-
-    // mc and cloze
-    $(".viewinput").off("change keyup");
-    $Hint.off("click");
-    $Hint.remove();
-
-    // cloze
-    $("viewbaseform").remove();
   }
 };
