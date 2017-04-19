@@ -21,6 +21,7 @@ describe("container.js", function() {
     $("#view-toolbar-iframe").remove();
     $("body").append($("#ru-no-markup-body"));
     $("#wertiview-container").remove();
+    view.originalContent = "";
     fixture.cleanup();
   });
 
@@ -44,6 +45,26 @@ describe("container.js", function() {
   });
 
   describe("add", function() {
+    it("should store the body content into view.originalContent", function() {
+      fixture.load("/fixtures/ru-no-markup.html");
+
+      const fixtureInnerHTML = $("#ru-no-markup-body").html();
+      const $FixtureBody = $("<div>");
+
+      $FixtureBody.html(fixtureInnerHTML);
+
+      $("body").append($FixtureBody);
+
+      view.container.add($FixtureBody);
+
+      const $ContentChildren = $("#wertiview-content").children();
+
+      expect($ContentChildren.get(0)).to.equal(view.originalContent.get(0));
+      expect($ContentChildren.get(1)).to.equal(view.originalContent.get(1));
+
+      $FixtureBody.remove();
+    });
+
     it("should wrap all body content of 'ru-no-markup.html' into a new element", function() {
       fixture.load("/fixtures/ru-no-markup.html");
 
