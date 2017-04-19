@@ -181,7 +181,8 @@ module.exports = function(grunt) {
         },
         preprocessors: {
           "../viewWE/content_scripts/js/activities/activityHelper.js": ["coverage"],
-          "**/ru-nouns-mc-and-cloze.html": ["html2js"]
+          "**/ru-nouns-mc-and-cloze.html": ["html2js"],
+          "**/en-det-mc-and-cloze.html": ["html2js"]
         }
       },
       tracker: {
