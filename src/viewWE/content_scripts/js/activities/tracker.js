@@ -45,21 +45,27 @@ view.tracker = {
    * @return {string} the raw sentence with the marked element
    */
   extractRawSentenceWithMarkedElement: function($EnhancementElement, enhancementId) {
-    const $OriginalSentence = $EnhancementElement.parent("sentence");
+    const $OriginalSentence = $EnhancementElement.closest("sentence");
     const $NewSentence = $("<sentence>").html($OriginalSentence.html());
+
+    $NewSentence.find("#" + enhancementId)
+    .replaceWith("STARTñôŃßĘńŠē" + $EnhancementElement.data("original-text") + "ñôŃßĘńŠēEND");
+
+    $NewSentence.find("viewenhancement").each(function() {
+      const $Element = $(this);
+      $Element.replaceWith($Element.data("original-text"));
+    });
 
     $NewSentence.find("*").each(function() {
       const $Element = $(this);
-      if($Element.attr("id") === enhancementId){
-        $Element.replaceWith($("<viewenhancement>").text($EnhancementElement.data("original-text")));
-      }
-      else if($Element.is("viewenhancement")){
-        $Element.replaceWith($Element.data("original-text"));
-      }
-      else{
-        $Element.replaceWith($Element.text());
-      }
+      $Element.replaceWith($Element.text());
     });
+
+    const newSentenceContent = $NewSentence.text()
+    .replace(/STARTñôŃßĘńŠē/g, "<viewenhancement>")
+    .replace(/ñôŃßĘńŠēEND/g, "</viewenhancement>");
+
+    $NewSentence.html(newSentenceContent);
 
     return $NewSentence.html();
   },
