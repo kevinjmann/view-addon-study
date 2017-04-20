@@ -260,7 +260,7 @@ describe("mc.js", function() {
             selectBoxOptions.push($(this).text());
           });
 
-          expect(selectBoxOptions[0]).to.equal(" ");
+          expect(selectBoxOptions[0]).to.equal("");
           expect(selectBoxOptions).to.include.members(options);
         });
 
