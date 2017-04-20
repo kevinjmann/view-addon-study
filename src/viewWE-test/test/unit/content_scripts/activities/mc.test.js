@@ -128,8 +128,8 @@ describe("mc.js", function() {
       });
 
       describe("getOptions", function() {
-        it("should call fillOptions(distractors, answer, capType)", function() {
-          const fillOptionsSpy = sandbox.spy(view.mc, "fillOptions");
+        it("should call lib.shuffleList(distractors)", function() {
+          const shuffleListSpy = sandbox.spy(view.lib, "shuffleList");
 
           const $hit = $("[data-type='hit']").first();
           const distractors = $hit.data("distractors").split(";");
@@ -137,15 +137,30 @@ describe("mc.js", function() {
 
           view.mc.getOptions($hit, answer, 2);
 
+          sinon.assert.calledTwice(shuffleListSpy);
+          expect(shuffleListSpy.firstCall.args[0]).to.have.members(distractors);
+        });
+
+        it("should call fillOptions(distractors, answer, capType)", function() {
+          const fillOptionsSpy = sandbox.spy(view.mc, "fillOptions");
+
+          // make randomness predictable
+          sinon.stub(Math, "random", function(){
+            return 0.5;
+          });
+
+          const $hit = $("[data-type='hit']").first();
+          const distractors = ["усвоению", "усвоение", "усвоения", "усвоении", "усвоением"];
+          const answer = "Усвоение";
+
+          view.mc.getOptions($hit, answer, 2);
+
           sinon.assert.calledOnce(fillOptionsSpy);
-          sinon.assert.calledWithExactly(fillOptionsSpy,
+          sinon.assert.calledWith(fillOptionsSpy,
             distractors,
             answer,
             2
           );
-
-          expect(distractors)
-          .to.eql(["усвоению","усвоения","усвоением","усвоение","усвоении"]);
 
           expect(fillOptionsSpy.firstCall.returnValue)
           .to.have.members(["Усвоение","Усвоении","Усвоению","Усвоением","Усвоения"]);

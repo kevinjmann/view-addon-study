@@ -38,12 +38,14 @@ view.mc = {
    */
   getOptions: function($hit, answer, capType) {
     const distractors = $hit.data("distractors").split(";");
+    view.lib.shuffleList(distractors);
 
     return view.mc.fillOptions(distractors, answer, capType);
   },
 
   /**
    * Add the distractor forms to the options.
+   *
    * @param {Array} distractors the distractor forms
    * @param {string} answer the correct answer
    * @param {number} capType the capitalization type of the original word
