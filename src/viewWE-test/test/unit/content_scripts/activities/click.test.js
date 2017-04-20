@@ -91,6 +91,22 @@ describe("click.js", function() {
     });
 
     describe("handler", function() {
+      it("should call view.setTimestamp(timestamp)", function() {
+        const nowSpy = sandbox.spy(Date, "now");
+        const setTimestampSpy = sandbox.spy(view, "setTimestamp");
+
+        const $EnhancementElement = $("[data-type='hit'].selected").first();
+
+        view.click.run();
+
+        $EnhancementElement.trigger("click");
+
+        sinon.assert.calledOnce(nowSpy);
+
+        sinon.assert.calledOnce(setTimestampSpy);
+        sinon.assert.calledWithExactly(setTimestampSpy, nowSpy.firstCall.returnValue);
+      });
+
       it("should add class for a correct click on an element of type 'hit'", function() {
         const $EnhancementElement = $("[data-type='hit'].selected").first();
 

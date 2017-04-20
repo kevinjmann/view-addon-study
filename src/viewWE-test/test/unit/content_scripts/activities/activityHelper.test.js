@@ -354,6 +354,24 @@ describe("activityHelper.js", function() {
     });
 
     describe("hintHandler", function() {
+      it("should call view.setTimestamp(timestamp)", function() {
+        const nowSpy = sandbox.spy(Date, "now");
+        const setTimestampSpy = sandbox.spy(view, "setTimestamp");
+
+        view.mc.run();
+
+        const $Hint = $("viewhint").first();
+
+        $Hint.trigger("click");
+
+        delete $Hint.prevObject;
+
+        sinon.assert.calledOnce(nowSpy);
+
+        sinon.assert.calledOnce(setTimestampSpy);
+        sinon.assert.calledWithExactly(setTimestampSpy, nowSpy.firstCall.returnValue);
+      });
+
       it("should call processCorrect($ElementBox, 'provided')", function() {
         const processCorrectSpy = sandbox.spy(view.activityHelper, "processCorrect");
 
@@ -428,6 +446,25 @@ describe("activityHelper.js", function() {
   });
 
   describe("inputHandler", function() {
+    it("should call view.setTimestamp(timestamp)", function() {
+      const nowSpy = sandbox.spy(Date, "now");
+      const setTimestampSpy = sandbox.spy(view, "setTimestamp");
+
+      view.mc.run();
+
+      const $ElementBox = $(".viewinput").first();
+      const answer = $ElementBox.data("view-answer");
+
+      $ElementBox.val(answer).trigger("change");
+
+      delete $ElementBox.prevObject;
+
+      sinon.assert.calledOnce(nowSpy);
+
+      sinon.assert.calledOnce(setTimestampSpy);
+      sinon.assert.calledWithExactly(setTimestampSpy, nowSpy.firstCall.returnValue);
+    });
+
     it("should call processCorrect($ElementBox, 'correct'), as the correct option was selected", function() {
       const processCorrectSpy = sandbox.spy(view.activityHelper, "processCorrect");
 
