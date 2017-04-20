@@ -775,12 +775,11 @@ describe("activityHelper.js", function() {
 
     it("should return the hit original text as 'correctform' does not exist", function() {
       fixture.load("/fixtures/en-det-mc-and-cloze.html");
-      const getCorrectAnswerSpy = sandbox.spy(view.activityHelper, "getCorrectAnswer");
-
       const $hit = $("[data-type='hit']").first();
 
-      // test if data-original-text is used as expected
-      $hit.text("");
+      view.cloze.createExercise($hit);
+
+      const getCorrectAnswerSpy = sandbox.spy(view.activityHelper, "getCorrectAnswer");
 
       view.activityHelper.getCorrectAnswer($hit, 2);
 
