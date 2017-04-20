@@ -192,7 +192,8 @@ module.exports = function(grunt) {
             "../viewWE/content_scripts/js/lib.js",
             "../viewWE/content_scripts/js/activities/tracker.js",
             "test/unit/content_scripts/activities/tracker.test.js",
-            "../viewWE/content_scripts/js/activities/activityHelper.js"
+            "../viewWE/content_scripts/js/activities/activityHelper.js",
+            "../viewWE/content_scripts/js/activities/cloze.js"
           ]
         },
         preprocessors: {

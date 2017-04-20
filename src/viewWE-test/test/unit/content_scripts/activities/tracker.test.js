@@ -12,7 +12,6 @@ describe("tracker.js", function() {
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
     fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
-    view.language = "ru";
     view.userid = "some-id";
   });
 
@@ -46,7 +45,6 @@ describe("tracker.js", function() {
       const isCorrect = false;
       const usedSolution = false;
 
-      view.activity = "mc";
       view.userid = "";
 
       view.tracker.trackData(
@@ -68,8 +66,6 @@ describe("tracker.js", function() {
       const isCorrect = false;
       const usedSolution = false;
 
-      view.activity = "mc";
-
       view.tracker.trackData(
         $EnhancementElement,
         submission,
@@ -79,23 +75,19 @@ describe("tracker.js", function() {
 
       sinon.assert.calledOnce(extractRawSentenceWithMarkedElementSpy);
       sinon.assert.calledWithExactly(extractRawSentenceWithMarkedElementSpy,
-        $EnhancementElement,
-        $EnhancementElement.attr("id")
+        $EnhancementElement
       );
     });
 
     it("should return the raw sentence with marked element", function() {
+      const $EnhancementElement = $("#VIEW-N-Msc-Anim-Pl-Ins-3");
+
+      view.cloze.createExercise($EnhancementElement);
+
       const extractRawSentenceWithMarkedElementSpy = sandbox.spy(
         view.tracker, "extractRawSentenceWithMarkedElement");
 
-      // remove the text as to test if the original-text attribute is used as expected
-      $("viewenhancement").text("");
-
-      const enhancementId = "VIEW-N-Msc-Anim-Pl-Ins-3";
-
-      const $EnhancementElement = $("#" + enhancementId);
-
-      view.tracker.extractRawSentenceWithMarkedElement($EnhancementElement, enhancementId);
+      view.tracker.extractRawSentenceWithMarkedElement($EnhancementElement);
 
       expect(extractRawSentenceWithMarkedElementSpy.firstCall.returnValue)
       .to.equal("Усвое́ние языка процесс обучения человека языку, исследуемый " +
@@ -103,14 +95,14 @@ describe("tracker.js", function() {
     });
 
     it("should call detectCapitalization(word)", function() {
-      const detectCapitalizationSpy = sandbox.spy(view.lib, "detectCapitalization");
-
       const $EnhancementElement = $("[data-type='hit']").first();
       const submission = "Усвоением";
       const isCorrect = false;
       const usedSolution = false;
 
-      view.activity = "mc";
+      view.cloze.createExercise($EnhancementElement);
+
+      const detectCapitalizationSpy = sandbox.spy(view.lib, "detectCapitalization");
 
       view.tracker.trackData(
         $EnhancementElement,
@@ -120,7 +112,7 @@ describe("tracker.js", function() {
       );
 
       sinon.assert.calledOnce(detectCapitalizationSpy);
-      sinon.assert.calledWithExactly(detectCapitalizationSpy, $EnhancementElement.text());
+      sinon.assert.calledWithExactly(detectCapitalizationSpy, $EnhancementElement.data("original-text"));
     });
 
     it("should call getCorrectAnswer($EnhancementElement, capType)", function() {
@@ -131,8 +123,6 @@ describe("tracker.js", function() {
       const isCorrect = false;
       const usedSolution = false;
       const capType = 2;
-
-      view.activity = "mc";
 
       view.tracker.trackData(
         $EnhancementElement,
@@ -176,7 +166,6 @@ describe("tracker.js", function() {
       view.token = token;
       view.taskId = taskId;
       view.timestamp = timestamp;
-      view.activity = "mc";
 
       view.tracker.trackData(
         $EnhancementElement,
@@ -219,7 +208,6 @@ describe("tracker.js", function() {
       view.token = token;
       view.taskId = taskId;
       view.timestamp = timestamp;
-      view.activity = "click";
 
       view.tracker.trackData(
         $EnhancementElement,
