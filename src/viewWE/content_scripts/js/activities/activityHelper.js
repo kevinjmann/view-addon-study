@@ -154,20 +154,22 @@ view.activityHelper = {
     const submission = $ElementBox.val();
     const usedSolution = false;
 
-    if (submission.toLowerCase() === $ElementBox.data("view-answer").toLowerCase()) {
-      isCorrect = true;
-      view.activityHelper.processCorrect($ElementBox, "correct");
-    }
-    else {
-      view.activityHelper.processIncorrect($ElementBox);
-    }
+    if(submission){
+      if (submission.toLowerCase() === $ElementBox.data("view-answer").toLowerCase()) {
+        isCorrect = true;
+        view.activityHelper.processCorrect($ElementBox, "correct");
+      }
+      else {
+        view.activityHelper.processIncorrect($ElementBox);
+      }
 
-    view.tracker.trackData(
-      $EnhancementElement,
-      submission,
-      isCorrect,
-      usedSolution
-    );
+      view.tracker.trackData(
+        $EnhancementElement,
+        submission,
+        isCorrect,
+        usedSolution
+      );
+    }
   },
 
   /**

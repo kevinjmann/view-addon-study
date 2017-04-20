@@ -528,6 +528,18 @@ describe("activityHelper.js", function() {
       );
     });
 
+    it("should not call trackData($Enhancement, submission, isCorrect, usedSolution), as the submission is empty", function() {
+      const trackDataSpy = sandbox.spy(view.tracker, "trackData");
+
+      view.mc.run();
+
+      const $ElementBox = $(".viewinput").first();
+
+      $ElementBox.val("").trigger("change");
+
+      sinon.assert.notCalled(trackDataSpy);
+    });
+
     describe("processCorrect", function() {
       it("should call colorClue(clueId, clueStyleColor)", function() {
         const colorClueSpy = sandbox.spy(view.activityHelper, "colorClue");
