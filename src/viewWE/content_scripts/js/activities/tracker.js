@@ -13,19 +13,15 @@ view.tracker = {
   trackData: function($EnhancementElement, submission, isCorrect, usedSolution) {
     if (view.userid) {
       const trackingData = {};
-      const enhancementId = $EnhancementElement.attr("id");
 
       trackingData["token"] = view.token;
       trackingData["task-id"] = view.taskId;
-      trackingData["enhancement-id"] = enhancementId;
+      trackingData["enhancement-id"] = $EnhancementElement.attr("id");
       trackingData["submission"] = submission;
-      trackingData["sentence"] = view.tracker.extractRawSentenceWithMarkedElement(
-        $EnhancementElement,
-        enhancementId
-      );
+      trackingData["sentence"] = view.tracker.extractRawSentenceWithMarkedElement($EnhancementElement);
       trackingData["is-correct"] = isCorrect;
 
-      const capType = view.lib.detectCapitalization($EnhancementElement.text());
+      const capType = view.lib.detectCapitalization($EnhancementElement.data("original-text"));
       trackingData["correct-answer"] = view.activityHelper.getCorrectAnswer($EnhancementElement, capType);
       trackingData["used-solution"] = usedSolution;
 
@@ -40,16 +36,17 @@ view.tracker = {
    * and strip all markup from the sentence.
    *
    * @param {object} $EnhancementElement the current enhancement element
-   * @param {string} enhancementId the id of the enhancement element
    *
    * @return {string} the raw sentence with the marked element
    */
-  extractRawSentenceWithMarkedElement: function($EnhancementElement, enhancementId) {
+  extractRawSentenceWithMarkedElement: function($EnhancementElement) {
+    const enhancementId = $EnhancementElement.attr("id");
+    const enhancementText = $EnhancementElement.data("original-text");
     const $OriginalSentence = $EnhancementElement.closest("sentence");
     const $NewSentence = $("<sentence>").html($OriginalSentence.html());
 
     $NewSentence.find("#" + enhancementId)
-    .replaceWith("STARTñôŃßĘńŠē" + $EnhancementElement.data("original-text") + "ñôŃßĘńŠēEND");
+    .replaceWith("STARTñôŃßĘńŠē" + enhancementText + "ñôŃßĘńŠēEND");
 
     $NewSentence.find("viewenhancement").each(function() {
       const $Element = $(this);
