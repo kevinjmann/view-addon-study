@@ -54,7 +54,7 @@ view.mc = {
 
     while (j < distractors.length && options.length < 4) {
       const distractor = distractors[j];
-      if (distractor.toLowerCase() != answer.toLowerCase()) {
+      if (distractor.toLowerCase() !== answer.toLowerCase()) {
         view.mc.addOption(options, distractor, capType);
       }
       j++;
@@ -88,7 +88,7 @@ view.mc = {
     const $SelectBox = $("<select>");
     $SelectBox.addClass("viewinput");
 
-    view.mc.addSelectOption($SelectBox, " ");
+    view.mc.addSelectOption($SelectBox, "");
 
     for (let j = 0; j < options.length; j++) {
       view.mc.addSelectOption($SelectBox, options[j]);
