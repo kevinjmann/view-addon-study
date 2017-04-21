@@ -1276,6 +1276,16 @@ describe("toolbar.js", function() {
         sinon.assert.calledWith(eventSpy, "click");
       });
 
+      it("should call requestToCallRestoreToOriginal() on click", function() {
+        const requestToCallRestoreToOriginalSpy = sandbox.spy(toolbar, "requestToCallRestoreToOriginal");
+
+        toolbar.initToggleToolbar();
+
+        $(toolbar.selectorStart + "toggle-button").trigger("click");
+
+        sinon.assert.calledOnce(requestToCallRestoreToOriginalSpy);
+      });
+
       it("should call requestToToggleToolbar() on click", function() {
         const requestToToggleToolbarSpy = sandbox.spy(toolbar, "requestToToggleToolbar");
 
