@@ -24,11 +24,35 @@ module.exports = function(grunt) {
           "../viewWE/lib/jquery-*.js",
           "node_modules/sinon/pkg/sinon.js",
           "node_modules/sinon-chrome/bundle/sinon-chrome.min.js",
+          "../viewWE/content_scripts/js/view.js",
+          "../viewWE/content_scripts/js/lib.js",
+          "../viewWE/content_scripts/js/selector.js",
+          "../viewWE/content_scripts/js/toolbar-iframe.js",
+          "../viewWE/content_scripts/js/container.js",
+          "../viewWE/content_scripts/js/enhancer.js",
+          "../viewWE/content_scripts/js/view-menu.js",
+          "../viewWE/content_scripts/js/statistics-menu.js",
+          "../viewWE/content_scripts/js/about.js",
+          "../viewWE/content_scripts/js/blur.js",
+          "../viewWE/content_scripts/js/notification.js",
+          "../viewWE/content_scripts/js/sidebar.js",
+          "../viewWE/content_scripts/js/feedbacker.js",
+          "../viewWE/content_scripts/js/activities/tracker.js",
+          "../viewWE/content_scripts/js/activities/activityHelper.js",
+          "../viewWE/content_scripts/js/activities/color.js",
+          "../viewWE/content_scripts/js/activities/click.js",
+          "../viewWE/content_scripts/js/activities/mc.js",
+          "../viewWE/content_scripts/js/activities/cloze.js",
           {pattern: "fixtures/**/*"}
         ],
         preprocessors: {
           "**/articles.json": ["json_fixtures"],
-          "**/nouns.json": ["json_fixtures"]
+          "**/nouns.json": ["json_fixtures"],
+          "**/en-det-mc-and-cloze.html": ["html2js"],
+          "**/ru-no-markup.html": ["html2js"],
+          "**/ru-nouns-click.html": ["html2js"],
+          "**/ru-nouns-color.html": ["html2js"],
+          "**/ru-nouns-mc-and-cloze.html": ["html2js"]
         },
         plugins: [
           "karma-coverage",
@@ -77,9 +101,6 @@ module.exports = function(grunt) {
       view: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/view.js",
-            "../viewWE/content_scripts/js/lib.js",
-            "../viewWE/content_scripts/js/enhancer.js",
             "test/unit/content_scripts/view.test.js"
           ]
         },
@@ -88,10 +109,6 @@ module.exports = function(grunt) {
       viewMenu: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/view.js",
-            "../viewWE/content_scripts/js/lib.js",
-            "../viewWE/content_scripts/js/about.js",
-            "../viewWE/content_scripts/js/view-menu.js",
             "test/unit/content_scripts/view-menu.test.js"
           ]
         },
@@ -103,187 +120,106 @@ module.exports = function(grunt) {
       activityColor: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/view.js",
-            "../viewWE/content_scripts/js/selector.js",
-            "../viewWE/content_scripts/js/activities/color.js",
             "test/unit/content_scripts/activities/color.test.js"
           ]
         },
         preprocessors: {
-          "../viewWE/content_scripts/js/activities/color.js": ["coverage"],
-          "**/ru-nouns-color.html": ["html2js"]
+          "../viewWE/content_scripts/js/activities/color.js": ["coverage"]
         }
       },
       activityClick: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/view.js",
-            "../viewWE/content_scripts/js/lib.js",
-            "../viewWE/content_scripts/js/selector.js",
-            "../viewWE/content_scripts/js/activities/tracker.js",
-            "../viewWE/content_scripts/js/activities/activityHelper.js",
-            "../viewWE/content_scripts/js/activities/click.js",
             "test/unit/content_scripts/activities/click.test.js"
           ]
         },
         preprocessors: {
-          "../viewWE/content_scripts/js/activities/click.js": ["coverage"],
-          "**/ru-nouns-click.html": ["html2js"]
+          "../viewWE/content_scripts/js/activities/click.js": ["coverage"]
         }
       },
       activityMc: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/view.js",
-            "../viewWE/content_scripts/js/lib.js",
-            "../viewWE/content_scripts/js/selector.js",
-            "../viewWE/content_scripts/js/activities/tracker.js",
-            "../viewWE/content_scripts/js/activities/activityHelper.js",
-            "../viewWE/content_scripts/js/activities/mc.js",
             "test/unit/content_scripts/activities/mc.test.js"
           ]
         },
         preprocessors: {
-          "../viewWE/content_scripts/js/activities/mc.js": ["coverage"],
-          "**/ru-nouns-mc-and-cloze.html": ["html2js"]
+          "../viewWE/content_scripts/js/activities/mc.js": ["coverage"]
         }
       },
       activityCloze: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/view.js",
-            "../viewWE/content_scripts/js/lib.js",
-            "../viewWE/content_scripts/js/selector.js",
-            "../viewWE/content_scripts/js/activities/tracker.js",
-            "../viewWE/content_scripts/js/activities/activityHelper.js",
-            "../viewWE/content_scripts/js/activities/cloze.js",
             "test/unit/content_scripts/activities/cloze.test.js"
           ]
         },
         preprocessors: {
-          "../viewWE/content_scripts/js/activities/cloze.js": ["coverage"],
-          "**/ru-nouns-mc-and-cloze.html": ["html2js"]
+          "../viewWE/content_scripts/js/activities/cloze.js": ["coverage"]
         }
       },
       activityHelper: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/view.js",
-            "../viewWE/content_scripts/js/lib.js",
-            "../viewWE/content_scripts/js/selector.js",
-            "../viewWE/content_scripts/js/activities/tracker.js",
-            "../viewWE/content_scripts/js/activities/activityHelper.js",
             "test/unit/content_scripts/activities/activityHelper.test.js",
-            "../viewWE/content_scripts/js/activities/click.js",
-            "../viewWE/content_scripts/js/activities/mc.js",
-            "../viewWE/content_scripts/js/activities/cloze.js"
           ]
         },
         preprocessors: {
-          "../viewWE/content_scripts/js/activities/activityHelper.js": ["coverage"],
-          "**/ru-nouns-mc-and-cloze.html": ["html2js"],
-          "**/en-det-mc-and-cloze.html": ["html2js"]
+          "../viewWE/content_scripts/js/activities/activityHelper.js": ["coverage"]
         }
       },
       tracker: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/view.js",
-            "../viewWE/content_scripts/js/lib.js",
-            "../viewWE/content_scripts/js/activities/tracker.js",
             "test/unit/content_scripts/activities/tracker.test.js",
-            "../viewWE/content_scripts/js/activities/activityHelper.js",
-            "../viewWE/content_scripts/js/activities/cloze.js"
           ]
         },
         preprocessors: {
-          "../viewWE/content_scripts/js/activities/tracker.js": ["coverage"],
-          "**/ru-nouns-mc-and-cloze.html": ["html2js"]
+          "../viewWE/content_scripts/js/activities/tracker.js": ["coverage"]
         }
       },
       selector: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/view.js",
-            "../viewWE/content_scripts/js/selector.js",
             "test/unit/content_scripts/selector.test.js"
           ]
         },
         preprocessors: {
-          "../viewWE/content_scripts/js/selector.js": ["coverage"],
-          "**/ru-nouns-mc-and-cloze.html": ["html2js"]
+          "../viewWE/content_scripts/js/selector.js": ["coverage"]
         }
       },
       toolbarIframe: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/view.js",
-            "../viewWE/content_scripts/js/lib.js",
-            "../viewWE/content_scripts/js/toolbar-iframe.js",
-            "../viewWE/content_scripts/js/enhancer.js",
-            "../viewWE/content_scripts/js/container.js",
-            "../viewWE/content_scripts/js/view-menu.js",
-            "../viewWE/content_scripts/js/statistics-menu.js",
-            "../viewWE/content_scripts/js/about.js",
             "test/unit/content_scripts/toolbar-iframe.test.js"
           ]
         },
         preprocessors: {
-          "../viewWE/content_scripts/js/toolbar-iframe.js": ["coverage"],
-          "**/ru-no-markup.html": ["html2js"]
+          "../viewWE/content_scripts/js/toolbar-iframe.js": ["coverage"]
         }
       },
       container: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/view.js",
-            "../viewWE/content_scripts/js/lib.js",
-            "../viewWE/content_scripts/js/toolbar-iframe.js",
-            "../viewWE/content_scripts/js/enhancer.js",
-            "../viewWE/content_scripts/js/container.js",
-            "../viewWE/content_scripts/js/view-menu.js",
-            "../viewWE/content_scripts/js/statistics-menu.js",
-            "../viewWE/content_scripts/js/about.js",
             "test/unit/content_scripts/container.test.js"
           ]
         },
         preprocessors: {
-          "../viewWE/content_scripts/js/container.js": ["coverage"],
-          "**/ru-no-markup.html": ["html2js"]
+          "../viewWE/content_scripts/js/container.js": ["coverage"]
         }
       },
       enhancer: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/view.js",
-            "../viewWE/content_scripts/js/lib.js",
-            "../viewWE/content_scripts/js/selector.js",
-            "../viewWE/content_scripts/js/enhancer.js",
-            "../viewWE/content_scripts/js/view-menu.js",
-            "../viewWE/content_scripts/js/about.js",
-            "../viewWE/content_scripts/js/blur.js",
-            "../viewWE/content_scripts/js/notification.js",
-            "../viewWE/content_scripts/js/activities/activityHelper.js",
-            "../viewWE/content_scripts/js/activities/color.js",
-            "../viewWE/content_scripts/js/activities/click.js",
-            "../viewWE/content_scripts/js/activities/mc.js",
-            "../viewWE/content_scripts/js/activities/cloze.js",
             "test/unit/content_scripts/enhancer.test.js"
           ]
         },
         preprocessors: {
-          "../viewWE/content_scripts/js/enhancer.js": ["coverage"],
-          "**/ru-no-markup.html": ["html2js"],
-          "**/ru-nouns-mc-and-cloze.html": ["html2js"]
+          "../viewWE/content_scripts/js/enhancer.js": ["coverage"]
         }
       },
       statisticsMenu: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/view.js",
-            "../viewWE/content_scripts/js/lib.js",
-            "../viewWE/content_scripts/js/view-menu.js",
-            "../viewWE/content_scripts/js/statistics-menu.js",
             "test/unit/content_scripts/statistics-menu.test.js"
           ]
         },
@@ -295,9 +231,6 @@ module.exports = function(grunt) {
       feedbacker: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/view.js",
-            "../viewWE/content_scripts/js/lib.js",
-            "../viewWE/content_scripts/js/feedbacker.js",
             "test/unit/content_scripts/feedbacker.test.js"
           ]
         },
@@ -308,10 +241,6 @@ module.exports = function(grunt) {
       lib: {
         files: {
           src: [
-            "../viewWE/content_scripts/js/view.js",
-            "../viewWE/content_scripts/js/lib.js",
-            "../viewWE/content_scripts/js/view-menu.js",
-            "../viewWE/content_scripts/js/statistics-menu.js",
             "test/unit/content_scripts/lib.test.js"
           ]
         },
