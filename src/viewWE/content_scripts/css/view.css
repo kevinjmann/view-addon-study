@@ -388,3 +388,16 @@
     color: green;
     font-weight: bold;
 }
+
+sentence,
+sentence a{
+    color: red;
+}
+
+sentence[data-isbasedonblock] {
+    background-color: greenyellow;
+}
+
+sentence sentence{
+    border: 1px solid black;
+}
