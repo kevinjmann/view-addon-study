@@ -51,8 +51,7 @@ describe("enhancer.js", function() {
   });
 
   describe("enhance", function() {
-    it("should call restoreToOriginal(), as there is still server markup in the page", function() {
-      fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
+    it("should call restoreToOriginal()", function() {
       const restoreToOriginalSpy = sandbox.spy(view.enhancer, "restoreToOriginal");
 
       view.enhancer.enhance();
@@ -74,7 +73,17 @@ describe("enhancer.js", function() {
         expect($ContentChildren.get(1)).to.equal(view.originalContent.get(1));
       });
 
+      it("should not call requestToToggleElement(msg, selector), as there is no markup", function() {
+        const requestToToggleElementSpy = sandbox.spy(view.enhancer, "requestToToggleElement");
+
+        view.enhancer.restoreToOriginal();
+
+        sinon.assert.notCalled(requestToToggleElementSpy);
+      });
+
       it("should call requestToToggleElement(msg, selector): hide restore button", function() {
+        fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
+
         const requestToToggleElementSpy = sandbox.spy(view.enhancer, "requestToToggleElement");
 
         view.enhancer.restoreToOriginal();
@@ -87,6 +96,8 @@ describe("enhancer.js", function() {
       });
 
       it("should call notification.remove()", function() {
+        fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
+
         const removeSpy = sandbox.spy(view.notification, "remove");
 
         view.enhancer.restoreToOriginal();
@@ -95,6 +106,8 @@ describe("enhancer.js", function() {
       });
 
       it("should call blur.remove()", function() {
+        fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
+
         const removeSpy = sandbox.spy(view.blur, "remove");
 
         view.enhancer.restoreToOriginal();
@@ -103,6 +116,8 @@ describe("enhancer.js", function() {
       });
 
       it("should remove the instruction notification", function() {
+        fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
+
         const $Notification = $("<div>");
         $Notification.attr("id", "wertiview-inst-notification");
 

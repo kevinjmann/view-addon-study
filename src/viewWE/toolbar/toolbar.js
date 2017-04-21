@@ -554,8 +554,7 @@ const toolbar = {
    * Call requestToToggleToolbar() on click.
    */
   initToggleToolbar: function() {
-    toolbar.$cache.get(toolbar.selectorStart + "toggle-button").on("click",
-      toolbar.requestToToggleToolbar);
+    toolbar.$cache.get(toolbar.selectorStart + "toggle-button").on("click", toolbar.requestToToggleToolbar);
   },
 
   /**

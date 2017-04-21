@@ -36,6 +36,7 @@ view.container = {
       $Container.addClass("down");
     }
     else {
+      view.enhancer.restoreToOriginal();
       $Container.removeClass("down");
     }
   }

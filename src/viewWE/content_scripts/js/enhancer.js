@@ -7,9 +7,7 @@ view.enhancer = {
    * on the server side.
    */
   enhance: function() {
-    if ($("viewenhancement").length > 0) {
-      view.enhancer.restoreToOriginal();
-    }
+    view.enhancer.restoreToOriginal();
 
     if ("cloze" === view.activity) {
       view.blur.add();
@@ -31,20 +29,22 @@ view.enhancer = {
 
   /**
    * Start to remove the wertiview markup and
-   * restore the original page.
+   * restore the original page if there is any markup.
    */
   restoreToOriginal: function() {
-    $("#wertiview-content").html(view.originalContent);
+    if($("viewenhancement").length){
+      $("#wertiview-content").html(view.originalContent);
 
-    view.enhancer.requestToToggleElement(
-      "hide element",
-      "#wertiview-toolbar-restore-button"
-    );
+      view.enhancer.requestToToggleElement(
+        "hide element",
+        "#wertiview-toolbar-restore-button"
+      );
 
-    view.notification.remove();
-    view.blur.remove();
+      view.notification.remove();
+      view.blur.remove();
 
-    $("#wertiview-inst-notification").remove();
+      $("#wertiview-inst-notification").remove();
+    }
   },
 
   /**

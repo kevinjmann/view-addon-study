@@ -131,6 +131,14 @@ describe("container.js", function() {
       expect($("#wertiview-container").hasClass("down")).to.be.true;
     });
 
+    it("should call restoreToOriginal()", function() {
+      const restoreToOriginalSpy = sandbox.spy(view.enhancer, "restoreToOriginal");
+
+      view.container.move();
+
+      sinon.assert.calledOnce(restoreToOriginalSpy);
+    });
+
     it("should not find the class 'down' inside the container, as the toolbar is hidden", function() {
       view.toolbarIframe.init();
 
