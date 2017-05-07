@@ -153,7 +153,8 @@ const viewOptions = {
       choiceMode: parseInt(viewOptions.$cache.get("input[name='choiceMode']:checked").val(), 10),
       firstOffset: parseInt(viewOptions.$cache.get(viewOptions.selectorStart + "first-offset-value").val(), 10),
       intervalSize: parseInt(viewOptions.$cache.get(viewOptions.selectorStart + "interval-size-value").val(), 10),
-      showInst: viewOptions.$cache.get(viewOptions.selectorStart + "show-instructions").prop("checked")
+      showInst: viewOptions.$cache.get(viewOptions.selectorStart + "show-instructions").prop("checked"),
+      debugSentenceMarkup: viewOptions.$cache.get(viewOptions.selectorStart + "debug-sentence-markup").prop("checked")
     }, viewOptions.showSavedMessage);
   },
 
@@ -177,7 +178,8 @@ const viewOptions = {
       "choiceMode",
       "firstOffset",
       "intervalSize",
-      "showInst"
+      "showInst",
+      "debugSentenceMarkup"
     ], function(res) {
 
       const fixedOrPercentageValue = res.fixedOrPercentage || 0;
@@ -187,6 +189,7 @@ const viewOptions = {
       const firstOffset = res.firstOffset || 0;
       const intervalSize = res.intervalSize || 1;
       const showInst = res.showInst || false;
+      const debugSentenceMarkup = res.debugSentenceMarkup || false;
 
       viewOptions.chooseHowManyExercises(fixedOrPercentageValue);
 
@@ -203,6 +206,7 @@ const viewOptions = {
       );
 
       viewOptions.restoreIfToShowInstructions(showInst);
+      viewOptions.restoreDeveloperOptions(debugSentenceMarkup);
     });
   },
 
@@ -272,6 +276,15 @@ const viewOptions = {
    */
   restoreIfToShowInstructions: function(showInst) {
     viewOptions.$cache.get(viewOptions.selectorStart + "show-instructions").prop("checked", showInst);
+  },
+
+  /**
+   * Restore developer options
+   *
+   * @param {boolean} debugSentenceMarkup true if the user selected to debug with sentences marked up
+   */
+  restoreDeveloperOptions: function(debugSentenceMarkup) {
+    viewOptions.$cache.get(viewOptions.selectorStart + "debug-sentence-markup").prop("checked", debugSentenceMarkup);
   }
 };
 

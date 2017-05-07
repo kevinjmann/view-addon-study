@@ -47,9 +47,12 @@ describe("options.js", function() {
 
       expect($(viewOptions.selectorStart + "show-instructions").length).to.be.above(0);
 
+      expect($(viewOptions.selectorStart + "debug-sentence-markup").length).to.be.above(0);
+
       expect($(viewOptions.selectorStart + "save-options").length).to.be.above(0);
 
       expect($(viewOptions.selectorStart + "options-saved").length).to.be.above(0);
+
     });
   });
 
@@ -279,6 +282,7 @@ describe("options.js", function() {
         const firstOffset = 5;
         const intervalSize = 1;
         const showInst = false;
+        const debugSentenceMarkup = false;
 
         chrome.storage.local.set.yields(); // make set synchronous
 
@@ -289,6 +293,7 @@ describe("options.js", function() {
         $(viewOptions.selectorStart + "first-offset-value").val(firstOffset);
         $(viewOptions.selectorStart + "interval-size-value").val(intervalSize);
         $(viewOptions.selectorStart + "show-instructions").prop("checked", showInst);
+        $(viewOptions.selectorStart + "debug-sentence-markup").prop("checked", debugSentenceMarkup);
 
         viewOptions.saveUserOptions();
 
@@ -300,7 +305,8 @@ describe("options.js", function() {
           choiceMode,
           firstOffset,
           intervalSize,
-          showInst
+          showInst,
+          debugSentenceMarkup
         });
 
         sinon.assert.calledOnce(showSavedMessageSpy);
@@ -332,6 +338,7 @@ describe("options.js", function() {
         const chooseHowToChooseExercisesSpy = sandbox.spy(viewOptions, "chooseHowToChooseExercises");
         const restoreHowToChooseExercisesSpy = sandbox.spy(viewOptions, "restoreHowToChooseExercises");
         const restoreIfToShowInstructionsSpy = sandbox.spy(viewOptions, "restoreIfToShowInstructions");
+        const restoreDeveloperOptionsSpy = sandbox.spy(viewOptions, "restoreDeveloperOptions");
 
         const fixedOrPercentage = 0;
         const fixedNumberOfExercises = 25;
@@ -340,6 +347,7 @@ describe("options.js", function() {
         const firstOffset = 0;
         const intervalSize = 1;
         const showInst = false;
+        const debugSentenceMarkup = false;
 
         chrome.storage.local.get.yields({});
 
@@ -365,6 +373,7 @@ describe("options.js", function() {
 
         sinon.assert.calledOnce(restoreIfToShowInstructionsSpy);
         sinon.assert.calledWithExactly(restoreIfToShowInstructionsSpy, showInst);
+        sinon.assert.calledWithExactly(restoreDeveloperOptionsSpy, debugSentenceMarkup);
       });
 
       it("should call all restoration functions with stored values", function() {
@@ -373,6 +382,7 @@ describe("options.js", function() {
         const chooseHowToChooseExercisesSpy = sandbox.spy(viewOptions, "chooseHowToChooseExercises");
         const restoreHowToChooseExercisesSpy = sandbox.spy(viewOptions, "restoreHowToChooseExercises");
         const restoreIfToShowInstructionsSpy = sandbox.spy(viewOptions, "restoreIfToShowInstructions");
+        const restoreDeveloperOptionsSpy = sandbox.spy(viewOptions, "restoreDeveloperOptions");
 
         const fixedOrPercentage = 1;
         const fixedNumberOfExercises = 30;
@@ -381,6 +391,7 @@ describe("options.js", function() {
         const firstOffset = 5;
         const intervalSize = 3;
         const showInst = true;
+        const debugSentenceMarkup = true;
 
         chrome.storage.local.get.yields({
           fixedOrPercentage,
@@ -389,7 +400,8 @@ describe("options.js", function() {
           choiceMode,
           firstOffset,
           intervalSize,
-          showInst
+          showInst,
+          debugSentenceMarkup
         });
 
         viewOptions.restoreUserOptions();
@@ -414,6 +426,7 @@ describe("options.js", function() {
 
         sinon.assert.calledOnce(restoreIfToShowInstructionsSpy);
         sinon.assert.calledWithExactly(restoreIfToShowInstructionsSpy, showInst);
+        sinon.assert.calledWithExactly(restoreDeveloperOptionsSpy, debugSentenceMarkup);
       });
     });
 

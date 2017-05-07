@@ -36,6 +36,7 @@ describe("view.js", function() {
     view.firstOffset = 0;
     view.intervalSize = 1;
     view.showInst = false;
+    view.debugSentenceMarkup = false;
 
     view.enabled = false; // should the page be enhanced right away?
     view.language = "unselected";
@@ -233,6 +234,7 @@ describe("view.js", function() {
         "firstOffset",
         "intervalSize",
         "showInst",
+        "debugSentenceMarkup",
         "userEmail",
         "userid",
         "user",
@@ -267,6 +269,7 @@ describe("view.js", function() {
       const firstOffset = 5;
       const intervalSize = 3;
       const showInst = false;
+      const debugSentenceMarkup = false;
 
       const storageItems = {
         fixedOrPercentage,
@@ -275,7 +278,8 @@ describe("view.js", function() {
         choiceMode,
         firstOffset,
         intervalSize,
-        showInst
+        showInst,
+        debugSentenceMarkup
       };
 
       chrome.storage.local.get.yields(storageItems);
@@ -289,6 +293,7 @@ describe("view.js", function() {
       expect(view.firstOffset).to.equal(firstOffset);
       expect(view.intervalSize).to.equal(intervalSize);
       expect(view.showInst).to.equal(showInst);
+      expect(view.debugSentenceMarkup).to.equal(debugSentenceMarkup);
     });
 
     it("should call setAuthenticationDetails(storageItems)", function() {

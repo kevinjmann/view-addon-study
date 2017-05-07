@@ -162,6 +162,16 @@ view.enhancer = {
         "show element",
         "#wertiview-toolbar-restore-button"
       );
+      view.enhancer.loadDebuggingOptions();
+    }
+  },
+
+  loadDebuggingOptions: function() {
+    if (view.debugSentenceMarkup) {
+      console.log("Debugging sentence markup.");
+      $("sentence, sentence a").css("color", "red");
+      $("sentence[data-isbasedonblock]").css("background-color", "greenyellow");
+      $("sentence sentence").css("border", "1px solid black");
     }
   },
 
