@@ -29,6 +29,7 @@ const view = {
   firstOffset: 0,
   intervalSize: 1,
   showInst: false,
+  debugSentenceMarkup: false,
 
   // enabled, language, topic and activity selections (default)
   enabled: false, // should the page be enhanced right away?
@@ -166,6 +167,7 @@ const view = {
       "firstOffset",
       "intervalSize",
       "showInst",
+      "debugSentenceMarkup",
       "userEmail",
       "userid",
       "user",
@@ -203,6 +205,7 @@ const view = {
       view.firstOffset = storageItems.firstOffset;
       view.intervalSize = storageItems.intervalSize;
       view.showInst = storageItems.showInst;
+      view.debugSentenceMarkup = storageItems.debugSentenceMarkup;
     }
   },
 
