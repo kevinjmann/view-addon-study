@@ -13,7 +13,7 @@ project used Python).
 
 # Name and version changes of the add-on
 
-For the tests to run sucessfully keep the name and version of the add-on in check:
+For the tests to run successfully keep the name and version of the add-on in check:
 
 In ../package.json update:
 
@@ -47,10 +47,6 @@ The functional tests can be run on their own by:
 ```
   $ npm run test:func
 ```
-
-## Running against different browser versions.
-
-TBD.
 
 # Useful Documents
 

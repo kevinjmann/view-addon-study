@@ -42,8 +42,24 @@ $ grunt karma:module
 ```
 
 Currently we have the modules:<br>
-background<br>
-toolbar
+- background
+- toolbar
+- viewOptions
+- view
+- viewMenu
+- activityColor
+- activityClick
+- activityMc
+- activityCloze
+- activityHelper
+- tracker
+- selector
+- toolbarIframe
+- container
+- enhancer
+- statisticsMenu
+- feedbacker
+- lib
 
 # Viewing coverage output
 

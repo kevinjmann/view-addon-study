@@ -12,7 +12,7 @@ It is recommended for any new project to have linting set up from the start.
 
 # ESLint - Javascript Linting
 
-This respository is has [ESLint](http://eslint.org) for providing javascript
+This repository has [ESLint](http://eslint.org) for providing javascript
 analysis. It is a highly flexible tool especially as it is pluggable, so more
 rules can be added easily.
 
