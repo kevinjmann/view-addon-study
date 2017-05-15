@@ -628,7 +628,17 @@ describe("enhancer.js", function() {
 
         view.enhancer.loadDebuggingOptions();
 
-        expect($("sentence, sentence a").css("color")).to.equal("rgb(255, 0, 0)");
+        expect($("sentence").css("color")).to.equal("rgb(255, 0, 0)");
+      });
+
+      it("should have sentences including anchors with red font", function() {
+        fixture.load("/fixtures/debug-sentence-markup.html");
+
+        view.debugSentenceMarkup = true;
+
+        view.enhancer.loadDebuggingOptions();
+
+        expect($("sentence a").css("color")).to.equal("rgb(255, 0, 0)");
       });
 
       it("should have inferred sentences with greenyellow background", function() {
