@@ -166,9 +166,12 @@ view.enhancer = {
     }
   },
 
+  /**
+   * Load activated debugging options:
+   * - debugSentenceMarkup
+   */
   loadDebuggingOptions: function() {
     if (view.debugSentenceMarkup) {
-      console.log("Debugging sentence markup.");
       $("sentence, sentence a").css("color", "red");
       $("sentence[data-isbasedonblock]").css("background-color", "greenyellow");
       $("sentence sentence").css("border", "1px solid black");

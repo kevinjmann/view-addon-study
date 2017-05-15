@@ -9,6 +9,10 @@
 describe("selector.js", function() {
   let sandbox;
 
+  const sentenceSelector = "sentence:not([data-isbasedonblock])";
+  const enhancementSelector = "viewenhancement";
+  const selectedClass = "selected";
+
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
     fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
@@ -28,28 +32,45 @@ describe("selector.js", function() {
       // the expectations below don't need to be tested in other tests again
       // the selectors below can be freely used in the tests without problems
 
-      expect($("viewenhancement").length).to.be.above(0);
+      expect($("sentence[data-isbasedonblock]").length).to.be.above(0);
+      expect($(enhancementSelector).length).to.be.above(0);
       expect($("[data-filters~='Pl']").length).to.be.above(0);
     });
   });
 
   describe("select", function() {
+    it("should not have class 'selected' for all enhancements in inferred sentences", function() {
+      view.selector.select("all");
+
+      $("sentence[data-isbasedonblock]").each(function() {
+        expect($(this).find(enhancementSelector).hasClass(selectedClass)).to.be.false;
+      });
+    });
+
     it("should have class 'selected' for all enhancements as the filter is 'all'", function() {
       view.selector.select("all");
 
-      expect($("viewenhancement").hasClass("selected")).to.be.true;
+      $(sentenceSelector).each(function() {
+        expect($(this).find(enhancementSelector).hasClass(selectedClass)).to.be.true;
+      });
     });
 
     it("should have class 'selected' for all enhancements as the filter is 'no-filter'", function() {
       view.selector.select("no-filter");
 
-      expect($("viewenhancement").hasClass("selected")).to.be.true;
+      $(sentenceSelector).each(function() {
+        expect($(this).find(enhancementSelector).hasClass(selectedClass)).to.be.true;
+      });
     });
 
     it("should have class 'selected' for all enhancements having the 'data-filter' attribute with the value 'Pl'", function() {
+      const filter = "Pl";
+
       view.selector.select("Pl");
 
-      expect($("[data-filters~='Pl']").hasClass("selected")).to.be.true;
+      $(sentenceSelector).each(function() {
+        expect($(this).find("[data-filters~='" + filter + "']").hasClass(selectedClass)).to.be.true;
+      });
     });
   });
 });

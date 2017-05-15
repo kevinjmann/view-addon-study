@@ -59,8 +59,10 @@ describe("container.js", function() {
 
       const $ContentChildren = $("#wertiview-content").children();
 
+      expect($ContentChildren.length).to.equal(3);
       expect($ContentChildren.get(0)).to.equal(view.originalContent.get(0));
       expect($ContentChildren.get(1)).to.equal(view.originalContent.get(1));
+      expect($ContentChildren.get(2)).to.equal(view.originalContent.get(2));
 
       $FixtureBody.remove();
     });
