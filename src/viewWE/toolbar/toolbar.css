@@ -21,8 +21,14 @@ body {
     cursor: pointer;
 }
 
-.wertiview-toolbar-btn:hover, .wertiview-toolbar-btn:focus {
+.wertiview-toolbar-btn:hover:not(:disabled),
+.wertiview-toolbar-btn:focus:not(:disabled) {
     background-color: #3e8e41;
+}
+
+#wertiview-toolbar-enhance-button:disabled {
+    opacity: 0.5;
+    cursor: initial;
 }
 
 .wertiview-toolbar-dropdown {

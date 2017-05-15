@@ -341,10 +341,10 @@ const toolbar = {
 
     if(toolbar.$cache.get(toolbar.selectorStart + "filter-menu").val() === "unselected" ||
       toolbar.$cache.get(toolbar.selectorStart + "activity-menu").val() === "unselected"){
-      $EnhanceButton.hide();
+      $EnhanceButton.prop("disabled", true);
     }
     else{
-      $EnhanceButton.show();
+      $EnhanceButton.prop("disabled", false);
     }
   },
 
