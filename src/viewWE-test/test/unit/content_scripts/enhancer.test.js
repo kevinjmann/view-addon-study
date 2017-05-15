@@ -35,6 +35,7 @@ describe("enhancer.js", function() {
     view.url = "";
     view.filter = "";
     view.enhancer.isAborted = false;
+    view.debugSentenceMarkup = false;
   });
 
   describe("jquery selectors", function() {
@@ -608,6 +609,51 @@ describe("enhancer.js", function() {
       view.enhancer.addEnhancementMarkup($("p").html());
 
       expect(view.enhancer.isAborted).to.be.false;
+    });
+
+    it("should call loadDebuggingOptions()", function() {
+      fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
+      const loadDebuggingOptionsSpy = sandbox.spy(view.enhancer, "loadDebuggingOptions");
+
+      view.enhancer.addEnhancementMarkup($("p").html());
+
+      sinon.assert.calledOnce(loadDebuggingOptionsSpy);
+    });
+
+    describe("loadDebuggingOptions", function() {
+      it("should have sentences with red font", function() {
+        fixture.load("/fixtures/debug-sentence-markup.html");
+
+        view.debugSentenceMarkup = true;
+
+        view.enhancer.loadDebuggingOptions();
+
+        expect($("sentence, sentence a").css("color")).to.equal("rgb(255, 0, 0)");
+      });
+
+      it("should have inferred sentences with greenyellow background", function() {
+        fixture.load("/fixtures/debug-sentence-markup.html");
+
+        view.debugSentenceMarkup = true;
+
+        view.enhancer.loadDebuggingOptions();
+
+        expect($("sentence[data-isbasedonblock]").css("background-color")).to.equal("rgb(173, 255, 47)");
+      });
+
+      it("should have nested sentences with a 1px thick solid black border", function() {
+        fixture.load("/fixtures/debug-sentence-markup.html");
+
+        view.debugSentenceMarkup = true;
+
+        view.enhancer.loadDebuggingOptions();
+
+        const $NestedSentence = $("sentence sentence");
+
+        expect($NestedSentence.css("border-top-width")).to.equal("1px");
+        expect($NestedSentence.css("border-top-style")).to.equal("solid");
+        expect($NestedSentence.css("border-top-color")).to.equal("rgb(0, 0, 0)");
+      });
     });
   });
 
