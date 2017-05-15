@@ -1,11 +1,15 @@
 view.selector = {
   select: function(filter) {
-    if("all" === filter ||
-        "no-filter" === filter){
-      $("viewenhancement").addClass("selected");
-    }
-    else{
-      $("[data-filters~='" + filter + "']").addClass("selected");
-    }
+    $("sentence:not([data-isbasedonblock])").each(function() {
+      const $Sentence = $(this);
+
+        if("all" === filter ||
+          "no-filter" === filter){
+          $Sentence.find("viewenhancement").addClass("selected");
+        }
+        else{
+          $Sentence.find("[data-filters~='" + filter + "']").addClass("selected");
+        }
+    });
   }
 };
