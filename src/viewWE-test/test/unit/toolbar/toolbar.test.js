@@ -844,32 +844,32 @@ describe("toolbar.js", function() {
         });
 
         describe("toggleEnhanceButton", function() {
-          it("should hide the enhance button, as the filter option was 'unselected'", function() {
+          it("should disable the enhance button, as the filter option was 'unselected'", function() {
             $(toolbar.selectorStart + "filter-menu").val("unselected");
 
             toolbar.toggleEnhanceButton();
 
-            expect($(toolbar.selectorStart + "enhance-button").is(":hidden")).to.be.true;
+            expect($(toolbar.selectorStart + "enhance-button").is(":disabled")).to.be.true;
           });
 
-          it("should hide the enhance button, as the activity option was 'unselected'", function() {
+          it("should disable the enhance button, as the activity option was 'unselected'", function() {
             $(toolbar.selectorStart + "activity-menu").val("unselected");
 
             $(toolbar.selectorStart + "enhance-button").show();
 
             toolbar.toggleEnhanceButton();
 
-            expect($(toolbar.selectorStart + "enhance-button").is(":hidden")).to.be.true;
+            expect($(toolbar.selectorStart + "enhance-button").is(":disabled")).to.be.true;
           });
 
-          it("should show the enhance button, as the filter and activity option are not 'unselected'", function() {
+          it("should enable the enhance button, as the filter and activity option are not 'unselected'", function() {
             $(toolbar.selectorStart + "filter-menu").val("Pl");
             $(toolbar.selectorStart + "activity-menu").val("color");
             $(toolbar.selectorStart + "enhance-button").hide();
 
             toolbar.toggleEnhanceButton();
 
-            expect($(toolbar.selectorStart + "enhance-button").is(":visible")).to.be.true;
+            expect($(toolbar.selectorStart + "enhance-button").is(":disabled")).to.be.false;
           });
         });
       });
