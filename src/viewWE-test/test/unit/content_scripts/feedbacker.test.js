@@ -18,6 +18,16 @@ describe("feedbacker.js", function() {
     "assessment": "CORRECT"
   };
 
+  const feedbackData = {
+    "assessment": "EXACT_MATCH",
+    "message": "Good job!"
+  };
+
+  const submissionResponseData = {
+    performance: performanceData,
+    feedback: feedbackData
+  };
+
   before(function() {
     $("body").append("<div id='" + performanceData["enhancement-id"] + "'>");
   });
@@ -28,31 +38,32 @@ describe("feedbacker.js", function() {
 
   afterEach(function() {
     sandbox.restore();
-    $("#view-performance-dialog").remove();
+    $("#view-feedback-dialog").remove();
   });
 
-  describe("showPerformance", function() {
-    it("should call addPerformanceData($Dialog, performanceData)", function() {
-      const addPerformanceDataSpy = sandbox.spy(view.feedbacker, "addPerformanceData");
+  describe("showFeedback", function() {
+    it("should call addSubmissionResponseData($Dialog, performanceData, feedbackData)", function() {
+      const addSubmissionResponseDataSpy = sandbox.spy(view.feedbacker, "addSubmissionResponseData");
 
-      view.feedbacker.showPerformance(performanceData);
+      view.feedbacker.showFeedback(submissionResponseData);
 
-      sinon.assert.calledOnce(addPerformanceDataSpy);
+      sinon.assert.calledOnce(addSubmissionResponseDataSpy);
 
-      sinon.assert.calledWithExactly(addPerformanceDataSpy,
-        $("#view-performance-dialog"),
-        performanceData
+      sinon.assert.calledWithExactly(addSubmissionResponseDataSpy,
+        $("#view-feedback-dialog"),
+        performanceData,
+        feedbackData
       );
     });
 
-    describe("addPerformanceData", function() {
-      it("should call lib.createList(id, items) to create the info list", function() {
+    describe("addSubmissionResponseData", function() {
+      it("should call lib.createList(id, items) to create the info list without feedback data", function() {
         const createListSpy = sandbox.spy(view.lib, "createList");
 
         const $Dialog = $("<div>");
-        $Dialog.attr("id", "view-performance-dialog");
+        $Dialog.attr("id", "view-feedback-dialog");
 
-        view.feedbacker.addPerformanceData($Dialog, performanceData);
+        view.feedbacker.addSubmissionResponseData($Dialog, performanceData, undefined);
 
         sinon.assert.calledOnce(createListSpy);
         sinon.assert.calledWithExactly(createListSpy,
@@ -64,15 +75,34 @@ describe("feedbacker.js", function() {
         );
       });
 
-      it("should find the info list inside the performance dialog", function() {
-        const $Dialog = $("<div>");
-        $Dialog.attr("id", "view-performance-dialog");
+      it("should call lib.createList(id, items) to create the info list with feedback data", function() {
+        const createListSpy = sandbox.spy(view.lib, "createList");
 
-        view.feedbacker.addPerformanceData($Dialog, performanceData);
+        const $Dialog = $("<div>");
+        $Dialog.attr("id", "view-feedback-dialog");
+
+        view.feedbacker.addSubmissionResponseData($Dialog, performanceData, feedbackData);
+
+        sinon.assert.calledOnce(createListSpy);
+        sinon.assert.calledWithExactly(createListSpy,
+          "bar-info",
+          [
+            "Number of tries: " + performanceData["number-of-tries"],
+            "Assessment: " + feedbackData["assessment"],
+            "Message: " + feedbackData["message"]
+          ]
+        );
+      });
+
+      it("should find the info list inside the feedback dialog", function() {
+        const $Dialog = $("<div>");
+        $Dialog.attr("id", "view-feedback-dialog");
+
+        view.feedbacker.addSubmissionResponseData($Dialog, performanceData, feedbackData);
 
         $("body").append($Dialog);
 
-        expect($("#view-performance-dialog").find("#bar-info").length).to.be.above(0);
+        expect($("#view-feedback-dialog").find("#bar-info").length).to.be.above(0);
       });
     });
 
@@ -80,7 +110,7 @@ describe("feedbacker.js", function() {
       const dialogSetupSpy = sandbox.spy(view.lib, "dialogSetup");
 
       const isModal = false;
-      const title = "Performance";
+      const title = "Feedback";
       const height = "auto";
       const position = {
         my: "left top",
@@ -89,12 +119,12 @@ describe("feedbacker.js", function() {
       };
       const buttons = {};
 
-      view.feedbacker.showPerformance(performanceData);
+      view.feedbacker.showFeedback(submissionResponseData);
 
       sinon.assert.calledOnce(dialogSetupSpy);
       sinon.assert.calledWithExactly(dialogSetupSpy,
         isModal,
-        $("#view-performance-dialog"),
+        $("#view-feedback-dialog"),
         title,
         height,
         position,
@@ -105,18 +135,18 @@ describe("feedbacker.js", function() {
     it("should call lib.initDialogClose($Dialog)", function() {
       const initDialogCloseSpy = sandbox.spy(view.lib, "initDialogClose");
 
-      view.feedbacker.showPerformance(performanceData);
+      view.feedbacker.showFeedback(submissionResponseData);
 
       sinon.assert.calledOnce(initDialogCloseSpy);
       sinon.assert.calledWithExactly(initDialogCloseSpy,
-        $("#view-performance-dialog")
+        $("#view-feedback-dialog")
       );
     });
 
-    it("should find the performance dialog", function() {
-      view.feedbacker.showPerformance(performanceData);
+    it("should find the feedback dialog", function() {
+      view.feedbacker.showFeedback(submissionResponseData);
 
-      expect($("#view-performance-dialog").length).to.be.above(0);
+      expect($("#view-feedback-dialog").length).to.be.above(0);
     });
   });
 });
