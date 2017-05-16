@@ -16,7 +16,7 @@ describe("lib.js", function() {
   afterEach(function() {
     sandbox.restore();
     $("#view-dialog").remove();
-    $("#view-performance-dialog").remove();
+    $("#view-feedback-dialog").remove();
     $(window).off("click");
     $("a").remove();
   });
@@ -70,7 +70,7 @@ describe("lib.js", function() {
 
       view.lib.initOnWindowClick();
 
-      const $Dialog = $("<div id='view-performance-dialog'>");
+      const $Dialog = $("<div id='view-feedback-dialog'>");
       const $Body = $("body");
 
       $Dialog.wrap($("<div>"));
@@ -87,7 +87,7 @@ describe("lib.js", function() {
 
       view.lib.initOnWindowClick();
 
-      const $Dialog = $("<div id='view-performance-dialog'>");
+      const $Dialog = $("<div id='view-feedback-dialog'>");
 
       $("body").append($Dialog);
 
