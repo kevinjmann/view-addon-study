@@ -15,7 +15,7 @@ view.lib = {
         view.VIEWmenu.hide();
         view.statisticsMenu.hide();
 
-        const $Dialog = $("#view-performance-dialog").parent();
+        const $Dialog = $("#view-feedback-dialog").parent();
         if(!$(event.target).closest($Dialog).length){
           view.lib.removeDialog($Dialog);
         }

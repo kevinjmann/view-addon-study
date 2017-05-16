@@ -255,15 +255,15 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message 'remove performance dialog'", function() {
-      const removePerformanceDialogSpy = sandbox.spy(background, "removePerformanceDialog");
+    it("should process the message 'remove feedback dialog'", function() {
+      const removeFeedbackDialogSpy = sandbox.spy(background, "removeFeedbackDialog");
 
-      const request = {msg: "remove performance dialog"};
+      const request = {msg: "remove feedback dialog"};
       const sender = {tab: {id: 5}};
 
       chrome.runtime.onMessage.trigger(request, sender);
 
-      sinon.assert.calledOnce(removePerformanceDialogSpy);
+      sinon.assert.calledOnce(removeFeedbackDialogSpy);
 
       sinon.assert.calledOnce(chrome.tabs.sendMessage);
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
@@ -757,8 +757,8 @@ describe("background.js", function() {
             );
           });
 
-          it("should succeed to send tracking data, get the performance data and call callShowPerformance(data)", function() {
-            const callShowPerformanceSpy = sandbox.spy(background, "callShowPerformance");
+          it("should succeed to send tracking data, get the submission response data and call callShowFeedback(data)", function() {
+            const callShowFeedbackSpy = sandbox.spy(background, "callShowFeedback");
 
             const serverTrackingURL = "https://view.aleks.bg/act/tracking";
             const trackingData = "some tracking data";
@@ -771,30 +771,30 @@ describe("background.js", function() {
 
             sandbox.useFakeServer();
 
-            const performanceData = "some performance data";
+            const submissionResponseData = "some submission response data";
 
             sandbox.server.respondWith("POST", serverTrackingURL,
-              [200, {"Content-Type": "application/json"}, JSON.stringify(performanceData)]);
+              [200, {"Content-Type": "application/json"}, JSON.stringify(submissionResponseData)]);
 
             background.sendTrackingData(request);
 
             sandbox.server.respond();
 
-            sinon.assert.calledOnce(callShowPerformanceSpy);
-            sinon.assert.calledWithExactly(callShowPerformanceSpy, performanceData);
+            sinon.assert.calledOnce(callShowFeedbackSpy);
+            sinon.assert.calledWithExactly(callShowFeedbackSpy, submissionResponseData);
           });
 
-          it("should send a request to call showPerformance(data)", function() {
-            const performanceData = "some performance data";
+          it("should send a request to call showFeedback(data)", function() {
+            const submissionResponseData = "some submission response data";
 
             background.currentTabId = 5;
 
-            background.callShowPerformance(performanceData);
+            background.callShowFeedback(submissionResponseData);
 
             sinon.assert.calledOnce(chrome.tabs.sendMessage);
             sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
-              msg: "call showPerformance",
-              performanceData: performanceData
+              msg: "call showFeedback",
+              submissionResponseData: submissionResponseData
             });
           });
 

@@ -1,16 +1,22 @@
 view.feedbacker = {
   /**
    * The extension send the request to show the
-   * current performance to the user.
+   * feedback for the submission.
+   *
+   * @param {Object} submissionResponseData the response from the
+   * server after tracking data was processed
    */
-  showPerformance: function(performanceData) {
+  showFeedback: function(submissionResponseData) {
     const $Dialog = $("<div>");
-    $Dialog.attr("id", "view-performance-dialog");
+    $Dialog.attr("id", "view-feedback-dialog");
 
-    view.feedbacker.addPerformanceData($Dialog, performanceData);
+    const performanceData = submissionResponseData.performance;
+    const feedbackData = submissionResponseData.feedback;
+
+    view.feedbacker.addSubmissionResponseData($Dialog, performanceData, feedbackData);
 
     const isModal = false;
-    const title = "Performance";
+    const title = "Feedback";
     const height = "auto";
     const position = {
       my: "left top",
@@ -25,20 +31,24 @@ view.feedbacker = {
   },
 
   /**
-   * Add performance data to the given dialog using the performance
-   * data.
+   * Add performance and feedback data to the given dialog.
    *
    * @param {Object} $Dialog the dialog the task data is added to
    * @param {Object} performanceData the performance data to add
+   * @param {Object} feedbackData the feedback data to add
    */
-  addPerformanceData: function($Dialog, performanceData) {
+  addSubmissionResponseData: function($Dialog, performanceData, feedbackData) {
     const enhancementId = performanceData["enhancement-id"];
+    const infoArray = ["Number of tries: " + performanceData["number-of-tries"]];
 
-    const $InfoList = view.lib.createList(enhancementId + "-info", [
-      "Number of tries: " + performanceData["number-of-tries"],
-      "Assessment: " + performanceData["assessment"]
-    ]);
+    if(feedbackData){
+      infoArray.push("Assessment: " + feedbackData["assessment"]);
+      infoArray.push("Message: " + feedbackData["message"]);
+    }
+    else{
+      infoArray.push("Assessment: " + performanceData["assessment"]);
+    }
 
-    $Dialog.append($InfoList);
+    $Dialog.append(view.lib.createList(enhancementId + "-info", infoArray));
   }
 };
