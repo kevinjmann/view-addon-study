@@ -124,11 +124,11 @@ const background = {
   },
 
   /**
-   * The toolbar ui send the message to remove the performance dialog.
-   * Pass it on to statistics-menu.js.
+   * The toolbar ui send the message to remove the feedback dialog.
+   * Pass it on to lib.js.
    */
-  removePerformanceDialog: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {msg: "remove performance dialog"});
+  removeFeedbackDialog: function() {
+    chrome.tabs.sendMessage(background.currentTabId, {msg: "remove feedback dialog"});
   },
 
   /**
@@ -304,8 +304,8 @@ const background = {
 
   /**
    * Send the tracking data to the server for processing.
-   * If successful, request to call showPerformance(performanceData)
-   * in feedbacker.js.
+   * If successful, request to call
+   * showFeedback(submissionResponseData) in feedbacker.js.
    *
    * @param {*} request the message sent by the calling script
    */
@@ -315,8 +315,8 @@ const background = {
       10000)
     .done(function(data, textStatus, xhr) {
       if (data) {
-        const performanceData = JSON.parse(data);
-        background.callShowPerformance(performanceData);
+        const submissionResponseData = JSON.parse(data);
+        background.callShowFeedback(submissionResponseData);
       } else {
         background.ajaxError(xhr, "no-performance-data");
       }
@@ -324,14 +324,16 @@ const background = {
   },
 
   /**
-   * Request to call showPerformance(performanceData) in feedbacker.js.
+   * Request to call showFeedback(submissionResponseData)
+   * in feedbacker.js.
    *
-   * @param {Object} performanceData the task id from the server
+   * @param {Object} submissionResponseData the response from the
+   * server after tracking data was processed
    */
-  callShowPerformance: function(performanceData) {
+  callShowFeedback: function(submissionResponseData) {
     chrome.tabs.sendMessage(background.currentTabId, {
-      msg: "call showPerformance",
-      performanceData: performanceData
+      msg: "call showFeedback",
+      submissionResponseData: submissionResponseData
     });
   },
 
@@ -665,8 +667,8 @@ function processMessage(request, sender, sendResponse) {
     case "hide statistics menu":
       background.hideStatisticsMenu();
       break;
-    case "remove performance dialog":
-      background.removePerformanceDialog();
+    case "remove feedback dialog":
+      background.removeFeedbackDialog();
       break;
     case "call startToEnhance":
       background.callStartToEnhance();
