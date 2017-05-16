@@ -19,8 +19,8 @@ function processMessage(request) {
     case "hide statistics menu":
       view.statisticsMenu.hide();
       break;
-    case "remove performance dialog":
-      view.lib.removeDialog($("#view-performance-dialog"));
+    case "remove feedback dialog":
+      view.lib.removeDialog($("#view-feedback-dialog"));
       break;
     case "call startToEnhance":
       view.startToEnhance();
@@ -34,8 +34,8 @@ function processMessage(request) {
     case "call setTaskId":
       view.setTaskId(request.taskId);
       break;
-    case "call showPerformance":
-      view.feedbacker.showPerformance(request.performanceData);
+    case "call showFeedback":
+      view.feedbacker.showFeedback(request.submissionResponseData);
       break;
     case "call showAllTasks":
       view.statisticsMenu.showAllTasks(request.tasksData);
