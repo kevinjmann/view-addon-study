@@ -143,7 +143,7 @@ const toolbar = {
         toolbar.requestToHideStatisticsMenu();
       }
 
-      toolbar.requestToRemovePerformanceDialog();
+      toolbar.requestToRemoveFeedbackDialog();
     });
   },
 
@@ -165,10 +165,10 @@ const toolbar = {
 
   /**
    * Send a request to the background script to pass on the message to
-   * remove the performance dialog.
+   * remove the feedback dialog.
    */
-  requestToRemovePerformanceDialog: function() {
-    chrome.runtime.sendMessage({msg: "remove performance dialog"}, toolbar.noResponse);
+  requestToRemoveFeedbackDialog: function() {
+    chrome.runtime.sendMessage({msg: "remove feedback dialog"}, toolbar.noResponse);
   },
 
   /**
