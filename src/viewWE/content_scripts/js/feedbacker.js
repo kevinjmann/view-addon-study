@@ -28,6 +28,8 @@ view.feedbacker = {
     view.lib.dialogSetup(isModal, $Dialog, title, height, position, buttons);
 
     view.lib.initDialogClose($Dialog);
+
+    $("#feedback-rule-btn").on("click", view.feedbacker.initFeedbackRuleBtn);
   },
 
   /**
@@ -50,5 +52,12 @@ view.feedbacker = {
     }
 
     $Dialog.append(view.lib.createList(enhancementId + "-info", infoArray));
+  },
+
+  /**
+   * Initialize the click handler for the feedback rule button.
+   */
+  initFeedbackRuleBtn: function() {
+    $("#feedback-rule").toggle();
   }
 };
