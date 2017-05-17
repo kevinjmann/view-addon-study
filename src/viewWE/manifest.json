@@ -48,7 +48,8 @@
         "content_scripts/css/about.css",
         "content_scripts/css/notification.css",
         "content_scripts/css/sidebar.css",
-        "content_scripts/css/tooltip.css"
+        "content_scripts/css/tooltip.css",
+        "content_scripts/css/feedbacker.css"
       ],
       "js": [
         "lib/jquery-3.1.1.min.js",
