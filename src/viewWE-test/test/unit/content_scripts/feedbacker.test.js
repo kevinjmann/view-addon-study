@@ -8,6 +8,10 @@
 
 describe("feedbacker.js", function() {
   let sandbox;
+
+  const rule =
+    "<button type='button' id='feedback-rule-btn'>Rule</button><br>" +
+    "<div id='feedback-rule'>An example rule</div>";
   
   const performanceData = {
     "enhancement-id": "bar",
@@ -20,7 +24,7 @@ describe("feedbacker.js", function() {
 
   const feedbackData = {
     "assessment": "EXACT_MATCH",
-    "message": "Good job!"
+    "message": "Good job!" + rule
   };
 
   const submissionResponseData = {
@@ -147,6 +151,27 @@ describe("feedbacker.js", function() {
       view.feedbacker.showFeedback(submissionResponseData);
 
       expect($("#view-feedback-dialog").length).to.be.above(0);
+    });
+
+    it("should initialize the feedback rule button handler", function() {
+      const selectorSpy = sandbox.spy(document, "getElementById");
+      const eventSpy = sandbox.spy($.fn, "on");
+
+      view.feedbacker.showFeedback(submissionResponseData);
+
+      sinon.assert.calledOnce(selectorSpy.withArgs("feedback-rule-btn"));
+
+      sinon.assert.calledOnce(eventSpy.withArgs("click"));
+    });
+
+    it("should toggle the feedback rule", function() {
+      view.feedbacker.showFeedback(submissionResponseData);
+
+      expect($("#feedback-rule").is(":hidden")).to.be.true;
+
+      $("#feedback-rule-btn").trigger("click");
+
+      expect($("#feedback-rule").is(":visible")).to.be.true;
     });
   });
 });
