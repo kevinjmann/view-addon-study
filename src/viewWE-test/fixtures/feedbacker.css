@@ -1,0 +1,11 @@
+.feedback-style-green {
+    color: green;
+}
+
+.feedback-style-red {
+    color: red;
+}
+
+#feedback-rule {
+    display: none;
+}
