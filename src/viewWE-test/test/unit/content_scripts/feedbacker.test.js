@@ -23,7 +23,7 @@ describe("feedbacker.js", function() {
   };
 
   const feedbackData = {
-    "assessment": "EXACT_MATCH",
+    "assessment": "Perfect solution",
     "message": "Good job!" + rule
   };
 
