@@ -104,7 +104,7 @@ describe("container.js", function() {
       $FixtureBody.remove();
     });
 
-    it("should have the class 'down' in the container", function() {
+    it("should have the class 'margin-at-bottom' in the container", function() {
       fixture.load("/fixtures/ru-no-markup.html");
 
       const fixtureInnerHTML = $("#ru-no-markup-body").html();
@@ -116,41 +116,41 @@ describe("container.js", function() {
 
       view.container.add($FixtureBody);
 
-      expect($("#wertiview-container").hasClass("down")).to.be.true;
+      expect($("#wertiview-container").hasClass("margin-at-bottom")).to.be.true;
 
       $FixtureBody.remove();
     });
   });
 
-  describe("move", function() {
-    it("should find the class 'down' inside the container, as the toolbar is visible", function() {
+  describe("adjustMargin", function() {
+    it("should find the class 'margin-at-bottom' inside the container, as the toolbar is visible", function() {
       view.toolbarIframe.init();
 
-      $("#wertiview-container").removeClass("down");
+      $("#wertiview-container").removeClass("margin-at-bottom");
 
-      view.container.move();
+      view.container.adjustMargin();
 
-      expect($("#wertiview-container").hasClass("down")).to.be.true;
+      expect($("#wertiview-container").hasClass("margin-at-bottom")).to.be.true;
     });
 
     it("should call restoreToOriginal()", function() {
       const restoreToOriginalSpy = sandbox.spy(view.enhancer, "restoreToOriginal");
 
-      view.container.move();
+      view.container.adjustMargin();
 
       sinon.assert.calledOnce(restoreToOriginalSpy);
     });
 
-    it("should not find the class 'down' inside the container, as the toolbar is hidden", function() {
+    it("should not find the class 'margin-at-bottom' inside the container, as the toolbar is hidden", function() {
       view.toolbarIframe.init();
 
       $("#view-toolbar-iframe").hide();
 
-      expect($("#wertiview-container").hasClass("down")).to.be.true;
+      expect($("#wertiview-container").hasClass("margin-at-bottom")).to.be.true;
 
-      view.container.move();
+      view.container.adjustMargin();
 
-      expect($("#wertiview-container").hasClass("down")).to.be.false;
+      expect($("#wertiview-container").hasClass("margin-at-bottom")).to.be.false;
     });
   });
 });

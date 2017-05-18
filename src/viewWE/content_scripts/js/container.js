@@ -20,24 +20,25 @@ view.container = {
 
     $Container.append($Content);
 
-    $Container.addClass("down");
+    $Container.addClass("margin-at-bottom");
 
     $Element.append($Container);
   },
 
   /**
-   * Move the container down when the toolbar is visible,
-   * but move it back otherwise.
+   * Make some margin at the bottom so that there is place
+   * for the toolbar and the page content can be fully seen.
+   * Remove the margin at the bottom when the toolbar is closed.
    */
-  move: function() {
+  adjustMargin: function() {
     const $Container = $("#wertiview-container");
 
     if ($("#view-toolbar-iframe").is(":visible")) {
-      $Container.addClass("down");
+      $Container.addClass("margin-at-bottom");
     }
     else {
       view.enhancer.restoreToOriginal();
-      $Container.removeClass("down");
+      $Container.removeClass("margin-at-bottom");
     }
   }
 };

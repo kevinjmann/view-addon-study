@@ -117,14 +117,14 @@ describe("toolbar-iframe.js", function() {
       sinon.assert.called(toggleSpy);
     });
 
-    it("should call move(), as the toolbar exists", function() {
-      const moveSpy = sandbox.spy(view.container, "move");
+    it("should call adjustMargin(), as the toolbar exists", function() {
+      const adjustMarginSpy = sandbox.spy(view.container, "adjustMargin");
 
       view.toolbarIframe.init();
 
       view.toolbarIframe.toggle();
 
-      sinon.assert.called(moveSpy);
+      sinon.assert.called(adjustMarginSpy);
     });
 
     it("should call setGeneralOptions(), as the toolbar doesn't exists yet", function() {

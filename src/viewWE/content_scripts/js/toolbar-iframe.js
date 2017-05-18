@@ -33,7 +33,7 @@ view.toolbarIframe = {
     const toolbar = $("#view-toolbar-iframe");
     if (toolbar.length) {
       toolbar.toggle();
-      view.container.move();
+      view.container.adjustMargin();
     } else {
       view.setGeneralOptions();
       view.toolbarIframe.init();
