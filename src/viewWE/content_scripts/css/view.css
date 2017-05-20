@@ -9,6 +9,7 @@
     border-bottom: none;
     border-left: none;
     border-right: none;
+    display:none;
 }
 
 #wertiview-container.margin-at-bottom {

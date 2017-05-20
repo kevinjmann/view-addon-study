@@ -86,6 +86,8 @@ const toolbar = {
     toolbar.initToggleToolbar();
 
     toolbar.restoreSelections();
+
+    toolbar.requestToToggleToolbar();
   },
 
   /**
