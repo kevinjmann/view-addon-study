@@ -168,8 +168,8 @@ describe("toolbar.js", function() {
 
       toolbar.requestTopicsAndInit();
 
-      sinon.assert.calledOnce(chrome.runtime.sendMessage);
-      sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "call sendTopics"});
+      sinon.assert.calledTwice(chrome.runtime.sendMessage);
+      sinon.assert.calledWith(chrome.runtime.sendMessage.getCall(0), {msg: "call sendTopics"});
 
       sinon.assert.calledOnce(initSpy);
       sinon.assert.calledWithExactly(initSpy, responseData.topics);
