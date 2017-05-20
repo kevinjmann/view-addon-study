@@ -231,19 +231,6 @@ describe("enhancer.js", function() {
       );
     });
 
-    it("should find a script tag in the content area with the expected type", function() {
-      const $ScriptTag = $("<script>");
-      const $Content = $("#wertiview-content");
-
-      $Content.append($ScriptTag);
-
-      view.enhancer.enhance();
-
-      expect($Content.find("script").attr("type")).to.equal("application/json");
-
-      $ScriptTag.remove();
-    });
-
     it("should call createActivityData()", function() {
       const createActivityDataSpy = sandbox.spy(view.enhancer, "createActivityData");
 
