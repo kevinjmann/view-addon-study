@@ -12,7 +12,7 @@ view.container = {
 
     const $OriginalContent = $Element.children();
 
-    view.originalContent = $OriginalContent;
+    view.originalContent = $OriginalContent.clone(true);
 
     $OriginalContent.wrapAll($Content);
 
