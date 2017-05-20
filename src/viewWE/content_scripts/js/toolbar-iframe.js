@@ -13,6 +13,8 @@ view.toolbarIframe = {
 
     const $Body = $("body");
 
+    $("head").append($Body.find("script"));
+
     view.container.add($Body);
 
     view.VIEWmenu.add();
