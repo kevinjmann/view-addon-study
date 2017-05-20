@@ -15,7 +15,8 @@ describe("enhancer.js", function() {
     fixture.load("/fixtures/ru-no-markup.html");
     $NoMarkup.html($("#ru-no-markup-body").html());
     $("body").append($("<div id='wertiview-content'>"));
-    view.originalContent = $NoMarkup.children();
+    const $OriginalContent = $NoMarkup.children();
+    view.originalContent = $OriginalContent.clone(true);
   });
 
   beforeEach(function() {
@@ -228,6 +229,19 @@ describe("enhancer.js", function() {
         "show element",
         "#wertiview-toolbar-abort-button"
       );
+    });
+
+    it("should find a script tag in the content area with the expected type", function() {
+      const $ScriptTag = $("<script>");
+      const $Content = $("#wertiview-content");
+
+      $Content.append($ScriptTag);
+
+      view.enhancer.enhance();
+
+      expect($Content.find("script").attr("type")).to.equal("application/json");
+
+      $ScriptTag.remove();
     });
 
     it("should call createActivityData()", function() {

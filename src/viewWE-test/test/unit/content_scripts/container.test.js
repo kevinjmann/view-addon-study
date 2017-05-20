@@ -45,6 +45,23 @@ describe("container.js", function() {
   });
 
   describe("add", function() {
+    it("should call clone(true)", function() {
+      fixture.load("/fixtures/ru-no-markup.html");
+
+      const cloneSpy = sandbox.spy($.fn, "clone");
+      const fixtureInnerHTML = $("#ru-no-markup-body").html();
+      const $FixtureBody = $("<div>");
+
+      $FixtureBody.html(fixtureInnerHTML);
+
+      $("body").append($FixtureBody);
+
+      view.container.add($FixtureBody);
+
+      sinon.assert.calledTwice(cloneSpy);
+      sinon.assert.calledWithExactly(cloneSpy, true);
+    });
+
     it("should store the body content into view.originalContent", function() {
       fixture.load("/fixtures/ru-no-markup.html");
 
@@ -60,9 +77,12 @@ describe("container.js", function() {
       const $ContentChildren = $("#wertiview-content").children();
 
       expect($ContentChildren.length).to.equal(3);
-      expect($ContentChildren.get(0)).to.equal(view.originalContent.get(0));
-      expect($ContentChildren.get(1)).to.equal(view.originalContent.get(1));
-      expect($ContentChildren.get(2)).to.equal(view.originalContent.get(2));
+      expect($ContentChildren.get(0).outerHTML)
+      .to.equal(view.originalContent.get(0).outerHTML);
+      expect($ContentChildren.get(1).outerHTML)
+      .to.equal(view.originalContent.get(1).outerHTML);
+      expect($ContentChildren.get(2).outerHTML)
+      .to.equal(view.originalContent.get(2).outerHTML);
 
       $FixtureBody.remove();
     });
