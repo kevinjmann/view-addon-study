@@ -194,6 +194,7 @@ describe("toolbar.js", function() {
       const initSignOutLinkSpy = sandbox.spy(toolbar, "initSignOutLink");
       const initToggleToolbarSpy = sandbox.spy(toolbar, "initToggleToolbar");
       const restoreSelectionsSpy = sandbox.spy(toolbar, "restoreSelections");
+      const requestToToggleToolbarSpy = sandbox.spy(toolbar, "requestToToggleToolbar");
       const topics = {topic: "some topic info"};
 
       expect(toolbar.topics).to.be.empty;
@@ -218,6 +219,7 @@ describe("toolbar.js", function() {
       sinon.assert.calledOnce(initSignOutLinkSpy);
       sinon.assert.calledOnce(initToggleToolbarSpy);
       sinon.assert.calledOnce(restoreSelectionsSpy);
+      sinon.assert.calledOnce(requestToToggleToolbarSpy);
     });
 
     describe("initViewMenuBtn", function() {
