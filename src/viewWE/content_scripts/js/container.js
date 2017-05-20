@@ -20,8 +20,6 @@ view.container = {
 
     $Container.append($Content);
 
-    $Container.addClass("margin-at-bottom");
-
     $Element.append($Container);
   },
 

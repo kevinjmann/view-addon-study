@@ -123,23 +123,6 @@ describe("container.js", function() {
 
       $FixtureBody.remove();
     });
-
-    it("should have the class 'margin-at-bottom' in the container", function() {
-      fixture.load("/fixtures/ru-no-markup.html");
-
-      const fixtureInnerHTML = $("#ru-no-markup-body").html();
-      const $FixtureBody = $("<div>");
-
-      $FixtureBody.html(fixtureInnerHTML);
-
-      $("body").append($FixtureBody);
-
-      view.container.add($FixtureBody);
-
-      expect($("#wertiview-container").hasClass("margin-at-bottom")).to.be.true;
-
-      $FixtureBody.remove();
-    });
   });
 
   describe("adjustMargin", function() {
