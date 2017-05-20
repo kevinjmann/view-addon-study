@@ -129,7 +129,7 @@ describe("container.js", function() {
     it("should find the class 'margin-at-bottom' inside the container, as the toolbar is visible", function() {
       view.toolbarIframe.init();
 
-      $("#wertiview-container").removeClass("margin-at-bottom");
+      expect($("#wertiview-container").hasClass("margin-at-bottom")).to.be.false;
 
       view.container.adjustMargin();
 
@@ -147,9 +147,11 @@ describe("container.js", function() {
     it("should not find the class 'margin-at-bottom' inside the container, as the toolbar is hidden", function() {
       view.toolbarIframe.init();
 
-      $("#view-toolbar-iframe").hide();
+      view.container.adjustMargin();
 
       expect($("#wertiview-container").hasClass("margin-at-bottom")).to.be.true;
+
+      $("#view-toolbar-iframe").hide();
 
       view.container.adjustMargin();
 
