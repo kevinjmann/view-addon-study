@@ -64,12 +64,23 @@ describe("toolbar-iframe.js", function() {
       sinon.assert.calledWith(attrSpy.getCall(1), "src");
     });
 
+    it("should move the script tag from the body to the head", function() {
+      const $ScriptTag = $("<script>");
+
+      $("body").append($ScriptTag);
+
+      view.toolbarIframe.init();
+
+      expect($("head").find($ScriptTag).length).to.be.above(0);
+    });
+
     it("should call add(selector)", function() {
       const addSpy = sandbox.spy(view.container, "add");
 
       view.toolbarIframe.init();
 
       sinon.assert.calledOnce(addSpy);
+      sinon.assert.calledWithExactly(addSpy, $("body"));
     });
 
     it("should call VIEWmenu.add()", function() {

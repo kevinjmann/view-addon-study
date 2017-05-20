@@ -22,8 +22,6 @@ view.enhancer = {
       "#wertiview-toolbar-abort-button"
     );
 
-    $("#wertiview-content").find("script").attr("type", "application/json");
-
     const activityData = view.enhancer.createActivityData();
 
     view.enhancer.requestToSendActivityDataAndGetEnhancementMarkup(activityData);
