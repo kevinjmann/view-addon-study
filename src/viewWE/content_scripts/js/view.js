@@ -30,6 +30,7 @@ const view = {
   intervalSize: 1,
   showInst: false,
   debugSentenceMarkup: false,
+  serverSelection: theServerURL,
 
   // enabled, language, topic and activity selections (default)
   enabled: false, // should the page be enhanced right away?
@@ -168,6 +169,7 @@ const view = {
       "intervalSize",
       "showInst",
       "debugSentenceMarkup",
+      "serverSelection",
       "userEmail",
       "userid",
       "user",
@@ -206,7 +208,20 @@ const view = {
       view.intervalSize = storageItems.intervalSize;
       view.showInst = storageItems.showInst;
       view.debugSentenceMarkup = storageItems.debugSentenceMarkup;
+      view.setServerUrl(view.serverSelection);
     }
+  },
+
+  /**
+   * Select the correct server, and adjust servlet and tracking urls.
+   *
+   * @param {string} server The server we should communicate with
+   */
+  setServerUrl(server) {
+    view.serverURL = server;
+    view.servletURL = server + "/view";
+    view.serverTaskURL = server + "/act/task";
+    view.serverTrackingURL = server + "/act/tracking";
   },
 
   /**
