@@ -19,6 +19,7 @@ describe("background.js", function() {
     chrome.extension.getURL.reset();
     chrome.tabs.sendMessage.reset();
     chrome.storage.local.set.reset();
+    chrome.storage.local.get.reset();
     chrome.notifications.create.reset();
     chrome.tabs.create.reset();
     chrome.runtime.openOptionsPage.reset();
@@ -472,22 +473,22 @@ describe("background.js", function() {
 
           it("should succeed to send activity data and call addEnhancementMarkup(data)", function() {
             const callAddEnhancementMarkupSpy = sandbox.spy(background, "callAddEnhancementMarkup");
+            const serverURL = "https://some.url";
 
             const request = {
               msg: "send activityData and get enhancement markup",
-              servletURL: "https://some.url",
               activityData: "some activity data"
               // ajaxTimeout not given by request to test "or branch"
             };
 
             sandbox.useFakeServer();
 
-            const serverURL = "https://some.url";
             const serverData = "some server data";
 
             sandbox.server.respondWith("POST", serverURL,
               [200, {"Content-Type": "text"}, serverData]);
 
+            chrome.storage.local.get.yields({"servletURL": serverURL});
             background.sendActivityDataAndGetEnhancementMarkup(request);
 
             sandbox.server.respond();
@@ -584,10 +585,10 @@ describe("background.js", function() {
 
             const request = {
               msg: "send taskData and get taskId",
-              serverTaskURL: serverTaskURL,
               taskData: taskData
             };
 
+            chrome.storage.local.get.yields({serverTaskURL: serverTaskURL});
             background.sendTaskDataAndGetTaskId(request);
 
             sinon.assert.calledOnce(ajaxPostSpy);
@@ -743,10 +744,10 @@ describe("background.js", function() {
 
             const request = {
               msg: "send trackingData",
-              serverTrackingURL: serverTrackingURL,
               trackingData: trackingData
             };
 
+            chrome.storage.local.get.yields({serverTrackingURL: serverTrackingURL});
             background.sendTrackingData(request);
 
             sinon.assert.calledOnce(ajaxPostSpy);

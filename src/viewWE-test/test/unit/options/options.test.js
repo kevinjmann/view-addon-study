@@ -283,6 +283,7 @@ describe("options.js", function() {
         const intervalSize = 1;
         const showInst = false;
         const debugSentenceMarkup = false;
+        const serverSelection = "http://localhost:8080";
 
         chrome.storage.local.set.yields(); // make set synchronous
 
@@ -294,6 +295,7 @@ describe("options.js", function() {
         $(viewOptions.selectorStart + "interval-size-value").val(intervalSize);
         $(viewOptions.selectorStart + "show-instructions").prop("checked", showInst);
         $(viewOptions.selectorStart + "debug-sentence-markup").prop("checked", debugSentenceMarkup);
+        $("#localhost8080").prop("checked", true);
 
         viewOptions.saveUserOptions();
 
@@ -306,7 +308,8 @@ describe("options.js", function() {
           firstOffset,
           intervalSize,
           showInst,
-          debugSentenceMarkup
+          debugSentenceMarkup,
+          serverSelection
         });
 
         sinon.assert.calledOnce(showSavedMessageSpy);
@@ -348,6 +351,7 @@ describe("options.js", function() {
         const intervalSize = 1;
         const showInst = false;
         const debugSentenceMarkup = false;
+        const serverSelection = "https://view.aleks.bg";
 
         chrome.storage.local.get.yields({});
 
@@ -373,7 +377,7 @@ describe("options.js", function() {
 
         sinon.assert.calledOnce(restoreIfToShowInstructionsSpy);
         sinon.assert.calledWithExactly(restoreIfToShowInstructionsSpy, showInst);
-        sinon.assert.calledWithExactly(restoreDeveloperOptionsSpy, debugSentenceMarkup);
+        sinon.assert.calledWithExactly(restoreDeveloperOptionsSpy, debugSentenceMarkup, serverSelection);
       });
 
       it("should call all restoration functions with stored values", function() {
@@ -392,6 +396,7 @@ describe("options.js", function() {
         const intervalSize = 3;
         const showInst = true;
         const debugSentenceMarkup = true;
+        const serverSelection = "http://localhost8080";
 
         chrome.storage.local.get.yields({
           fixedOrPercentage,
@@ -401,7 +406,8 @@ describe("options.js", function() {
           firstOffset,
           intervalSize,
           showInst,
-          debugSentenceMarkup
+          debugSentenceMarkup,
+          serverSelection
         });
 
         viewOptions.restoreUserOptions();
@@ -426,7 +432,7 @@ describe("options.js", function() {
 
         sinon.assert.calledOnce(restoreIfToShowInstructionsSpy);
         sinon.assert.calledWithExactly(restoreIfToShowInstructionsSpy, showInst);
-        sinon.assert.calledWithExactly(restoreDeveloperOptionsSpy, debugSentenceMarkup);
+        sinon.assert.calledWithExactly(restoreDeveloperOptionsSpy, debugSentenceMarkup, serverSelection);
       });
     });
 

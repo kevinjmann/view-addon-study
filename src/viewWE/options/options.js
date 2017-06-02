@@ -154,7 +154,8 @@ const viewOptions = {
       firstOffset: parseInt(viewOptions.$cache.get(viewOptions.selectorStart + "first-offset-value").val(), 10),
       intervalSize: parseInt(viewOptions.$cache.get(viewOptions.selectorStart + "interval-size-value").val(), 10),
       showInst: viewOptions.$cache.get(viewOptions.selectorStart + "show-instructions").prop("checked"),
-      debugSentenceMarkup: viewOptions.$cache.get(viewOptions.selectorStart + "debug-sentence-markup").prop("checked")
+      debugSentenceMarkup: viewOptions.$cache.get(viewOptions.selectorStart + "debug-sentence-markup").prop("checked"),
+      serverSelection: viewOptions.$cache.get("input[name='server']:checked").val()
     }, viewOptions.showSavedMessage);
   },
 
@@ -179,7 +180,8 @@ const viewOptions = {
       "firstOffset",
       "intervalSize",
       "showInst",
-      "debugSentenceMarkup"
+      "debugSentenceMarkup",
+      "serverSelection"
     ], function(res) {
 
       const fixedOrPercentageValue = res.fixedOrPercentage || 0;
@@ -190,6 +192,7 @@ const viewOptions = {
       const intervalSize = res.intervalSize || 1;
       const showInst = res.showInst || false;
       const debugSentenceMarkup = res.debugSentenceMarkup || false;
+      const serverSelection = res.serverSelection || 'https://view.aleks.bg';
 
       viewOptions.chooseHowManyExercises(fixedOrPercentageValue);
 
@@ -206,7 +209,7 @@ const viewOptions = {
       );
 
       viewOptions.restoreIfToShowInstructions(showInst);
-      viewOptions.restoreDeveloperOptions(debugSentenceMarkup);
+      viewOptions.restoreDeveloperOptions(debugSentenceMarkup, serverSelection);
     });
   },
 
@@ -281,10 +284,16 @@ const viewOptions = {
   /**
    * Restore developer options
    *
-   * @param {boolean} debugSentenceMarkup true if the user selected to debug with sentences marked up
+   * @param {boolean} debugSentenceMarkup True iff the user selected to debug with sentences marked up
+   * @param {string}  serverSelection     The server to communicate with
    */
-  restoreDeveloperOptions: function(debugSentenceMarkup) {
+  restoreDeveloperOptions: function(debugSentenceMarkup, serverSelection) {
     viewOptions.$cache.get(viewOptions.selectorStart + "debug-sentence-markup").prop("checked", debugSentenceMarkup);
+
+    // We assume the ids of the radio <input> tags are the url with all slashes and initial https?: stripped.
+    const httpAndSlashes = /(^https?:|\/|\.|:)/g;
+    const selectionId = serverSelection.replace(httpAndSlashes, "");
+    viewOptions.$cache.get('#' + selectionId).prop("checked", true);
   }
 };
 

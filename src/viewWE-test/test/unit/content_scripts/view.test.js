@@ -67,7 +67,8 @@ describe("view.js", function() {
         "user",
         "token",
         "taskId",
-        "enabled"
+        "enabled",
+        "serverSelection"
       ]);
     });
 
@@ -112,8 +113,6 @@ describe("view.js", function() {
 
         sinon.assert.calledOnce(chrome.storage.local.set);
         sinon.assert.calledWithExactly(chrome.storage.local.set, {
-          serverURL: "https://view.aleks.bg",
-          servletURL: "https://view.aleks.bg/view",
           cookie_name: "wertiview_userid",
           cookie_path: "/VIEW/openid",
           ajaxTimeout: 60000
@@ -235,6 +234,7 @@ describe("view.js", function() {
         "intervalSize",
         "showInst",
         "debugSentenceMarkup",
+        "serverSelection",
         "userEmail",
         "userid",
         "user",
