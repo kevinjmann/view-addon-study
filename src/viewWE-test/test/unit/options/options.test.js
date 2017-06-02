@@ -283,6 +283,7 @@ describe("options.js", function() {
         const intervalSize = 1;
         const showInst = false;
         const debugSentenceMarkup = false;
+        const serverSelection = "http://localhost:8080";
 
         chrome.storage.local.set.yields(); // make set synchronous
 
@@ -294,6 +295,7 @@ describe("options.js", function() {
         $(viewOptions.selectorStart + "interval-size-value").val(intervalSize);
         $(viewOptions.selectorStart + "show-instructions").prop("checked", showInst);
         $(viewOptions.selectorStart + "debug-sentence-markup").prop("checked", debugSentenceMarkup);
+        $("#localhost8080").prop("checked", true);
 
         viewOptions.saveUserOptions();
 
@@ -306,7 +308,8 @@ describe("options.js", function() {
           firstOffset,
           intervalSize,
           showInst,
-          debugSentenceMarkup
+          debugSentenceMarkup,
+          serverSelection
         });
 
         sinon.assert.calledOnce(showSavedMessageSpy);
