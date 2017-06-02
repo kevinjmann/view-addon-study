@@ -317,8 +317,7 @@ describe("enhancer.js", function() {
       sinon.assert.calledWith(chrome.runtime.sendMessage, {
         msg: "send activityData and get enhancement markup",
         activityData: activityData,
-        ajaxTimeout: 60000,
-        servletURL: "https://view.aleks.bg/view"
+        ajaxTimeout: 60000
       });
     });
   });
