@@ -744,10 +744,10 @@ describe("background.js", function() {
 
             const request = {
               msg: "send trackingData",
-              serverTrackingURL: serverTrackingURL,
               trackingData: trackingData
             };
 
+            chrome.storage.local.get.yields({serverTrackingURL: serverTrackingURL});
             background.sendTrackingData(request);
 
             sinon.assert.calledOnce(ajaxPostSpy);
