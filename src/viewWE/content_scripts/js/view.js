@@ -56,7 +56,8 @@ const view = {
           "user",
           "token",
           "taskId",
-          "enabled"
+          "enabled",
+          "serverSelection"
         ], function(storageItems) {
           view.setAllGeneralOptions(storageItems, response.topics);
         });
@@ -85,8 +86,6 @@ const view = {
     view.topics = topics;
 
     chrome.storage.local.set({
-      serverURL: view.serverURL,
-      servletURL: view.servletURL,
       cookie_name: view.cookie_name,
       cookie_path: view.cookie_path,
       ajaxTimeout: view.ajaxTimeout
@@ -102,6 +101,22 @@ const view = {
     view.setAuthenticationDetails(storageItems);
     view.setAutoEnhance(storageItems.enabled);
     view.setLatestTaskId(storageItems.taskId);
+    view.saveServerUrl(storageItems);
+  },
+
+  /**
+   * Save server and servlet URL to storage local
+   *
+   * @param {object} storageItems Items retrieved from storage
+   */
+  saveServerUrl: function(storageItems) {
+    view.setServerUrl(storageItems.serverSelection);
+    chrome.storage.local.set({
+      serverURL: view.serverURL,
+      servletURL: view.servletURL,
+      serverTaskURL: view.serverTaskURL,
+      serverTrackingURL: view.serverTrackingURL
+    });
   },
 
   /**

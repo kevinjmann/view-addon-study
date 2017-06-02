@@ -186,7 +186,7 @@ const background = {
   redirect: function(link) {
     chrome.tabs.create({url: link});
   },
-  
+
   /**
    * The toolbar ui send the message to open the options page.
    */
@@ -232,19 +232,25 @@ const background = {
    */
   sendActivityDataAndGetEnhancementMarkup: function(request) {
     const ajaxTimeout = request.ajaxTimeout || 120000;
-    background.ajaxPost(request.servletURL,
-      request.activityData,
-      ajaxTimeout)
-    .done(function(data, textStatus, xhr) {
-      if (data) {
-        background.callAddEnhancementMarkup(data);
-      } else {
-        background.ajaxError(xhr, "nodata");
+    chrome.storage.local.get(
+      "servletURL",
+      function(data) {
+        background.ajaxPost(
+          data.servletURL,
+          request.activityData,
+          ajaxTimeout)
+          .done(function(data, textStatus, xhr) {
+            if (data) {
+              background.callAddEnhancementMarkup(data);
+            } else {
+              background.ajaxError(xhr, "nodata");
+            }
+          })
+          .fail(function(xhr, textStatus) {
+            background.ajaxError(xhr, textStatus);
+          });
       }
-    })
-    .fail(function(xhr, textStatus) {
-      background.ajaxError(xhr, textStatus);
-    });
+    );
   },
 
   /**
@@ -267,27 +273,33 @@ const background = {
    * @param {*} request the message sent by the calling script
    */
   sendTaskDataAndGetTaskId: function(request){
-    background.ajaxPost(request.serverTaskURL,
-      request.taskData,
-      10000)
-    .done(function(data, textStatus, xhr) {
-      if (data) {
-        const taskData = JSON.parse(data);
-          background.callSetTaskId(taskData["task-id"]);
-      } else {
-        background.ajaxError(xhr, "no-task-data");
+    chrome.storage.local.get(
+      "serverTaskURL",
+      function(data) {
+        background.ajaxPost(
+          data.serverTaskURL,
+          request.taskData,
+          10000)
+          .done(function(data, textStatus, xhr) {
+            if (data) {
+              const taskData = JSON.parse(data);
+              background.callSetTaskId(taskData["task-id"]);
+            } else {
+              background.ajaxError(xhr, "no-task-data");
+            }
+          })
+          .fail(function() {
+            background.signOutUser();
+            background.createBasicNotification(
+              "auth-token-expired",
+              "The auth token expired!",
+              "The token for user authentication expired, " +
+                "you will be signed out automatically. " +
+                "Please sign in again!"
+            );
+          });
       }
-    })
-    .fail(function() {
-      background.signOutUser();
-      background.createBasicNotification(
-        "auth-token-expired",
-        "The auth token expired!",
-        "The token for user authentication expired, " +
-        "you will be signed out automatically. " +
-        "Please sign in again!"
-      );
-    });
+    );
   },
 
   /**
@@ -310,17 +322,23 @@ const background = {
    * @param {*} request the message sent by the calling script
    */
   sendTrackingData: function(request) {
-    background.ajaxPost(request.serverTrackingURL,
-      request.trackingData,
-      10000)
-    .done(function(data, textStatus, xhr) {
-      if (data) {
-        const submissionResponseData = JSON.parse(data);
-        background.callShowFeedback(submissionResponseData);
-      } else {
-        background.ajaxError(xhr, "no-performance-data");
+    chrome.storage.local.get(
+      "serverTrackingURL",
+      function(data) {
+        background.ajaxPost(
+          data.serverTrackingURL,
+          request.trackingData,
+          10000)
+          .done(function(data, textStatus, xhr) {
+            if (data) {
+              const submissionResponseData = JSON.parse(data);
+              background.callShowFeedback(submissionResponseData);
+            } else {
+              background.ajaxError(xhr, "no-performance-data");
+            }
+          });
       }
-    });
+    );
   },
 
   /**

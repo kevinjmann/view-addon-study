@@ -112,8 +112,7 @@ view.enhancer = {
     chrome.runtime.sendMessage({
       msg: "send activityData and get enhancement markup",
       activityData: activityData,
-      ajaxTimeout: view.ajaxTimeout,
-      servletURL: view.servletURL
+      ajaxTimeout: view.ajaxTimeout
     }, view.lib.noResponse);
   },
 
