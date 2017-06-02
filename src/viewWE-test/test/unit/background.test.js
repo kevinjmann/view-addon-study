@@ -585,10 +585,10 @@ describe("background.js", function() {
 
             const request = {
               msg: "send taskData and get taskId",
-              serverTaskURL: serverTaskURL,
               taskData: taskData
             };
 
+            chrome.storage.local.get.yields({serverTaskURL: serverTaskURL});
             background.sendTaskDataAndGetTaskId(request);
 
             sinon.assert.calledOnce(ajaxPostSpy);
