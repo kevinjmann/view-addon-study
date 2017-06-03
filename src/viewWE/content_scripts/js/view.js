@@ -101,7 +101,7 @@ const view = {
     view.setAuthenticationDetails(storageItems);
     view.setAutoEnhance(storageItems.enabled);
     view.setLatestTaskId(storageItems.taskId);
-    view.saveServerUrl(storageItems);
+    view.saveServerUrl(storageItems.serverSelection);
   },
 
   /**
@@ -158,10 +158,10 @@ const view = {
   /**
    * Save server and servlet URL to storage local
    *
-   * @param {object} storageItems Items retrieved from storage
+   * @param {string} serverSelection The server we should communicate with
    */
-  saveServerUrl: function(storageItems) {
-    view.setServerUrl(storageItems.serverSelection);
+  saveServerUrl: function(serverSelection) {
+    view.setServerUrl(serverSelection);
     chrome.storage.local.set({
       serverSelection: view.serverSelection,
       serverURL: view.serverURL,
@@ -237,7 +237,7 @@ const view = {
       view.intervalSize = storageItems.intervalSize;
       view.showInst = storageItems.showInst;
       view.debugSentenceMarkup = storageItems.debugSentenceMarkup;
-      view.saveServerUrl(storageItems);
+      view.saveServerUrl(storageItems.serverSelection);
     }
   },
 
