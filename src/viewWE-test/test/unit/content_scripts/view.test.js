@@ -73,8 +73,7 @@ describe("view.js", function() {
         "user",
         "token",
         "taskId",
-        "enabled",
-        "serverSelection"
+        "enabled"
       ]);
     });
 
@@ -218,56 +217,12 @@ describe("view.js", function() {
             expect(view.taskId).to.equal(taskId);
           });
         });
-
-        describe("saveServerUrl", function() {
-          it("should call setServerUrl(serverSelection)", function() {
-            const setServerUrlSpy = sandbox.spy(view, "setServerUrl");
-
-            const server = "some server";
-
-            view.saveServerUrl(server);
-
-            sinon.assert.calledOnce(setServerUrlSpy);
-            sinon.assert.calledWithExactly(setServerUrlSpy, server);
-          });
-
-          it("should set the server, servlet url and tracking urls to view", function() {
-            const server = "some server";
-
-            view.setServerUrl(server);
-
-            expect(view.serverSelection).to.equal(server);
-            expect(view.serverURL).to.equal(server);
-            expect(view.servletURL).to.equal(server + "/view");
-            expect(view.serverTaskURL).to.equal(server + "/act/task");
-            expect(view.serverTrackingURL).to.equal(server + "/act/tracking");
-          });
-
-          it("should set the server, servlet url and tracking urls to local storage", function() {
-            const server = "some server";
-
-            view.saveServerUrl(server);
-
-            sinon.assert.calledOnce(chrome.storage.local.set);
-            sinon.assert.calledWithExactly(chrome.storage.local.set, {
-              serverSelection: server,
-              serverURL: server,
-              servletURL: server + "/view",
-              serverTaskURL: server + "/act/task",
-              serverTrackingURL: server + "/act/tracking"
-            });
-          });
-        });
       });
     });
   });
 
   describe("startToEnhance", function() {
     it("should get the expected storage items", function() {
-      const storageItems = {topic: "articles"};
-
-      chrome.storage.local.get.yields(storageItems);
-
       view.startToEnhance();
 
       sinon.assert.calledOnce(chrome.storage.local.get);
@@ -331,8 +286,6 @@ describe("view.js", function() {
           serverSelection
         };
 
-        chrome.storage.local.get.yields(storageItems);
-
         view.setUserOptions(storageItems);
 
         expect(view.fixedOrPercentage).to.equal(fixedOrPercentage);
@@ -346,8 +299,8 @@ describe("view.js", function() {
         expect(view.serverSelection).to.equal(serverSelection);
       });
 
-      it("should call saveServerUrl(serverSelection)", function() {
-        const saveServerUrlSpy = sandbox.spy(view, "saveServerUrl");
+      it("should call setServerUrl(serverSelection), as fixedOrPercentage is defined", function() {
+        const setServerUrlSpy = sandbox.spy(view, "setServerUrl");
 
         const fixedOrPercentage = 1;
         const fixedNumberOfExercises = 30;
@@ -371,12 +324,47 @@ describe("view.js", function() {
           serverSelection
         };
 
-        chrome.storage.local.get.yields(storageItems);
+        view.setUserOptions(storageItems);
+
+        sinon.assert.calledOnce(setServerUrlSpy);
+        sinon.assert.calledWithExactly(setServerUrlSpy, serverSelection);
+      });
+
+      it("should set the server, servlet url and tracking urls to view", function() {
+        const server = "some server";
+
+        view.setServerUrl(server);
+
+        expect(view.serverSelection).to.equal(server);
+        expect(view.serverURL).to.equal(server);
+        expect(view.servletURL).to.equal(server + "/view");
+        expect(view.serverTaskURL).to.equal(server + "/act/task");
+        expect(view.serverTrackingURL).to.equal(server + "/act/tracking");
+      });
+
+      it("should call saveServerUrl() in any case", function() {
+        const saveServerUrlSpy = sandbox.spy(view, "saveServerUrl");
+
+        const storageItems = {};
 
         view.setUserOptions(storageItems);
 
         sinon.assert.calledOnce(saveServerUrlSpy);
-        sinon.assert.calledWithExactly(saveServerUrlSpy, serverSelection);
+      });
+
+      it("should set the server, servlet url and tracking urls to local storage", function() {
+        const server = view.serverSelection;
+
+        view.saveServerUrl();
+
+        sinon.assert.calledOnce(chrome.storage.local.set);
+        sinon.assert.calledWithExactly(chrome.storage.local.set, {
+          serverSelection: server,
+          serverURL: server,
+          servletURL: server + "/view",
+          serverTaskURL: server + "/act/task",
+          serverTrackingURL: server + "/act/tracking"
+        });
       });
     });
 
@@ -420,8 +408,6 @@ describe("view.js", function() {
         filter,
         activity
       };
-
-      chrome.storage.local.get.yields(storageItems);
 
       view.setSelections(storageItems);
 
