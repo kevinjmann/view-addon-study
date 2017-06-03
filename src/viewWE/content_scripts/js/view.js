@@ -56,8 +56,7 @@ const view = {
           "user",
           "token",
           "taskId",
-          "enabled",
-          "serverSelection"
+          "enabled"
         ], function(storageItems) {
           view.setAllGeneralOptions(storageItems, response.topics);
         });
@@ -101,7 +100,6 @@ const view = {
     view.setAuthenticationDetails(storageItems);
     view.setAutoEnhance(storageItems.enabled);
     view.setLatestTaskId(storageItems.taskId);
-    view.saveServerUrl(storageItems.serverSelection);
   },
 
   /**
@@ -153,35 +151,6 @@ const view = {
     else {
       view.taskId = taskId;
     }
-  },
-
-  /**
-   * Save server and servlet URL to storage local
-   *
-   * @param {string} serverSelection The server we should communicate with
-   */
-  saveServerUrl: function(serverSelection) {
-    view.setServerUrl(serverSelection);
-    chrome.storage.local.set({
-      serverSelection: view.serverSelection,
-      serverURL: view.serverURL,
-      servletURL: view.servletURL,
-      serverTaskURL: view.serverTaskURL,
-      serverTrackingURL: view.serverTrackingURL
-    });
-  },
-
-  /**
-   * Select the correct server, and adjust servlet and tracking urls.
-   *
-   * @param {string} server The server we should communicate with
-   */
-  setServerUrl(server) {
-    view.serverSelection = server;
-    view.serverURL = server;
-    view.servletURL = server + "/view";
-    view.serverTaskURL = server + "/act/task";
-    view.serverTrackingURL = server + "/act/tracking";
   },
 
   /**
@@ -237,8 +206,36 @@ const view = {
       view.intervalSize = storageItems.intervalSize;
       view.showInst = storageItems.showInst;
       view.debugSentenceMarkup = storageItems.debugSentenceMarkup;
-      view.saveServerUrl(storageItems.serverSelection);
+      view.setServerUrl(storageItems.serverSelection);
     }
+
+    view.saveServerUrl();
+  },
+
+  /**
+   * Select the correct server, and adjust servlet and tracking urls.
+   *
+   * @param {string} server The server we should communicate with
+   */
+  setServerUrl(server) {
+    view.serverSelection = server;
+    view.serverURL = server;
+    view.servletURL = server + "/view";
+    view.serverTaskURL = server + "/act/task";
+    view.serverTrackingURL = server + "/act/tracking";
+  },
+
+  /**
+   * Save server and servlet URL to the local storage.
+   */
+  saveServerUrl: function() {
+    chrome.storage.local.set({
+      serverSelection: view.serverSelection,
+      serverURL: view.serverURL,
+      servletURL: view.servletURL,
+      serverTaskURL: view.serverTaskURL,
+      serverTrackingURL: view.serverTrackingURL
+    });
   },
 
   /**
