@@ -105,21 +105,6 @@ const view = {
   },
 
   /**
-   * Save server and servlet URL to storage local
-   *
-   * @param {object} storageItems Items retrieved from storage
-   */
-  saveServerUrl: function(storageItems) {
-    view.setServerUrl(storageItems.serverSelection);
-    chrome.storage.local.set({
-      serverURL: view.serverURL,
-      servletURL: view.servletURL,
-      serverTaskURL: view.serverTaskURL,
-      serverTrackingURL: view.serverTrackingURL
-    });
-  },
-
-  /**
    * Set authentication details:
    * - userid
    * - userEmail
@@ -146,6 +131,17 @@ const view = {
   },
 
   /**
+   * Set whether a page should be enhanced on the spot or not.
+   *
+   * @param enabled true if the page should be auto enhanced, false otherwise
+   */
+  setAutoEnhance: function(enabled) {
+    if (enabled === undefined) {
+      chrome.storage.local.set({enabled: view.enabled});
+    }
+  },
+
+  /**
    * Set the latest known task id, if there is one.
    *
    * @param {number} taskId the task id from storage
@@ -160,14 +156,32 @@ const view = {
   },
 
   /**
-   * Set whether a page should be enhanced on the spot or not.
+   * Save server and servlet URL to storage local
    *
-   * @param enabled true if the page should be auto enhanced, false otherwise
+   * @param {object} storageItems Items retrieved from storage
    */
-  setAutoEnhance: function(enabled) {
-    if (enabled === undefined) {
-      chrome.storage.local.set({enabled: view.enabled});
-    }
+  saveServerUrl: function(storageItems) {
+    view.setServerUrl(storageItems.serverSelection);
+    chrome.storage.local.set({
+      serverSelection: view.serverSelection,
+      serverURL: view.serverURL,
+      servletURL: view.servletURL,
+      serverTaskURL: view.serverTaskURL,
+      serverTrackingURL: view.serverTrackingURL
+    });
+  },
+
+  /**
+   * Select the correct server, and adjust servlet and tracking urls.
+   *
+   * @param {string} server The server we should communicate with
+   */
+  setServerUrl(server) {
+    view.serverSelection = server;
+    view.serverURL = server;
+    view.servletURL = server + "/view";
+    view.serverTaskURL = server + "/act/task";
+    view.serverTrackingURL = server + "/act/tracking";
   },
 
   /**
@@ -223,20 +237,8 @@ const view = {
       view.intervalSize = storageItems.intervalSize;
       view.showInst = storageItems.showInst;
       view.debugSentenceMarkup = storageItems.debugSentenceMarkup;
-      view.setServerUrl(view.serverSelection);
+      view.saveServerUrl(storageItems);
     }
-  },
-
-  /**
-   * Select the correct server, and adjust servlet and tracking urls.
-   *
-   * @param {string} server The server we should communicate with
-   */
-  setServerUrl(server) {
-    view.serverURL = server;
-    view.servletURL = server + "/view";
-    view.serverTaskURL = server + "/act/task";
-    view.serverTrackingURL = server + "/act/tracking";
   },
 
   /**
