@@ -8,6 +8,7 @@
 
 describe("view.js", function() {
   let sandbox;
+  const theServerURL = "https://view.aleks.bg";
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
@@ -18,6 +19,10 @@ describe("view.js", function() {
     chrome.runtime.sendMessage.reset();
     chrome.storage.local.get.reset();
     chrome.storage.local.set.reset();
+    view.serverURL = theServerURL;
+    view.servletURL = theServerURL + "/view";
+    view.serverTaskURL = theServerURL + "/act/task";
+    view.serverTrackingURL = theServerURL + "/act/tracking";
     view.topics = {};
     view.userEmail = "";
     view.userid = "";
@@ -37,6 +42,7 @@ describe("view.js", function() {
     view.intervalSize = 1;
     view.showInst = false;
     view.debugSentenceMarkup = false;
+    view.serverSelection = theServerURL;
 
     view.enabled = false; // should the page be enhanced right away?
     view.language = "unselected";
@@ -212,6 +218,46 @@ describe("view.js", function() {
             expect(view.taskId).to.equal(taskId);
           });
         });
+
+        describe("saveServerUrl", function() {
+          it("should call setServerUrl(serverSelection)", function() {
+            const setServerUrlSpy = sandbox.spy(view, "setServerUrl");
+
+            const server = "some server";
+
+            view.saveServerUrl(server);
+
+            sinon.assert.calledOnce(setServerUrlSpy);
+            sinon.assert.calledWithExactly(setServerUrlSpy, server);
+          });
+
+          it("should set the server, servlet url and tracking urls to view", function() {
+            const server = "some server";
+
+            view.setServerUrl(server);
+
+            expect(view.serverSelection).to.equal(server);
+            expect(view.serverURL).to.equal(server);
+            expect(view.servletURL).to.equal(server + "/view");
+            expect(view.serverTaskURL).to.equal(server + "/act/task");
+            expect(view.serverTrackingURL).to.equal(server + "/act/tracking");
+          });
+
+          it("should set the server, servlet url and tracking urls to local storage", function() {
+            const server = "some server";
+
+            view.saveServerUrl(server);
+
+            sinon.assert.calledOnce(chrome.storage.local.set);
+            sinon.assert.calledWithExactly(chrome.storage.local.set, {
+              serverSelection: server,
+              serverURL: server,
+              servletURL: server + "/view",
+              serverTaskURL: server + "/act/task",
+              serverTrackingURL: server + "/act/tracking"
+            });
+          });
+        });
       });
     });
   });
@@ -261,39 +307,77 @@ describe("view.js", function() {
       sinon.assert.calledWithExactly(setUserOptionsSpy, storageItems);
     });
 
-    it("should save all user options from the options page, as fixedOrPercentage is defined", function() {
-      const fixedOrPercentage = 1;
-      const fixedNumberOfExercises = 30;
-      const percentageOfExercises = 90;
-      const choiceMode = 1;
-      const firstOffset = 5;
-      const intervalSize = 3;
-      const showInst = false;
-      const debugSentenceMarkup = false;
+    describe("setUserOptions", function() {
+      it("should save all user options from the options page, as fixedOrPercentage is defined", function() {
+        const fixedOrPercentage = 1;
+        const fixedNumberOfExercises = 30;
+        const percentageOfExercises = 90;
+        const choiceMode = 1;
+        const firstOffset = 5;
+        const intervalSize = 3;
+        const showInst = false;
+        const debugSentenceMarkup = false;
+        const serverSelection = "some server";
 
-      const storageItems = {
-        fixedOrPercentage,
-        fixedNumberOfExercises,
-        percentageOfExercises,
-        choiceMode,
-        firstOffset,
-        intervalSize,
-        showInst,
-        debugSentenceMarkup
-      };
+        const storageItems = {
+          fixedOrPercentage,
+          fixedNumberOfExercises,
+          percentageOfExercises,
+          choiceMode,
+          firstOffset,
+          intervalSize,
+          showInst,
+          debugSentenceMarkup,
+          serverSelection
+        };
 
-      chrome.storage.local.get.yields(storageItems);
+        chrome.storage.local.get.yields(storageItems);
 
-      view.setUserOptions(storageItems);
+        view.setUserOptions(storageItems);
 
-      expect(view.fixedOrPercentage).to.equal(fixedOrPercentage);
-      expect(view.fixedNumberOfExercises).to.equal(fixedNumberOfExercises);
-      expect(view.percentageOfExercises).to.equal(percentageOfExercises);
-      expect(view.choiceMode).to.equal(choiceMode);
-      expect(view.firstOffset).to.equal(firstOffset);
-      expect(view.intervalSize).to.equal(intervalSize);
-      expect(view.showInst).to.equal(showInst);
-      expect(view.debugSentenceMarkup).to.equal(debugSentenceMarkup);
+        expect(view.fixedOrPercentage).to.equal(fixedOrPercentage);
+        expect(view.fixedNumberOfExercises).to.equal(fixedNumberOfExercises);
+        expect(view.percentageOfExercises).to.equal(percentageOfExercises);
+        expect(view.choiceMode).to.equal(choiceMode);
+        expect(view.firstOffset).to.equal(firstOffset);
+        expect(view.intervalSize).to.equal(intervalSize);
+        expect(view.showInst).to.equal(showInst);
+        expect(view.debugSentenceMarkup).to.equal(debugSentenceMarkup);
+        expect(view.serverSelection).to.equal(serverSelection);
+      });
+
+      it("should call saveServerUrl(serverSelection)", function() {
+        const saveServerUrlSpy = sandbox.spy(view, "saveServerUrl");
+
+        const fixedOrPercentage = 1;
+        const fixedNumberOfExercises = 30;
+        const percentageOfExercises = 90;
+        const choiceMode = 1;
+        const firstOffset = 5;
+        const intervalSize = 3;
+        const showInst = false;
+        const debugSentenceMarkup = false;
+        const serverSelection = "some server";
+
+        const storageItems = {
+          fixedOrPercentage,
+          fixedNumberOfExercises,
+          percentageOfExercises,
+          choiceMode,
+          firstOffset,
+          intervalSize,
+          showInst,
+          debugSentenceMarkup,
+          serverSelection
+        };
+
+        chrome.storage.local.get.yields(storageItems);
+
+        view.setUserOptions(storageItems);
+
+        sinon.assert.calledOnce(saveServerUrlSpy);
+        sinon.assert.calledWithExactly(saveServerUrlSpy, serverSelection);
+      });
     });
 
     it("should call setAuthenticationDetails(storageItems)", function() {
