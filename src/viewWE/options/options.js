@@ -293,7 +293,7 @@ const viewOptions = {
     // We assume the ids of the radio <input> tags are the url with all slashes and initial https?: stripped.
     const httpAndSlashes = /(^https?:|\/|\.|:)/g;
     const selectionId = serverSelection.replace(httpAndSlashes, "");
-    viewOptions.$cache.get('#' + selectionId).prop("checked", true);
+    viewOptions.$cache.get("#" + selectionId).prop("checked", true);
   }
 };
 

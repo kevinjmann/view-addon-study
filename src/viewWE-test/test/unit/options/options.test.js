@@ -53,6 +53,11 @@ describe("options.js", function() {
 
       expect($(viewOptions.selectorStart + "options-saved").length).to.be.above(0);
 
+
+      expect($("#viewaleksbg").length).to.be.above(0);
+      expect($("#sifnossfsuni-tuebingendeVIEW").length).to.be.above(0);
+      expect($("#viewlocalhost").length).to.be.above(0);
+      expect($("#localhost8080").length).to.be.above(0);
     });
   });
 
@@ -113,6 +118,9 @@ describe("options.js", function() {
       });
 
       it("should show fixed number value and hide percentage value", function() {
+        $(viewOptions.selectorStart + "fixed-number-of-exercises-value").hide();
+        $(viewOptions.selectorStart + "percentage-of-exercises-value").show();
+
         viewOptions.chooseFixedNumber();
 
         expect($(viewOptions.selectorStart + "fixed-number-of-exercises-value").is(":visible")).to.be.true;
@@ -145,6 +153,9 @@ describe("options.js", function() {
       });
 
       it("should show percentage value and hide fixed number value", function() {
+        $(viewOptions.selectorStart + "percentage-of-exercises-value").hide();
+        $(viewOptions.selectorStart + "fixed-number-of-exercises-value").show();
+
         viewOptions.choosePercentage();
 
         expect($(viewOptions.selectorStart + "percentage-of-exercises-value").is(":visible")).to.be.true;
@@ -177,6 +188,9 @@ describe("options.js", function() {
       });
 
       it("should hide first offset value and interval size value", function() {
+        $(viewOptions.selectorStart + "first-offset-value").show();
+        $(viewOptions.selectorStart + "interval-size-value").show();
+
         viewOptions.chooseRandom();
 
         expect($(viewOptions.selectorStart + "first-offset-value").is(":hidden")).to.be.true;
@@ -209,6 +223,9 @@ describe("options.js", function() {
       });
 
       it("should show first offset value and hide interval size value", function() {
+        $(viewOptions.selectorStart + "first-offset-value").hide();
+        $(viewOptions.selectorStart + "interval-size-value").show();
+
         viewOptions.chooseFirstOffset();
 
         expect($(viewOptions.selectorStart + "first-offset-value").is(":visible")).to.be.true;
@@ -241,6 +258,9 @@ describe("options.js", function() {
       });
 
       it("should show interval size value and hide first offset value", function() {
+        $(viewOptions.selectorStart + "interval-size-value").hide();
+        $(viewOptions.selectorStart + "first-offset-value").show();
+
         viewOptions.chooseIntervalSize();
 
         expect($(viewOptions.selectorStart + "interval-size-value").is(":visible")).to.be.true;
@@ -440,6 +460,8 @@ describe("options.js", function() {
       it("should check fixed number of exercises and call chooseFixedNumber(), as the argument is 0", function() {
         const chooseFixedNumberSpy = sandbox.spy(viewOptions, "chooseFixedNumber");
 
+        $(viewOptions.selectorStart + "fixed-number-of-exercises").prop("checked", false);
+
         viewOptions.chooseHowManyExercises(0);
 
         expect($(viewOptions.selectorStart + "fixed-number-of-exercises").prop("checked")).to.be.true;
@@ -449,6 +471,8 @@ describe("options.js", function() {
 
       it("should check percentage of exercises and call choosePercentage(), as the argument is 1", function() {
         const choosePercentageSpy = sandbox.spy(viewOptions, "choosePercentage");
+
+        $(viewOptions.selectorStart + "percentage-of-exercises").prop("checked", false);
 
         viewOptions.chooseHowManyExercises(1);
 
@@ -476,6 +500,7 @@ describe("options.js", function() {
     describe("chooseHowToChooseExercises", function() {
       it("should check random choice and call chooseRandom(), as the argument is 0", function() {
         const chooseRandomSpy = sandbox.spy(viewOptions, "chooseRandom");
+        $(viewOptions.selectorStart + "random").prop("checked", false);
 
         viewOptions.chooseHowToChooseExercises(0);
 
@@ -487,6 +512,8 @@ describe("options.js", function() {
       it("should check first offset and call chooseFirstOffset(), as the argument is 1", function() {
         const chooseFirstOffsetSpy = sandbox.spy(viewOptions, "chooseFirstOffset");
 
+        $(viewOptions.selectorStart + "first-offset").prop("checked", false);
+
         viewOptions.chooseHowToChooseExercises(1);
 
         expect($(viewOptions.selectorStart + "first-offset").prop("checked")).to.be.true;
@@ -496,6 +523,8 @@ describe("options.js", function() {
 
       it("should check interval size and call chooseIntervalSize(), as the argument is 2", function() {
         const chooseIntervalSizeSpy = sandbox.spy(viewOptions, "chooseIntervalSize");
+
+        $(viewOptions.selectorStart + "interval-size").prop("checked", false);
 
         viewOptions.chooseHowToChooseExercises(2);
 
@@ -522,9 +551,33 @@ describe("options.js", function() {
 
     describe("restoreIfToShowInstructions", function() {
       it("should restore if instructions should be shown or not", function() {
+        $(viewOptions.selectorStart + "show-instructions").prop("checked", false);
+
         viewOptions.restoreIfToShowInstructions(true);
 
         expect($(viewOptions.selectorStart + "show-instructions").prop("checked")).to.be.true;
+      });
+    });
+
+    describe("restoreDeveloperOptions", function() {
+      it("should restore if debug sentence markup should be shown or not", function() {
+        const serverSelection = "http://localhost8080";
+
+        $(viewOptions.selectorStart + "debug-sentence-markup").prop("checked", false);
+
+        viewOptions.restoreDeveloperOptions(true, serverSelection);
+
+        expect($(viewOptions.selectorStart + "debug-sentence-markup").prop("checked")).to.be.true;
+      });
+
+      it("should restore the server selection", function() {
+        const serverSelection = "http://localhost8080";
+
+        $("#localhost8080").prop("checked", false);
+
+        viewOptions.restoreDeveloperOptions(true, serverSelection);
+
+        expect($("#localhost8080").prop("checked")).to.be.true;
       });
     });
   });
