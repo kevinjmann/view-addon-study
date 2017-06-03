@@ -308,40 +308,6 @@ describe("view.js", function() {
     });
 
     describe("setUserOptions", function() {
-      it("should call saveServerUrl(storageItems)", function() {
-        const saveServerUrlSpy = sandbox.spy(view, "saveServerUrl");
-
-        const fixedOrPercentage = 1;
-        const fixedNumberOfExercises = 30;
-        const percentageOfExercises = 90;
-        const choiceMode = 1;
-        const firstOffset = 5;
-        const intervalSize = 3;
-        const showInst = false;
-        const debugSentenceMarkup = false;
-        const serverSelection = "some server";
-
-        const storageItems = {
-          fixedOrPercentage,
-          fixedNumberOfExercises,
-          percentageOfExercises,
-          choiceMode,
-          firstOffset,
-          intervalSize,
-          showInst,
-          debugSentenceMarkup,
-          serverSelection
-        };
-
-        chrome.storage.local.get.yields(storageItems);
-
-
-        view.setUserOptions(storageItems);
-
-        sinon.assert.calledOnce(saveServerUrlSpy);
-        sinon.assert.calledWithExactly(saveServerUrlSpy, serverSelection);
-      });
-
       it("should save all user options from the options page, as fixedOrPercentage is defined", function() {
         const fixedOrPercentage = 1;
         const fixedNumberOfExercises = 30;
@@ -378,6 +344,39 @@ describe("view.js", function() {
         expect(view.showInst).to.equal(showInst);
         expect(view.debugSentenceMarkup).to.equal(debugSentenceMarkup);
         expect(view.serverSelection).to.equal(serverSelection);
+      });
+
+      it("should call saveServerUrl(serverSelection)", function() {
+        const saveServerUrlSpy = sandbox.spy(view, "saveServerUrl");
+
+        const fixedOrPercentage = 1;
+        const fixedNumberOfExercises = 30;
+        const percentageOfExercises = 90;
+        const choiceMode = 1;
+        const firstOffset = 5;
+        const intervalSize = 3;
+        const showInst = false;
+        const debugSentenceMarkup = false;
+        const serverSelection = "some server";
+
+        const storageItems = {
+          fixedOrPercentage,
+          fixedNumberOfExercises,
+          percentageOfExercises,
+          choiceMode,
+          firstOffset,
+          intervalSize,
+          showInst,
+          debugSentenceMarkup,
+          serverSelection
+        };
+
+        chrome.storage.local.get.yields(storageItems);
+
+        view.setUserOptions(storageItems);
+
+        sinon.assert.calledOnce(saveServerUrlSpy);
+        sinon.assert.calledWithExactly(saveServerUrlSpy, serverSelection);
       });
     });
 
