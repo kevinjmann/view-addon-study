@@ -235,7 +235,17 @@ describe("feedbacker.js", function() {
     });
 
     describe("initFeedbackHintBtn", function() {
-      it("should show the next feedback hint button, because the current feedback hint is hidden", function() {
+      it("should toggle the feedback hint", function() {
+        view.feedbacker.showFeedback(submissionResponseData);
+
+        $("#feedback-hint-1").hide();
+
+        $("#feedback-hint-btn-1").trigger("click");
+
+        expect($("#feedback-hint-1").css("display")).to.equal("block");
+      });
+
+      it("should show the next feedback hint button", function() {
         view.feedbacker.showFeedback(submissionResponseData);
 
         $("#feedback-hint-btn-2").hide();
@@ -245,28 +255,6 @@ describe("feedbacker.js", function() {
         $("#feedback-hint-btn-1").trigger("click");
 
         expect($("#feedback-hint-btn-2").css("display")).to.equal("inline-block");
-      });
-
-      it("should not show the next feedback hint button, because the current feedback hint is visible", function() {
-        view.feedbacker.showFeedback(submissionResponseData);
-
-        $("#feedback-hint-btn-2").hide();
-
-        $("#feedback-hint-1").show();
-
-        $("#feedback-hint-btn-1").trigger("click");
-
-        expect($("#feedback-hint-btn-2").css("display")).to.equal("none");
-      });
-
-      it("should toggle the feedback hint in any case", function() {
-        view.feedbacker.showFeedback(submissionResponseData);
-
-        $("#feedback-hint-1").hide();
-
-        $("#feedback-hint-btn-1").trigger("click");
-
-        expect($("#feedback-hint-1").css("display")).to.equal("block");
       });
     });
 
