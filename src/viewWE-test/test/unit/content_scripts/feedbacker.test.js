@@ -9,22 +9,20 @@
 describe("feedbacker.js", function() {
   let sandbox;
 
-  const rule =
-    "<button type='button' id='feedback-rule-btn'>Rule</button><br>" +
-    "<div id='feedback-rule'>An example rule</div>";
+  fixture.load("/fixtures/unstressed-o-feedback.html");
   
   const performanceData = {
-    "enhancement-id": "bar",
+    "enhancement-id": "VIEW-N-Msc-Inan-Sg-Nom-5",
     "task-id": 1,
-    "correct-answer": "submission",
+    "correct-answer": "процесс",
     "number-of-tries": 1,
     "used-solution": false,
-    "assessment": "CORRECT"
+    "assessment": "WRONG_SPELLING_UNSTRESSED_O"
   };
 
   const feedbackData = {
-    "assessment": "Perfect solution",
-    "message": "Good job!" + rule
+    "assessment": "Spelling error in unstressed 'o' position",
+    "message": $("#feedback-message").html()
   };
 
   const submissionResponseData = {
@@ -33,7 +31,8 @@ describe("feedbacker.js", function() {
   };
 
   before(function() {
-    $("body").append("<div id='" + performanceData["enhancement-id"] + "'>");
+    $("body").append("<viewenhancement id='" + performanceData["enhancement-id"] + "'>" +
+      "процесс</viewenhancement>");
   });
 
   beforeEach(function() {
@@ -43,6 +42,35 @@ describe("feedbacker.js", function() {
   afterEach(function() {
     sandbox.restore();
     $("#view-feedback-dialog").remove();
+    $("*").off();
+  });
+
+  describe("jquery selectors", function() {
+    it("should be able to find all required jquery selectors for this module", function() {
+      // some selectors only need the element, its enough if they exist
+      // some selectors need the val(), text() or attr("link"),
+      // if there is the value we expect, they exist as well
+      // maintain this test, if there are additions or changes
+      // the expectations below don't need to be tested in other tests again
+      // the selectors below can be freely used in the tests without problems
+
+      expect($(".feedback-hint-btn").length).to.equal(3);
+      expect($(".feedback-hint").length).to.equal(3);
+
+      expect($("#feedback-hint-btn-1").length).to.be.above(0);
+      expect($("#feedback-hint-btn-2").length).to.be.above(0);
+      expect($("#feedback-hint-btn-3").length).to.be.above(0);
+      expect($("#feedback-rule-btn").length).to.be.above(0);
+
+      expect($("#feedback-hint-btn-1").data("feedback-level")).to.equal(1);
+      expect($("#feedback-hint-btn-2").data("feedback-level")).to.equal(2);
+      expect($("#feedback-hint-btn-3").data("feedback-level")).to.equal(3);
+
+      expect($("#feedback-hint-1").length).to.be.above(0);
+      expect($("#feedback-hint-2").length).to.be.above(0);
+      expect($("#feedback-hint-3").length).to.be.above(0);
+      expect($("#feedback-rule").length).to.be.above(0);
+    });
   });
 
   describe("showFeedback", function() {
@@ -71,7 +99,7 @@ describe("feedbacker.js", function() {
 
         sinon.assert.calledOnce(createListSpy);
         sinon.assert.calledWithExactly(createListSpy,
-          "bar-info",
+          performanceData["enhancement-id"] + "-info",
           [
             "Number of tries: " + performanceData["number-of-tries"],
             "Assessment: " + performanceData["assessment"]
@@ -89,7 +117,7 @@ describe("feedbacker.js", function() {
 
         sinon.assert.calledOnce(createListSpy);
         sinon.assert.calledWithExactly(createListSpy,
-          "bar-info",
+          performanceData["enhancement-id"] + "-info",
           [
             "Number of tries: " + performanceData["number-of-tries"],
             "Assessment: " + feedbackData["assessment"],
@@ -106,7 +134,8 @@ describe("feedbacker.js", function() {
 
         $("body").append($Dialog);
 
-        expect($("#view-feedback-dialog").find("#bar-info").length).to.be.above(0);
+        expect($("#view-feedback-dialog").find("#" + performanceData["enhancement-id"] + "-info").length)
+        .to.be.above(0);
       });
     });
 
@@ -161,17 +190,80 @@ describe("feedbacker.js", function() {
 
       sinon.assert.calledOnce(selectorSpy.withArgs("feedback-rule-btn"));
 
-      sinon.assert.calledOnce(eventSpy.withArgs("click"));
+      sinon.assert.called(eventSpy.withArgs("click"));
+    });
+
+    it("should call initFeedbackRuleBtn() on click", function() {
+      const initFeedbackRuleBtnSpy = sandbox.spy(view.feedbacker, "initFeedbackRuleBtn");
+
+      view.feedbacker.showFeedback(submissionResponseData);
+
+      $("#feedback-rule-btn").trigger("click");
+
+      sinon.assert.calledOnce(initFeedbackRuleBtnSpy);
     });
 
     it("should toggle the feedback rule", function() {
       view.feedbacker.showFeedback(submissionResponseData);
 
-      expect($("#feedback-rule").is(":hidden")).to.be.true;
+      $("#feedback-rule").hide();
 
       $("#feedback-rule-btn").trigger("click");
 
-      expect($("#feedback-rule").is(":visible")).to.be.true;
+      expect($("#feedback-rule").css("display")).to.equal("block");
+    });
+
+    it("should initialize the feedback hint button handler", function() {
+      const selectorSpy = sandbox.spy($.fn, "find");
+      const eventSpy = sandbox.spy($.fn, "on");
+
+      view.feedbacker.showFeedback(submissionResponseData);
+
+      sinon.assert.calledOnce(selectorSpy.withArgs(".feedback-hint-btn"));
+
+      sinon.assert.called(eventSpy.withArgs("click"));
+    });
+
+    it("should call initFeedbackHintBtn() on click", function() {
+      const initFeedbackHintBtnSpy = sandbox.spy(view.feedbacker, "initFeedbackHintBtn");
+
+      view.feedbacker.showFeedback(submissionResponseData);
+
+      $("#feedback-hint-btn-1").trigger("click");
+
+      sinon.assert.calledOnce(initFeedbackHintBtnSpy);
+    });
+
+    describe("initFeedbackHintBtn", function() {
+      it("should toggle the feedback hint", function() {
+        view.feedbacker.showFeedback(submissionResponseData);
+
+        $("#feedback-hint-1").hide();
+
+        $("#feedback-hint-btn-1").trigger("click");
+
+        expect($("#feedback-hint-1").css("display")).to.equal("block");
+      });
+
+      it("should show the next feedback hint button", function() {
+        view.feedbacker.showFeedback(submissionResponseData);
+
+        $("#feedback-hint-btn-2").hide();
+
+        $("#feedback-hint-1").hide();
+
+        $("#feedback-hint-btn-1").trigger("click");
+
+        expect($("#feedback-hint-btn-2").css("display")).to.equal("inline-block");
+      });
+    });
+
+    it("should show the first feedback hint button", function() {
+      $("#feedback-hint-btn-1").hide();
+
+      view.feedbacker.showFeedback(submissionResponseData);
+
+      expect($("#feedback-hint-btn-1").css("display")).to.equal("inline-block");
     });
   });
 });
