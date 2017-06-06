@@ -60,6 +60,7 @@ view.feedbacker = {
 
   /**
    * Initialize the click handler for the feedback rule button.
+   * Toggle the feedback rule.
    */
   initFeedbackRuleBtn: function() {
     $("#feedback-rule").toggle();
@@ -67,15 +68,12 @@ view.feedbacker = {
 
   /**
    * Initialize the click handler for the feedback hint button.
+   * Toggle the feedback hint and show the next feedback hint button.
    */
   initFeedbackHintBtn: function() {
     const feedbackLevel = $(this).data("feedback-level");
-    const $FeedbackHint = $("#feedback-hint-" + feedbackLevel);
 
-    if($FeedbackHint.is(":hidden")){
-      $("#feedback-hint-btn-" + (feedbackLevel+1)).show();
-    }
-
-    $FeedbackHint.toggle();
+    $("#feedback-hint-" + feedbackLevel).toggle();
+    $("#feedback-hint-btn-" + (feedbackLevel+1)).show();
   }
 };
