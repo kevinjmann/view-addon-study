@@ -30,6 +30,10 @@ view.feedbacker = {
     view.lib.initDialogClose($Dialog);
 
     $("#feedback-rule-btn").on("click", view.feedbacker.initFeedbackRuleBtn);
+
+    $(".feedback-hint-btn").on("click", view.feedbacker.initFeedbackHintBtn);
+
+    $("#feedback-hint-btn-1").show();
   },
 
   /**
@@ -59,5 +63,19 @@ view.feedbacker = {
    */
   initFeedbackRuleBtn: function() {
     $("#feedback-rule").toggle();
+  },
+
+  /**
+   * Initialize the click handler for the feedback hint button.
+   */
+  initFeedbackHintBtn: function() {
+    const feedbackLevel = $(this).data("feedback-level");
+    const $FeedbackHint = $("#feedback-hint-" + feedbackLevel);
+
+    if($FeedbackHint.is(":hidden")){
+      $("#feedback-hint-btn-" + (feedbackLevel+1)).show();
+    }
+
+    $FeedbackHint.toggle();
   }
 };
