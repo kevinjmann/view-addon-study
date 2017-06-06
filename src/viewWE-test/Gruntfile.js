@@ -53,7 +53,8 @@ module.exports = function(grunt) {
           "**/ru-nouns-click.html": ["html2js"],
           "**/ru-nouns-color.html": ["html2js"],
           "**/ru-nouns-mc-and-cloze.html": ["html2js"],
-          "**/debug-sentence-markup.html": ["html2js"]
+          "**/debug-sentence-markup.html": ["html2js"],
+          "**/unstressed-o-feedback.html": ["html2js"]
         },
         plugins: [
           "karma-coverage",
