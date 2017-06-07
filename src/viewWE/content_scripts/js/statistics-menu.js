@@ -109,21 +109,25 @@ view.statisticsMenu = {
       view.statisticsMenu.addTaskData($Dialog, taskData);
     });
 
-    const isModal = true;
-    const title = "All Tasks";
-    const height = $(window).height() * 0.8;
-    const position = {
-      my: "left",
-      at: "left",
-      of: window
-    };
-    const buttons = {
-      Ok: function() {
-        view.lib.removeDialog($Dialog);
+    const settings = {
+      modal: true,
+      title: "All Tasks",
+      width: "auto",
+      maxWidth: $(window).width() * 0.5,
+      maxHeight: $(window).height() * 0.8,
+      position: {
+        my: "left",
+        at: "left",
+        of: window
+      },
+      buttons: {
+        Ok: function() {
+          view.lib.removeDialog($Dialog);
+        }
       }
     };
 
-    view.lib.dialogSetup(isModal, $Dialog, title, height, position, buttons);
+    view.lib.dialogSetup($Dialog, settings);
 
     view.lib.initDialogClose($Dialog);
   },
@@ -231,21 +235,25 @@ view.statisticsMenu = {
       view.statisticsMenu.addPerformanceData($Dialog, performanceData, index);
     });
 
-    const isModal = true;
-    const title = "Task Performances";
-    const height = $(window).height() * 0.8;
-    const position = {
-      my: "left",
-      at: "left",
-      of: window
-    };
-    const buttons = {
-      Ok: function() {
-        view.lib.removeDialog($Dialog);
+    const settings = {
+      modal: true,
+      title: "Task Performances",
+      width: "auto",
+      maxWidth: $(window).width() * 0.5,
+      maxHeight: $(window).height() * 0.8,
+      position: {
+        my: "left",
+        at: "left",
+        of: window
+      },
+      buttons: {
+        Ok: function() {
+          view.lib.removeDialog($Dialog);
+        }
       }
     };
 
-    view.lib.dialogSetup(isModal, $Dialog, title, height, position, buttons);
+    view.lib.dialogSetup($Dialog, settings);
 
     view.lib.initDialogClose($Dialog);
   },

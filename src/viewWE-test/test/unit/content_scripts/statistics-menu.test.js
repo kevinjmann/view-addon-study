@@ -589,27 +589,32 @@ describe("statistics-menu.js", function() {
         });
       });
 
-      it("should call lib.dialogSetup(isModal, $Dialog, title, height, position, buttons)", function() {
+      it("should call lib.dialogSetup($Dialog, settings)", function() {
         const dialogSetupSpy = sandbox.spy(view.lib, "dialogSetup");
 
-        const isModal = true;
-        const title = "All Tasks";
-        const height = $(window).height() * 0.8;
-        const position = {
-          my: "left",
-          at: "left",
-          of: window
+        const settings = {
+          modal: true,
+          title: "All Tasks",
+          width: "auto",
+          maxWidth: $(window).width() * 0.5,
+          maxHeight: $(window).height() * 0.8,
+          position: {
+            my: "left",
+            at: "left",
+            of: window
+          }
         };
 
         view.statisticsMenu.showAllTasks(tasksData);
 
+        // the test fails with this property, probably because it has
+        // an anonymous function
+        delete dialogSetupSpy.firstCall.args[1].buttons;
+
         sinon.assert.calledOnce(dialogSetupSpy);
         sinon.assert.calledWith(dialogSetupSpy,
-          isModal,
           $("#view-all-tasks-dialog"),
-          title,
-          height,
-          position
+          settings
         );
       });
 
@@ -824,27 +829,32 @@ describe("statistics-menu.js", function() {
         });
       });
 
-      it("should call lib.dialogSetup(isModal, $Dialog, title, height, position, buttons)", function() {
+      it("should call lib.dialogSetup($Dialog, settings)", function() {
         const dialogSetupSpy = sandbox.spy(view.lib, "dialogSetup");
 
-        const isModal = true;
-        const title = "Task Performances";
-        const height = $(window).height() * 0.8;
-        const position = {
-          my: "left",
-          at: "left",
-          of: window
+        const settings = {
+          modal: true,
+          title: "Task Performances",
+          width: "auto",
+          maxWidth: $(window).width() * 0.5,
+          maxHeight: $(window).height() * 0.8,
+          position: {
+            my: "left",
+            at: "left",
+            of: window
+          }
         };
 
         view.statisticsMenu.showTask(performancesData);
 
+        // the test fails with this property, probably because it has
+        // an anonymous function
+        delete dialogSetupSpy.firstCall.args[1].buttons;
+
         sinon.assert.calledOnce(dialogSetupSpy);
         sinon.assert.calledWith(dialogSetupSpy,
-          isModal,
           $("#view-task-dialog"),
-          title,
-          height,
-          position
+          settings
         );
       });
 
