@@ -37,6 +37,7 @@ describe("feedbacker.js", function() {
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
+    sandbox.stub($.fn, "load").yields();
   });
 
   afterEach(function() {
@@ -53,6 +54,9 @@ describe("feedbacker.js", function() {
       // maintain this test, if there are additions or changes
       // the expectations below don't need to be tested in other tests again
       // the selectors below can be freely used in the tests without problems
+      view.toolbarIframe.init();
+
+      expect($("#view-toolbar-iframe").length).to.be.above(0);
 
       expect($(".feedback-hint-btn").length).to.equal(3);
       expect($(".feedback-hint").length).to.equal(3);
@@ -139,29 +143,69 @@ describe("feedbacker.js", function() {
       });
     });
 
-    it("should call lib.dialogSetup($Dialog, title, height, position)", function() {
+    it("should call decideDialogPosition(enhancementId)", function() {
+      const decideDialogPositionSpy = sandbox.spy(view.feedbacker, "decideDialogPosition");
+
+      view.feedbacker.showFeedback(submissionResponseData);
+
+      sinon.assert.calledOnce(decideDialogPositionSpy);
+
+      sinon.assert.calledWithExactly(decideDialogPositionSpy,
+        performanceData["enhancement-id"]
+      );
+    });
+
+    describe("decideDialogPosition", function() {
+      it("should decide where to place the dialog, decision bottom", function() {
+        const enhancementId = "VIEW-N-Msc-Inan-Sg-Nom-5";
+
+        $("#" + enhancementId).offset({ top: 200, left: 0 });
+
+        const position = view.feedbacker.decideDialogPosition(enhancementId);
+
+        expect(position).to.eql({
+          my: "left bottom",
+          at: "left top",
+          of: "#view-toolbar-iframe"
+        })
+      });
+
+      it("should decide where to place the dialog, decision top", function() {
+        const enhancementId = "VIEW-N-Msc-Inan-Sg-Nom-5";
+
+        $("#" + enhancementId).offset({ top: 500, left: 0 });
+
+        const position = view.feedbacker.decideDialogPosition(enhancementId);
+
+        expect(position).to.eql({
+          my: "left top",
+          at: "left top",
+          of: window
+        })
+      });
+    });
+
+    it("should call lib.dialogSetup($Dialog, settings)", function() {
       const dialogSetupSpy = sandbox.spy(view.lib, "dialogSetup");
 
-      const isModal = false;
-      const title = "Feedback";
-      const height = "auto";
-      const position = {
-        my: "left top",
-        at: "right bottom",
-        of: "#" + performanceData["enhancement-id"]
+      const settings = {
+        title: "Feedback",
+        width: "auto",
+        height: "auto",
+        maxHeight: $(window).height() * 0.40,
+        position: {
+          my: "left bottom",
+          at: "left top",
+          of: "#view-toolbar-iframe"
+        }
       };
-      const buttons = {};
 
       view.feedbacker.showFeedback(submissionResponseData);
 
       sinon.assert.calledOnce(dialogSetupSpy);
       sinon.assert.calledWithExactly(dialogSetupSpy,
-        isModal,
         $("#view-feedback-dialog"),
-        title,
-        height,
-        position,
-        buttons
+        settings
       );
     });
 
@@ -182,79 +226,158 @@ describe("feedbacker.js", function() {
       expect($("#view-feedback-dialog").length).to.be.above(0);
     });
 
+    it("should call initFeedbackRuleBtn()", function() {
+      const initFeedbackRuleBtnSpy = sandbox.spy(view.feedbacker, "initFeedbackRuleBtn");
+
+      view.feedbacker.showFeedback(submissionResponseData);
+
+      sinon.assert.calledOnce(initFeedbackRuleBtnSpy);
+    });
+
     it("should initialize the feedback rule button handler", function() {
       const selectorSpy = sandbox.spy(document, "getElementById");
       const eventSpy = sandbox.spy($.fn, "on");
 
-      view.feedbacker.showFeedback(submissionResponseData);
+      view.feedbacker.initFeedbackRuleBtn();
 
       sinon.assert.calledOnce(selectorSpy.withArgs("feedback-rule-btn"));
 
       sinon.assert.called(eventSpy.withArgs("click"));
     });
 
-    it("should call initFeedbackRuleBtn() on click", function() {
-      const initFeedbackRuleBtnSpy = sandbox.spy(view.feedbacker, "initFeedbackRuleBtn");
+    it("should call toggleFeedbackRule() on click", function() {
+      const toggleFeedbackRuleSpy = sandbox.spy(view.feedbacker, "toggleFeedbackRule");
 
-      view.feedbacker.showFeedback(submissionResponseData);
+      view.feedbacker.initFeedbackRuleBtn();
 
       $("#feedback-rule-btn").trigger("click");
 
-      sinon.assert.calledOnce(initFeedbackRuleBtnSpy);
+      sinon.assert.calledOnce(toggleFeedbackRuleSpy);
     });
 
     it("should toggle the feedback rule", function() {
-      view.feedbacker.showFeedback(submissionResponseData);
-
       $("#feedback-rule").hide();
+
+      view.feedbacker.toggleFeedbackRule();
 
       $("#feedback-rule-btn").trigger("click");
 
       expect($("#feedback-rule").css("display")).to.equal("block");
     });
 
+    it("should call initFeedbackHintBtn(position)", function() {
+      const initFeedbackHintBtnSpy = sandbox.spy(view.feedbacker, "initFeedbackHintBtn");
+
+      view.feedbacker.showFeedback(submissionResponseData);
+
+      sinon.assert.calledOnce(initFeedbackHintBtnSpy);
+      sinon.assert.calledWithExactly(initFeedbackHintBtnSpy, {
+        my: "left bottom",
+        at: "left top",
+        of: "#view-toolbar-iframe"
+      });
+    });
+
     it("should initialize the feedback hint button handler", function() {
       const selectorSpy = sandbox.spy($.fn, "find");
       const eventSpy = sandbox.spy($.fn, "on");
 
-      view.feedbacker.showFeedback(submissionResponseData);
+      view.feedbacker.initFeedbackHintBtn({
+        my: "left top",
+        at: "left top",
+        of: window
+      });
 
       sinon.assert.calledOnce(selectorSpy.withArgs(".feedback-hint-btn"));
 
       sinon.assert.called(eventSpy.withArgs("click"));
     });
 
-    it("should call initFeedbackHintBtn() on click", function() {
-      const initFeedbackHintBtnSpy = sandbox.spy(view.feedbacker, "initFeedbackHintBtn");
+    it("should call toggleHintAndShowNextHintBtn(feedbackLevel, position) on click", function() {
+      const toggleHintAndShowNextHintBtnSpy = sandbox.spy(view.feedbacker, "toggleHintAndShowNextHintBtn");
 
-      view.feedbacker.showFeedback(submissionResponseData);
+      const position = {
+        my: "left top",
+        at: "left top",
+        of: window
+      };
+
+      view.feedbacker.initFeedbackHintBtn(position);
 
       $("#feedback-hint-btn-1").trigger("click");
 
-      sinon.assert.calledOnce(initFeedbackHintBtnSpy);
+      sinon.assert.calledOnce(toggleHintAndShowNextHintBtnSpy);
+      sinon.assert.calledWithExactly(toggleHintAndShowNextHintBtnSpy,
+        1,
+        position
+      );
     });
 
-    describe("initFeedbackHintBtn", function() {
+    describe("toggleHintAndShowNextHintBtn", function() {
       it("should toggle the feedback hint", function() {
-        view.feedbacker.showFeedback(submissionResponseData);
-
         $("#feedback-hint-1").hide();
 
-        $("#feedback-hint-btn-1").trigger("click");
+        const position = {
+          my: "left top",
+          at: "left top",
+          of: window
+        };
+
+        view.feedbacker.toggleHintAndShowNextHintBtn(1, position);
 
         expect($("#feedback-hint-1").css("display")).to.equal("block");
       });
 
       it("should show the next feedback hint button", function() {
-        view.feedbacker.showFeedback(submissionResponseData);
-
         $("#feedback-hint-btn-2").hide();
-
         $("#feedback-hint-1").hide();
 
-        $("#feedback-hint-btn-1").trigger("click");
+        const position = {
+          my: "left top",
+          at: "left top",
+          of: window
+        };
+
+        view.feedbacker.toggleHintAndShowNextHintBtn(1, position);
 
         expect($("#feedback-hint-btn-2").css("display")).to.equal("inline-block");
+      });
+
+      it("should adjust the dialog position as the width and height likely changed", function() {
+        const position = {
+          my: "left bottom",
+          at: "left top",
+          of: "#view-toolbar-iframe"
+        };
+
+        const dialogSpy = sandbox.spy($.fn, "dialog");
+
+        view.feedbacker.toggleHintAndShowNextHintBtn(1, position);
+
+        sinon.assert.calledOnce(dialogSpy);
+        sinon.assert.calledWithExactly(dialogSpy,
+          "option",
+          "position",
+          position
+        );
+      });
+
+      it("should scroll down inside the feedback message", function() {
+        const scrollTopSpy = sandbox.spy($.fn, "scrollTop");
+        const dialogHeight = $("#view-feedback-dialog").height();
+
+        const position = {
+          my: "left top",
+          at: "left top",
+          of: window
+        };
+
+        view.feedbacker.toggleHintAndShowNextHintBtn(1, position);
+
+        sinon.assert.called(scrollTopSpy);
+        sinon.assert.calledWithExactly(scrollTopSpy,
+          dialogHeight
+        );
       });
     });
 
