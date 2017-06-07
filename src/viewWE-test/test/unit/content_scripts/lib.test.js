@@ -156,44 +156,39 @@ describe("lib.js", function() {
   });
 
   describe("dialogSetup", function() {
-    it("should call dialogSetup($Dialog, title, height, position)", function() {
+    it("should call dialogSetup($Dialog, settings), with max width in settings", function() {
       const dialogSpy = sandbox.spy($.fn, "dialog");
 
       const $Dialog = $("<div>");
       $Dialog.attr("id", "view-dialog");
 
-      const isModal = true;
-      const title = "All Tasks";
-      const height = $(window).height() * 0.8;
-      const position = {
-        my: "left",
-        at: "left",
-        of: window
-      };
-      const buttons = {
-        Ok: function() {
-          view.lib.removeDialog($("#view-dialog"));
-        }
+      const maxWidth = 500;
+
+      const settings = {
+        width: "auto",
+        maxWidth: maxWidth
       };
 
-      view.lib.dialogSetup(isModal, $Dialog, title, height, position, buttons);
+      view.lib.dialogSetup($Dialog, settings);
 
-      // the test fails with this property, probably because it has
-      // an anonymous function
-      delete dialogSpy.firstCall.args[0].buttons;
+      sinon.assert.calledOnce(dialogSpy.withArgs(settings));
 
-      sinon.assert.calledOnce(dialogSpy);
-      sinon.assert.calledWithExactly(dialogSpy, {
-          modal: isModal,
-          title: title,
-          overlay: {opacity: 0.1, background: "black"},
-          width: "auto",
-          height: height,
-          position: position,
-          draggable: true,
-          resizable: true
-        }
-      );
+      expect($Dialog.dialog("widget").css("max-width")).to.equal(maxWidth + "px")
+    });
+
+    it("should call dialogSetup($Dialog, settings), without max width in settings", function() {
+      const dialogSpy = sandbox.spy($.fn, "dialog");
+
+      const $Dialog = $("<div>");
+      $Dialog.attr("id", "view-dialog");
+
+      const settings = {
+        title: "some title"
+      };
+
+      view.lib.dialogSetup($Dialog, settings);
+
+      sinon.assert.calledOnce(dialogSpy.withArgs(settings));
     });
 
     it("should call removeDialog($Dialog) when the 'Ok' button was pressed", function() {
@@ -202,21 +197,17 @@ describe("lib.js", function() {
       const $Dialog = $("<div>");
       $Dialog.attr("id", "view-dialog");
 
-      const isModal = true;
-      const title = "All Tasks";
-      const height = $(window).height() * 0.8;
-      const position = {
-        my: "left",
-        at: "left",
-        of: window
-      };
-      const buttons = {
-        Ok: function() {
-          view.lib.removeDialog($("#view-dialog"));
+      const settings = {
+        width: "auto",
+        maxWidth: $(window).width() * 0.5,
+        buttons: {
+          Ok: function() {
+            view.lib.removeDialog($("#view-dialog"));
+          }
         }
       };
 
-      view.lib.dialogSetup(isModal, $Dialog, title, height, position, buttons);
+      view.lib.dialogSetup($Dialog, settings);
 
       // trigger a click on the 'Ok' button
       $Dialog.dialog("option", "buttons").Ok();
