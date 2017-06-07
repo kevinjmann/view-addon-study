@@ -31,6 +31,7 @@ module.exports = function(grunt) {
           "../viewWE/content_scripts/js/container.js",
           "../viewWE/content_scripts/js/enhancer.js",
           "../viewWE/content_scripts/js/view-menu.js",
+          "../viewWE/content_scripts/js/assessment.js",
           "../viewWE/content_scripts/js/statistics-menu.js",
           "../viewWE/content_scripts/js/about.js",
           "../viewWE/content_scripts/js/blur.js",
