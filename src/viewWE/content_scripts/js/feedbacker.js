@@ -15,23 +15,23 @@ view.feedbacker = {
 
     view.feedbacker.addSubmissionResponseData($Dialog, performanceData, feedbackData);
 
-    const isModal = false;
-    const title = "Feedback";
-    const height = "auto";
-    const position = {
-      my: "left top",
-      at: "right bottom",
-      of: "#" + performanceData["enhancement-id"]
-    };
-    const buttons = {};
+    const position = view.feedbacker.decideDialogPosition(performanceData["enhancement-id"]);
 
-    view.lib.dialogSetup(isModal, $Dialog, title, height, position, buttons);
+    const settings = {
+      title: "Feedback",
+      width: "auto",
+      height: "auto",
+      maxHeight: $(window).height() * 0.40,
+      position: position
+    };
+
+    view.lib.dialogSetup($Dialog, settings);
 
     view.lib.initDialogClose($Dialog);
 
-    $("#feedback-rule-btn").on("click", view.feedbacker.initFeedbackRuleBtn);
+    view.feedbacker.initFeedbackRuleBtn();
 
-    $(".feedback-hint-btn").on("click", view.feedbacker.initFeedbackHintBtn);
+    view.feedbacker.initFeedbackHintBtn(position);
 
     $("#feedback-hint-btn-1").show();
   },
@@ -59,21 +59,76 @@ view.feedbacker = {
   },
 
   /**
+   * Decide the dialog position relative to the position of the
+   * enhancement element:
+   * - dialog is at the bottom, if the enhancement element is above
+   * the center of the window
+   * - dialog is at the top otherwise
+   *
+   * @param enhancementId the id of the enhancement element
+   * @returns {object} the position of the dialog
+   */
+  decideDialogPosition: function(enhancementId) {
+    const elementYPosition = $("#" + enhancementId).offset().top;
+    const currentTop = $(window).scrollTop();
+    const windowCenter = $(window).height() * 0.45;
+    const centerYPosition = currentTop + windowCenter;
+
+    if(elementYPosition < centerYPosition){
+      return {
+        my: "left bottom",
+        at: "left top",
+        of: "#view-toolbar-iframe"
+      };
+    }
+    else {
+      return {
+        my: "left top",
+        at: "left top",
+        of: window
+      };
+    }
+  },
+
+  /**
    * Initialize the click handler for the feedback rule button.
-   * Toggle the feedback rule.
    */
   initFeedbackRuleBtn: function() {
+    $("#feedback-rule-btn").on("click", view.feedbacker.toggleFeedbackRule);
+  },
+
+  /**
+   * Toggle the feedback rule.
+   */
+  toggleFeedbackRule: function() {
     $("#feedback-rule").toggle();
   },
 
   /**
    * Initialize the click handler for the feedback hint button.
-   * Toggle the feedback hint and show the next feedback hint button.
+   *
+   * @param position the position of the feedback dialog
    */
-  initFeedbackHintBtn: function() {
-    const feedbackLevel = $(this).data("feedback-level");
+  initFeedbackHintBtn: function(position) {
+    $(".feedback-hint-btn").on("click", function() {
+      view.feedbacker.toggleHintAndShowNextHintBtn($(this).data("feedback-level"), position);
+    });
+  },
 
+  /**
+   * Toggle the feedback hint and show the next feedback hint button.
+   * Scroll down, so that the hint can be seen.
+   *
+   * @param feedbackLevel the level of the feedback
+   * @param position the position of the feedback dialog
+   */
+  toggleHintAndShowNextHintBtn: function(feedbackLevel, position) {
     $("#feedback-hint-" + feedbackLevel).toggle();
     $("#feedback-hint-btn-" + (feedbackLevel+1)).show();
+
+    const $Dialog = $("#view-feedback-dialog");
+
+    $Dialog.dialog("option", "position", position);
+    $Dialog.scrollTop($Dialog.height());
   }
 };
