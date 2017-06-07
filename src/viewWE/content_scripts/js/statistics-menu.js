@@ -287,7 +287,7 @@ view.statisticsMenu = {
       "Correct answer: " + performanceData["correct-answer"],
       "Number of tries: " + performanceData["number-of-tries"],
       "Used solution: " + performanceData["used-solution"],
-      "Assessment: " + performanceData["assessment"]
+      "Assessment: " + view.assessment[performanceData["assessment"]]
     ]);
 
     $InfoList.hide();
