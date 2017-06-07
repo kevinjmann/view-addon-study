@@ -43,7 +43,7 @@ describe("statistics-menu.js", function() {
       "number-of-tries": 1,
       "used-solution": false,
       "sentence": "the context sentence in which the <viewenhancement>enhancement</viewenhancement> is placed",
-      "assessment": "CORRECT"
+      "assessment": "EXACT_MATCH"
     },
     {
       "enhancement-id": "foo",
@@ -52,7 +52,7 @@ describe("statistics-menu.js", function() {
       "number-of-tries": 2,
       "used-solution": false,
       "sentence": "the context sentence in which the <viewenhancement>enhancement</viewenhancement> is placed",
-      "assessment": "CORRECT"
+      "assessment": "EXACT_MATCH"
     }
   ];
 
@@ -709,7 +709,7 @@ describe("statistics-menu.js", function() {
               "Correct answer: " + performanceData["correct-answer"],
               "Number of tries: " + performanceData["number-of-tries"],
               "Used solution: " + performanceData["used-solution"],
-              "Assessment: " + performanceData["assessment"]
+              "Assessment: Perfect solution"
             ]
           );
         });

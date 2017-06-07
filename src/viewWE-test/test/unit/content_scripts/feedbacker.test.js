@@ -21,7 +21,7 @@ describe("feedbacker.js", function() {
   };
 
   const feedbackData = {
-    "assessment": "Spelling error in unstressed 'o' position",
+    "assessment": "WRONG_SPELLING_UNSTRESSED_O",
     "message": $("#feedback-message").html()
   };
 
@@ -106,7 +106,7 @@ describe("feedbacker.js", function() {
           performanceData["enhancement-id"] + "-info",
           [
             "Number of tries: " + performanceData["number-of-tries"],
-            "Assessment: " + performanceData["assessment"]
+            "Assessment: Spelling error in unstressed 'o' position"
           ]
         );
       });
@@ -124,7 +124,7 @@ describe("feedbacker.js", function() {
           performanceData["enhancement-id"] + "-info",
           [
             "Number of tries: " + performanceData["number-of-tries"],
-            "Assessment: " + feedbackData["assessment"],
+            "Assessment: Spelling error in unstressed 'o' position",
             "Message: " + feedbackData["message"]
           ]
         );
