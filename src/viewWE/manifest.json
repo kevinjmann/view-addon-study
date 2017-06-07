@@ -61,6 +61,7 @@
         "content_scripts/js/container.js",
         "content_scripts/js/enhancer.js",
         "content_scripts/js/view-menu.js",
+        "content_scripts/js/assessment.js",
         "content_scripts/js/statistics-menu.js",
         "content_scripts/js/about.js",
         "content_scripts/js/blur.js",
