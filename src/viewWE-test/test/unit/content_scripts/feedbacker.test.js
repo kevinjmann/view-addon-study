@@ -93,25 +93,7 @@ describe("feedbacker.js", function() {
     });
 
     describe("addSubmissionResponseData", function() {
-      it("should call lib.createList(id, items) to create the info list without feedback data", function() {
-        const createListSpy = sandbox.spy(view.lib, "createList");
-
-        const $Dialog = $("<div>");
-        $Dialog.attr("id", "view-feedback-dialog");
-
-        view.feedbacker.addSubmissionResponseData($Dialog, performanceData, undefined);
-
-        sinon.assert.calledOnce(createListSpy);
-        sinon.assert.calledWithExactly(createListSpy,
-          performanceData["enhancement-id"] + "-info",
-          [
-            "Number of tries: " + performanceData["number-of-tries"],
-            "Assessment: Spelling error in unstressed 'o' position"
-          ]
-        );
-      });
-
-      it("should call lib.createList(id, items) to create the info list with feedback data", function() {
+      it("should call lib.createList(id, items) to create the info list", function() {
         const createListSpy = sandbox.spy(view.lib, "createList");
 
         const $Dialog = $("<div>");
