@@ -47,13 +47,8 @@ view.feedbacker = {
     const enhancementId = performanceData["enhancement-id"];
     const infoArray = ["Number of tries: " + performanceData["number-of-tries"]];
 
-    if(feedbackData){
-      infoArray.push("Assessment: " + view.assessment[feedbackData["assessment"]]);
-      infoArray.push("Message: " + feedbackData["message"]);
-    }
-    else{
-      infoArray.push("Assessment: " + view.assessment[performanceData["assessment"]]);
-    }
+    infoArray.push("Assessment: " + view.assessment[feedbackData["assessment"]]);
+    infoArray.push("Message: " + feedbackData["message"]);
 
     $Dialog.append(view.lib.createList(enhancementId + "-info", infoArray));
   },
