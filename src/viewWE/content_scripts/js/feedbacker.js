@@ -112,7 +112,7 @@ view.feedbacker = {
 
   /**
    * Toggle the feedback hint and show the next feedback hint button.
-   * Scroll down, so that the hint can be seen.
+   * Scroll to the start of the shown hint.
    *
    * @param feedbackLevel the level of the feedback
    * @param position the position of the feedback dialog
@@ -120,13 +120,19 @@ view.feedbacker = {
   toggleHintAndShowNextHintBtn: function(feedbackLevel, position) {
     const $FeedbackHint = $("#feedback-hint-" + feedbackLevel);
 
-    $FeedbackHint.toggle();
-    $("#feedback-hint-btn-" + (feedbackLevel+1)).show();
-
     const $Dialog = $("#view-feedback-dialog");
 
-    $Dialog.dialog("option", "position", position);
+    if($FeedbackHint.is(":hidden")){
+      $FeedbackHint.show();
 
-    view.lib.scrollToElement($FeedbackHint, $Dialog);
+      $("#feedback-hint-btn-" + (feedbackLevel+1)).show();
+
+      view.lib.scrollToElement($FeedbackHint, $Dialog);
+    }
+    else{
+      $FeedbackHint.hide();
+    }
+
+    $Dialog.dialog("option", "position", position);
   }
 };

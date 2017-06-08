@@ -303,7 +303,7 @@ describe("feedbacker.js", function() {
     });
 
     describe("toggleHintAndShowNextHintBtn", function() {
-      it("should toggle the feedback hint", function() {
+      it("should show the feedback hint, hint was hidden before", function() {
         const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
 
         $("body").append($Dialog);
@@ -323,7 +323,7 @@ describe("feedbacker.js", function() {
         expect($("#feedback-hint-1").css("display")).to.equal("block");
       });
 
-      it("should show the next feedback hint button", function() {
+      it("should show the next feedback hint button, hint was hidden before", function() {
         const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
 
         $("body").append($Dialog);
@@ -344,7 +344,54 @@ describe("feedbacker.js", function() {
         expect($("#feedback-hint-btn-2").css("display")).to.equal("inline-block");
       });
 
-      it("should adjust the dialog position as the width and height likely changed", function() {
+      it("should call view.lib.scrollToElement($Dialog, $ScrollArea), hint was hidden before", function() {
+        const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
+
+        $("body").append($Dialog);
+
+        view.lib.dialogSetup($Dialog, {});
+
+        $("#feedback-hint-1").hide();
+
+        const scrollToElementSpy = sandbox.spy(view.lib, "scrollToElement");
+
+        const feedbackLevel = 1;
+        const position = {
+          my: "left top",
+          at: "left top",
+          of: window
+        };
+
+        view.feedbacker.toggleHintAndShowNextHintBtn(feedbackLevel, position);
+
+        sinon.assert.called(scrollToElementSpy);
+        sinon.assert.calledWithExactly(scrollToElementSpy,
+          $("#feedback-hint-" + feedbackLevel),
+          $("#view-feedback-dialog")
+        );
+      });
+
+      it("should hide the feedback hint, hint was visible before", function() {
+        const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
+
+        $("body").append($Dialog);
+
+        view.lib.dialogSetup($Dialog, {});
+
+        $("#feedback-hint-1").show();
+
+        const position = {
+          my: "left top",
+          at: "left top",
+          of: window
+        };
+
+        view.feedbacker.toggleHintAndShowNextHintBtn(1, position);
+
+        expect($("#feedback-hint-1").css("display")).to.equal("none");
+      });
+
+      it("should adjust the dialog position as the width and height likely changed in any case", function() {
         const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
 
         $("body").append($Dialog);
@@ -366,31 +413,6 @@ describe("feedbacker.js", function() {
           "option",
           "position",
           position
-        );
-      });
-
-      it("should call view.lib.scrollToElement($Dialog, $ScrollArea)", function() {
-        const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
-
-        $("body").append($Dialog);
-
-        view.lib.dialogSetup($Dialog, {});
-
-        const scrollToElementSpy = sandbox.spy(view.lib, "scrollToElement");
-
-        const feedbackLevel = 1;
-        const position = {
-          my: "left top",
-          at: "left top",
-          of: window
-        };
-
-        view.feedbacker.toggleHintAndShowNextHintBtn(feedbackLevel, position);
-
-        sinon.assert.called(scrollToElementSpy);
-        sinon.assert.calledWithExactly(scrollToElementSpy,
-          $("#feedback-hint-" + feedbackLevel),
-          $("#view-feedback-dialog")
         );
       });
     });
