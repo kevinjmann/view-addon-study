@@ -37,7 +37,6 @@ describe("feedbacker.js", function() {
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
-    sandbox.stub($.fn, "load").yields();
   });
 
   afterEach(function() {
@@ -54,6 +53,8 @@ describe("feedbacker.js", function() {
       // maintain this test, if there are additions or changes
       // the expectations below don't need to be tested in other tests again
       // the selectors below can be freely used in the tests without problems
+      sandbox.stub($.fn, "load").yields();
+
       view.toolbarIframe.init();
 
       expect($("#view-toolbar-iframe").length).to.be.above(0);
@@ -276,6 +277,12 @@ describe("feedbacker.js", function() {
     });
 
     it("should call toggleHintAndShowNextHintBtn(feedbackLevel, position) on click", function() {
+      const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
+
+      $("body").append($Dialog);
+
+      view.lib.dialogSetup($Dialog, {});
+
       const toggleHintAndShowNextHintBtnSpy = sandbox.spy(view.feedbacker, "toggleHintAndShowNextHintBtn");
 
       const position = {
@@ -297,6 +304,12 @@ describe("feedbacker.js", function() {
 
     describe("toggleHintAndShowNextHintBtn", function() {
       it("should toggle the feedback hint", function() {
+        const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
+
+        $("body").append($Dialog);
+
+        view.lib.dialogSetup($Dialog, {});
+
         $("#feedback-hint-1").hide();
 
         const position = {
@@ -311,6 +324,12 @@ describe("feedbacker.js", function() {
       });
 
       it("should show the next feedback hint button", function() {
+        const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
+
+        $("body").append($Dialog);
+
+        view.lib.dialogSetup($Dialog, {});
+
         $("#feedback-hint-btn-2").hide();
         $("#feedback-hint-1").hide();
 
@@ -326,6 +345,12 @@ describe("feedbacker.js", function() {
       });
 
       it("should adjust the dialog position as the width and height likely changed", function() {
+        const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
+
+        $("body").append($Dialog);
+
+        view.lib.dialogSetup($Dialog, {});
+
         const position = {
           my: "left bottom",
           at: "left top",
@@ -344,21 +369,28 @@ describe("feedbacker.js", function() {
         );
       });
 
-      it("should scroll down inside the feedback message", function() {
-        const scrollTopSpy = sandbox.spy($.fn, "scrollTop");
-        const dialogHeight = $("#view-feedback-dialog").height();
+      it("should call view.lib.scrollToElement($Dialog, $ScrollArea)", function() {
+        const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
 
+        $("body").append($Dialog);
+
+        view.lib.dialogSetup($Dialog, {});
+
+        const scrollToElementSpy = sandbox.spy(view.lib, "scrollToElement");
+
+        const feedbackLevel = 1;
         const position = {
           my: "left top",
           at: "left top",
           of: window
         };
 
-        view.feedbacker.toggleHintAndShowNextHintBtn(1, position);
+        view.feedbacker.toggleHintAndShowNextHintBtn(feedbackLevel, position);
 
-        sinon.assert.called(scrollTopSpy);
-        sinon.assert.calledWithExactly(scrollTopSpy,
-          dialogHeight
+        sinon.assert.called(scrollToElementSpy);
+        sinon.assert.calledWithExactly(scrollToElementSpy,
+          $("#feedback-hint-" + feedbackLevel),
+          $("#view-feedback-dialog")
         );
       });
     });
