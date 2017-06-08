@@ -171,5 +171,18 @@ view.lib = {
       default:
         return word;
     }
+  },
+
+  /**
+   * Scroll to an element inside the scroll area if it not
+   * done already.
+   *
+   * @param {object} $Element the element to scroll to
+   * @param {object} $ScrollArea the area of the scrolling
+   */
+  scrollToElement: function($Element, $ScrollArea){
+    $ScrollArea.scrollTop(
+      $Element.offset().top - $ScrollArea.offset().top + $ScrollArea.scrollTop()
+    );
   }
 };

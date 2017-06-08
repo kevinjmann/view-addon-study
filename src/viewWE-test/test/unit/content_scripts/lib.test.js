@@ -9,6 +9,20 @@
 describe("lib.js", function() {
   let sandbox;
 
+  before(function() {
+    const $ScrollArea = $("<div id='scroll-area'>");
+    $ScrollArea.css("height", 50);
+    $ScrollArea.css("overflow", "auto");
+
+    $ScrollArea.append($("<div id='1' class='element'>Some element</div>"));
+    $ScrollArea.append($("<div id='2' class='element'>Some element</div>"));
+    $ScrollArea.append($("<div id='3' class='element'>Some element</div>"));
+
+    $("body").append($ScrollArea);
+
+    $(".element").css("height", 30);
+  });
+
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
   });
@@ -19,6 +33,7 @@ describe("lib.js", function() {
     $("#view-feedback-dialog").remove();
     $(window).off("click");
     $("a").remove();
+    $("#scroll-area").scrollTop(0);
   });
 
   describe("noResponse", function() {
@@ -362,6 +377,56 @@ describe("lib.js", function() {
       view.lib.matchCapitalization(word, 4);
 
       expect(matchCapitalizationSpy.firstCall.returnValue).to.equal(word);
+    });
+  });
+
+  describe("scrollToElement", function() {
+    it("should scroll to the element inside the scroll area, scroll bar at top", function() {
+      const scrollTopSpy = sandbox.spy($.fn, "scrollTop");
+
+      const $ScrollArea = $("#scroll-area");
+      const $Element = $("#3");
+
+      $ScrollArea.scrollTop(0);
+
+      view.lib.scrollToElement($Element, $ScrollArea);
+
+      sinon.assert.called(scrollTopSpy);
+      sinon.assert.calledWithExactly(scrollTopSpy,
+        60
+      );
+    });
+
+    it("should scroll to the element inside the scroll area, scroll bar at #2", function() {
+      const scrollTopSpy = sandbox.spy($.fn, "scrollTop");
+
+      const $ScrollArea = $("#scroll-area");
+      const $Element = $("#3");
+
+      $ScrollArea.scrollTop(30);
+
+      view.lib.scrollToElement($Element, $ScrollArea);
+
+      sinon.assert.called(scrollTopSpy);
+      sinon.assert.calledWithExactly(scrollTopSpy,
+        60
+      );
+    });
+
+    it("should scroll to the element inside the scroll area, scroll bar at element", function() {
+      const scrollTopSpy = sandbox.spy($.fn, "scrollTop");
+
+      const $ScrollArea = $("#scroll-area");
+      const $Element = $("#2");
+
+      $ScrollArea.scrollTop(30);
+
+      view.lib.scrollToElement($Element, $ScrollArea);
+
+      sinon.assert.called(scrollTopSpy);
+      sinon.assert.calledWithExactly(scrollTopSpy,
+        30
+      );
     });
   });
 });
