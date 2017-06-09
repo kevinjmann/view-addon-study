@@ -174,15 +174,38 @@ view.lib = {
   },
 
   /**
-   * Scroll to an element inside the scroll area if it not
-   * done already.
+   * Toggle an element and scroll to it, if possible.
+   *
+   * @param {object} $Element the element to scroll to
+   * @param {object} $ScrollArea the area of the scrolling
+   */
+  toggleAndScrollToElement: function($Element, $ScrollArea) {
+    $Element.toggle();
+
+    view.lib.scrollToElement($Element, $ScrollArea);
+  },
+
+  /**
+   * Scroll to a visible element inside the scroll area.
    *
    * @param {object} $Element the element to scroll to
    * @param {object} $ScrollArea the area of the scrolling
    */
   scrollToElement: function($Element, $ScrollArea){
-    $ScrollArea.scrollTop(
-      $Element.offset().top - $ScrollArea.offset().top + $ScrollArea.scrollTop()
-    );
+    if($Element.is(":visible")){
+      $ScrollArea.scrollTop(
+        $Element.offset().top - $ScrollArea.offset().top + $ScrollArea.scrollTop()
+      );
+    }
+  },
+
+  /**
+   * Moves a dialog to the given position.
+   *
+   * @param {object} $Dialog the dialog to move
+   * @param {object} position the new position
+   */
+  moveDialog: function($Dialog, position) {
+    $Dialog.dialog("option", "position", position);
   }
 };
