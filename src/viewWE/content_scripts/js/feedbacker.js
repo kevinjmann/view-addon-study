@@ -29,7 +29,7 @@ view.feedbacker = {
 
     view.lib.initDialogClose($Dialog);
 
-    view.feedbacker.initFeedbackRuleBtn();
+    view.feedbacker.initFeedbackRuleBtn(position);
 
     view.feedbacker.initFeedbackHintBtn(position);
 
@@ -87,16 +87,28 @@ view.feedbacker = {
 
   /**
    * Initialize the click handler for the feedback rule button.
+   *
+   * @param position the position of the feedback dialog
    */
-  initFeedbackRuleBtn: function() {
-    $("#feedback-rule-btn").on("click", view.feedbacker.toggleFeedbackRule);
+  initFeedbackRuleBtn: function(position) {
+    $("#feedback-rule-btn").on("click", function() {
+      view.feedbacker.toggleFeedbackRule(position);
+    });
   },
 
   /**
    * Toggle the feedback rule.
+   * Scroll to the start of the shown rule.
+   * Reposition the feedback dialog, because the height and width likely changed.
+   *
+   * @param position the position of the feedback dialog
    */
-  toggleFeedbackRule: function() {
-    $("#feedback-rule").toggle();
+  toggleFeedbackRule: function(position) {
+    const $Dialog = $("#view-feedback-dialog");
+
+    view.lib.toggleAndScrollToElement($("#feedback-rule"), $Dialog);
+
+    view.lib.moveDialog($Dialog, position);
   },
 
   /**
@@ -113,26 +125,18 @@ view.feedbacker = {
   /**
    * Toggle the feedback hint and show the next feedback hint button.
    * Scroll to the start of the shown hint.
+   * Reposition the feedback dialog, because the height and width likely changed.
    *
    * @param feedbackLevel the level of the feedback
    * @param position the position of the feedback dialog
    */
   toggleHintAndShowNextHintBtn: function(feedbackLevel, position) {
-    const $FeedbackHint = $("#feedback-hint-" + feedbackLevel);
-
     const $Dialog = $("#view-feedback-dialog");
 
-    if($FeedbackHint.is(":hidden")){
-      $FeedbackHint.show();
+    $("#feedback-hint-btn-" + (feedbackLevel+1)).show();
 
-      $("#feedback-hint-btn-" + (feedbackLevel+1)).show();
+    view.lib.toggleAndScrollToElement($("#feedback-hint-" + feedbackLevel), $Dialog);
 
-      view.lib.scrollToElement($FeedbackHint, $Dialog);
-    }
-    else{
-      $FeedbackHint.hide();
-    }
-
-    $Dialog.dialog("option", "position", position);
+    view.lib.moveDialog($Dialog, position);
   }
 };

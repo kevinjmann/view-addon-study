@@ -34,6 +34,7 @@ describe("lib.js", function() {
     $(window).off("click");
     $("a").remove();
     $("#scroll-area").scrollTop(0);
+    $(".element").show();
   });
 
   describe("noResponse", function() {
@@ -380,14 +381,46 @@ describe("lib.js", function() {
     });
   });
 
+  describe("toggleAndScrollToElement", function() {
+    it("should toggle the element", function() {
+      const $ScrollArea = $("#scroll-area");
+      const $Element = $("#3");
+
+      $Element.hide();
+
+      view.lib.toggleAndScrollToElement($Element, $ScrollArea);
+
+      expect($Element.css("display")).to.equal("block");
+
+      view.lib.toggleAndScrollToElement($Element, $ScrollArea);
+
+      expect($Element.css("display")).to.equal("none");
+    });
+
+    it("should call view.lib.scrollToElement($Element, $ScrollArea)", function() {
+      const $ScrollArea = $("#scroll-area");
+      const $Element = $("#3");
+
+      const scrollToElementSpy = sandbox.spy(view.lib, "scrollToElement");
+
+      view.lib.toggleAndScrollToElement($Element, $ScrollArea);
+
+      sinon.assert.calledOnce(scrollToElementSpy);
+      sinon.assert.calledWithExactly(scrollToElementSpy,
+        $Element,
+        $ScrollArea
+      );
+    });
+  });
+
   describe("scrollToElement", function() {
     it("should scroll to the element inside the scroll area, scroll bar at top", function() {
-      const scrollTopSpy = sandbox.spy($.fn, "scrollTop");
-
       const $ScrollArea = $("#scroll-area");
       const $Element = $("#3");
 
       $ScrollArea.scrollTop(0);
+
+      const scrollTopSpy = sandbox.spy($.fn, "scrollTop");
 
       view.lib.scrollToElement($Element, $ScrollArea);
 
@@ -398,12 +431,12 @@ describe("lib.js", function() {
     });
 
     it("should scroll to the element inside the scroll area, scroll bar at #2", function() {
-      const scrollTopSpy = sandbox.spy($.fn, "scrollTop");
-
       const $ScrollArea = $("#scroll-area");
       const $Element = $("#3");
 
       $ScrollArea.scrollTop(30);
+
+      const scrollTopSpy = sandbox.spy($.fn, "scrollTop");
 
       view.lib.scrollToElement($Element, $ScrollArea);
 
@@ -414,18 +447,60 @@ describe("lib.js", function() {
     });
 
     it("should scroll to the element inside the scroll area, scroll bar at element", function() {
-      const scrollTopSpy = sandbox.spy($.fn, "scrollTop");
-
       const $ScrollArea = $("#scroll-area");
       const $Element = $("#2");
 
       $ScrollArea.scrollTop(30);
+
+      const scrollTopSpy = sandbox.spy($.fn, "scrollTop");
 
       view.lib.scrollToElement($Element, $ScrollArea);
 
       sinon.assert.called(scrollTopSpy);
       sinon.assert.calledWithExactly(scrollTopSpy,
         30
+      );
+    });
+
+    it("should not scroll to a hidden element inside the scroll area", function() {
+      const $ScrollArea = $("#scroll-area");
+      const $Element = $("#3");
+
+      $ScrollArea.scrollTop(0);
+
+      $Element.hide();
+
+      const scrollTopSpy = sandbox.spy($.fn, "scrollTop");
+
+      view.lib.scrollToElement($Element, $ScrollArea);
+
+      sinon.assert.notCalled(scrollTopSpy);
+    });
+  });
+
+  describe("moveDialog", function() {
+    it("should call $.fn.dialog('option', 'position', position)", function() {
+      const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
+
+      $("body").append($Dialog);
+
+      view.lib.dialogSetup($Dialog, {});
+
+      const position = {
+        my: "top",
+        at: "top",
+        of: window
+      };
+
+      const dialogSpy = sandbox.spy($.fn, "dialog");
+
+      view.lib.moveDialog($Dialog, position);
+
+      sinon.assert.calledOnce(dialogSpy);
+      sinon.assert.calledWithExactly(dialogSpy,
+        "option",
+        "position",
+        position
       );
     });
   });
