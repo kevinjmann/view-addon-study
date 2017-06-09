@@ -508,8 +508,10 @@ const toolbar = {
   initSignInOutInterfaces: function() {
     chrome.storage.local.get("serverURL", function(result) {
       const authenticator = result.serverURL + "/authenticator.html";
-      toolbar.$cache.get(toolbar.selectorStart + "identity-signinlink").attr("link", authenticator);
-      toolbar.$cache.get(toolbar.selectorStart + "identity-signoutlink").attr("link", authenticator);
+      toolbar.$cache.get(toolbar.selectorStart + "identity-signinlink")
+      .attr("link", authenticator + "?action=sign-in");
+      toolbar.$cache.get(toolbar.selectorStart + "identity-signoutlink")
+      .attr("link", authenticator + "?action=sign-out");
     });
   },
 

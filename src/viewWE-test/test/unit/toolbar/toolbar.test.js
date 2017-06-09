@@ -30,6 +30,8 @@ describe("toolbar.js", function() {
   const identityIdStart = toolbar.selectorStart + "identity-";
   const globalServerURL = "https://view.aleks.bg";
   const authenticatorURL = globalServerURL + "/authenticator.html";
+  const authenticatorSignInURL = authenticatorURL + "?action=sign-in";
+  const authenticatorSignOutURL = authenticatorURL + "?action=sign-out";
 
   describe("Selector_Cache", function() {
     it("should get the wanted jquery selector", function() {
@@ -139,10 +141,10 @@ describe("toolbar.js", function() {
       chrome.storage.local.get.yields({ serverURL: globalServerURL });
       toolbar.initSignInOutInterfaces(); // adds the link attribute
 
-      expect($(identityIdStart + "signinlink").attr("link")).to.equal(authenticatorURL);
+      expect($(identityIdStart + "signinlink").attr("link")).to.equal(authenticatorSignInURL);
       expect($(identityIdStart + "signedinstatus").length).to.be.above(0);
       expect($(identityIdStart + "signedinuseremail").length).to.be.above(0);
-      expect($(identityIdStart + "signoutlink").attr("link")).to.equal(authenticatorURL);
+      expect($(identityIdStart + "signoutlink").attr("link")).to.equal(authenticatorSignOutURL);
 
       expect($(toolbar.selectorStart + "toggle-button").length).to.be.above(0);
     });
@@ -1168,15 +1170,15 @@ describe("toolbar.js", function() {
 
     describe("initSignInOutInterfaces", function() {
       it("should initialize the sign in and sign out interfaces", function() {
-        const link = authenticatorURL;
-
         $(toolbar.selectorStart + "identity-signinlink").attr("link", "");
         $(toolbar.selectorStart + "identity-signoutlink").attr("link", "");
 
         toolbar.initSignInOutInterfaces();
 
-        expect($(toolbar.selectorStart + "identity-signinlink").attr("link")).to.equal(link);
-        expect($(toolbar.selectorStart + "identity-signoutlink").attr("link")).to.equal(link);
+        expect($(toolbar.selectorStart + "identity-signinlink").attr("link"))
+        .to.equal(authenticatorSignInURL);
+        expect($(toolbar.selectorStart + "identity-signoutlink").attr("link"))
+        .to.equal(authenticatorSignOutURL);
       });
     });
 
