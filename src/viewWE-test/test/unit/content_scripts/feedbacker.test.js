@@ -209,43 +209,103 @@ describe("feedbacker.js", function() {
       expect($("#view-feedback-dialog").length).to.be.above(0);
     });
 
-    it("should call initFeedbackRuleBtn()", function() {
+    it("should call initFeedbackRuleBtn(position)", function() {
       const initFeedbackRuleBtnSpy = sandbox.spy(view.feedbacker, "initFeedbackRuleBtn");
 
       view.feedbacker.showFeedback(submissionResponseData);
 
       sinon.assert.calledOnce(initFeedbackRuleBtnSpy);
+      sinon.assert.calledWithExactly(initFeedbackRuleBtnSpy, {
+        my: "left bottom",
+        at: "left top",
+        of: "#view-toolbar-iframe"
+      });
     });
 
     it("should initialize the feedback rule button handler", function() {
       const selectorSpy = sandbox.spy(document, "getElementById");
       const eventSpy = sandbox.spy($.fn, "on");
 
-      view.feedbacker.initFeedbackRuleBtn();
+      view.feedbacker.initFeedbackRuleBtn({
+        my: "left top",
+        at: "left top",
+        of: window
+      });
 
       sinon.assert.calledOnce(selectorSpy.withArgs("feedback-rule-btn"));
 
       sinon.assert.called(eventSpy.withArgs("click"));
     });
 
-    it("should call toggleFeedbackRule() on click", function() {
+    it("should call toggleFeedbackRule(position) on click", function() {
+      const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
+
+      $("body").append($Dialog);
+
+      view.lib.dialogSetup($Dialog, {});
+
       const toggleFeedbackRuleSpy = sandbox.spy(view.feedbacker, "toggleFeedbackRule");
 
-      view.feedbacker.initFeedbackRuleBtn();
+      const position = {
+        my: "left top",
+        at: "left top",
+        of: window
+      };
+
+      view.feedbacker.initFeedbackRuleBtn(position);
 
       $("#feedback-rule-btn").trigger("click");
 
       sinon.assert.calledOnce(toggleFeedbackRuleSpy);
+      sinon.assert.calledWithExactly(toggleFeedbackRuleSpy, position);
     });
 
-    it("should toggle the feedback rule", function() {
-      $("#feedback-rule").hide();
+    describe("toggleFeedbackRule", function() {
+      it("should call view.lib.toggleAndScrollToElement($Element, $Dialog)", function() {
+        const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
 
-      view.feedbacker.toggleFeedbackRule();
+        $("body").append($Dialog);
 
-      $("#feedback-rule-btn").trigger("click");
+        view.lib.dialogSetup($Dialog, {});
 
-      expect($("#feedback-rule").css("display")).to.equal("block");
+        const toggleAndScrollToElementSpy = sandbox.spy(view.lib, "toggleAndScrollToElement");
+
+        view.feedbacker.toggleFeedbackRule({
+          my: "left top",
+          at: "left top",
+          of: window
+        });
+
+        sinon.assert.calledOnce(toggleAndScrollToElementSpy);
+        sinon.assert.calledWithExactly(toggleAndScrollToElementSpy,
+          $("#feedback-rule"),
+          $Dialog
+        );
+      });
+
+      it("should call view.lib.moveDialog($Dialog, position)", function() {
+        const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
+
+        $("body").append($Dialog);
+
+        view.lib.dialogSetup($Dialog, {});
+
+        const moveDialogSpy = sandbox.spy(view.lib, "moveDialog");
+
+        const position = {
+          my: "left top",
+          at: "left top",
+          of: window
+        };
+
+        view.feedbacker.toggleFeedbackRule(position);
+
+        sinon.assert.calledOnce(moveDialogSpy);
+        sinon.assert.calledWithExactly(moveDialogSpy,
+          $Dialog,
+          position
+        );
+      });
     });
 
     it("should call initFeedbackHintBtn(position)", function() {
@@ -303,27 +363,7 @@ describe("feedbacker.js", function() {
     });
 
     describe("toggleHintAndShowNextHintBtn", function() {
-      it("should show the feedback hint, hint was hidden before", function() {
-        const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
-
-        $("body").append($Dialog);
-
-        view.lib.dialogSetup($Dialog, {});
-
-        $("#feedback-hint-1").hide();
-
-        const position = {
-          my: "left top",
-          at: "left top",
-          of: window
-        };
-
-        view.feedbacker.toggleHintAndShowNextHintBtn(1, position);
-
-        expect($("#feedback-hint-1").css("display")).to.equal("block");
-      });
-
-      it("should show the next feedback hint button, hint was hidden before", function() {
+      it("should show the next feedback hint button", function() {
         const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
 
         $("body").append($Dialog);
@@ -331,7 +371,6 @@ describe("feedbacker.js", function() {
         view.lib.dialogSetup($Dialog, {});
 
         $("#feedback-hint-btn-2").hide();
-        $("#feedback-hint-1").hide();
 
         const position = {
           my: "left top",
@@ -344,16 +383,14 @@ describe("feedbacker.js", function() {
         expect($("#feedback-hint-btn-2").css("display")).to.equal("inline-block");
       });
 
-      it("should call view.lib.scrollToElement($Dialog, $ScrollArea), hint was hidden before", function() {
+      it("should call view.lib.toggleAndScrollToElement($Element, $Dialog)", function() {
         const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
 
         $("body").append($Dialog);
 
         view.lib.dialogSetup($Dialog, {});
 
-        $("#feedback-hint-1").hide();
-
-        const scrollToElementSpy = sandbox.spy(view.lib, "scrollToElement");
+        const toggleAndScrollToElementSpy = sandbox.spy(view.lib, "toggleAndScrollToElement");
 
         const feedbackLevel = 1;
         const position = {
@@ -364,54 +401,34 @@ describe("feedbacker.js", function() {
 
         view.feedbacker.toggleHintAndShowNextHintBtn(feedbackLevel, position);
 
-        sinon.assert.called(scrollToElementSpy);
-        sinon.assert.calledWithExactly(scrollToElementSpy,
+        sinon.assert.calledOnce(toggleAndScrollToElementSpy);
+        sinon.assert.calledWithExactly(toggleAndScrollToElementSpy,
           $("#feedback-hint-" + feedbackLevel),
-          $("#view-feedback-dialog")
+          $Dialog
         );
       });
 
-      it("should hide the feedback hint, hint was visible before", function() {
+      it("should call view.lib.moveDialog($Dialog, position)", function() {
         const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
 
         $("body").append($Dialog);
 
         view.lib.dialogSetup($Dialog, {});
 
-        $("#feedback-hint-1").show();
+        const moveDialogSpy = sandbox.spy(view.lib, "moveDialog");
 
+        const feedbackLevel = 1;
         const position = {
           my: "left top",
           at: "left top",
           of: window
         };
 
-        view.feedbacker.toggleHintAndShowNextHintBtn(1, position);
+        view.feedbacker.toggleHintAndShowNextHintBtn(feedbackLevel, position);
 
-        expect($("#feedback-hint-1").css("display")).to.equal("none");
-      });
-
-      it("should adjust the dialog position as the width and height likely changed in any case", function() {
-        const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
-
-        $("body").append($Dialog);
-
-        view.lib.dialogSetup($Dialog, {});
-
-        const position = {
-          my: "left bottom",
-          at: "left top",
-          of: "#view-toolbar-iframe"
-        };
-
-        const dialogSpy = sandbox.spy($.fn, "dialog");
-
-        view.feedbacker.toggleHintAndShowNextHintBtn(1, position);
-
-        sinon.assert.calledOnce(dialogSpy);
-        sinon.assert.calledWithExactly(dialogSpy,
-          "option",
-          "position",
+        sinon.assert.calledOnce(moveDialogSpy);
+        sinon.assert.calledWithExactly(moveDialogSpy,
+          $Dialog,
           position
         );
       });
