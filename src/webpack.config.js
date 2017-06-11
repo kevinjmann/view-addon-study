@@ -1,5 +1,7 @@
 const path = require("path");
 const glob = require("glob");
+
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const addon = path.resolve(__dirname, "addon");
@@ -9,7 +11,10 @@ module.exports = {
   entry: {
     'background/background': "./viewWE/background.js",
     'toolbar/toolbar': "./viewWE/toolbar/toolbar.js",
-    'content_scripts/view': glob.sync(path.resolve(content_scripts_path, "js/**/*.js"))
+    'content_scripts/view': [].concat(
+      glob.sync(path.resolve(content_scripts_path, "js/**/*.js")),
+      glob.sync(path.resolve(content_scripts_path, "css/**/*.css"))
+    )
   },
   devtool: 'source-map',
   output: {
@@ -22,25 +27,18 @@ module.exports = {
         from: "./viewWE/manifest.json",
         "to": path.resolve(addon, "manifest.json")
       }
-    ])
+    ]),
+    new ExtractTextPlugin("[name].css")
   ],
   module: {
     rules: [
       {
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract({fallback: "style-loader", use: "css-loader"})
+      },
+      {
         test: /\.scss$/,
-        use: [
-          {
-            loader: "style-loader"
-          },
-          {
-            loader: "css-loader",
-            options: { sourceMap : true }
-          },
-          {
-            loader: "sass-loader",
-            options: { sourceMap : true }
-          }
-        ]
+        loader: ExtractTextPlugin.extract({fallback: "style-loader", use: "css-loader!sass-loader"})
       }
     ]
   }
