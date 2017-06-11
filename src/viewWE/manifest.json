@@ -32,7 +32,6 @@
 
   "background": {
     "scripts": [
-      "lib/jquery-3.1.1.min.js",
       "background.js"
     ]
   },
@@ -41,7 +40,6 @@
     {
       "matches": ["<all_urls>"],
       "css": [
-        "lib/jquery-ui.min.css",
         "content_scripts/css/view.css",
         "content_scripts/css/view-menu.css",
         "content_scripts/css/statistics-menu.css",
@@ -53,8 +51,6 @@
         "content_scripts/css/feedbacker.css"
       ],
       "js": [
-        "lib/jquery-3.1.1.min.js",
-        "lib/jquery-ui.min.js",
         "content_scripts/js/view.js",
         "content_scripts/js/lib.js",
         "content_scripts/js/selector.js",
