@@ -28,7 +28,7 @@ const background = {
     .done(function() {
       background.proceedToSetAndToggleToolbar();
     })
-    .fail(function(){
+    .fail(function() {
       background.createBasicNotification(
         "topics-not-loaded-notification",
         "Topics not loaded!",
@@ -40,7 +40,7 @@ const background = {
   /**
    * Initiate topics object, so that it can be filled.
    */
-  initTopics: function(){
+  initTopics: function() {
     background.topics.articles = {};
 
     background.topics.determiners = {};
@@ -51,7 +51,7 @@ const background = {
   /**
    * Get the URLs of all topic json objects and set them.
    */
-  getAndSetTopicURLs: function(){
+  getAndSetTopicURLs: function() {
     background.topics.articles.url = chrome.extension.getURL("topics/articles.json");
 
     background.topics.determiners.url = chrome.extension.getURL("topics/determiners.json");
@@ -62,7 +62,7 @@ const background = {
   /**
    * Proceed to set the topics and toggle the toolbar.
    */
-  proceedToSetAndToggleToolbar : function(){
+  proceedToSetAndToggleToolbar: function() {
     chrome.storage.local.set({topics: background.topics}, background.toggleToolbar);
   },
 
@@ -74,13 +74,44 @@ const background = {
    * @param {string} title the title
    * @param {string} message the message
    */
-  createBasicNotification: function(id, title, message){
+  createBasicNotification: function(id, title, message) {
     chrome.notifications.create(
       id, {
-      "type": "basic",
-      "title": title,
-      "message": message
-    });
+        "type": "basic",
+        "title": title,
+        "message": message
+      });
+  },
+
+  /**
+   * Processes all messages received from content scripts and
+   * toolbar.js.
+   * Sends requests to content scripts toolbar.js or the server
+   * depending on the message.
+   *
+   * @param {*} request the message sent by the calling script
+   * @param {Object} sender the MessageSender Object containing sender info
+   * @callback sendResponseCallback
+   * @param {sendResponseCallback} sendResponse function to call as response
+   */
+  processMessage: function(request, sender, sendResponse) {
+    background.currentTabId = sender.tab.id;
+
+    const action = request.action;
+
+    if (action && background.hasOwnProperty(action)) {
+      const parameters = {
+        request,
+        sender,
+        sendResponse
+      };
+      return background[action](parameters);
+    }
+    background.createBasicNotification(
+      "unhandled-message-notification",
+      "Unhandled Message!",
+      "There was no handler for message: " + JSON.stringify(request) + "!"
+    );
   },
 
   /**
@@ -88,7 +119,7 @@ const background = {
    * Pass it on to toolbar-iframe.js.
    */
   toggleToolbar: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {msg: "toggle toolbar"});
+    chrome.tabs.sendMessage(background.currentTabId, {action: "toggleToolbar"});
   },
 
   /**
@@ -96,7 +127,7 @@ const background = {
    * Pass it on to view-menu.js.
    */
   toggleVIEWMenu: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {msg: "toggle VIEW Menu"});
+    chrome.tabs.sendMessage(background.currentTabId, {action: "toggleVIEWMenu"});
   },
 
   /**
@@ -104,7 +135,7 @@ const background = {
    * Pass it on to view-menu.js.
    */
   hideVIEWMenu: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {msg: "hide VIEW Menu"});
+    chrome.tabs.sendMessage(background.currentTabId, {action: "hideVIEWMenu"});
   },
 
   /**
@@ -112,7 +143,7 @@ const background = {
    * Pass it on to statistics-menu.js.
    */
   toggleStatisticsMenu: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {msg: "toggle statistics menu"});
+    chrome.tabs.sendMessage(background.currentTabId, {action: "toggleStatisticsMenu"});
   },
 
   /**
@@ -120,7 +151,7 @@ const background = {
    * Pass it on to statistics-menu.js.
    */
   hideStatisticsMenu: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {msg: "hide statistics menu"});
+    chrome.tabs.sendMessage(background.currentTabId, {action: "hideStatisticsMenu"});
   },
 
   /**
@@ -128,7 +159,7 @@ const background = {
    * Pass it on to lib.js.
    */
   removeFeedbackDialog: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {msg: "remove feedback dialog"});
+    chrome.tabs.sendMessage(background.currentTabId, {action: "removeFeedbackDialog"});
   },
 
   /**
@@ -136,30 +167,39 @@ const background = {
    * Pass it on to view.js.
    */
   callStartToEnhance: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {msg: "call startToEnhance"});
+    chrome.tabs.sendMessage(background.currentTabId, {action: "callStartToEnhance"});
   },
 
   /**
-   * Interaction.js send the message to show/hide an element
+   * enhancer.js send the message to show an element
    * using a selector. Pass it on to toolbar.js.
    *
-   * @param {*} request the message sent by the calling script
+   * @param {object} parameters request, sender and sendResponse from
+   * processMessage
    */
-  showHideElement: function(request) {
-    chrome.tabs.sendMessage(background.currentTabId, {
-      msg: request.msg,
-      selector: request.selector
-    });
+  showElement: function(parameters) {
+    chrome.tabs.sendMessage(background.currentTabId, parameters.request);
+  },
+
+  /**
+   * enhancer.js send the message to hide an element
+   * using a selector. Pass it on to toolbar.js.
+   *
+   * @param {object} parameters request, sender and sendResponse from
+   * processMessage
+   */
+  hideElement: function(parameters) {
+    chrome.tabs.sendMessage(background.currentTabId, parameters.request);
   },
 
   /**
    * toolbar.js/view.js is ready to receive the topics. Send them to it.
    *
-   * @callback sendResponseCallback
-   * @param {sendResponseCallback} sendResponse function to call as response
+   * @param {object} parameters request, sender and sendResponse from
+   * processMessage
    */
-  sendTopics: function(sendResponse) {
-    sendResponse({topics: background.topics});
+  sendTopics: function(parameters) {
+    parameters.sendResponse({topics: background.topics});
   },
 
   /**
@@ -167,7 +207,7 @@ const background = {
    * Pass it on to enhancer.js.
    */
   callAbort: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {msg: "call abort"});
+    chrome.tabs.sendMessage(background.currentTabId, {action: "callAbort"});
   },
 
   /**
@@ -175,16 +215,7 @@ const background = {
    * Pass it on to enhancer.js.
    */
   callRestoreToOriginal: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {msg: "call restoreToOriginal"});
-  },
-
-  /**
-   * Redirects to the given link in the request.
-   *
-   * @param {string} link the link to redirect to
-   */
-  redirect: function(link) {
-    chrome.tabs.create({url: link});
+    chrome.tabs.sendMessage(background.currentTabId, {action: "callRestoreToOriginal"});
   },
 
   /**
@@ -228,9 +259,11 @@ const background = {
    * If successful, request a call of addEnhancementMarkup
    * in enhancer.js.
    *
-   * @param {*} request the message sent by the calling script
+   * @param {object} parameters request, sender and sendResponse from
+   * processMessage
    */
-  sendActivityDataAndGetEnhancementMarkup: function(request) {
+  sendActivityDataAndGetEnhancementMarkup: function(parameters) {
+    const request = parameters.request;
     const ajaxTimeout = request.ajaxTimeout || 120000;
     chrome.storage.local.get(
       "servletURL",
@@ -239,16 +272,16 @@ const background = {
           data.servletURL,
           request.activityData,
           ajaxTimeout)
-          .done(function(data, textStatus, xhr) {
-            if (data) {
-              background.callAddEnhancementMarkup(data);
-            } else {
-              background.ajaxError(xhr, "nodata");
-            }
-          })
-          .fail(function(xhr, textStatus) {
-            background.ajaxError(xhr, textStatus);
-          });
+        .done(function(data, textStatus, xhr) {
+          if (data) {
+            background.callAddEnhancementMarkup(data);
+          } else {
+            background.ajaxError(xhr, "nodata");
+          }
+        })
+        .fail(function(xhr, textStatus) {
+          background.ajaxError(xhr, textStatus);
+        });
       }
     );
   },
@@ -259,9 +292,9 @@ const background = {
    *
    * @param {string} data the html markup to be added to the current page
    */
-  callAddEnhancementMarkup: function(data){
+  callAddEnhancementMarkup: function(data) {
     chrome.tabs.sendMessage(background.currentTabId, {
-      msg: "call addEnhancementMarkup",
+      action: "addEnhancementMarkup",
       data: data
     });
   },
@@ -270,34 +303,35 @@ const background = {
    * Send the task data from view.js to the server for processing.
    * If successful, request to call setTaskId(taskId) in view.js.
    *
-   * @param {*} request the message sent by the calling script
+   * @param {object} parameters request, sender and sendResponse from
+   * processMessage
    */
-  sendTaskDataAndGetTaskId: function(request){
+  sendTaskDataAndGetTaskId: function(parameters) {
     chrome.storage.local.get(
       "serverTaskURL",
       function(data) {
         background.ajaxPost(
           data.serverTaskURL,
-          request.taskData,
+          parameters.request.taskData,
           10000)
-          .done(function(data, textStatus, xhr) {
-            if (data) {
-              const taskData = JSON.parse(data);
-              background.callSetTaskId(taskData["task-id"]);
-            } else {
-              background.ajaxError(xhr, "no-task-data");
-            }
-          })
-          .fail(function() {
-            background.signOutUser();
-            background.createBasicNotification(
-              "auth-token-expired",
-              "The auth token expired!",
-              "The token for user authentication expired, " +
-                "you will be signed out automatically. " +
-                "Please sign in again!"
-            );
-          });
+        .done(function(data, textStatus, xhr) {
+          if (data) {
+            const taskData = JSON.parse(data);
+            background.callSetTaskId(taskData["task-id"]);
+          } else {
+            background.ajaxError(xhr, "no-task-data");
+          }
+        })
+        .fail(function() {
+          background.signOut();
+          background.createBasicNotification(
+            "auth-token-expired",
+            "The auth token expired!",
+            "The token for user authentication expired, " +
+            "you will be signed out automatically. " +
+            "Please sign in again!"
+          );
+        });
       }
     );
   },
@@ -309,7 +343,7 @@ const background = {
    */
   callSetTaskId: function(taskId) {
     chrome.tabs.sendMessage(background.currentTabId, {
-      msg: "call setTaskId",
+      action: "setTaskId",
       taskId: taskId
     });
   },
@@ -319,24 +353,25 @@ const background = {
    * If successful, request to call
    * showFeedback(submissionResponseData) in feedbacker.js.
    *
-   * @param {*} request the message sent by the calling script
+   * @param {object} parameters request, sender and sendResponse from
+   * processMessage
    */
-  sendTrackingData: function(request) {
+  sendTrackingData: function(parameters) {
     chrome.storage.local.get(
       "serverTrackingURL",
       function(data) {
         background.ajaxPost(
           data.serverTrackingURL,
-          request.trackingData,
+          parameters.request.trackingData,
           10000)
-          .done(function(data, textStatus, xhr) {
-            if (data) {
-              const submissionResponseData = JSON.parse(data);
-              background.callShowFeedback(submissionResponseData);
-            } else {
-              background.ajaxError(xhr, "no-performance-data");
-            }
-          });
+        .done(function(data, textStatus, xhr) {
+          if (data) {
+            const submissionResponseData = JSON.parse(data);
+            background.callShowFeedback(submissionResponseData);
+          } else {
+            background.ajaxError(xhr, "no-performance-data");
+          }
+        });
       }
     );
   },
@@ -350,7 +385,7 @@ const background = {
    */
   callShowFeedback: function(submissionResponseData) {
     chrome.tabs.sendMessage(background.currentTabId, {
-      msg: "call showFeedback",
+      action: "showFeedback",
       submissionResponseData: submissionResponseData
     });
   },
@@ -378,9 +413,11 @@ const background = {
    * If successful, request a call of showAllTasks(data)
    * in statistics-menu.js.
    *
-   * @param {*} request the message sent by the calling script
+   * @param {object} parameters request, sender and sendResponse from
+   * processMessage
    */
-  getAllTasks: function(request) {
+  getAllTasks: function(parameters) {
+    const request = parameters.request;
     const ajaxTimeout = request.ajaxTimeout || 120000;
     background.ajaxGet(request.serverTaskURL,
       request.queryParam,
@@ -405,7 +442,7 @@ const background = {
    */
   callShowAllTasks: function(tasksData) {
     chrome.tabs.sendMessage(background.currentTabId, {
-      msg: "call showAllTasks",
+      action: "showAllTasks",
       tasksData: tasksData
     });
   },
@@ -416,9 +453,11 @@ const background = {
    * If successful, request a call of showTask(data)
    * in statistics-menu.js.
    *
-   * @param {*} request the message sent by the calling script
+   * @param {object} parameters request, sender and sendResponse from
+   * processMessage
    */
-  getTask: function(request) {
+  getTask: function(parameters) {
+    const request = parameters.request;
     const ajaxTimeout = request.ajaxTimeout || 120000;
     background.ajaxGet(request.serverTrackingURL,
       request.queryParam,
@@ -444,7 +483,7 @@ const background = {
    */
   callShowTask: function(performancesData) {
     chrome.tabs.sendMessage(background.currentTabId, {
-      msg: "call showTask",
+      action: "showTask",
       performancesData: performancesData
     });
   },
@@ -554,14 +593,14 @@ const background = {
    * Send a request to the content script to return to the initial interaction
    * state.
    */
-  callInitialInteractionState: function(){
-    chrome.tabs.sendMessage(background.currentTabId, {msg: "call initialInteractionState"});
+  callInitialInteractionState: function() {
+    chrome.tabs.sendMessage(background.currentTabId, {action: "initialInteractionState"});
   },
 
   /**
    * Create an unknown error notification when no judgement can be made.
    */
-  createUnknownErrorNotification: function(){
+  createUnknownErrorNotification: function() {
     background.createBasicNotification(
       "unknown-error-notification",
       "Unknown error!",
@@ -577,12 +616,12 @@ const background = {
    * whether the cookie was removed, the cookie itself and the
    * reason for its change
    */
-  processUserIdCookie: function(changeInfo){
+  processUserIdCookie: function(changeInfo) {
     if (changeInfo.removed) {
-      background.signOutUser();
+      background.signOut();
     }
-    else if(changeInfo.cookie.value){
-      background.signInUser(changeInfo.cookie.value);
+    else if (changeInfo.cookie.value) {
+      background.signIn(changeInfo.cookie.value);
     }
   },
 
@@ -590,7 +629,7 @@ const background = {
    * Reset user related information and send a request to the toolbar to
    * sign out the user afterwards.
    */
-  signOutUser: function(){
+  signOut: function() {
     chrome.storage.local.set({
       userEmail: "",
       userid: "",
@@ -598,7 +637,7 @@ const background = {
       token: "",
       taskId: ""
     }, function() {
-      chrome.tabs.sendMessage(background.currentTabId, {msg: "call signOut"});
+      chrome.tabs.sendMessage(background.currentTabId, {action: "signOut"});
     });
   },
 
@@ -610,8 +649,9 @@ const background = {
    * - name
    * - email
    * - id
+   * - auth token
    */
-  signInUser: function(userData){
+  signIn: function(userData) {
     const account = userData.split("/");
     const user = account[0];
     const userEmail = account[1];
@@ -625,7 +665,7 @@ const background = {
       token: authtoken
     }, function() {
       chrome.tabs.sendMessage(background.currentTabId, {
-        msg: "call signIn",
+        action: "signIn",
         userEmail: userEmail,
         userid: userid,
         user: user,
@@ -655,89 +695,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
   }
 });
 
-/**
- * Processes all messages received from enhancer.js, toolbar-iframe.js and
- * toolbar.js.
- * Sends requests to enhancer.js, toolbar-iframe.js, toolbar.js or the server
- * depending on the message.
- *
- * @param {*} request the message sent by the calling script
- * @param {Object} sender the MessageSender Object containing sender info
- * @callback sendResponseCallback
- * @param {sendResponseCallback} sendResponse function to call as response
- */
-function processMessage(request, sender, sendResponse) {
-  background.currentTabId = sender.tab.id;
-
-  switch (request.msg) {
-    case "toggle toolbar":
-      background.toggleToolbar();
-      break;
-    case "toggle VIEW Menu":
-      background.toggleVIEWMenu();
-      break;
-    case "hide VIEW Menu":
-      background.hideVIEWMenu();
-      break;
-    case "toggle statistics menu":
-      background.toggleStatisticsMenu();
-      break;
-    case "hide statistics menu":
-      background.hideStatisticsMenu();
-      break;
-    case "remove feedback dialog":
-      background.removeFeedbackDialog();
-      break;
-    case "call startToEnhance":
-      background.callStartToEnhance();
-      break;
-    case "show element":
-    case "hide element":
-      background.showHideElement(request);
-      break;
-    case "call sendTopics":
-      background.sendTopics(sendResponse);
-      break;
-    case "call abort":
-      background.callAbort();
-      break;
-    case "call restoreToOriginal":
-      background.callRestoreToOriginal();
-      break;
-    case "redirect to link":
-      background.redirect(request.link);
-      break;
-    case "call openOptionsPage":
-      background.callOpenOptionsPage(sender.tab.id);
-      break;
-    case "open help page":
-      background.openHelpPage();
-      break;
-    case "send activityData and get enhancement markup":
-      background.sendActivityDataAndGetEnhancementMarkup(request);
-      break;
-    case "send taskData and get taskId":
-      background.sendTaskDataAndGetTaskId(request);
-      break;
-    case "send trackingData":
-      background.sendTrackingData(request);
-      break;
-    case "get all tasks":
-      background.getAllTasks(request);
-      break;
-    case "get task":
-      background.getTask(request);
-      break;
-    default:
-      background.createBasicNotification(
-        "unhandled-message-notification",
-        "Unhandled Message!",
-        "There was an unhandled message!"
-      );
-  }
-}
-
-chrome.runtime.onMessage.addListener(processMessage);
+chrome.runtime.onMessage.addListener(background.processMessage);
 
 /**
  * Observe the user id cookie when it changes.
@@ -748,7 +706,7 @@ chrome.runtime.onMessage.addListener(processMessage);
  */
 function observeUserId(changeInfo) {
   if ("wertiview_userid" === changeInfo.cookie.name) {
-  background.processUserIdCookie(changeInfo);
+    background.processUserIdCookie(changeInfo);
   }
 }
 
