@@ -32,7 +32,7 @@
 
   "background": {
     "scripts": [
-      "background.js"
+      "background/index.js"
     ]
   },
 

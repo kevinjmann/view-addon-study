@@ -1,12 +1,24 @@
 const path = require("path");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+const addon = path.resolve(__dirname, "addon");
 
 module.exports = {
-    entry: {
-        background: "./viewWE/background.js"
-    },
-    devtool: 'source-map',
-    output: {
-        path: path.resolve(__dirname, "addon"),
-        filename: "[name]/index.js"
-    }
+  entry: {
+    'background/index': "./viewWE/background.js",
+    'content_scripts/view': "./viewWE/content_scripts/js/view.js"
+  },
+  devtool: 'source-map',
+  output: {
+    path: addon,
+    filename: "[name].js"
+  },
+  plugins: [
+    new CopyWebpackPlugin([
+      {
+        from: "./viewWE/manifest.json",
+        "to": path.resolve(addon, "manifest.json")
+      }
+    ])
+  ]
 };
