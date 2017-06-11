@@ -1,14 +1,14 @@
+const viewMenuContent = require('../html/view-menu.html');
+
 view.VIEWmenu = {
   selectorStart : "#view-VIEW-menu-",
 
   add: function() {
-    const viewMenuHTML = chrome.extension.getURL("content_scripts/html/view-menu.html");
-
-    const $ViewMenu = $("<div>");
-
-    $ViewMenu.load(viewMenuHTML, view.VIEWmenu.init);
+    const $ViewMenu = $(viewMenuContent);
 
     $("body").prepend($ViewMenu);
+
+    view.VIEWmenu.init();
   },
 
   /**

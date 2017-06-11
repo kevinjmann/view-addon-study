@@ -1,3 +1,5 @@
+const aboutDialogContent = require('../html/about.html');
+
 view.about = {
   /**
    * The extension send the message to open the about dialog.
@@ -6,9 +8,6 @@ view.about = {
    */
   open: function() {
     if (!$("#view-about").length) {
-      // get the url of the about page
-      const aboutDialog = chrome.extension.getURL("content_scripts/html/about.html");
-
       // get the url of the view icon
       const viewLogo = chrome.extension.getURL("icons/view-128.png");
 
@@ -21,13 +20,9 @@ view.about = {
       const dHeight = wHeight * 0.8;
 
       // create and open the about dialog
-      const $aboutDialog = $("<div>");
+      const $aboutDialog = $(aboutDialogContent);
 
-      // load the about page and append the view icon
-      $aboutDialog.load(aboutDialog, function() {
-        // attach the view icon to the span element
-        $("#view-icon").append($viewImg);
-      });
+      $aboutDialog.find("#view-icon").append($viewImg);
 
       // create the about dialog
       $aboutDialog.dialog({

@@ -1,3 +1,5 @@
+const statisticsMenuContent = require('../html/statistics-menu.html');
+
 view.statisticsMenu = {
   selectorStart: "#view-statistics-menu-",
 
@@ -5,13 +7,8 @@ view.statisticsMenu = {
    * Add the statistics menu to the page.
    */
   add: function() {
-    const statisticsMenuURL = chrome.extension.getURL("content_scripts/html/statistics-menu.html");
-
-    const $StatisticsMenu = $("<div>");
-
-    $StatisticsMenu.load(statisticsMenuURL, view.statisticsMenu.init);
-
-    $("body").prepend($StatisticsMenu);
+    $("body").prepend(statisticsMenuContent);
+    view.statisticsMenu.init();
   },
 
   /**
