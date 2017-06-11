@@ -1,5 +1,8 @@
 const theServerURL = "https://view.aleks.bg";
 /** @namespace */
+
+const $ = require('jquery');
+
 const background = {
   currentTabId: -1,
   clickCounter: 0,
