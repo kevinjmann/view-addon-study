@@ -51,28 +51,7 @@
         "content_scripts/css/feedbacker.css"
       ],
       "js": [
-        "content_scripts/js/view.js",
-        "content_scripts/js/lib.js",
-        "content_scripts/js/selector.js",
-        "content_scripts/js/toolbar-iframe.js",
-        "content_scripts/js/container.js",
-        "content_scripts/js/enhancer.js",
-        "content_scripts/js/view-menu.js",
-        "content_scripts/js/assessment.js",
-        "content_scripts/js/statistics-menu.js",
-        "content_scripts/js/account-menu.js",
-        "content_scripts/js/about.js",
-        "content_scripts/js/blur.js",
-        "content_scripts/js/notification.js",
-        "content_scripts/js/sidebar.js",
-        "content_scripts/js/feedbacker.js",
-        "content_scripts/js/activities/tracker.js",
-        "content_scripts/js/activities/activityHelper.js",
-        "content_scripts/js/activities/color.js",
-        "content_scripts/js/activities/click.js",
-        "content_scripts/js/activities/mc.js",
-        "content_scripts/js/activities/cloze.js",
-        "content_scripts/js/messageHandler.js"
+        "content_scripts/view.js"
       ],
       "run_at": "document_idle"
     }
