@@ -9,8 +9,11 @@ const source_path = path.resolve(__dirname, "./viewWE");
 
 module.exports = {
   entry: {
-    'background/background': "./viewWE/background.js",
-    'toolbar/toolbar': "./viewWE/toolbar/toolbar.js",
+    'background/background': path.resolve(source_path, "background.js"),
+    'toolbar/toolbar': [
+      path.resolve(source_path, "toolbar/toolbar.js"),
+      path.resolve(source_path, "toolbar/toolbar.css")
+    ],
     'content_scripts/view': [].concat(
       glob.sync(path.resolve(source_path, "content_scripts/js/**/*.js")),
       glob.sync(path.resolve(source_path, "content_scripts/css/**/*.css"))
