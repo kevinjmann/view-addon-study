@@ -4,19 +4,24 @@
   "description": "VIEW provides supplementary language learning activities using authentic texts selected by the learner.",
   "repository": "https://git.aleks.bg/view/view-addon",
   "scripts": {
+    "clean": "rm -rf addon/*",
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "webpack  --progress --colors --watch",
-    "build": "webpack"
+    "build": "webpack",
+    "bundle": "web-ext -s ./addon -a dist build",
+    "lint": "npm-run-all lint:*",
+    "lint:webext": "web-ext -s ./addon lint"
   },
   "license": "UNLICENSED",
   "devDependencies": {
-    "webpack": "^2.3.2"
+    "npm-run-all": "^3.1.2",
+    "webpack": "^2.3.2",
+    "web-ext": "^1.6.0"
   },
   "dependencies": {
     "copy-webpack-plugin": "^4.0.1",
     "firebase": "^4.1.2",
     "jquery": "^3.1.1",
-    "jquery-ui": "^1.12.1",
-    "webpack-copy-plugin": "0.0.4"
+    "jquery-ui": "^1.12.1"
   }
 }
