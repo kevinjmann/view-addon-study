@@ -41,7 +41,7 @@ view.VIEWmenu = {
    * Send a request to the background script to call openOptionsPage().
    */
   requestToCallOpenOptionsPage: function() {
-    chrome.runtime.sendMessage({msg: "call openOptionsPage"});
+    chrome.runtime.sendMessage({action: "callOpenOptionsPage"});
   },
 
   /**
@@ -56,7 +56,7 @@ view.VIEWmenu = {
    * Send a request to the background script to open the help page.
    */
   requestToOpenHelpPage: function() {
-    chrome.runtime.sendMessage({msg: "open help page"});
+    chrome.runtime.sendMessage({action: "openHelpPage"});
   },
 
   /**

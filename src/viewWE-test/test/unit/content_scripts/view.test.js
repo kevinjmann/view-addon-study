@@ -56,7 +56,7 @@ describe("view.js", function() {
       view.setGeneralOptions();
 
       sinon.assert.calledOnce(chrome.runtime.sendMessage);
-      sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "call sendTopics"});
+      sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "sendTopics"});
     });
 
     it("should get the expected storage items", function() {
@@ -516,7 +516,7 @@ describe("view.js", function() {
 
       sinon.assert.calledOnce(chrome.runtime.sendMessage);
       sinon.assert.calledWith(chrome.runtime.sendMessage, {
-        msg: "send taskData and get taskId",
+        action: "sendTaskDataAndGetTaskId",
         taskData: taskData,
         serverTaskURL: "https://view.aleks.bg/act/task"
       });
@@ -535,7 +535,7 @@ describe("view.js", function() {
     });
   });
 
-  describe("signInUser", function() {
+  describe("signIn", function() {
     it("should sign in the user", function() {
       const userEmail = "some.email";
       const userid = "someid";
@@ -549,7 +549,7 @@ describe("view.js", function() {
         token
       };
 
-      view.signInUser(request);
+      view.signIn(request);
 
       expect(view.userEmail).to.equal(userEmail);
       expect(view.userid).to.equal(userid);
@@ -564,7 +564,7 @@ describe("view.js", function() {
       view.token = "some token";
       view.taskId = 5;
 
-      view.signOutUser();
+      view.signOut();
 
       expect(view.userEmail).to.equal("");
       expect(view.userid).to.equal("");

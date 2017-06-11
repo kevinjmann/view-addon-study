@@ -48,7 +48,7 @@ const view = {
    */
   setGeneralOptions: function() {
     chrome.runtime.sendMessage({
-        msg: "call sendTopics"
+      action: "sendTopics"
       }, function(response) {
         chrome.storage.local.get([
           "userEmail",
@@ -277,7 +277,7 @@ const view = {
     const taskData = view.createTaskData();
 
     chrome.runtime.sendMessage({
-      msg: "send taskData and get taskId",
+      action: "sendTaskDataAndGetTaskId",
       taskData: taskData,
       serverTaskURL: view.serverTaskURL
     }, view.lib.noResponse);
@@ -319,7 +319,7 @@ const view = {
    *
    * @param {*} request the message sent by the calling script
    */
-  signInUser: function(request) {
+  signIn: function(request) {
     view.userEmail = request.userEmail;
     view.userid = request.userid;
     view.user = request.user;
@@ -329,7 +329,7 @@ const view = {
   /**
    * The extension send the message to sign out the user.
    */
-  signOutUser: function() {
+  signOut: function() {
     view.userEmail = "";
     view.userid = "";
     view.user = "";

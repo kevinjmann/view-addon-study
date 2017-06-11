@@ -171,7 +171,7 @@ describe("toolbar.js", function() {
       toolbar.requestTopicsAndInit();
 
       sinon.assert.calledTwice(chrome.runtime.sendMessage);
-      sinon.assert.calledWith(chrome.runtime.sendMessage.getCall(0), {msg: "call sendTopics"});
+      sinon.assert.calledWith(chrome.runtime.sendMessage.getCall(0), {action: "sendTopics"});
 
       sinon.assert.calledOnce(initSpy);
       sinon.assert.calledWithExactly(initSpy, responseData.topics);
@@ -252,7 +252,7 @@ describe("toolbar.js", function() {
         toolbar.requestToToggleViewMenu();
 
         sinon.assert.calledOnce(chrome.runtime.sendMessage);
-        sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "toggle VIEW Menu"});
+        sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "toggleVIEWMenu"});
       });
     });
 
@@ -285,7 +285,7 @@ describe("toolbar.js", function() {
         toolbar.requestToToggleStatisticsMenu();
 
         sinon.assert.calledOnce(chrome.runtime.sendMessage);
-        sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "toggle statistics menu"});
+        sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "toggleStatisticsMenu"});
       });
     });
 
@@ -328,7 +328,7 @@ describe("toolbar.js", function() {
         toolbar.requestToHideViewMenu();
 
         sinon.assert.calledOnce(chrome.runtime.sendMessage);
-        sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "hide VIEW Menu"});
+        sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "hideVIEWMenu"});
       });
 
       it("should call requestToHideStatisticsMenu(), as the toolbar body was clicked", function() {
@@ -356,7 +356,7 @@ describe("toolbar.js", function() {
         toolbar.requestToHideStatisticsMenu();
 
         sinon.assert.calledOnce(chrome.runtime.sendMessage);
-        sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "hide statistics menu"});
+        sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "hideStatisticsMenu"});
       });
 
       it("should call requestToRemoveFeedbackDialog(), as the toolbar body was clicked", function() {
@@ -373,7 +373,7 @@ describe("toolbar.js", function() {
         toolbar.requestToRemoveFeedbackDialog();
 
         sinon.assert.calledOnce(chrome.runtime.sendMessage);
-        sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "remove feedback dialog"});
+        sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "removeFeedbackDialog"});
       });
     });
 
@@ -1099,7 +1099,7 @@ describe("toolbar.js", function() {
           expect($(toolbar.selectorStart + "loading-image").is(":visible")).to.be.true;
 
           sinon.assert.calledOnce(chrome.runtime.sendMessage);
-          sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "call startToEnhance"});
+          sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "callStartToEnhance"});
         });
       });
     });
@@ -1132,7 +1132,7 @@ describe("toolbar.js", function() {
         toolbar.requestToCallAbort();
 
         sinon.assert.calledOnce(chrome.runtime.sendMessage);
-        sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "call abort"});
+        sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "callAbort"});
       });
     });
 
@@ -1164,7 +1164,7 @@ describe("toolbar.js", function() {
         toolbar.requestToCallRestoreToOriginal();
 
         sinon.assert.calledOnce(chrome.runtime.sendMessage);
-        sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "call restoreToOriginal"});
+        sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "callRestoreToOriginal"});
       });
     });
 
@@ -1294,7 +1294,7 @@ describe("toolbar.js", function() {
         toolbar.requestToToggleToolbar();
 
         sinon.assert.calledOnce(chrome.runtime.sendMessage);
-        sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "toggle toolbar"});
+        sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "toggleToolbar"});
       });
     });
 
@@ -1491,7 +1491,7 @@ describe("toolbar.js", function() {
 
     it("should process the message \"show element\"", function() {
       const request = {
-        msg: "show element",
+        action: "showElement",
         selector: toolbar.selectorStart + "restore-button"
       };
 
@@ -1502,7 +1502,7 @@ describe("toolbar.js", function() {
 
     it("should process the message \"hide element\"", function() {
       const request = {
-        msg: "hide element",
+        action: "hideElement",
         selector: toolbar.selectorStart + "restore-button"
       };
 
@@ -1520,7 +1520,7 @@ describe("toolbar.js", function() {
         const userEmail = "some.email";
 
         const request = {
-          msg: "call signIn",
+          action: "signIn",
           userEmail: userEmail
         };
 
@@ -1567,7 +1567,7 @@ describe("toolbar.js", function() {
       it("should process the message \"call signOut\"", function() {
         const signOutSpy = sandbox.spy(toolbar, "signOut");
 
-        const request = {msg: "call signOut"};
+        const request = {action: "signOut"};
 
         chrome.runtime.onMessage.trigger(request);
 

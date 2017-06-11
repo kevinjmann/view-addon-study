@@ -227,7 +227,7 @@ describe("tracker.js", function() {
 
       sinon.assert.calledOnce(chrome.runtime.sendMessage);
       sinon.assert.calledWithExactly(chrome.runtime.sendMessage, {
-        msg: "send trackingData",
+        action: "sendTrackingData",
         trackingData: trackingData,
         serverTrackingURL: "https://view.aleks.bg/act/tracking"
       });

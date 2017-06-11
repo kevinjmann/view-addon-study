@@ -75,7 +75,7 @@ view.tracker = {
    */
   requestToSendTrackingData: function(trackingData) {
     chrome.runtime.sendMessage({
-      msg: "send trackingData",
+      action: "sendTrackingData",
       trackingData: trackingData,
       serverTrackingURL: view.serverTrackingURL
     });

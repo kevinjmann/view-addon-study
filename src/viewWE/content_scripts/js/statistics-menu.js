@@ -35,7 +35,7 @@ view.statisticsMenu = {
    */
   requestToGetAllTasks: function() {
     chrome.runtime.sendMessage({
-      msg: "get all tasks",
+      action: "getAllTasks",
       ajaxTimeout: view.ajaxTimeout,
       serverTaskURL: view.serverTaskURL,
       queryParam: "?token=" + view.token
@@ -57,7 +57,7 @@ view.statisticsMenu = {
    */
   requestToGetTask: function(taskId) {
     chrome.runtime.sendMessage({
-      msg: "get task",
+      action: "getTask",
       ajaxTimeout: view.ajaxTimeout,
       serverTrackingURL: view.serverTrackingURL,
       queryParam: "?token=" + view.token + "&taskId=" + taskId
