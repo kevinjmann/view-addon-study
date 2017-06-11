@@ -101,7 +101,7 @@ describe("view-menu.js", function() {
           view.VIEWmenu.requestToCallOpenOptionsPage();
 
           sinon.assert.calledOnce(chrome.runtime.sendMessage);
-          sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "call openOptionsPage"});
+          sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "callOpenOptionsPage"});
         });
       });
 
@@ -133,7 +133,7 @@ describe("view-menu.js", function() {
           view.VIEWmenu.requestToOpenHelpPage();
 
           sinon.assert.calledOnce(chrome.runtime.sendMessage);
-          sinon.assert.calledWith(chrome.runtime.sendMessage, {msg: "open help page"});
+          sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "openHelpPage"});
         });
       });
 

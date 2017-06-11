@@ -92,7 +92,7 @@ describe("enhancer.js", function() {
 
         sinon.assert.calledOnce(requestToToggleElementSpy);
         sinon.assert.calledWithExactly(requestToToggleElementSpy,
-          "hide element",
+          "hideElement",
           "#wertiview-toolbar-restore-button"
         );
       });
@@ -226,7 +226,7 @@ describe("enhancer.js", function() {
 
       sinon.assert.calledOnce(requestToToggleElementSpy);
       sinon.assert.calledWithExactly(requestToToggleElementSpy,
-        "show element",
+        "showElement",
         "#wertiview-toolbar-abort-button"
       );
     });
@@ -315,7 +315,7 @@ describe("enhancer.js", function() {
 
       sinon.assert.calledOnce(chrome.runtime.sendMessage);
       sinon.assert.calledWith(chrome.runtime.sendMessage, {
-        msg: "send activityData and get enhancement markup",
+        action: "sendActivityDataAndGetEnhancementMarkup",
         activityData: activityData,
         ajaxTimeout: 60000
       });
@@ -330,7 +330,7 @@ describe("enhancer.js", function() {
 
       sinon.assert.called(requestToToggleElementSpy);
       sinon.assert.calledWithExactly(requestToToggleElementSpy.getCall(0),
-        "hide element",
+        "hideElement",
         "#wertiview-toolbar-loading-image"
       );
     });
@@ -342,7 +342,7 @@ describe("enhancer.js", function() {
 
       sinon.assert.called(requestToToggleElementSpy);
       sinon.assert.calledWithExactly(requestToToggleElementSpy.getCall(1),
-        "hide element",
+        "hideElement",
         "#wertiview-toolbar-abort-button"
       );
     });
@@ -354,7 +354,7 @@ describe("enhancer.js", function() {
 
       sinon.assert.called(requestToToggleElementSpy);
       sinon.assert.calledWithExactly(requestToToggleElementSpy.getCall(2),
-        "show element",
+        "showElement",
         "#wertiview-toolbar-enhance-button"
       );
     });
@@ -377,7 +377,7 @@ describe("enhancer.js", function() {
 
       sinon.assert.called(requestToToggleElementSpy);
       sinon.assert.calledWithExactly(requestToToggleElementSpy.getCall(0),
-        "hide element",
+        "hideElement",
         "#wertiview-toolbar-abort-button"
       );
     });
@@ -596,7 +596,7 @@ describe("enhancer.js", function() {
 
       sinon.assert.called(requestToToggleElementSpy);
       sinon.assert.calledWithExactly(requestToToggleElementSpy.getCall(4),
-        "show element",
+        "showElement",
         "#wertiview-toolbar-restore-button"
       );
     });

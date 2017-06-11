@@ -3,57 +3,57 @@
  * Sends requests to backround.js or handles requests here.
  */
 function processMessage(request) {
-  switch (request.msg) {
-    case "toggle toolbar":
+  switch (request.action) {
+    case "toggleToolbar":
       view.toolbarIframe.toggle();
       break;
-    case "toggle VIEW Menu":
+    case "toggleVIEWMenu":
       view.VIEWmenu.toggle();
       break;
-    case "hide VIEW Menu":
+    case "hideVIEWMenu":
       view.VIEWmenu.hide();
       break;
-    case "toggle statistics menu":
+    case "toggleStatisticsMenu":
       view.statisticsMenu.toggle();
       break;
-    case "hide statistics menu":
+    case "hideStatisticsMenu":
       view.statisticsMenu.hide();
       break;
-    case "remove feedback dialog":
+    case "removeFeedbackDialog":
       view.lib.removeDialog($("#view-feedback-dialog"));
       break;
-    case "call startToEnhance":
+    case "callStartToEnhance":
       view.startToEnhance();
       break;
-    case "call initialInteractionState":
+    case "initialInteractionState":
       view.enhancer.initialInteractionState();
       break;
-    case "call addEnhancementMarkup":
+    case "addEnhancementMarkup":
       view.enhancer.addEnhancementMarkup(request.data);
       break;
-    case "call setTaskId":
+    case "setTaskId":
       view.setTaskId(request.taskId);
       break;
-    case "call showFeedback":
+    case "showFeedback":
       view.feedbacker.showFeedback(request.submissionResponseData);
       break;
-    case "call showAllTasks":
+    case "showAllTasks":
       view.statisticsMenu.showAllTasks(request.tasksData);
       break;
-    case "call showTask":
+    case "showTask":
       view.statisticsMenu.showTask(request.performancesData);
       break;
-    case "call abort":
+    case "callAbort":
       view.enhancer.abort();
       break;
-    case "call restoreToOriginal":
+    case "callRestoreToOriginal":
       view.enhancer.restoreToOriginal();
       break;
-    case "call signOut":
-      view.signOutUser();
+    case "signOut":
+      view.signOut();
       break;
-    case "call signIn":
-      view.signInUser(request);
+    case "signIn":
+      view.signIn(request);
   }
 }
 

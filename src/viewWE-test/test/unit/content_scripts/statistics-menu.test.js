@@ -169,7 +169,7 @@ describe("statistics-menu.js", function() {
 
           sinon.assert.calledOnce(chrome.runtime.sendMessage);
           sinon.assert.calledWith(chrome.runtime.sendMessage, {
-            msg: "get all tasks",
+            action: "getAllTasks",
             ajaxTimeout: 60000,
             serverTaskURL: "https://view.aleks.bg/act/task",
             queryParam: "?token=" + token
@@ -230,7 +230,7 @@ describe("statistics-menu.js", function() {
 
           sinon.assert.calledOnce(chrome.runtime.sendMessage);
           sinon.assert.calledWith(chrome.runtime.sendMessage, {
-            msg: "get task",
+            action: "getTask",
             ajaxTimeout: 60000,
             serverTrackingURL: "https://view.aleks.bg/act/tracking",
             queryParam: "?token=" + token + "&taskId=" + taskId

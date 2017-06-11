@@ -18,7 +18,7 @@ view.enhancer = {
     }
 
     view.enhancer.requestToToggleElement(
-      "show element",
+      "showElement",
       "#wertiview-toolbar-abort-button"
     );
 
@@ -36,7 +36,7 @@ view.enhancer = {
       $("#wertiview-content").html(view.originalContent);
 
       view.enhancer.requestToToggleElement(
-        "hide element",
+        "hideElement",
         "#wertiview-toolbar-restore-button"
       );
 
@@ -51,12 +51,12 @@ view.enhancer = {
    * Send a request to toolbar.js to toggle (show/hide) the element with the
    * given selector.
    *
-   * @param {String} msg the request message "show/hide element"
+   * @param {String} action the request message "show/hide element"
    * @param {String} selector the selector of the element to toggle
    */
-  requestToToggleElement: function(msg, selector) {
+  requestToToggleElement: function(action, selector) {
     chrome.runtime.sendMessage({
-      msg: msg,
+      action: action,
       selector: selector
     }, view.lib.noResponse);
   },
@@ -110,7 +110,7 @@ view.enhancer = {
    */
   requestToSendActivityDataAndGetEnhancementMarkup: function(activityData) {
     chrome.runtime.sendMessage({
-      msg: "send activityData and get enhancement markup",
+      action: "sendActivityDataAndGetEnhancementMarkup",
       activityData: activityData,
       ajaxTimeout: view.ajaxTimeout
     }, view.lib.noResponse);
@@ -122,15 +122,15 @@ view.enhancer = {
    */
   initialInteractionState: function() {
     view.enhancer.requestToToggleElement(
-      "hide element",
+      "hideElement",
       "#wertiview-toolbar-loading-image"
     );
     view.enhancer.requestToToggleElement(
-      "hide element",
+      "hideElement",
       "#wertiview-toolbar-abort-button"
     );
     view.enhancer.requestToToggleElement(
-      "show element",
+      "showElement",
       "#wertiview-toolbar-enhance-button"
     );
     view.blur.remove();
@@ -148,7 +148,7 @@ view.enhancer = {
     }
     else{
       view.enhancer.requestToToggleElement(
-        "hide element",
+        "hideElement",
         "#wertiview-toolbar-abort-button"
       );
 
@@ -158,7 +158,7 @@ view.enhancer = {
       view.enhancer.runActivity();
       view.enhancer.initialInteractionState();
       view.enhancer.requestToToggleElement(
-        "show element",
+        "showElement",
         "#wertiview-toolbar-restore-button"
       );
       view.enhancer.loadDebuggingOptions();

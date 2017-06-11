@@ -39,7 +39,7 @@ const toolbar = {
    * After they are received we start to initialize the toolbar.
    */
   requestTopicsAndInit: function() {
-    chrome.runtime.sendMessage({msg: "call sendTopics"}, function(response) {
+    chrome.runtime.sendMessage({action: "sendTopics"}, function(response) {
       toolbar.init(response.topics);
     });
   },
@@ -104,7 +104,7 @@ const toolbar = {
    * toggle the VIEW menu.
    */
   requestToToggleViewMenu: function() {
-    chrome.runtime.sendMessage({msg: "toggle VIEW Menu"}, toolbar.noResponse);
+    chrome.runtime.sendMessage({action: "toggleVIEWMenu"}, toolbar.noResponse);
   },
 
   /**
@@ -128,7 +128,7 @@ const toolbar = {
    * toggle the statistics menu.
    */
   requestToToggleStatisticsMenu: function() {
-    chrome.runtime.sendMessage({msg: "toggle statistics menu"}, toolbar.noResponse);
+    chrome.runtime.sendMessage({action: "toggleStatisticsMenu"}, toolbar.noResponse);
   },
 
   /**
@@ -154,7 +154,7 @@ const toolbar = {
    * hide the VIEW menu.
    */
   requestToHideViewMenu: function() {
-    chrome.runtime.sendMessage({msg: "hide VIEW Menu"}, toolbar.noResponse);
+    chrome.runtime.sendMessage({action: "hideVIEWMenu"}, toolbar.noResponse);
   },
 
   /**
@@ -162,7 +162,7 @@ const toolbar = {
    * hide the statistics menu.
    */
   requestToHideStatisticsMenu: function() {
-    chrome.runtime.sendMessage({msg: "hide statistics menu"}, toolbar.noResponse);
+    chrome.runtime.sendMessage({action: "hideStatisticsMenu"}, toolbar.noResponse);
   },
 
   /**
@@ -170,7 +170,7 @@ const toolbar = {
    * remove the feedback dialog.
    */
   requestToRemoveFeedbackDialog: function() {
-    chrome.runtime.sendMessage({msg: "remove feedback dialog"}, toolbar.noResponse);
+    chrome.runtime.sendMessage({action: "removeFeedbackDialog"}, toolbar.noResponse);
   },
 
   /**
@@ -465,7 +465,7 @@ const toolbar = {
     toolbar.$cache.get(toolbar.selectorStart + "restore-button").hide();
     toolbar.$cache.get(toolbar.selectorStart + "loading-image").show();
 
-    chrome.runtime.sendMessage({msg: "call startToEnhance"}, toolbar.noResponse);
+    chrome.runtime.sendMessage({action: "callStartToEnhance"}, toolbar.noResponse);
   },
 
   /**
@@ -482,7 +482,7 @@ const toolbar = {
    * message to call abort().
    */
   requestToCallAbort: function() {
-    chrome.runtime.sendMessage({msg: "call abort"}, toolbar.noResponse);
+    chrome.runtime.sendMessage({action: "callAbort"}, toolbar.noResponse);
   },
 
   /**
@@ -499,7 +499,7 @@ const toolbar = {
    * message to call restoreToOriginal().
    */
   requestToCallRestoreToOriginal: function() {
-    chrome.runtime.sendMessage({msg: "call restoreToOriginal"}, toolbar.noResponse);
+    chrome.runtime.sendMessage({action: "callRestoreToOriginal"}, toolbar.noResponse);
   },
 
   /**
@@ -566,7 +566,7 @@ const toolbar = {
    * message to toggle the toolbar.
    */
   requestToToggleToolbar: function() {
-    chrome.runtime.sendMessage({msg: "toggle toolbar"}, toolbar.noResponse);
+    chrome.runtime.sendMessage({action: "toggleToolbar"}, toolbar.noResponse);
   },
 
   /**
@@ -717,17 +717,17 @@ toolbar.$cache.get(document).ready(function() {
  * @param {*} request the message sent by the calling script
  */
 function processMessageForToolbar(request) {
-  switch (request.msg) {
-    case "show element":
+  switch (request.action) {
+    case "showElement":
       toolbar.$cache.get(request.selector).show();
       break;
-    case "hide element":
+    case "hideElement":
       toolbar.$cache.get(request.selector).hide();
       break;
-    case "call signIn":
+    case "signIn":
       toolbar.signIn(request.userEmail);
       break;
-    case "call signOut":
+    case "signOut":
       toolbar.signOut();
   }
 }
