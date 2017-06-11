@@ -17,8 +17,7 @@ module.exports = {
     'options/options': glob.sync(path.resolve(source_path, "options/options.*")),
     'content_scripts/view': [].concat(
       glob.sync(path.resolve(source_path, "content_scripts/js/**/*.js")),
-      glob.sync(path.resolve(source_path, "content_scripts/css/**/*.css")),
-      glob.sync(path.resolve(source_path, "content_scripts/css/**/*.html"))
+      glob.sync(path.resolve(source_path, "content_scripts/css/**/*.css"))
     )
   },
   devtool: 'source-map',
@@ -47,7 +46,11 @@ module.exports = {
         loader: CssTextPlugin.extract({fallback: "style-loader", use: "css-loader!sass-loader"})
       },
       {
-        test: /\.html$/,
+        test: /.*content_scripts.*\.html$/,
+        loader: "file-loader"
+      },
+      {
+        test: /.*(options|toolbar).*\.html$/,
         loader: HtmlTextPlugin.extract({use: "raw-loader"})
       }
     ]
