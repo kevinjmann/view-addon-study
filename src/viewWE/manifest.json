@@ -40,15 +40,7 @@
     {
       "matches": ["<all_urls>"],
       "css": [
-        "content_scripts/css/view.css",
-        "content_scripts/css/view-menu.css",
-        "content_scripts/css/statistics-menu.css",
-        "content_scripts/css/account-menu.css",
-        "content_scripts/css/about.css",
-        "content_scripts/css/notification.css",
-        "content_scripts/css/sidebar.css",
-        "content_scripts/css/tooltip.css",
-        "content_scripts/css/feedbacker.css"
+        "content_scripts/view.css"
       ],
       "js": [
         "content_scripts/view.js"
