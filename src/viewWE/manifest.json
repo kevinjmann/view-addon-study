@@ -73,10 +73,6 @@
 
   "web_accessible_resources": [
     "toolbar/toolbar.html",
-    "content_scripts/html/about.html",
-    "content_scripts/html/view-menu.html",
-    "content_scripts/html/statistics-menu.html",
-    "content_scripts/html/account-menu.html",
     "icons/view-128.png",
     "icons/loading.gif",
     "topics/articles.json",
