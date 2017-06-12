@@ -28,8 +28,16 @@ module.exports = {
   plugins: [
     new CopyWebpackPlugin([
       {
-        from: "./viewWE/manifest.json",
-        "to": path.resolve(addon, "manifest.json")
+        from: path.resolve(source_path, "manifest.json"),
+        to:   path.resolve(addon, "manifest.json")
+      },
+      {
+        from: path.resolve(source_path, "topics"),
+        to:   path.resolve(addon, "topics")
+      },
+      {
+        from: path.resolve(source_path, "icons"),
+        to:   path.resolve(addon, "icons")
       }
     ]),
     CssTextPlugin,
