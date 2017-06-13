@@ -32,6 +32,7 @@ module.exports = function(grunt) {
           "../viewWE/content_scripts/js/enhancer.js",
           "../viewWE/content_scripts/js/view-menu.js",
           "../viewWE/content_scripts/js/assessment.js",
+          "../viewWE/content_scripts/js/account-menu.js",
           "../viewWE/content_scripts/js/statistics-menu.js",
           "../viewWE/content_scripts/js/about.js",
           "../viewWE/content_scripts/js/blur.js",
@@ -218,6 +219,17 @@ module.exports = function(grunt) {
         },
         preprocessors: {
           "../viewWE/content_scripts/js/enhancer.js": ["coverage"]
+        }
+      },
+      accountMenu: {
+        files: {
+          src: [
+            "test/unit/content_scripts/account-menu.test.js"
+          ]
+        },
+        preprocessors: {
+          "../viewWE/content_scripts/js/account-menu.js": ["coverage"],
+          "**/account-menu.html": ["html2js"]
         }
       },
       statisticsMenu: {
