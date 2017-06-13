@@ -87,7 +87,7 @@ describe("statistics-menu.js", function() {
   });
 
   describe("add", function() {
-    it("should get the url for the statistics menu, call init() and prepend(viewMenu)", function() {
+    it("should get the url for the statistics menu", function() {
       sandbox.stub($.fn, "load").yields();
 
       view.statisticsMenu.add();
