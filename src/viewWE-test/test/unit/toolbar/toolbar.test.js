@@ -1160,62 +1160,58 @@ describe("toolbar.js", function() {
         sinon.assert.calledOnce(openSignInWindowSpy);
       });
 
-      it("should open the sign in window", function() {
-        const windowOpenSpy = sandbox.spy(window, "open");
+      describe("openSignInWindow", function() {
+        it("should open the sign in window", function() {
+          const windowOpenSpy = sandbox.spy(window, "open");
 
-        toolbar.initSignInBtn();
+          toolbar.openSignInWindow();
 
-        toolbar.openSignInWindow();
+          sinon.assert.calledOnce(windowOpenSpy);
+          sinon.assert.calledWithExactly(windowOpenSpy,
+            "",
+            "",
+            "width=985,height=735"
+          );
+        });
 
-        sinon.assert.calledOnce(windowOpenSpy);
-        sinon.assert.calledWithExactly(windowOpenSpy,
-          "",
-          "",
-          "width=985,height=735"
-        );
-      });
+        it("should get the expected values", function() {
+          toolbar.openSignInWindow();
 
-      it("should get the expected values", function() {
-        toolbar.initSignInBtn();
+          sinon.assert.calledOnce(chrome.storage.local.get);
+          sinon.assert.calledWith(chrome.storage.local.get, "authenticator");
+        });
 
-        toolbar.openSignInWindow();
+        it("should call assignHrefAndFocus(myWindow, authenticatorLink)", function() {
+          const windowOpenSpy = sandbox.spy(window, "open");
+          const assignHrefAndFocusSpy = sandbox.spy(toolbar, "assignHrefAndFocus");
 
-        sinon.assert.calledOnce(chrome.storage.local.get);
-        sinon.assert.calledWith(chrome.storage.local.get, "authenticator");
-      });
+          const authenticator = globalServerURL + "/authenticator.html";
 
-      it("should call assignHrefAndFocus(myWindow, authenticatorLink)", function() {
-        const windowOpenSpy = sandbox.spy(window, "open");
-        const assignHrefAndFocusSpy = sandbox.spy(toolbar, "assignHrefAndFocus");
+          chrome.storage.local.get.yields({authenticator});
 
-        const authenticator = globalServerURL + "/authenticator.html";
+          toolbar.openSignInWindow();
 
-        chrome.storage.local.get.yields({authenticator});
+          const signInWindow = windowOpenSpy.getCall(0).returnValue;
 
-        toolbar.initSignInBtn();
+          sinon.assert.calledOnce(assignHrefAndFocusSpy);
+          sinon.assert.calledWith(assignHrefAndFocusSpy,
+            signInWindow,
+            authenticator + "?action=sign-in"
+          );
+        });
 
-        toolbar.openSignInWindow();
+        it("should call focus()", function() {
+          const signInWindow = window.open("", "", "width=985,height=735");
+          const authenticator = globalServerURL +
+            "/authenticator.html"  +
+            "?action=sign-in";
 
-        const signInWindow = windowOpenSpy.getCall(0).returnValue;
+          const focusSpy = sandbox.spy(signInWindow, "focus");
 
-        sinon.assert.calledOnce(assignHrefAndFocusSpy);
-        sinon.assert.calledWith(assignHrefAndFocusSpy,
-          signInWindow,
-          authenticator + "?action=sign-in"
-        );
-      });
+          toolbar.assignHrefAndFocus(signInWindow, authenticator);
 
-      it("should call focus()", function() {
-        const signInWindow = window.open("", "", "width=985,height=735");
-        const authenticator = globalServerURL +
-          "/authenticator.html"  +
-          "?action=sign-in";
-
-        const focusSpy = sandbox.spy(signInWindow, "focus");
-
-        toolbar.assignHrefAndFocus(signInWindow, authenticator);
-
-        sinon.assert.calledOnce(focusSpy);
+          sinon.assert.calledOnce(focusSpy);
+        });
       });
     });
 
