@@ -12,6 +12,7 @@ describe("view-menu.js", function() {
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
     fixture.load("/fixtures/view-menu.html");
+    sandbox.stub($.fn, "load").yields();
   });
 
   afterEach(function() {
@@ -38,12 +39,9 @@ describe("view-menu.js", function() {
 
   describe("add", function() {
     it("should get the url for the view menu, call init() and prepend(viewMenu)", function() {
-      const loadStub = sandbox.stub($.fn, "load");
       const selectorSpy = sandbox.spy($.fn, "find");
       const prependSpy = sandbox.spy($.fn, "prepend");
       const initSpy = sandbox.spy(view.VIEWmenu, "init");
-
-      loadStub.yields();
 
       view.VIEWmenu.add();
 
@@ -153,9 +151,6 @@ describe("view-menu.js", function() {
 
         it("should call view.about.open() on click", function() {
           const viewAboutOpenSpy = sandbox.spy(view.about, "open");
-          const loadStub = sandbox.stub($.fn, "load");
-
-          loadStub.yields();
 
           view.VIEWmenu.initOpenAboutDialogHandler();
 
