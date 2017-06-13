@@ -506,7 +506,10 @@ const toolbar = {
   openSignInWindow: function() {
     const signInWindow = window.open("", "", "width=985,height=735");
     chrome.storage.local.get("authenticator", function(storageItems) {
-      toolbar.assignHrefAndFocus(signInWindow, storageItems.authenticator + "?action=sign-in");
+      toolbar.assignHrefAndFocus(
+        signInWindow,
+        storageItems.authenticator + "?action=sign-in"
+      );
     });
   },
 
