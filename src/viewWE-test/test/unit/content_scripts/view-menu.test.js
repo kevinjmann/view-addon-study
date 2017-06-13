@@ -88,8 +88,6 @@ describe("view-menu.js", function() {
 
           view.VIEWmenu.initOpenOptionsPageHandler();
 
-          $("body").prepend($(view.VIEWmenu.selectorStart + "content"));
-
           $(view.VIEWmenu.selectorStart + "options").trigger("click");
 
           sinon.assert.calledOnce(requestToCallOpenOptionsPageSpy);
