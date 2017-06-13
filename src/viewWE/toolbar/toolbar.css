@@ -52,26 +52,20 @@ body {
     width: 18px;
 }
 
-#wertiview-toolbar-toggle-button {
-    right: 4px;
+#wertiview-toolbar-account-sign-in-button,
+#wertiview-toolbar-account-menu-button {
+    right: 50px;
     position: absolute;
 }
 
-/* wertiview-toolbar-identity-signingroup */
-
-#wertiview-toolbar-identity-signingroup {
-    display: inline;
+#wertiview-toolbar-account-menu-button {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    border: 2px solid red;
 }
 
-#wertiview-toolbar-identity-signedinstatus {
-    padding-left: 10px;
-}
-
-#wertiview-toolbar-identity-signinlink,
-#wertiview-toolbar-identity-signoutlink {
-    cursor: pointer;
-    color: blue;
-    text-decoration: underline;
-    padding-left: 10px;
-    padding-right: 10px;
+#wertiview-toolbar-toggle-button {
+    right: 4px;
+    position: absolute;
 }
