@@ -57,6 +57,7 @@ Currently we have the modules:<br>
 - toolbarIframe
 - container
 - enhancer
+- accountMenu
 - statisticsMenu
 - feedbacker
 - lib
