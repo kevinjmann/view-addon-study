@@ -140,7 +140,7 @@ const background = {
 
   /**
    * The toolbar ui send the message to toggle the account menu.
-   * Pass it on to account.js.
+   * Pass it on to account-menu.js.
    */
   toggleAccountMenu: function() {
     chrome.tabs.sendMessage(background.currentTabId, {action: "toggleAccountMenu"});
@@ -148,7 +148,7 @@ const background = {
 
   /**
    * The toolbar ui send the message to hide the account menu.
-   * Pass it on to account.js.
+   * Pass it on to account-menu.js.
    */
   hideAccountMenu: function() {
     chrome.tabs.sendMessage(background.currentTabId, {action: "hideAccountMenu"});
