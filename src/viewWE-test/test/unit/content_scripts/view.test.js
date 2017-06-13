@@ -304,6 +304,14 @@ describe("view.js", function() {
         });
       });
     });
+
+    it("should call view.toolbarIframe.init()", function() {
+      const toolbarIframeInitSpy = sandbox.spy(view.toolbarIframe, "init");
+
+      view.setGeneralOptionsAndInitToolbar();
+
+      sinon.assert.calledOnce(toolbarIframeInitSpy);
+    });
   });
 
   describe("startToEnhance", function() {
