@@ -91,6 +91,14 @@ describe("toolbar-iframe.js", function() {
       sinon.assert.calledOnce(addSpy);
     });
 
+    it("should call accountMenu.add()", function() {
+      const addSpy = sandbox.spy(view.accountMenu, "add");
+
+      view.toolbarIframe.init();
+
+      sinon.assert.calledOnce(addSpy);
+    });
+
     it("should call statisticsMenu.add()", function() {
       const addSpy = sandbox.spy(view.statisticsMenu, "add");
 
@@ -138,20 +146,12 @@ describe("toolbar-iframe.js", function() {
       sinon.assert.called(adjustMarginSpy);
     });
 
-    it("should call setGeneralOptions(), as the toolbar doesn't exists yet", function() {
-      const setGeneralOptionsSpy = sandbox.spy(view, "setGeneralOptions");
+    it("should call setGeneralOptionsAndInitToolbar(), as the toolbar doesn't exists yet", function() {
+      const setGeneralOptionsSpy = sandbox.spy(view, "setGeneralOptionsAndInitToolbar");
 
       view.toolbarIframe.toggle();
 
       sinon.assert.called(setGeneralOptionsSpy);
-    });
-
-    it("should call init(), as the toolbar doesn't exists yet", function() {
-      const initToolbarSpy = sandbox.spy(view.toolbarIframe, "init");
-
-      view.toolbarIframe.toggle();
-
-      sinon.assert.called(initToolbarSpy);
     });
   });
 });

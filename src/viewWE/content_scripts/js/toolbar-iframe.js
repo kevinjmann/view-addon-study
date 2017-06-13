@@ -19,6 +19,8 @@ view.toolbarIframe = {
 
     view.VIEWmenu.add();
 
+    view.accountMenu.add();
+
     view.statisticsMenu.add();
 
     view.lib.initOnWindowClick();
@@ -37,8 +39,7 @@ view.toolbarIframe = {
       toolbar.toggle();
       view.container.adjustMargin();
     } else {
-      view.setGeneralOptions();
-      view.toolbarIframe.init();
+      view.setGeneralOptionsAndInitToolbar();
     }
   }
 };
