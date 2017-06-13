@@ -139,6 +139,22 @@ const background = {
   },
 
   /**
+   * The toolbar ui send the message to toggle the account menu.
+   * Pass it on to account-menu.js.
+   */
+  toggleAccountMenu: function() {
+    chrome.tabs.sendMessage(background.currentTabId, {action: "toggleAccountMenu"});
+  },
+
+  /**
+   * The toolbar ui send the message to hide the account menu.
+   * Pass it on to account-menu.js.
+   */
+  hideAccountMenu: function() {
+    chrome.tabs.sendMessage(background.currentTabId, {action: "hideAccountMenu"});
+  },
+
+  /**
    * The toolbar ui send the message to toggle the statistics menu.
    * Pass it on to statistics-menu.js.
    */
@@ -653,7 +669,7 @@ const background = {
    */
   signIn: function(userData) {
     const account = userData.split("/");
-    const user = account[0];
+    const user = decodeURI(account[0]);
     const userEmail = account[1];
     const userid = account[2];
     const authtoken = account[3];

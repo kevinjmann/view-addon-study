@@ -12,6 +12,7 @@ describe("view.js", function() {
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
+    sandbox.stub($.fn, "load").yields();
   });
 
   afterEach(function() {
@@ -23,6 +24,7 @@ describe("view.js", function() {
     view.servletURL = theServerURL + "/view";
     view.serverTaskURL = theServerURL + "/act/task";
     view.serverTrackingURL = theServerURL + "/act/tracking";
+    view.authenticator = theServerURL + "/authenticator.html";
     view.topics = {};
     view.userEmail = "";
     view.userid = "";
@@ -42,18 +44,19 @@ describe("view.js", function() {
     view.intervalSize = 1;
     view.showInst = false;
     view.debugSentenceMarkup = false;
-    view.serverSelection = theServerURL;
 
     view.enabled = false; // should the page be enhanced right away?
     view.language = "unselected";
     view.topic = "unselected";
     view.filter = "unselected";
     view.activity = "unselected";
+
+    $("#view-toolbar-iframe").remove();
   });
 
-  describe("setGeneralOptions", function() {
+  describe("setGeneralOptionsAndInitToolbar", function() {
     it("should send a request to send the topics", function() {
-      view.setGeneralOptions();
+      view.setGeneralOptionsAndInitToolbar();
 
       sinon.assert.calledOnce(chrome.runtime.sendMessage);
       sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "sendTopics"});
@@ -64,10 +67,15 @@ describe("view.js", function() {
 
       chrome.runtime.sendMessage.yields(responseData);
 
-      view.setGeneralOptions();
+      view.setGeneralOptionsAndInitToolbar();
 
       sinon.assert.calledOnce(chrome.storage.local.get);
       sinon.assert.calledWith(chrome.storage.local.get, [
+        "serverURL",
+        "servletURL",
+        "serverTaskURL",
+        "serverTrackingURL",
+        "authenticator",
         "userEmail",
         "userid",
         "user",
@@ -87,7 +95,7 @@ describe("view.js", function() {
 
       chrome.storage.local.get.yields(storageItems);
 
-      view.setGeneralOptions();
+      view.setGeneralOptionsAndInitToolbar();
 
       sinon.assert.calledOnce(setAllGeneralOptionsSpy);
       sinon.assert.calledWithExactly(setAllGeneralOptionsSpy,
@@ -137,6 +145,83 @@ describe("view.js", function() {
       });
 
       describe("setMutableGeneralOptions", function() {
+        it("should call setServerOptions(storageItems)", function() {
+          const setServerOptionsSpy = sandbox.spy(view, "setServerOptions");
+
+          const storageItems = {};
+
+          view.setMutableGeneralOptions(storageItems);
+
+          sinon.assert.calledOnce(setServerOptionsSpy);
+          sinon.assert.calledWithExactly(setServerOptionsSpy, storageItems);
+        });
+
+        describe("setServerOptions", function() {
+          it("should call setServerOptionsFromStorage(storageItems), because the server url is defined", function() {
+            const setServerOptionsSpy = sandbox.spy(view, "setServerOptions");
+
+            const storageItems = {serverURL: "some server"};
+
+            view.setServerOptions(storageItems);
+
+            sinon.assert.calledOnce(setServerOptionsSpy);
+            sinon.assert.calledWithExactly(setServerOptionsSpy, storageItems);
+          });
+
+          it("should set the server, servlet url and tracking urls to the storage values", function() {
+            const serverURL = "http://localhost:8080";
+            const servletURL = serverURL + "/view";
+            const serverTaskURL = serverURL + "/act/task";
+            const serverTrackingURL = serverURL + "/act/tracking";
+            const authenticator = serverURL + "/authenticator.html";
+
+            const storageItems = {
+              serverURL,
+              servletURL,
+              serverTaskURL,
+              serverTrackingURL,
+              authenticator
+            };
+
+            view.setServerOptionsFromStorage(storageItems);
+
+            expect(view.serverURL).to.equal(serverURL);
+            expect(view.servletURL).to.equal(serverURL + "/view");
+            expect(view.serverTaskURL).to.equal(serverURL + "/act/task");
+            expect(view.serverTrackingURL).to.equal(serverURL + "/act/tracking");
+          });
+
+          it("should call setServerOptionsToStorage(), because the server url is undefined", function() {
+            const setServerOptionsToStorageSpy = sandbox.spy(view, "setServerOptionsToStorage");
+
+            const storageItems = {};
+
+            view.setServerOptions(storageItems);
+
+            sinon.assert.calledOnce(setServerOptionsToStorageSpy);
+          });
+
+          it("should set the server, servlet url and tracking urls to local storage", function() {
+            const server = "some server";
+            view.serverURL = server;
+            view.servletURL = server + "/view";
+            view.serverTaskURL = server + "/act/task";
+            view.serverTrackingURL = server + "/act/tracking";
+            view.authenticator = server + "/authenticator.html";
+
+            view.setServerOptionsToStorage();
+
+            sinon.assert.calledOnce(chrome.storage.local.set);
+            sinon.assert.calledWithExactly(chrome.storage.local.set, {
+              serverURL: view.serverURL,
+              servletURL: view.servletURL,
+              serverTaskURL: view.serverTaskURL,
+              serverTrackingURL: view.serverTrackingURL,
+              authenticator: view.authenticator
+            });
+          });
+        });
+
         it("should call setAuthenticationDetails(storageItems)", function() {
           const setAuthenticationDetailsSpy = sandbox.spy(view, "setAuthenticationDetails");
 
@@ -219,6 +304,14 @@ describe("view.js", function() {
         });
       });
     });
+
+    it("should call view.toolbarIframe.init()", function() {
+      const toolbarIframeInitSpy = sandbox.spy(view.toolbarIframe, "init");
+
+      view.setGeneralOptionsAndInitToolbar();
+
+      sinon.assert.calledOnce(toolbarIframeInitSpy);
+    });
   });
 
   describe("startToEnhance", function() {
@@ -227,6 +320,11 @@ describe("view.js", function() {
 
       sinon.assert.calledOnce(chrome.storage.local.get);
       sinon.assert.calledWith(chrome.storage.local.get, [
+        "serverURL",
+        "servletURL",
+        "serverTaskURL",
+        "serverTrackingURL",
+        "authenticator",
         "fixedOrPercentage",
         "fixedNumberOfExercises",
         "percentageOfExercises",
@@ -235,7 +333,6 @@ describe("view.js", function() {
         "intervalSize",
         "showInst",
         "debugSentenceMarkup",
-        "serverSelection",
         "userEmail",
         "userid",
         "user",
@@ -263,7 +360,12 @@ describe("view.js", function() {
     });
 
     describe("setUserOptions", function() {
-      it("should save all user options from the options page, as fixedOrPercentage is defined", function() {
+      it("should save all user options from the options page, as serverURL is defined", function() {
+        const serverURL = "http://localhost:8080";
+        const servletURL = serverURL + "/view";
+        const serverTaskURL = serverURL + "/act/task";
+        const serverTrackingURL = serverURL + "/act/tracking";
+        const authenticator = serverURL + "/authenticator.html";
         const fixedOrPercentage = 1;
         const fixedNumberOfExercises = 30;
         const percentageOfExercises = 90;
@@ -272,9 +374,13 @@ describe("view.js", function() {
         const intervalSize = 3;
         const showInst = false;
         const debugSentenceMarkup = false;
-        const serverSelection = "some server";
 
         const storageItems = {
+          serverURL,
+          servletURL,
+          serverTaskURL,
+          serverTrackingURL,
+          authenticator,
           fixedOrPercentage,
           fixedNumberOfExercises,
           percentageOfExercises,
@@ -282,12 +388,16 @@ describe("view.js", function() {
           firstOffset,
           intervalSize,
           showInst,
-          debugSentenceMarkup,
-          serverSelection
+          debugSentenceMarkup
         };
 
         view.setUserOptions(storageItems);
 
+        expect(view.serverURL).to.equal(serverURL);
+        expect(view.servletURL).to.equal(servletURL);
+        expect(view.serverTaskURL).to.equal(serverTaskURL);
+        expect(view.serverTrackingURL).to.equal(serverTrackingURL);
+        expect(view.authenticator).to.equal(authenticator);
         expect(view.fixedOrPercentage).to.equal(fixedOrPercentage);
         expect(view.fixedNumberOfExercises).to.equal(fixedNumberOfExercises);
         expect(view.percentageOfExercises).to.equal(percentageOfExercises);
@@ -296,12 +406,16 @@ describe("view.js", function() {
         expect(view.intervalSize).to.equal(intervalSize);
         expect(view.showInst).to.equal(showInst);
         expect(view.debugSentenceMarkup).to.equal(debugSentenceMarkup);
-        expect(view.serverSelection).to.equal(serverSelection);
       });
 
-      it("should call setServerUrl(serverSelection), as fixedOrPercentage is defined", function() {
-        const setServerUrlSpy = sandbox.spy(view, "setServerUrl");
+      it("should call setServerOptionsFromStorage(serverSelection), as serverURL is defined", function() {
+        const setServerOptionsFromStorageSpy = sandbox.spy(view, "setServerOptionsFromStorage");
 
+        const serverURL = "http://localhost:8080";
+        const servletURL = serverURL + "/view";
+        const serverTaskURL = serverURL + "/act/task";
+        const serverTrackingURL = serverURL + "/act/tracking";
+        const authenticator = serverURL + "/authenticator.html";
         const fixedOrPercentage = 1;
         const fixedNumberOfExercises = 30;
         const percentageOfExercises = 90;
@@ -310,9 +424,13 @@ describe("view.js", function() {
         const intervalSize = 3;
         const showInst = false;
         const debugSentenceMarkup = false;
-        const serverSelection = "some server";
 
         const storageItems = {
+          serverURL,
+          servletURL,
+          serverTaskURL,
+          serverTrackingURL,
+          authenticator,
           fixedOrPercentage,
           fixedNumberOfExercises,
           percentageOfExercises,
@@ -320,51 +438,13 @@ describe("view.js", function() {
           firstOffset,
           intervalSize,
           showInst,
-          debugSentenceMarkup,
-          serverSelection
+          debugSentenceMarkup
         };
 
         view.setUserOptions(storageItems);
 
-        sinon.assert.calledOnce(setServerUrlSpy);
-        sinon.assert.calledWithExactly(setServerUrlSpy, serverSelection);
-      });
-
-      it("should set the server, servlet url and tracking urls to view", function() {
-        const server = "some server";
-
-        view.setServerUrl(server);
-
-        expect(view.serverSelection).to.equal(server);
-        expect(view.serverURL).to.equal(server);
-        expect(view.servletURL).to.equal(server + "/view");
-        expect(view.serverTaskURL).to.equal(server + "/act/task");
-        expect(view.serverTrackingURL).to.equal(server + "/act/tracking");
-      });
-
-      it("should call saveServerUrl() in any case", function() {
-        const saveServerUrlSpy = sandbox.spy(view, "saveServerUrl");
-
-        const storageItems = {};
-
-        view.setUserOptions(storageItems);
-
-        sinon.assert.calledOnce(saveServerUrlSpy);
-      });
-
-      it("should set the server, servlet url and tracking urls to local storage", function() {
-        const server = view.serverSelection;
-
-        view.saveServerUrl();
-
-        sinon.assert.calledOnce(chrome.storage.local.set);
-        sinon.assert.calledWithExactly(chrome.storage.local.set, {
-          serverSelection: server,
-          serverURL: server,
-          servletURL: server + "/view",
-          serverTaskURL: server + "/act/task",
-          serverTrackingURL: server + "/act/tracking"
-        });
+        sinon.assert.calledOnce(setServerOptionsFromStorageSpy);
+        sinon.assert.calledWithExactly(setServerOptionsFromStorageSpy, storageItems);
       });
     });
 
@@ -532,45 +612,6 @@ describe("view.js", function() {
       view.setTaskId(taskId);
 
       expect(view.taskId).to.equal(taskId);
-    });
-  });
-
-  describe("signIn", function() {
-    it("should sign in the user", function() {
-      const userEmail = "some.email";
-      const userid = "someid";
-      const user = "some user";
-      const token = "some token";
-
-      const request = {
-        userEmail,
-        userid,
-        user,
-        token
-      };
-
-      view.signIn(request);
-
-      expect(view.userEmail).to.equal(userEmail);
-      expect(view.userid).to.equal(userid);
-      expect(view.user).to.equal(user);
-      expect(view.token).to.equal(token);
-    });
-
-    it("should sign out the user", function() {
-      view.userEmail = "some.email";
-      view.userid = "someid";
-      view.user = "some user";
-      view.token = "some token";
-      view.taskId = 5;
-
-      view.signOut();
-
-      expect(view.userEmail).to.equal("");
-      expect(view.userid).to.equal("");
-      expect(view.user).to.equal("");
-      expect(view.token).to.equal("");
-      expect(view.taskId).to.equal("");
     });
   });
 });

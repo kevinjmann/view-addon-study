@@ -59,6 +59,7 @@ describe("statistics-menu.js", function() {
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
     fixture.load("/fixtures/statistics-menu.html");
+    sandbox.stub($.fn, "load").yields();
   });
 
   afterEach(function() {
@@ -87,9 +88,7 @@ describe("statistics-menu.js", function() {
   });
 
   describe("add", function() {
-    it("should get the url for the statistics menu, call init() and prepend(viewMenu)", function() {
-      sandbox.stub($.fn, "load").yields();
-
+    it("should get the url for the statistics menu", function() {
       view.statisticsMenu.add();
 
       sinon.assert.calledOnce(chrome.extension.getURL);
@@ -99,8 +98,6 @@ describe("statistics-menu.js", function() {
     it("should call init()", function() {
       const initSpy = sandbox.spy(view.statisticsMenu, "init");
 
-      sandbox.stub($.fn, "load").yields();
-
       view.statisticsMenu.add();
 
       sinon.assert.calledOnce(initSpy);
@@ -109,8 +106,6 @@ describe("statistics-menu.js", function() {
     it("should call prepend(statisticMenu)", function() {
       const selectorSpy = sandbox.spy($.fn, "find");
       const prependSpy = sandbox.spy($.fn, "prepend");
-
-      sandbox.stub($.fn, "load").yields();
 
       view.statisticsMenu.add();
 

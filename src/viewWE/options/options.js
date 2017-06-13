@@ -146,7 +146,17 @@ const viewOptions = {
    * Save all user option choices to the storage.
    */
   saveUserOptions: function() {
+    const serverURL = viewOptions.$cache.get("input[name='server']:checked").val();
+    const servletURL = serverURL + "/view";
+    const serverTaskURL = serverURL + "/act/task";
+    const serverTrackingURL = serverURL + "/act/tracking";
+    const authenticator = serverURL + "/authenticator.html";
     chrome.storage.local.set({
+      serverURL,
+      servletURL,
+      serverTaskURL,
+      serverTrackingURL,
+      authenticator,
       fixedOrPercentage: parseInt(viewOptions.$cache.get("input[name='fixedOrPercentage']:checked").val(), 10),
       fixedNumberOfExercises: parseInt(viewOptions.$cache.get(viewOptions.selectorStart + "fixed-number-of-exercises-value").val(), 10),
       percentageOfExercises: parseInt(viewOptions.$cache.get(viewOptions.selectorStart + "percentage-of-exercises-value").val(), 10),
@@ -154,8 +164,7 @@ const viewOptions = {
       firstOffset: parseInt(viewOptions.$cache.get(viewOptions.selectorStart + "first-offset-value").val(), 10),
       intervalSize: parseInt(viewOptions.$cache.get(viewOptions.selectorStart + "interval-size-value").val(), 10),
       showInst: viewOptions.$cache.get(viewOptions.selectorStart + "show-instructions").prop("checked"),
-      debugSentenceMarkup: viewOptions.$cache.get(viewOptions.selectorStart + "debug-sentence-markup").prop("checked"),
-      serverSelection: viewOptions.$cache.get("input[name='server']:checked").val()
+      debugSentenceMarkup: viewOptions.$cache.get(viewOptions.selectorStart + "debug-sentence-markup").prop("checked")
     }, viewOptions.showSavedMessage);
   },
 
@@ -173,6 +182,7 @@ const viewOptions = {
    */
   restoreUserOptions: function() {
     chrome.storage.local.get([
+      "serverURL",
       "fixedOrPercentage",
       "fixedNumberOfExercises",
       "percentageOfExercises",
@@ -180,10 +190,8 @@ const viewOptions = {
       "firstOffset",
       "intervalSize",
       "showInst",
-      "debugSentenceMarkup",
-      "serverSelection"
+      "debugSentenceMarkup"
     ], function(res) {
-
       const fixedOrPercentageValue = res.fixedOrPercentage || 0;
       const fixedNumberOfExercises = res.fixedNumberOfExercises || 25;
       const percentageOfExercises = res.percentageOfExercises || 100;
@@ -192,7 +200,7 @@ const viewOptions = {
       const intervalSize = res.intervalSize || 1;
       const showInst = res.showInst || false;
       const debugSentenceMarkup = res.debugSentenceMarkup || false;
-      const serverSelection = res.serverSelection || 'https://view.aleks.bg';
+      const serverURL = res.serverURL || 'https://view.aleks.bg';
 
       viewOptions.chooseHowManyExercises(fixedOrPercentageValue);
 
@@ -209,7 +217,7 @@ const viewOptions = {
       );
 
       viewOptions.restoreIfToShowInstructions(showInst);
-      viewOptions.restoreDeveloperOptions(debugSentenceMarkup, serverSelection);
+      viewOptions.restoreDeveloperOptions(debugSentenceMarkup, serverURL);
     });
   },
 
@@ -282,7 +290,7 @@ const viewOptions = {
   },
 
   /**
-   * Restore developer options
+   * Restore developer options.
    *
    * @param {boolean} debugSentenceMarkup True iff the user selected to debug with sentences marked up
    * @param {string}  serverSelection     The server to communicate with

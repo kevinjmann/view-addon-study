@@ -13,8 +13,11 @@ function processMessage(request) {
     case "hideVIEWMenu":
       view.VIEWmenu.hide();
       break;
-    case "toggleStatisticsMenu":
-      view.statisticsMenu.toggle();
+    case "toggleAccountMenu":
+      view.accountMenu.toggle();
+      break;
+    case "hideAccountMenu":
+      view.accountMenu.hide();
       break;
     case "hideStatisticsMenu":
       view.statisticsMenu.hide();
@@ -49,11 +52,11 @@ function processMessage(request) {
     case "callRestoreToOriginal":
       view.enhancer.restoreToOriginal();
       break;
-    case "signOut":
-      view.signOut();
-      break;
     case "signIn":
-      view.signIn(request);
+      view.accountMenu.signIn(request);
+      break;
+    case "signOut":
+      view.accountMenu.signOut();
   }
 }
 

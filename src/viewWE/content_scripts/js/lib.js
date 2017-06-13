@@ -7,18 +7,24 @@ view.lib = {
   },
 
   /**
-   * Close the dropdown menu if the user clicks outside of it.
-   * Remove the instant feedback dialog, if the user clicks outside of it.
+   * Close the dropdown menu and remove the instant feedback dialog,
+   * if the user clicks outside of it.
    */
   initOnWindowClick: function() {
     $(window).on("click", function(event) {
-        view.VIEWmenu.hide();
-        view.statisticsMenu.hide();
+      const $Target = $(event.target);
 
-        const $Dialog = $("#view-feedback-dialog").parent();
-        if(!$(event.target).closest($Dialog).length){
-          view.lib.removeDialog($Dialog);
-        }
+      if(!$Target.closest(view.accountMenu.selectorStart + "statistics").length){
+        view.statisticsMenu.hide();
+      }
+
+      view.VIEWmenu.hide();
+      view.accountMenu.hide();
+
+      const $Dialog = $("#view-feedback-dialog").parent();
+      if(!$Target.closest($Dialog).length){
+        view.lib.removeDialog($Dialog);
+      }
     });
   },
 
@@ -103,7 +109,7 @@ view.lib = {
    * @param $Dialog the dialog element
    */
   initDialogClose: function($Dialog) {
-    $Dialog.on("dialogclose", function(){
+    $Dialog.on("dialogclose", function() {
       view.lib.removeDialog($Dialog);
     });
   },
@@ -143,10 +149,10 @@ view.lib = {
    * @return {number} the capitalization type
    */
   detectCapitalization: function(word) {
-    if (word === word.toUpperCase()) {
+    if(word === word.toUpperCase()){
       return 1;
     }
-    else if (word === word.substr(0, 1).toUpperCase() + word.substr(1)) {
+    else if(word === word.substr(0, 1).toUpperCase() + word.substr(1)){
       return 2;
     }
     else{
@@ -191,7 +197,7 @@ view.lib = {
    * @param {object} $Element the element to scroll to
    * @param {object} $ScrollArea the area of the scrolling
    */
-  scrollToElement: function($Element, $ScrollArea){
+  scrollToElement: function($Element, $ScrollArea) {
     if($Element.is(":visible")){
       $ScrollArea.scrollTop(
         $Element.offset().top - $ScrollArea.offset().top + $ScrollArea.scrollTop()

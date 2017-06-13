@@ -15,7 +15,7 @@ function Selector_Cache() {
   const collection = {};
 
   function get_from_cache(selector, reset) {
-    if (undefined === collection[selector] || true === reset) {
+    if(undefined === collection[selector] || true === reset){
       collection[selector] = $(selector);
     }
 
@@ -55,8 +55,6 @@ const toolbar = {
 
     toolbar.initViewMenuBtn();
 
-    toolbar.initStatisticsMenuBtn();
-
     toolbar.initOnWindowClick();
 
     toolbar.initAutoEnhance();
@@ -77,13 +75,11 @@ const toolbar = {
 
     toolbar.initRestoreBtn();
 
-    toolbar.initSignInOutInterfaces();
+    toolbar.initSignInBtn();
 
-    toolbar.initSignInLink();
+    toolbar.initAccountMenuBtn();
 
-    toolbar.initSignOutLink();
-
-    toolbar.initToggleToolbar();
+    toolbar.initToggleToolbarBtn();
 
     toolbar.restoreSelections();
 
@@ -115,36 +111,20 @@ const toolbar = {
   },
 
   /**
-   * Init the handler for the statistics button.
-   * Call requestToToggleStatisticsMenu() on click.
-   */
-  initStatisticsMenuBtn: function() {
-    toolbar.$cache.get(toolbar.selectorStart + "statistics-menu-button").on("click",
-      toolbar.requestToToggleStatisticsMenu);
-  },
-
-  /**
-   * Send a request to the background script to pass on the message to
-   * toggle the statistics menu.
-   */
-  requestToToggleStatisticsMenu: function() {
-    chrome.runtime.sendMessage({action: "toggleStatisticsMenu"}, toolbar.noResponse);
-  },
-
-  /**
    * Hide the view and statistics menu when anything but the menu buttons were clicked.
    * Remove the instant feedback dialog.
    */
   initOnWindowClick: function() {
     toolbar.$cache.get(window).on("click", function(event) {
       const $Target = $(event.target);
-      if (!$Target.closest("#wertiview-VIEW-menu-btn").length) {
+      if(!$Target.closest("#wertiview-VIEW-menu-btn").length){
         toolbar.requestToHideViewMenu();
       }
-      if (!$Target.closest(toolbar.selectorStart + "statistics-menu-button").length) {
-        toolbar.requestToHideStatisticsMenu();
+      if(!$Target.closest(toolbar.selectorStart + "account-menu-button").length){
+        toolbar.requestToHideAccountMenu();
       }
 
+      toolbar.requestToHideStatisticsMenu();
       toolbar.requestToRemoveFeedbackDialog();
     });
   },
@@ -155,6 +135,14 @@ const toolbar = {
    */
   requestToHideViewMenu: function() {
     chrome.runtime.sendMessage({action: "hideVIEWMenu"}, toolbar.noResponse);
+  },
+
+  /**
+   * Send a request to the background script to pass on the message to
+   * hide the account menu.
+   */
+  requestToHideAccountMenu: function() {
+    chrome.runtime.sendMessage({action: "hideAccountMenu"}, toolbar.noResponse);
   },
 
   /**
@@ -323,11 +311,11 @@ const toolbar = {
 
     $ActivityMenu.append(toolbar.activitySelectors[unselected]);
 
-    if (
+    if(
       language !== unselected &&
       !topic.startsWith(unselected) &&
       toolbar.topics[topic] &&
-      toolbar.topics[topic][language]) {
+      toolbar.topics[topic][language]){
       toolbar.enableAndShowActivities(language, topic);
     }
 
@@ -503,61 +491,62 @@ const toolbar = {
   },
 
   /**
-   * Set the href attribute for the identity sign-in/out link.
+   * Init the handler for the sign in button.
+   * Call openSignInWinodow() on click.
    */
-  initSignInOutInterfaces: function() {
-    chrome.storage.local.get("serverURL", function(result) {
-      const authenticator = result.serverURL + "/authenticator.html";
-      toolbar.$cache.get(toolbar.selectorStart + "identity-signinlink")
-      .attr("link", authenticator + "?action=sign-in");
-      toolbar.$cache.get(toolbar.selectorStart + "identity-signoutlink")
-      .attr("link", authenticator + "?action=sign-out");
+  initSignInBtn: function() {
+    toolbar.$cache.get(toolbar.selectorStart + "account-sign-in-button").on("click", function() {
+      toolbar.openSignInWindow();
     });
   },
 
   /**
-   * Init the handler for the sign in link.
-   * Call openSignInWinodow() on click.
-   */
-  initSignInLink: function() {
-    toolbar.$cache.get(toolbar.selectorStart + "identity-signinlink").on("click", 
-      toolbar.openSignInWindow);
-  },
-
-  /**
-   * Use the sign in link to open the authenticator sign in window.
+   * Open the authenticator sign in window.
    */
   openSignInWindow: function() {
-    window.open(
-      toolbar.$cache.get(toolbar.selectorStart + "identity-signinlink").attr("link"),
-      "Sign In",
-      "width=985,height=735").focus();
+    const signInWindow = window.open("", "", "width=985,height=735");
+    chrome.storage.local.get("authenticator", function(storageItems) {
+      toolbar.assignHrefAndFocus(
+        signInWindow,
+        storageItems.authenticator + "?action=sign-in"
+      );
+    });
   },
 
   /**
-   * Init the handler for the sign out link.
-   * Call openSignOutWindow() on click.
+   * Assign the authenticator to the href attribute of the given window
+   * and focus on it.
+   *
+   * @param {object} myWindow the window we assign the href attribute of
+   * @param {string} authenticatorLink the value to be assigned
    */
-  initSignOutLink: function() {
-    toolbar.$cache.get(toolbar.selectorStart + "identity-signoutlink").on("click",
-      toolbar.openSignOutWindow);
+  assignHrefAndFocus: function(myWindow, authenticatorLink) {
+    myWindow.location.href = authenticatorLink;
+    myWindow.focus();
   },
 
   /**
-   * Use the sign out link to open the authenticator sign out window.
+   * Init the handler for the account menu button.
+   * Call requestToToggleAccountMenu() on click.
    */
-  openSignOutWindow: function() {
-    window.open(
-      toolbar.$cache.get(toolbar.selectorStart + "identity-signoutlink").attr("link"),
-      "Sign Out",
-      "width=1,height=1").moveTo(0, window.screen.availHeight + 1000);
+  initAccountMenuBtn: function() {
+    toolbar.$cache.get(toolbar.selectorStart + "account-menu-button").on("click",
+      toolbar.requestToToggleAccountMenu);
+  },
+
+  /**
+   * Send a request to the background script to pass on the
+   * message to toggle the account menu.
+   */
+  requestToToggleAccountMenu: function() {
+    chrome.runtime.sendMessage({action: "toggleAccountMenu"}, toolbar.noResponse);
   },
 
   /**
    * Init the handler for the "X" button.
    * Call requestToToggleToolbar() on click.
    */
-  initToggleToolbar: function() {
+  initToggleToolbarBtn: function() {
     toolbar.$cache.get(toolbar.selectorStart + "toggle-button").on("click", toolbar.requestToToggleToolbar);
   },
 
@@ -580,21 +569,21 @@ const toolbar = {
       "topic",
       "filter",
       "activity",
-      "userEmail",
+      "user",
       "enabled"
     ], function(res) {
       const language = res.language || "unselected";
       const topic = res.topic || "unselected";
       const filter = res.filter || "no-filter";
       const activity = res.activity || "unselected";
-      const userEmail = res.userEmail || "";
+      const user = res.user || "";
       const enabled = res.enabled || false;
 
       toolbar.restoreSelectionMenus(language, topic, filter, activity);
 
       toolbar.toggleEnhanceButton();
 
-      toolbar.verifySignInStatus(userEmail);
+      toolbar.verifySignInStatus(user);
 
       toolbar.restoreAutoEnhance(enabled);
     });
@@ -616,10 +605,10 @@ const toolbar = {
     const topicMenu = toolbar.selectorStart + "topic-" + topic;
 
     // special case Dets and Preps are shared between en, de and es
-    if (topic === "determiners" || topic === "Preps") {
+    if(topic === "determiners" || topic === "Preps"){
       toolbar.$cache.get(topicMenu + "-" + language).prop(selected, true);
     }
-    else {
+    else{
       toolbar.$cache.get(topicMenu).prop(selected, true);
     }
 
@@ -632,16 +621,16 @@ const toolbar = {
 
   /**
    * The user will be signed in/out according to the value of the
-   * stored email address.
+   * stored user.
    *
-   * @param {string} userEmail the email address of the user
+   * @param {string} user the user name
    */
-  verifySignInStatus: function(userEmail) {
-    if (!userEmail) {
+  verifySignInStatus: function(user) {
+    if(!user){
       toolbar.signOut()
     }
-    else {
-      toolbar.signIn(userEmail);
+    else{
+      toolbar.signIn(user);
     }
   },
 
@@ -652,53 +641,37 @@ const toolbar = {
    * @param {boolean} enabled true if auto-enhance is still enabled, false otherwise
    */
   restoreAutoEnhance: function(enabled) {
-    if (enabled) {
+    if(enabled){
       toolbar.turnOnAutoEnhance();
 
       toolbar.setSelectionsAndPrepareToEnhance();
     }
-    else {
+    else{
       toolbar.turnOffAutoEnhance();
     }
   },
 
   /**
-   * Hide the sign in link and show the signed in status, user email and sign
-   * out link. Fill in the user email.
+   * Hide the sign in button and show the account menu button.
    *
-   * @param {string} userEmail the user id given from the provider
+   * @param {string} user the user name
    */
-  signIn: function(userEmail) {
-    const identityIdStart = toolbar.selectorStart + "identity-";
-    const $UserEmailID = toolbar.$cache.get(identityIdStart + "signedinuseremail");
+  signIn: function(user) {
+    const accountIdStart = toolbar.selectorStart + "account-";
+    const firstLetterOfUser = user.substring(0, 1);
 
-    toolbar.$cache.get(identityIdStart + "signinlink").hide();
-
-    toolbar.$cache.get(identityIdStart + "signedinstatus").show();
-    $UserEmailID.show();
-    toolbar.$cache.get(identityIdStart + "signoutlink").show();
-
-    $UserEmailID.text(userEmail);
-
-    toolbar.$cache.get(
-      toolbar.selectorStart + "statistics-menu-button").show();
+    toolbar.$cache.get(accountIdStart + "sign-in-button").hide();
+    toolbar.$cache.get(accountIdStart + "menu-button").text(firstLetterOfUser).show();
   },
 
   /**
-   * Show the sign in link and hide the signed in status, user email and sign
-   * out link.
+   * Show the sign in button and hide the account menu button.
    */
   signOut: function() {
-    const identityIdStart = toolbar.selectorStart + "identity-";
+    const accountIdStart = toolbar.selectorStart + "account-";
 
-    toolbar.$cache.get(identityIdStart + "signinlink").show();
-
-    toolbar.$cache.get(identityIdStart + "signedinstatus").hide();
-    toolbar.$cache.get(identityIdStart + "signedinuseremail").hide();
-    toolbar.$cache.get(identityIdStart + "signoutlink").hide();
-
-    toolbar.$cache.get(
-      toolbar.selectorStart + "statistics-menu-button").hide();
+    toolbar.$cache.get(accountIdStart + "menu-button").text("").hide();
+    toolbar.$cache.get(accountIdStart + "sign-in-button").show();
   }
 };
 
@@ -725,7 +698,7 @@ function processMessageForToolbar(request) {
       toolbar.$cache.get(request.selector).hide();
       break;
     case "signIn":
-      toolbar.signIn(request.userEmail);
+      toolbar.signIn(request.user);
       break;
     case "signOut":
       toolbar.signOut();

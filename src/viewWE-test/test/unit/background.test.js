@@ -207,7 +207,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message 'toggle VIEW Menu'", function() {
+    it("should process the message 'toggleVIEWMenu'", function() {
       const toggleMenuVIEWSpy = sandbox.spy(background, "toggleVIEWMenu");
 
       const request = {action: "toggleVIEWMenu"};
@@ -228,7 +228,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message 'hide VIEW Menu'", function() {
+    it("should process the message 'hideVIEWMenu'", function() {
       const hideVIEWMenuSpy = sandbox.spy(background, "hideVIEWMenu");
 
       const request = {action: "hideVIEWMenu"};
@@ -249,7 +249,49 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message 'toggle statistics menu'", function() {
+    it("should process the message 'toggleAccountMenu'", function() {
+      const toggleAccountMenuSpy = sandbox.spy(background, "toggleAccountMenu");
+
+      const request = {action: "toggleAccountMenu"};
+      const sender = {tab: {id: 5}};
+      const sendResponse = sandbox.spy();
+      const parameters = {
+        request,
+        sender,
+        sendResponse
+      };
+
+      chrome.runtime.onMessage.trigger(request, sender, sendResponse);
+
+      sinon.assert.calledOnce(toggleAccountMenuSpy);
+      sinon.assert.calledWithExactly(toggleAccountMenuSpy, parameters);
+
+      sinon.assert.calledOnce(chrome.tabs.sendMessage);
+      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
+    });
+
+    it("should process the message 'hideAccountMenu'", function() {
+      const hideAccountMenuSpy = sandbox.spy(background, "hideAccountMenu");
+
+      const request = {action: "hideAccountMenu"};
+      const sender = {tab: {id: 5}};
+      const sendResponse = sandbox.spy();
+      const parameters = {
+        request,
+        sender,
+        sendResponse
+      };
+
+      chrome.runtime.onMessage.trigger(request, sender, sendResponse);
+
+      sinon.assert.calledOnce(hideAccountMenuSpy);
+      sinon.assert.calledWithExactly(hideAccountMenuSpy, parameters);
+
+      sinon.assert.calledOnce(chrome.tabs.sendMessage);
+      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
+    });
+
+    it("should process the message 'toggleStatisticsMenu'", function() {
       const toggleStatisticsMenuSpy = sandbox.spy(background, "toggleStatisticsMenu");
 
       const request = {action: "toggleStatisticsMenu"};
@@ -270,7 +312,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message 'hide statistics menu'", function() {
+    it("should process the message 'hideStatisticsMenu'", function() {
       const hideStatisticsMenuSpy = sandbox.spy(background, "hideStatisticsMenu");
 
       const request = {action: "hideStatisticsMenu"};
@@ -291,7 +333,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message 'remove feedback dialog'", function() {
+    it("should process the message 'removeFeedbackDialog'", function() {
       const removeFeedbackDialogSpy = sandbox.spy(background, "removeFeedbackDialog");
 
       const request = {action: "removeFeedbackDialog"};
@@ -312,7 +354,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message 'call startToEnhance'", function() {
+    it("should process the message 'callStartToEnhance'", function() {
       const callStartToEnhanceSpy = sandbox.spy(background, "callStartToEnhance");
 
       const request = {action: "callStartToEnhance"};
@@ -333,7 +375,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message 'show element'", function() {
+    it("should process the message 'showElement'", function() {
       const showElementSpy = sandbox.spy(background, "showElement");
 
       const request = {
@@ -357,7 +399,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message 'hide element'", function() {
+    it("should process the message 'hideElement'", function() {
       const hideElementSpy = sandbox.spy(background, "hideElement");
 
       const request = {
@@ -381,7 +423,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message 'call sendTopics'", function() {
+    it("should process the message 'sendTopics'", function() {
       const sendTopicsSpy = sandbox.spy(background, "sendTopics");
 
       const request = {action: "sendTopics"};
@@ -407,7 +449,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(sendResponse, {topics: articlesData});
     });
 
-    it("should process the message 'call abort'", function() {
+    it("should process the message 'callAbort'", function() {
       const callAbortSpy = sandbox.spy(background, "callAbort");
 
       const request = {action: "callAbort"};
@@ -428,7 +470,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message 'call restoreToOriginal'", function() {
+    it("should process the message 'callRestoreToOriginal'", function() {
       const callRestoreToOriginalSpy = sandbox.spy(background, "callRestoreToOriginal");
 
       const request = {action: "callRestoreToOriginal"};
@@ -449,7 +491,7 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message 'call openOptionsPage'", function() {
+    it("should process the message 'callOpenOptionsPage'", function() {
       const callOpenOptionsPageSpy = sandbox.spy(background, "callOpenOptionsPage");
 
       const request = {action: "callOpenOptionsPage"};
@@ -469,7 +511,7 @@ describe("background.js", function() {
       sinon.assert.calledOnce(chrome.runtime.openOptionsPage);
     });
 
-    it("should process the message 'open help page'", function() {
+    it("should process the message 'openHelpPage'", function() {
       const openHelpPageSpy = sandbox.spy(background, "openHelpPage");
 
       const request = {action: "openHelpPage"};
@@ -547,7 +589,7 @@ describe("background.js", function() {
         });
 
         describe("sendActivityDataAndGetEnhancementMarkup", function() {
-          it("should process the message 'send activityData and get enhancement markup'", function() {
+          it("should process the message 'sendActivityDataAndGetEnhancementMarkup'", function() {
             const sendActivityDataAndGetEnhancementMarkupSpy =
             sandbox.spy(background, "sendActivityDataAndGetEnhancementMarkup");
 
@@ -661,7 +703,7 @@ describe("background.js", function() {
         });
 
         describe("sendTaskDataAndGetTaskId", function() {
-          it("should process the message 'send taskData and get taskId'", function() {
+          it("should process the message 'sendTaskDataAndGetTaskId'", function() {
             const sendTaskDataAndGetTaskIdSpy = sandbox.spy(background, "sendTaskDataAndGetTaskId");
 
             const request = {
@@ -826,7 +868,7 @@ describe("background.js", function() {
         });
 
         describe("sendTrackingData", function() {
-          it("should process the message 'send trackingData'", function() {
+          it("should process the message 'sendTrackingData'", function() {
             const sendTrackingDataSpy = sandbox.spy(background, "sendTrackingData");
 
             const request = {
@@ -956,7 +998,7 @@ describe("background.js", function() {
         });
 
         describe("getAllTasks", function() {
-          it("should process the message 'get all tasks'", function() {
+          it("should process the message 'getAllTasks'", function() {
             const getAllTasksSpy = sandbox.spy(background, "getAllTasks");
 
             const request = {
@@ -1080,7 +1122,7 @@ describe("background.js", function() {
         });
 
         describe("getTask", function() {
-          it("should process the message 'get task'", function() {
+          it("should process the message 'getTask'", function() {
             const getTaskSpy = sandbox.spy(background, "getTask");
 
             const request = {
@@ -1460,10 +1502,11 @@ describe("background.js", function() {
     });
 
     it("should set user email and id and send a request to sign in the user", function() {
-      const userData = "user/email/id/authtoken";
+      const encodedUser = "user%20name";
+      const userData = encodedUser + "/email/id/authtoken";
       const userEmail = "email";
       const userid = "id";
-      const user = "user";
+      const user = "user name";
       const token = "authtoken";
 
       background.currentTabId = 5;
