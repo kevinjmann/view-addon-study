@@ -5,6 +5,7 @@ const view = {
   servletURL: theServerURL + "/view",
   serverTaskURL: theServerURL + "/act/task",
   serverTrackingURL: theServerURL + "/act/tracking",
+  authenticator: theServerURL + "/authenticator.html",
   cookie_name: "wertiview_userid",
   cookie_path: "/VIEW/openid",
   ajaxTimeout: 60000,
@@ -30,7 +31,6 @@ const view = {
   intervalSize: 1,
   showInst: false,
   debugSentenceMarkup: false,
-  serverSelection: theServerURL,
 
   // enabled, language, topic and activity selections (default)
   enabled: false, // should the page be enhanced right away?
@@ -45,12 +45,18 @@ const view = {
   /**
    * Save general options to the storage
    * and retrieve changed options.
+   * Afterwards initialize the toolbar iframe.
    */
-  setGeneralOptions: function() {
+  setGeneralOptionsAndInitToolbar: function() {
     chrome.runtime.sendMessage({
       action: "sendTopics"
       }, function(response) {
         chrome.storage.local.get([
+          "serverURL",
+          "servletURL",
+          "serverTaskURL",
+          "serverTrackingURL",
+          "authenticator",
           "userEmail",
           "userid",
           "user",
@@ -59,6 +65,8 @@ const view = {
           "enabled"
         ], function(storageItems) {
           view.setAllGeneralOptions(storageItems, response.topics);
+
+          view.toolbarIframe.init();
         });
       }
     );
@@ -97,9 +105,51 @@ const view = {
    * @param {object} storageItems changeable items from storage
    */
   setMutableGeneralOptions: function(storageItems) {
+    view.setServerOptions(storageItems);
     view.setAuthenticationDetails(storageItems);
     view.setAutoEnhance(storageItems.enabled);
     view.setLatestTaskId(storageItems.taskId);
+  },
+
+  /**
+   * Set the server options from local storage if possible,
+   * save to local storage otherwise.
+   *
+   * @param {object} storageItems changeable items from storage
+   */
+  setServerOptions(storageItems) {
+    if (storageItems.serverURL !== undefined) {
+      view.setServerOptionsFromStorage(storageItems);
+    }
+    else{
+      view.setServerOptionsToStorage();
+    }
+  },
+
+  /**
+   * Set the server options from local storage.
+   *
+   * @param {object} storageItems changeable items from storage
+   */
+  setServerOptionsFromStorage: function(storageItems) {
+    view.serverURL = storageItems.serverURL;
+    view.servletURL = storageItems.servletURL;
+    view.serverTaskURL = storageItems.serverTaskURL;
+    view.serverTrackingURL = storageItems.serverTrackingURL;
+    view.authenticator = storageItems.authenticator;
+  },
+
+  /**
+   * Set server options to local storage.
+   */
+  setServerOptionsToStorage: function() {
+    chrome.storage.local.set({
+      serverURL: view.serverURL,
+      servletURL: view.servletURL,
+      serverTaskURL: view.serverTaskURL,
+      serverTrackingURL: view.serverTrackingURL,
+      authenticator: view.authenticator
+    });
   },
 
   /**
@@ -159,6 +209,11 @@ const view = {
    */
   startToEnhance: function() {
     chrome.storage.local.get([
+      "serverURL",
+      "servletURL",
+      "serverTaskURL",
+      "serverTrackingURL",
+      "authenticator",
       "fixedOrPercentage",
       "fixedNumberOfExercises",
       "percentageOfExercises",
@@ -167,7 +222,6 @@ const view = {
       "intervalSize",
       "showInst",
       "debugSentenceMarkup",
-      "serverSelection",
       "userEmail",
       "userid",
       "user",
@@ -197,7 +251,8 @@ const view = {
    * @param {object} storageItems the storage items
    */
   setUserOptions: function(storageItems) {
-    if (storageItems.fixedOrPercentage !== undefined) {
+    if (storageItems.serverURL !== undefined) {
+      view.setServerOptionsFromStorage(storageItems);
       view.fixedOrPercentage = storageItems.fixedOrPercentage;
       view.fixedNumberOfExercises = storageItems.fixedNumberOfExercises;
       view.percentageOfExercises = storageItems.percentageOfExercises;
@@ -206,36 +261,7 @@ const view = {
       view.intervalSize = storageItems.intervalSize;
       view.showInst = storageItems.showInst;
       view.debugSentenceMarkup = storageItems.debugSentenceMarkup;
-      view.setServerUrl(storageItems.serverSelection);
     }
-
-    view.saveServerUrl();
-  },
-
-  /**
-   * Select the correct server, and adjust servlet and tracking urls.
-   *
-   * @param {string} server The server we should communicate with
-   */
-  setServerUrl(server) {
-    view.serverSelection = server;
-    view.serverURL = server;
-    view.servletURL = server + "/view";
-    view.serverTaskURL = server + "/act/task";
-    view.serverTrackingURL = server + "/act/tracking";
-  },
-
-  /**
-   * Save server and servlet URL to the local storage.
-   */
-  saveServerUrl: function() {
-    chrome.storage.local.set({
-      serverSelection: view.serverSelection,
-      serverURL: view.serverURL,
-      servletURL: view.servletURL,
-      serverTaskURL: view.serverTaskURL,
-      serverTrackingURL: view.serverTrackingURL
-    });
   },
 
   /**
@@ -312,28 +338,5 @@ const view = {
     chrome.storage.local.set({taskId: taskId}, function() {
       view.taskId = taskId;
     });
-  },
-
-  /**
-   * The extension send the message to sign in the user.
-   *
-   * @param {*} request the message sent by the calling script
-   */
-  signIn: function(request) {
-    view.userEmail = request.userEmail;
-    view.userid = request.userid;
-    view.user = request.user;
-    view.token = request.token;
-  },
-
-  /**
-   * The extension send the message to sign out the user.
-   */
-  signOut: function() {
-    view.userEmail = "";
-    view.userid = "";
-    view.user = "";
-    view.token = "";
-    view.taskId = "";
   }
 };
