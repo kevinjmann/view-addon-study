@@ -25,7 +25,6 @@ describe("lib.js", function() {
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
-    fixture.load("/fixtures/account.html");
   });
 
   afterEach(function() {
@@ -36,7 +35,6 @@ describe("lib.js", function() {
     $("a").remove();
     $("#scroll-area").scrollTop(0);
     $(".element").show();
-    fixture.cleanup();
   });
 
   describe("noResponse", function() {
@@ -76,9 +74,11 @@ describe("lib.js", function() {
     it("should not call statisticsMenu.hide() on click, because the target was the statistics button", function() {
       const hideSpy = sandbox.spy(view.statisticsMenu, "hide");
 
+      $("body").append("<div>").attr("id", view.accountMenu.selectorStart.substr(1) + "statistics");
+
       view.lib.initOnWindowClick();
 
-      $(view.account.selectorStart + "statistics").trigger("click");
+      $(view.accountMenu.selectorStart + "statistics").trigger("click");
 
       sinon.assert.notCalled(hideSpy);
     });
@@ -93,8 +93,8 @@ describe("lib.js", function() {
       sinon.assert.calledOnce(hideSpy);
     });
 
-    it("should call account.hide() on click", function() {
-      const hideSpy = sandbox.spy(view.account, "hide");
+    it("should call accountMenu.hide() on click", function() {
+      const hideSpy = sandbox.spy(view.accountMenu, "hide");
 
       view.lib.initOnWindowClick();
 

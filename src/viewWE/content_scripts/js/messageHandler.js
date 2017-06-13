@@ -14,10 +14,10 @@ function processMessage(request) {
       view.VIEWmenu.hide();
       break;
     case "toggleAccountMenu":
-      view.account.toggle();
+      view.accountMenu.toggle();
       break;
     case "hideAccountMenu":
-      view.account.hide();
+      view.accountMenu.hide();
       break;
     case "hideStatisticsMenu":
       view.statisticsMenu.hide();
@@ -53,10 +53,10 @@ function processMessage(request) {
       view.enhancer.restoreToOriginal();
       break;
     case "signIn":
-      view.account.signIn(request);
+      view.accountMenu.signIn(request);
       break;
     case "signOut":
-      view.account.signOut();
+      view.accountMenu.signOut();
   }
 }
 
