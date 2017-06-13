@@ -295,6 +295,11 @@ describe("options.js", function() {
       it("should set all user options and then call showSavedMessage()", function() {
         const showSavedMessageSpy = sandbox.spy(viewOptions, "showSavedMessage");
 
+        const serverURL = "http://localhost:8080";
+        const servletURL = serverURL + "/view";
+        const serverTaskURL = serverURL + "/act/task";
+        const serverTrackingURL = serverURL + "/act/tracking";
+        const authenticator = serverURL + "/authenticator.html";
         const fixedOrPercentage = 0;
         const fixedNumberOfExercises = 30;
         const percentageOfExercises = 90;
@@ -303,7 +308,6 @@ describe("options.js", function() {
         const intervalSize = 1;
         const showInst = false;
         const debugSentenceMarkup = false;
-        const serverSelection = "http://localhost:8080";
 
         chrome.storage.local.set.yields(); // make set synchronous
 
@@ -321,6 +325,11 @@ describe("options.js", function() {
 
         sinon.assert.calledOnce(chrome.storage.local.set);
         sinon.assert.calledWith(chrome.storage.local.set, {
+          serverURL,
+          servletURL,
+          serverTaskURL,
+          serverTrackingURL,
+          authenticator,
           fixedOrPercentage,
           fixedNumberOfExercises,
           percentageOfExercises,
@@ -328,8 +337,7 @@ describe("options.js", function() {
           firstOffset,
           intervalSize,
           showInst,
-          debugSentenceMarkup,
-          serverSelection
+          debugSentenceMarkup
         });
 
         sinon.assert.calledOnce(showSavedMessageSpy);
@@ -416,9 +424,10 @@ describe("options.js", function() {
         const intervalSize = 3;
         const showInst = true;
         const debugSentenceMarkup = true;
-        const serverSelection = "http://localhost8080";
+        const serverURL = "http://localhost8080";
 
         chrome.storage.local.get.yields({
+          serverURL,
           fixedOrPercentage,
           fixedNumberOfExercises,
           percentageOfExercises,
@@ -426,8 +435,7 @@ describe("options.js", function() {
           firstOffset,
           intervalSize,
           showInst,
-          debugSentenceMarkup,
-          serverSelection
+          debugSentenceMarkup
         });
 
         viewOptions.restoreUserOptions();
@@ -452,7 +460,7 @@ describe("options.js", function() {
 
         sinon.assert.calledOnce(restoreIfToShowInstructionsSpy);
         sinon.assert.calledWithExactly(restoreIfToShowInstructionsSpy, showInst);
-        sinon.assert.calledWithExactly(restoreDeveloperOptionsSpy, debugSentenceMarkup, serverSelection);
+        sinon.assert.calledWithExactly(restoreDeveloperOptionsSpy, debugSentenceMarkup, serverURL);
       });
     });
 
