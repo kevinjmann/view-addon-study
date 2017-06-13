@@ -27,11 +27,7 @@ describe("toolbar.js", function() {
   });
 
   const toolbarStart = "#wertiview-toolbar-";
-  const identityIdStart = toolbar.selectorStart + "identity-";
   const globalServerURL = "https://view.aleks.bg";
-  const authenticatorURL = globalServerURL + "/authenticator.html";
-  const authenticatorSignInURL = authenticatorURL + "?action=sign-in";
-  const authenticatorSignOutURL = authenticatorURL + "?action=sign-out";
 
   describe("Selector_Cache", function() {
     it("should get the wanted jquery selector", function() {
@@ -82,35 +78,34 @@ describe("toolbar.js", function() {
       // the selectors below can be freely used in the tests without problems
 
       expect($("#wertiview-VIEW-menu-btn").length).to.be.above(0);
-      expect($(toolbar.selectorStart + "statistics-menu-button").length).to.be.above(0);
 
-      expect($(toolbar.selectorStart + "enabled").length).to.be.above(0);
-      expect($(toolbar.selectorStart + "disabled").length).to.be.above(0);
+      expect($(toolbarStart + "enabled").length).to.be.above(0);
+      expect($(toolbarStart + "disabled").length).to.be.above(0);
 
-      expect($(toolbar.selectorStart + "language-menu").length).to.be.above(0);
-      expect($(toolbar.selectorStart + "language-unselected").val()).to.equal("unselected");
-      expect($(toolbar.selectorStart + "language-unselected").next().text()).to.equal("──────────");
-      expect($(toolbar.selectorStart + "language-en").val()).to.equal("en");
-      expect($(toolbar.selectorStart + "language-ru").val()).to.equal("ru");
+      expect($(toolbarStart + "language-menu").length).to.be.above(0);
+      expect($(toolbarStart + "language-unselected").val()).to.equal("unselected");
+      expect($(toolbarStart + "language-unselected").next().text()).to.equal("──────────");
+      expect($(toolbarStart + "language-en").val()).to.equal("en");
+      expect($(toolbarStart + "language-ru").val()).to.equal("ru");
 
-      expect($(toolbar.selectorStart + "topic-menu-unselected").length).to.be.above(0);
-      expect($(toolbar.selectorStart + "topic-unselected").val()).to.equal("unselected");
+      expect($(toolbarStart + "topic-menu-unselected").length).to.be.above(0);
+      expect($(toolbarStart + "topic-unselected").val()).to.equal("unselected");
 
-      expect($(toolbar.selectorStart + "topic-menu-en").length).to.be.above(0);
-      expect($(toolbar.selectorStart + "topic-unselected-en").val()).to.equal("unselected-en");
-      expect($(toolbar.selectorStart + "topic-unselected-en").next().text()).to.equal("──────────");
-      expect($(toolbar.selectorStart + "topic-articles").val()).to.equal("articles");
-      expect($(toolbar.selectorStart + "topic-determiners-en").val()).to.equal("determiners");
+      expect($(toolbarStart + "topic-menu-en").length).to.be.above(0);
+      expect($(toolbarStart + "topic-unselected-en").val()).to.equal("unselected-en");
+      expect($(toolbarStart + "topic-unselected-en").next().text()).to.equal("──────────");
+      expect($(toolbarStart + "topic-articles").val()).to.equal("articles");
+      expect($(toolbarStart + "topic-determiners-en").val()).to.equal("determiners");
 
-      expect($(toolbar.selectorStart + "topic-menu-ru").length).to.be.above(0);
-      expect($(toolbar.selectorStart + "topic-unselected-ru").val()).to.equal("unselected-ru");
-      expect($(toolbar.selectorStart + "topic-unselected-ru").next().text()).to.equal("──────────");
-      expect($(toolbar.selectorStart + "topic-nouns").val()).to.equal("nouns");
+      expect($(toolbarStart + "topic-menu-ru").length).to.be.above(0);
+      expect($(toolbarStart + "topic-unselected-ru").val()).to.equal("unselected-ru");
+      expect($(toolbarStart + "topic-unselected-ru").next().text()).to.equal("──────────");
+      expect($(toolbarStart + "topic-nouns").val()).to.equal("nouns");
 
-      expect($(toolbar.selectorStart + "filter-menu").length).to.be.above(0);
-      expect($(toolbar.selectorStart + "filter-no-filter").val()).to.equal("no-filter");
-      expect($(toolbar.selectorStart + "filter-unselected").val()).to.equal("unselected");
-      expect($(toolbar.selectorStart + "filter-unselected").next().text()).to.equal("──────────");
+      expect($(toolbarStart + "filter-menu").length).to.be.above(0);
+      expect($(toolbarStart + "filter-no-filter").val()).to.equal("no-filter");
+      expect($(toolbarStart + "filter-unselected").val()).to.equal("unselected");
+      expect($(toolbarStart + "filter-unselected").next().text()).to.equal("──────────");
 
       const jsonData = fixture.load("fixtures/json/nouns.json", true);
 
@@ -118,35 +113,27 @@ describe("toolbar.js", function() {
 
       toolbar.checkForFilters("ru", "nouns");
 
-      expect($(toolbar.selectorStart + "filter-all").val()).to.equal("all");
-      expect($(toolbar.selectorStart + "filter-Sg").val()).to.equal("Sg");
-      expect($(toolbar.selectorStart + "filter-Pl").val()).to.equal("Pl");
+      expect($(toolbarStart + "filter-all").val()).to.equal("all");
+      expect($(toolbarStart + "filter-Sg").val()).to.equal("Sg");
+      expect($(toolbarStart + "filter-Pl").val()).to.equal("Pl");
 
-      expect($(toolbar.selectorStart + "activity-menu").length).to.be.above(0);
-      expect($(toolbar.selectorStart + "activity-unselected").val()).to.equal("unselected");
-      expect($(toolbar.selectorStart + "activity-splitter").text()).to.equal("──────────");
-      expect($(toolbar.selectorStart + "activity-color").val()).to.equal("color");
-      expect($(toolbar.selectorStart + "activity-click").val()).to.equal("click");
-      expect($(toolbar.selectorStart + "activity-mc").val()).to.equal("mc");
-      expect($(toolbar.selectorStart + "activity-cloze").val()).to.equal("cloze");
+      expect($(toolbarStart + "activity-menu").length).to.be.above(0);
+      expect($(toolbarStart + "activity-unselected").val()).to.equal("unselected");
+      expect($(toolbarStart + "activity-splitter").text()).to.equal("──────────");
+      expect($(toolbarStart + "activity-color").val()).to.equal("color");
+      expect($(toolbarStart + "activity-click").val()).to.equal("click");
+      expect($(toolbarStart + "activity-mc").val()).to.equal("mc");
+      expect($(toolbarStart + "activity-cloze").val()).to.equal("cloze");
 
-      expect($(toolbar.selectorStart + "enhance-button").length).to.be.above(0);
-      expect($(toolbar.selectorStart + "restore-button").length).to.be.above(0);
-      expect($(toolbar.selectorStart + "abort-button").length).to.be.above(0);
-      expect($(toolbar.selectorStart + "loading-image").length).to.be.above(0);
+      expect($(toolbarStart + "enhance-button").length).to.be.above(0);
+      expect($(toolbarStart + "restore-button").length).to.be.above(0);
+      expect($(toolbarStart + "abort-button").length).to.be.above(0);
+      expect($(toolbarStart + "loading-image").length).to.be.above(0);
 
-      $(identityIdStart + "signinlink").attr("link", "");
-      $(identityIdStart + "signoutlink").attr("link", "");
+      expect($(toolbarStart + "toggle-button").length).to.be.above(0);
 
-      chrome.storage.local.get.yields({ serverURL: globalServerURL });
-      toolbar.initSignInOutInterfaces(); // adds the link attribute
-
-      expect($(identityIdStart + "signinlink").attr("link")).to.equal(authenticatorSignInURL);
-      expect($(identityIdStart + "signedinstatus").length).to.be.above(0);
-      expect($(identityIdStart + "signedinuseremail").length).to.be.above(0);
-      expect($(identityIdStart + "signoutlink").attr("link")).to.equal(authenticatorSignOutURL);
-
-      expect($(toolbar.selectorStart + "toggle-button").length).to.be.above(0);
+      expect($(toolbarStart + "account-sign-in-button").length).to.be.above(0);
+      expect($(toolbarStart + "account-menu-button").length).to.be.above(0);
     });
   });
 
@@ -181,7 +168,6 @@ describe("toolbar.js", function() {
   describe("init", function() {
     it("should set the topics, initialize toolbar events and restore prior selections", function() {
       const initViewMenuBtnSpy = sandbox.spy(toolbar, "initViewMenuBtn");
-      const initStatisticsMenuBtnSpy = sandbox.spy(toolbar, "initStatisticsMenuBtn");
       const initOnWindowClickSpy = sandbox.spy(toolbar, "initOnWindowClick");
       const initAutoEnhanceSpy = sandbox.spy(toolbar, "initAutoEnhance");
       const initLanguageMenuSpy = sandbox.spy(toolbar, "initLanguageMenu");
@@ -191,10 +177,9 @@ describe("toolbar.js", function() {
       const initEnhanceBtnSpy = sandbox.spy(toolbar, "initEnhanceBtn");
       const initAbortBtnSpy = sandbox.spy(toolbar, "initAbortBtn");
       const initRestoreBtnSpy = sandbox.spy(toolbar, "initRestoreBtn");
-      const initSignInOutInterfacesSpy = sandbox.spy(toolbar, "initSignInOutInterfaces");
-      const initSignInLinkSpy = sandbox.spy(toolbar, "initSignInLink");
-      const initSignOutLinkSpy = sandbox.spy(toolbar, "initSignOutLink");
-      const initToggleToolbarSpy = sandbox.spy(toolbar, "initToggleToolbar");
+      const initSignInBtnSpy = sandbox.spy(toolbar, "initSignInBtn");
+      const initAccountMenuBtnSpy = sandbox.spy(toolbar, "initAccountMenuBtn");
+      const initToggleToolbarSpy = sandbox.spy(toolbar, "initToggleToolbarBtn");
       const restoreSelectionsSpy = sandbox.spy(toolbar, "restoreSelections");
       const requestToToggleToolbarSpy = sandbox.spy(toolbar, "requestToToggleToolbar");
       const topics = {topic: "some topic info"};
@@ -206,7 +191,6 @@ describe("toolbar.js", function() {
       expect(toolbar.topics).to.equal(topics);
 
       sinon.assert.calledOnce(initViewMenuBtnSpy);
-      sinon.assert.calledOnce(initStatisticsMenuBtnSpy);
       sinon.assert.calledOnce(initOnWindowClickSpy);
       sinon.assert.calledOnce(initAutoEnhanceSpy);
       sinon.assert.calledOnce(initLanguageMenuSpy);
@@ -216,9 +200,8 @@ describe("toolbar.js", function() {
       sinon.assert.calledOnce(initEnhanceBtnSpy);
       sinon.assert.calledOnce(initAbortBtnSpy);
       sinon.assert.calledOnce(initRestoreBtnSpy);
-      sinon.assert.calledOnce(initSignInOutInterfacesSpy);
-      sinon.assert.calledOnce(initSignInLinkSpy);
-      sinon.assert.calledOnce(initSignOutLinkSpy);
+      sinon.assert.calledOnce(initSignInBtnSpy);
+      sinon.assert.calledOnce(initAccountMenuBtnSpy);
       sinon.assert.calledOnce(initToggleToolbarSpy);
       sinon.assert.calledOnce(restoreSelectionsSpy);
       sinon.assert.calledOnce(requestToToggleToolbarSpy);
@@ -256,39 +239,6 @@ describe("toolbar.js", function() {
       });
     });
 
-    describe("initStatisticsMenuBtn", function() {
-      it("should initialize the statistics menu handler", function() {
-        const selectorSpy = sandbox.spy(toolbar.$cache, "get");
-        const eventSpy = sandbox.spy($.fn, "on");
-
-        toolbar.initStatisticsMenuBtn();
-
-        sinon.assert.calledOnce(selectorSpy);
-        sinon.assert.calledWithExactly(selectorSpy,
-          toolbar.selectorStart + "statistics-menu-button");
-
-        sinon.assert.calledOnce(eventSpy);
-        sinon.assert.calledWith(eventSpy, "click");
-      });
-
-      it("should call requestToToggleStatisticsMenu() on click", function() {
-        const requestToToggleStatisticsMenuSpy = sandbox.spy(toolbar, "requestToToggleStatisticsMenu");
-
-        toolbar.initStatisticsMenuBtn();
-
-        $(toolbar.selectorStart + "statistics-menu-button").trigger("click");
-
-        sinon.assert.calledOnce(requestToToggleStatisticsMenuSpy);
-      });
-
-      it("should request to toggle the statistics menu", function() {
-        toolbar.requestToToggleStatisticsMenu();
-
-        sinon.assert.calledOnce(chrome.runtime.sendMessage);
-        sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "toggleStatisticsMenu"});
-      });
-    });
-
     describe("initOnWindowClick", function() {
       it("should initialize the hide VIEW menu and statistics handler", function() {
         const selectorSpy = sandbox.spy(toolbar.$cache, "get");
@@ -314,6 +264,13 @@ describe("toolbar.js", function() {
         sinon.assert.calledOnce(requestToHideViewMenuSpy);
       });
 
+      it("should request to hide the VIEW menu", function() {
+        toolbar.requestToHideViewMenu();
+
+        sinon.assert.calledOnce(chrome.runtime.sendMessage);
+        sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "hideVIEWMenu"});
+      });
+
       it("should not call requestToHideViewMenu(), as the view menu button was clicked", function() {
         const requestToHideViewMenuSpy = sandbox.spy(toolbar, "requestToHideViewMenu");
 
@@ -324,14 +281,35 @@ describe("toolbar.js", function() {
         sinon.assert.notCalled(requestToHideViewMenuSpy);
       });
 
-      it("should request to hide the VIEW menu", function() {
-        toolbar.requestToHideViewMenu();
+      it("should call requestToHideAccountMenu(), as the toolbar body was clicked", function() {
+        const requestToHideAccountMenuSpy = sandbox.spy(toolbar, "requestToHideAccountMenu");
 
-        sinon.assert.calledOnce(chrome.runtime.sendMessage);
-        sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "hideVIEWMenu"});
+        toolbar.initOnWindowClick();
+
+        // anything but the view menu button can be the trigger here
+        $("body").trigger("click");
+
+        sinon.assert.calledOnce(requestToHideAccountMenuSpy);
       });
 
-      it("should call requestToHideStatisticsMenu(), as the toolbar body was clicked", function() {
+      it("should request to hide the account menu", function() {
+        toolbar.requestToHideAccountMenu();
+
+        sinon.assert.calledOnce(chrome.runtime.sendMessage);
+        sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "hideAccountMenu"});
+      });
+
+      it("should not call requestToHideAccountMenu(), as the account menu button was clicked", function() {
+        const requestToHideAccountMenuSpy = sandbox.spy(toolbar, "requestToHideAccountMenu");
+
+        toolbar.initOnWindowClick();
+
+        $(toolbarStart + "account-menu-button").trigger("click");
+
+        sinon.assert.notCalled(requestToHideAccountMenuSpy);
+      });
+
+      it("should call requestToHideStatisticsMenu() in any case", function() {
         const requestToHideStatisticsMenuSpy = sandbox.spy(toolbar, "requestToHideStatisticsMenu");
 
         toolbar.initOnWindowClick();
@@ -342,16 +320,6 @@ describe("toolbar.js", function() {
         sinon.assert.calledOnce(requestToHideStatisticsMenuSpy);
       });
 
-      it("should not call requestToHideStatisticsMenu(), as the statistics menu button was clicked", function() {
-        const requestToHideStatisticsMenuSpy = sandbox.spy(toolbar, "requestToHideStatisticsMenu");
-
-        toolbar.initOnWindowClick();
-
-        $(toolbar.selectorStart + "statistics-menu-button").trigger("click");
-
-        sinon.assert.notCalled(requestToHideStatisticsMenuSpy);
-      });
-
       it("should request to hide the statistics menu", function() {
         toolbar.requestToHideStatisticsMenu();
 
@@ -359,7 +327,7 @@ describe("toolbar.js", function() {
         sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "hideStatisticsMenu"});
       });
 
-      it("should call requestToRemoveFeedbackDialog(), as the toolbar body was clicked", function() {
+      it("should call requestToRemoveFeedbackDialog() in any case", function() {
         const requestToRemoveDialogSpy = sandbox.spy(toolbar, "requestToRemoveFeedbackDialog");
 
         toolbar.initOnWindowClick();
@@ -398,7 +366,7 @@ describe("toolbar.js", function() {
 
           toolbar.initAutoEnhance();
 
-          $(toolbar.selectorStart + "enabled").trigger("click");
+          $(toolbarStart + "enabled").trigger("click");
 
           sinon.assert.calledOnce(turnOffAutoEnhanceAndSetSpy);
         });
@@ -415,13 +383,13 @@ describe("toolbar.js", function() {
         });
 
         it("should turn off auto enhance", function() {
-          $(toolbar.selectorStart + "enabled").show();
-          $(toolbar.selectorStart + "disabled").hide();
+          $(toolbarStart + "enabled").show();
+          $(toolbarStart + "disabled").hide();
 
           toolbar.turnOffAutoEnhance();
 
-          expect($(toolbar.selectorStart + "enabled").is(":hidden")).to.be.true;
-          expect($(toolbar.selectorStart + "disabled").is(":visible")).to.be.true;
+          expect($(toolbarStart + "enabled").is(":hidden")).to.be.true;
+          expect($(toolbarStart + "disabled").is(":visible")).to.be.true;
         });
       });
 
@@ -431,7 +399,7 @@ describe("toolbar.js", function() {
 
           toolbar.initAutoEnhance();
 
-          toolbar.$cache.get(toolbar.selectorStart + "disabled").trigger("click");
+          toolbar.$cache.get(toolbarStart + "disabled").trigger("click");
 
           sinon.assert.calledOnce(turnOnAutoEnhanceAndSetSpy);
         });
@@ -450,8 +418,8 @@ describe("toolbar.js", function() {
         it("should turn on auto enhance", function() {
           toolbar.turnOnAutoEnhance();
 
-          expect($(toolbar.selectorStart + "disabled").is(":hidden")).to.be.true;
-          expect($(toolbar.selectorStart + "enabled").is(":visible")).to.be.true;
+          expect($(toolbarStart + "disabled").is(":hidden")).to.be.true;
+          expect($(toolbarStart + "enabled").is(":visible")).to.be.true;
         });
       });
     });
@@ -463,7 +431,7 @@ describe("toolbar.js", function() {
         toolbar.initLanguageMenu();
 
         sinon.assert.calledOnce(selectorSpy);
-        sinon.assert.calledWithExactly(selectorSpy, toolbar.selectorStart + "language-menu");
+        sinon.assert.calledWithExactly(selectorSpy, toolbarStart + "language-menu");
 
         sinon.assert.calledOnce(eventSpy);
         sinon.assert.calledWith(eventSpy, "change");
@@ -475,7 +443,7 @@ describe("toolbar.js", function() {
 
         toolbar.initLanguageMenu();
 
-        $(toolbar.selectorStart + "language-menu").val(language).trigger("change");
+        $(toolbarStart + "language-menu").val(language).trigger("change");
 
         sinon.assert.calledOnce(selectTopicMenuSpy);
         sinon.assert.calledWithExactly(selectTopicMenuSpy, language);
@@ -485,7 +453,7 @@ describe("toolbar.js", function() {
         it("should un-select and hide the previous topic menu", function() {
           const selectedLanguage = "en";
           const previousLanguage = "ru";
-          const previousTopicMenu = toolbar.selectorStart + "topic-menu-" + previousLanguage;
+          const previousTopicMenu = toolbarStart + "topic-menu-" + previousLanguage;
           const selectedTopicMenu = "selected-toolbar-topic-menu";
 
           $(previousTopicMenu).addClass(selectedTopicMenu);
@@ -500,7 +468,7 @@ describe("toolbar.js", function() {
 
         it("should show the selected topic menu", function() {
           const selectedLanguage = "en";
-          const topicMenu = toolbar.selectorStart + "topic-menu-" + selectedLanguage;
+          const topicMenu = toolbarStart + "topic-menu-" + selectedLanguage;
           const topic = "articles";
 
           $(topicMenu).val(topic);
@@ -515,7 +483,7 @@ describe("toolbar.js", function() {
         it("should call checkForFilters(language, topic)", function() {
           const checkForFiltersSpy = sandbox.spy(toolbar, "checkForFilters");
           const selectedLanguage = "en";
-          const topicMenu = toolbar.selectorStart + "topic-menu-" + selectedLanguage;
+          const topicMenu = toolbarStart + "topic-menu-" + selectedLanguage;
           const topic = "articles";
 
           $(topicMenu).val(topic);
@@ -528,19 +496,19 @@ describe("toolbar.js", function() {
 
         describe("checkForFilters", function() {
           it("should hide the filter menu", function() {
-            $(toolbar.selectorStart + "filter-menu").show();
+            $(toolbarStart + "filter-menu").show();
 
             toolbar.checkForFilters("ru", "nouns");
 
-            expect($(toolbar.selectorStart + "filter-menu").is(":hidden")).to.be.true;
+            expect($(toolbarStart + "filter-menu").is(":hidden")).to.be.true;
           });
 
           it("should select the 'no-filter' option", function() {
-            $(toolbar.selectorStart + "filter-menu").val("unselected");
+            $(toolbarStart + "filter-menu").val("unselected");
 
             toolbar.checkForFilters("ru", "nouns");
 
-            expect($(toolbar.selectorStart + "filter-menu").val()).to.equal("no-filter");
+            expect($(toolbarStart + "filter-menu").val()).to.equal("no-filter");
           });
 
           it("should remove all options followed after the horizontal line", function() {
@@ -551,12 +519,12 @@ describe("toolbar.js", function() {
             toolbar.checkForFilters("ru", "nouns");
 
             // noun filter options do exist
-            expect($(toolbar.selectorStart + "filter-unselected").next().next().length).to.be.above(0);
+            expect($(toolbarStart + "filter-unselected").next().next().length).to.be.above(0);
 
             toolbar.checkForFilters("en", "articles");
 
             // articles filter options do not exist, previous filter options were removed
-            expect($(toolbar.selectorStart + "filter-unselected").next().next().length).to.equal(0);
+            expect($(toolbarStart + "filter-unselected").next().next().length).to.equal(0);
           });
 
           it("should call showFilterMenu(filters), as filters exist for the topic", function() {
@@ -581,11 +549,11 @@ describe("toolbar.js", function() {
 
               const filters = jsonData.ru.filters;
 
-              $(toolbar.selectorStart + "filter-menu").val("no-filter");
+              $(toolbarStart + "filter-menu").val("no-filter");
 
               toolbar.showFilterMenu(filters);
 
-              expect($(toolbar.selectorStart + "filter-menu").val()).to.equal("unselected");
+              expect($(toolbarStart + "filter-menu").val()).to.equal("unselected");
             });
 
             it("should call addFilterOptions(filters, $FilterMenu)", function() {
@@ -599,7 +567,7 @@ describe("toolbar.js", function() {
               sinon.assert.calledOnce(addFilterOptionsSpy);
               sinon.assert.calledWithExactly(addFilterOptionsSpy,
                 filters,
-                $(toolbar.selectorStart + "filter-menu")
+                $(toolbarStart + "filter-menu")
               );
             });
 
@@ -607,7 +575,7 @@ describe("toolbar.js", function() {
               const jsonData = fixture.load("fixtures/json/nouns.json", true);
 
               const filters = jsonData.ru.filters;
-              const $FilterMenu = $(toolbar.selectorStart + "filter-menu");
+              const $FilterMenu = $(toolbarStart + "filter-menu");
 
               toolbar.addFilterOptions(filters, $FilterMenu);
 
@@ -628,7 +596,7 @@ describe("toolbar.js", function() {
 
               toolbar.showFilterMenu(filters);
 
-              expect($(toolbar.selectorStart + "filter-menu").is(":visible")).to.be.true;
+              expect($(toolbarStart + "filter-menu").is(":visible")).to.be.true;
             });
           });
 
@@ -678,7 +646,7 @@ describe("toolbar.js", function() {
         it("should call updateActivities(language, topic)", function() {
           const updateActivitiesSpy = sandbox.spy(toolbar, "updateActivities");
           const selectedLanguage = "en";
-          const topicMenu = toolbar.selectorStart + "topic-menu-" + selectedLanguage;
+          const topicMenu = toolbarStart + "topic-menu-" + selectedLanguage;
           const topic = "articles";
 
           $(topicMenu).val(topic);
@@ -695,11 +663,11 @@ describe("toolbar.js", function() {
           const language = "unselected";
           const topic = "unselected";
 
-          expect($(toolbar.selectorStart + "activity-menu").find("option").length).to.be.above(0);
+          expect($(toolbarStart + "activity-menu").find("option").length).to.be.above(0);
 
           toolbar.updateActivities(language, topic);
 
-          expect($(toolbar.selectorStart + "activity-menu").find("option").length).to.equal(0);
+          expect($(toolbarStart + "activity-menu").find("option").length).to.equal(0);
         });
 
         it("should append the activity \"unselected\"", function() {
@@ -710,7 +678,7 @@ describe("toolbar.js", function() {
 
           toolbar.updateActivities(language, topic);
 
-          expect($(toolbar.selectorStart + "activity-unselected").length).to.be.above(0);
+          expect($(toolbarStart + "activity-unselected").length).to.be.above(0);
         });
 
         it("should not call enableAndShowActivities(language, topic), as the language is \"unselected\"", function() {
@@ -799,7 +767,7 @@ describe("toolbar.js", function() {
 
             toolbar.updateActivities(language, topic);
 
-            expect($(toolbar.selectorStart + "activity-splitter").length).to.be.above(0);
+            expect($(toolbarStart + "activity-splitter").length).to.be.above(0);
           });
 
           it("should have all activity options available for this topic", function() {
@@ -816,7 +784,7 @@ describe("toolbar.js", function() {
             const availableActivities = toolbar.topics[topic][language].activities;
 
             $.each(availableActivities, function(activity) {
-              expect($(toolbar.selectorStart + "activity-" + activity).length).to.be.above(0);
+              expect($(toolbarStart + "activity-" + activity).length).to.be.above(0);
             });
           });
 
@@ -827,13 +795,13 @@ describe("toolbar.js", function() {
 
             toolbar.topics = {articles: jsonData};
 
-            $(toolbar.selectorStart + "activity-menu").val("color");
+            $(toolbarStart + "activity-menu").val("color");
 
             toolbar.initActivitySelectors();
 
             toolbar.updateActivities(language, topic);
 
-            expect($(toolbar.selectorStart + "activity-menu").val()).to.equal("unselected");
+            expect($(toolbarStart + "activity-menu").val()).to.equal("unselected");
           });
         });
 
@@ -849,31 +817,31 @@ describe("toolbar.js", function() {
 
         describe("toggleEnhanceButton", function() {
           it("should disable the enhance button, as the filter option was 'unselected'", function() {
-            $(toolbar.selectorStart + "filter-menu").val("unselected");
+            $(toolbarStart + "filter-menu").val("unselected");
 
             toolbar.toggleEnhanceButton();
 
-            expect($(toolbar.selectorStart + "enhance-button").is(":disabled")).to.be.true;
+            expect($(toolbarStart + "enhance-button").is(":disabled")).to.be.true;
           });
 
           it("should disable the enhance button, as the activity option was 'unselected'", function() {
-            $(toolbar.selectorStart + "activity-menu").val("unselected");
+            $(toolbarStart + "activity-menu").val("unselected");
 
-            $(toolbar.selectorStart + "enhance-button").show();
+            $(toolbarStart + "enhance-button").show();
 
             toolbar.toggleEnhanceButton();
 
-            expect($(toolbar.selectorStart + "enhance-button").is(":disabled")).to.be.true;
+            expect($(toolbarStart + "enhance-button").is(":disabled")).to.be.true;
           });
 
           it("should enable the enhance button, as the filter and activity option are not 'unselected'", function() {
-            $(toolbar.selectorStart + "filter-menu").val("Pl");
-            $(toolbar.selectorStart + "activity-menu").val("color");
-            $(toolbar.selectorStart + "enhance-button").hide();
+            $(toolbarStart + "filter-menu").val("Pl");
+            $(toolbarStart + "activity-menu").val("color");
+            $(toolbarStart + "enhance-button").hide();
 
             toolbar.toggleEnhanceButton();
 
-            expect($(toolbar.selectorStart + "enhance-button").is(":disabled")).to.be.false;
+            expect($(toolbarStart + "enhance-button").is(":disabled")).to.be.false;
           });
         });
       });
@@ -888,11 +856,11 @@ describe("toolbar.js", function() {
 
         sinon.assert.calledOnce(selectorSpy);
         sinon.assert.calledWithExactly(selectorSpy,
-          toolbar.selectorStart + "topic-menu-unselected, " +
-          toolbar.selectorStart + "topic-menu-en, " +
-          toolbar.selectorStart + "topic-menu-de, " +
-          toolbar.selectorStart + "topic-menu-es, " +
-          toolbar.selectorStart + "topic-menu-ru");
+          toolbarStart + "topic-menu-unselected, " +
+          toolbarStart + "topic-menu-en, " +
+          toolbarStart + "topic-menu-de, " +
+          toolbarStart + "topic-menu-es, " +
+          toolbarStart + "topic-menu-ru");
 
         sinon.assert.calledOnce(eventSpy);
         sinon.assert.calledWith(eventSpy, "change");
@@ -905,9 +873,9 @@ describe("toolbar.js", function() {
 
         toolbar.initTopicMenu();
 
-        $(toolbar.selectorStart + "language-menu").val(language);
+        $(toolbarStart + "language-menu").val(language);
 
-        $(toolbar.selectorStart + "topic-menu-" + language).val(topic).trigger("change");
+        $(toolbarStart + "topic-menu-" + language).val(topic).trigger("change");
 
         sinon.assert.calledOnce(checkForFiltersSpy);
         sinon.assert.calledWithExactly(checkForFiltersSpy, language, topic);
@@ -921,9 +889,9 @@ describe("toolbar.js", function() {
 
         toolbar.initTopicMenu();
 
-        $(toolbar.selectorStart + "language-menu").val(language);
+        $(toolbarStart + "language-menu").val(language);
 
-        $(toolbar.selectorStart + "topic-menu-" + language).val(topic).trigger("change");
+        $(toolbarStart + "topic-menu-" + language).val(topic).trigger("change");
 
         sinon.assert.calledOnce(updateActivitiesSpy);
         sinon.assert.calledWithExactly(updateActivitiesSpy, language, topic);
@@ -939,8 +907,8 @@ describe("toolbar.js", function() {
 
         sinon.assert.calledOnce(selectorSpy);
         sinon.assert.calledWithExactly(selectorSpy,
-          toolbar.selectorStart + "filter-menu, " +
-          toolbar.selectorStart + "activity-menu"
+          toolbarStart + "filter-menu, " +
+          toolbarStart + "activity-menu"
         );
 
         sinon.assert.calledOnce(eventSpy);
@@ -955,11 +923,11 @@ describe("toolbar.js", function() {
 
         toolbar.initFilterAndActivityMenu();
 
-        $(toolbar.selectorStart + "language-menu").val(language);
+        $(toolbarStart + "language-menu").val(language);
 
-        $(toolbar.selectorStart + "topic-menu-" + language).val(topic);
+        $(toolbarStart + "topic-menu-" + language).val(topic);
 
-        $(toolbar.selectorStart + "filter-menu").val(filter).trigger("change");
+        $(toolbarStart + "filter-menu").val(filter).trigger("change");
 
         sinon.assert.calledOnce(toggleEnhanceButtonSpy);
       });
@@ -973,13 +941,13 @@ describe("toolbar.js", function() {
 
         toolbar.initFilterAndActivityMenu();
 
-        $(toolbar.selectorStart + "language-menu").val(language);
+        $(toolbarStart + "language-menu").val(language);
 
-        $(toolbar.selectorStart + "topic-menu-" + language).val(topic);
+        $(toolbarStart + "topic-menu-" + language).val(topic);
 
-        $(toolbar.selectorStart + "filter-menu").val(filter);
+        $(toolbarStart + "filter-menu").val(filter);
 
-        $(toolbar.selectorStart + "activity-menu").val(activity).trigger("change");
+        $(toolbarStart + "activity-menu").val(activity).trigger("change");
 
         sinon.assert.calledOnce(toggleEnhanceButtonSpy);
       });
@@ -991,7 +959,7 @@ describe("toolbar.js", function() {
 
         const activitySelectors = {};
 
-        $(toolbar.selectorStart + "activity-menu").find("option").each(function() {
+        $(toolbarStart + "activity-menu").find("option").each(function() {
           activitySelectors[$(this).val()] = $(this);
         });
 
@@ -1003,17 +971,17 @@ describe("toolbar.js", function() {
 
     describe("initialInteractionState", function() {
       it("should put the toolbar into the initial interaction state", function() {
-        $(toolbar.selectorStart + "enhance-button").hide();
-        $(toolbar.selectorStart + "restore-button").show();
-        $(toolbar.selectorStart + "abort-button").show();
-        $(toolbar.selectorStart + "loading-image").show();
+        $(toolbarStart + "enhance-button").hide();
+        $(toolbarStart + "restore-button").show();
+        $(toolbarStart + "abort-button").show();
+        $(toolbarStart + "loading-image").show();
 
         toolbar.initialInteractionState();
 
-        expect($(toolbar.selectorStart + "enhance-button").is(":visible")).to.be.true;
-        expect($(toolbar.selectorStart + "restore-button").is(":hidden")).to.be.true;
-        expect($(toolbar.selectorStart + "abort-button").is(":hidden")).to.be.true;
-        expect($(toolbar.selectorStart + "loading-image").is(":hidden")).to.be.true;
+        expect($(toolbarStart + "enhance-button").is(":visible")).to.be.true;
+        expect($(toolbarStart + "restore-button").is(":hidden")).to.be.true;
+        expect($(toolbarStart + "abort-button").is(":hidden")).to.be.true;
+        expect($(toolbarStart + "loading-image").is(":hidden")).to.be.true;
       });
     });
 
@@ -1025,7 +993,7 @@ describe("toolbar.js", function() {
         toolbar.initEnhanceBtn();
 
         sinon.assert.calledOnce(selectorSpy);
-        sinon.assert.calledWithExactly(selectorSpy, toolbar.selectorStart + "enhance-button");
+        sinon.assert.calledWithExactly(selectorSpy, toolbarStart + "enhance-button");
 
         sinon.assert.calledOnce(eventSpy);
         sinon.assert.calledWith(eventSpy, "click");
@@ -1036,7 +1004,7 @@ describe("toolbar.js", function() {
 
         toolbar.initEnhanceBtn();
 
-        $(toolbar.selectorStart + "enhance-button").trigger("click");
+        $(toolbarStart + "enhance-button").trigger("click");
 
         sinon.assert.calledOnce(setSelectionsAndPrepareToEnhanceSpy);
       });
@@ -1059,15 +1027,15 @@ describe("toolbar.js", function() {
 
           chrome.storage.local.set.yields(); // make set synchronous
 
-          $(toolbar.selectorStart + "language-menu").val(language);
+          $(toolbarStart + "language-menu").val(language);
 
-          $(toolbar.selectorStart + "topic-menu-" + language)
+          $(toolbarStart + "topic-menu-" + language)
           .addClass("selected-toolbar-topic-menu")
           .val(topic);
 
-          $(toolbar.selectorStart + "filter-menu").val(filter);
+          $(toolbarStart + "filter-menu").val(filter);
 
-          $(toolbar.selectorStart + "activity-menu").val(activity);
+          $(toolbarStart + "activity-menu").val(activity);
 
           toolbar.setSelectionsAndPrepareToEnhance();
 
@@ -1088,15 +1056,15 @@ describe("toolbar.js", function() {
         });
 
         it("should prepare and request to call startToEnhance()", function() {
-          $(toolbar.selectorStart + "enhance-button").show();
-          $(toolbar.selectorStart + "restore-button").show();
-          $(toolbar.selectorStart + "loading-image").hide();
+          $(toolbarStart + "enhance-button").show();
+          $(toolbarStart + "restore-button").show();
+          $(toolbarStart + "loading-image").hide();
 
           toolbar.prepareToEnhance();
 
-          expect($(toolbar.selectorStart + "enhance-button").is(":hidden")).to.be.true;
-          expect($(toolbar.selectorStart + "restore-button").is(":hidden")).to.be.true;
-          expect($(toolbar.selectorStart + "loading-image").is(":visible")).to.be.true;
+          expect($(toolbarStart + "enhance-button").is(":hidden")).to.be.true;
+          expect($(toolbarStart + "restore-button").is(":hidden")).to.be.true;
+          expect($(toolbarStart + "loading-image").is(":visible")).to.be.true;
 
           sinon.assert.calledOnce(chrome.runtime.sendMessage);
           sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "callStartToEnhance"});
@@ -1112,7 +1080,7 @@ describe("toolbar.js", function() {
         toolbar.initAbortBtn();
 
         sinon.assert.calledOnce(selectorSpy);
-        sinon.assert.calledWithExactly(selectorSpy, toolbar.selectorStart + "abort-button");
+        sinon.assert.calledWithExactly(selectorSpy, toolbarStart + "abort-button");
 
         sinon.assert.calledOnce(eventSpy);
         sinon.assert.calledWith(eventSpy, "click");
@@ -1123,7 +1091,7 @@ describe("toolbar.js", function() {
 
         toolbar.initAbortBtn();
 
-        $(toolbar.selectorStart + "abort-button").trigger("click");
+        $(toolbarStart + "abort-button").trigger("click");
 
         sinon.assert.calledOnce(requestToCallAbortSpy);
       });
@@ -1144,7 +1112,7 @@ describe("toolbar.js", function() {
         toolbar.initRestoreBtn();
 
         sinon.assert.calledOnce(selectorSpy);
-        sinon.assert.calledWithExactly(selectorSpy, toolbar.selectorStart + "restore-button");
+        sinon.assert.calledWithExactly(selectorSpy, toolbarStart + "restore-button");
 
         sinon.assert.calledOnce(eventSpy);
         sinon.assert.calledWith(eventSpy, "click");
@@ -1155,7 +1123,7 @@ describe("toolbar.js", function() {
 
         toolbar.initRestoreBtn();
 
-        $(toolbar.selectorStart + "restore-button").trigger("click");
+        $(toolbarStart + "restore-button").trigger("click");
 
         sinon.assert.calledOnce(requestToCallRestoreToOriginalSpy);
       });
@@ -1168,29 +1136,15 @@ describe("toolbar.js", function() {
       });
     });
 
-    describe("initSignInOutInterfaces", function() {
-      it("should initialize the sign in and sign out interfaces", function() {
-        $(toolbar.selectorStart + "identity-signinlink").attr("link", "");
-        $(toolbar.selectorStart + "identity-signoutlink").attr("link", "");
-
-        toolbar.initSignInOutInterfaces();
-
-        expect($(toolbar.selectorStart + "identity-signinlink").attr("link"))
-        .to.equal(authenticatorSignInURL);
-        expect($(toolbar.selectorStart + "identity-signoutlink").attr("link"))
-        .to.equal(authenticatorSignOutURL);
-      });
-    });
-
-    describe("initSignInLink", function() {
-      it("should initialize the sign in link handler", function() {
+    describe("initSignInBtn", function() {
+      it("should initialize the sign in btn handler", function() {
         const selectorSpy = sandbox.spy(toolbar.$cache, "get");
         const eventSpy = sandbox.spy($.fn, "on");
 
-        toolbar.initSignInLink();
+        toolbar.initSignInBtn();
 
         sinon.assert.calledOnce(selectorSpy);
-        sinon.assert.calledWithExactly(selectorSpy, toolbar.selectorStart + "identity-signinlink");
+        sinon.assert.calledWithExactly(selectorSpy, toolbarStart + "account-sign-in-button");
 
         sinon.assert.calledOnce(eventSpy);
         sinon.assert.calledWith(eventSpy, "click");
@@ -1199,9 +1153,9 @@ describe("toolbar.js", function() {
       it("should call openSignInWindow() on click", function() {
         const openSignInWindowSpy = sandbox.spy(toolbar, "openSignInWindow");
 
-        toolbar.initSignInLink();
+        toolbar.initSignInBtn();
 
-        $(toolbar.selectorStart + "identity-signinlink").trigger("click");
+        $(toolbarStart + "account-sign-in-button").trigger("click");
 
         sinon.assert.calledOnce(openSignInWindowSpy);
       });
@@ -1209,72 +1163,103 @@ describe("toolbar.js", function() {
       it("should open the sign in window", function() {
         const windowOpenSpy = sandbox.spy(window, "open");
 
-        toolbar.initSignInOutInterfaces(globalServerURL);
-
-        toolbar.initSignInLink();
+        toolbar.initSignInBtn();
 
         toolbar.openSignInWindow();
 
         sinon.assert.calledOnce(windowOpenSpy);
         sinon.assert.calledWithExactly(windowOpenSpy,
-          $(toolbar.selectorStart + "identity-signinlink").attr("link"),
-          "Sign In",
-          "width=985,height=735");
+          "",
+          "",
+          "width=985,height=735"
+        );
+      });
 
-        // TODO: Find out how to check if the window has focus as expected
+      it("should get the expected values", function() {
+        toolbar.initSignInBtn();
+
+        toolbar.openSignInWindow();
+
+        sinon.assert.calledOnce(chrome.storage.local.get);
+        sinon.assert.calledWith(chrome.storage.local.get, "authenticator");
+      });
+
+      it("should call assignHrefAndFocus(myWindow, authenticatorLink)", function() {
+        const windowOpenSpy = sandbox.spy(window, "open");
+        const assignHrefAndFocusSpy = sandbox.spy(toolbar, "assignHrefAndFocus");
+
+        const authenticator = globalServerURL + "/authenticator.html";
+
+        chrome.storage.local.get.yields({authenticator});
+
+        toolbar.initSignInBtn();
+
+        toolbar.openSignInWindow();
+
+        const signInWindow = windowOpenSpy.getCall(0).returnValue;
+
+        sinon.assert.calledOnce(assignHrefAndFocusSpy);
+        sinon.assert.calledWith(assignHrefAndFocusSpy,
+          signInWindow,
+          authenticator + "?action=sign-in"
+        );
+      });
+
+      it("should call focus()", function() {
+        const signInWindow = window.open("", "", "width=985,height=735");
+        const authenticator = globalServerURL +
+          "/authenticator.html"  +
+          "?action=sign-in";
+
+        const focusSpy = sandbox.spy(signInWindow, "focus");
+
+        toolbar.assignHrefAndFocus(signInWindow, authenticator);
+
+        sinon.assert.calledOnce(focusSpy);
       });
     });
 
-    describe("initSignOutLink", function() {
-      it("should initialize the sign out link handler", function() {
+    describe("initAccountMenuBtn", function() {
+      it("should initialize the account menu button handler", function() {
         const selectorSpy = sandbox.spy(toolbar.$cache, "get");
         const eventSpy = sandbox.spy($.fn, "on");
 
-        toolbar.initSignOutLink();
+        toolbar.initAccountMenuBtn();
 
         sinon.assert.calledOnce(selectorSpy);
-        sinon.assert.calledWithExactly(selectorSpy, toolbar.selectorStart + "identity-signoutlink");
+        sinon.assert.calledWithExactly(selectorSpy, toolbarStart + "account-menu-button");
 
         sinon.assert.calledOnce(eventSpy);
         sinon.assert.calledWith(eventSpy, "click");
       });
 
-      it("should call openSignOutWindow() on click", function() {
-        const openSignOutWindowSpy = sandbox.spy(toolbar, "openSignOutWindow");
+      it("should call requestToToggleAccountMenu() on click", function() {
+        const requestToToggleAccountMenuSpy = sandbox.spy(toolbar, "requestToToggleAccountMenu");
 
-        toolbar.initSignOutLink();
+        toolbar.initAccountMenuBtn();
 
-        $(toolbar.selectorStart + "identity-signoutlink").trigger("click");
+        $(toolbarStart + "account-menu-button").trigger("click");
 
-        sinon.assert.calledOnce(openSignOutWindowSpy);
+        sinon.assert.calledOnce(requestToToggleAccountMenuSpy);
       });
 
-      it("should open the sign out window", function() {
-        const windowOpenSpy = sandbox.spy(window, "open");
+      it("should request to call requestToToggleToolbar()", function() {
+        toolbar.requestToToggleAccountMenu();
 
-        toolbar.initSignInOutInterfaces(globalServerURL);
-
-        toolbar.openSignOutWindow();
-
-        sinon.assert.calledOnce(windowOpenSpy);
-        sinon.assert.calledWithExactly(windowOpenSpy,
-          $(toolbar.selectorStart + "identity-signoutlink").attr("link"),
-          "Sign Out",
-          "width=1,height=1");
-
-        // TODO: Find out how to test if window.moveTo(x, y) was called
+        sinon.assert.calledOnce(chrome.runtime.sendMessage);
+        sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "toggleAccountMenu"});
       });
     });
 
-    describe("initToggleToolbar", function() {
+    describe("initToggleToolbarBtn", function() {
       it("should initialize the toggle toolbar button handler", function() {
         const selectorSpy = sandbox.spy(toolbar.$cache, "get");
         const eventSpy = sandbox.spy($.fn, "on");
 
-        toolbar.initToggleToolbar();
+        toolbar.initToggleToolbarBtn();
 
         sinon.assert.calledOnce(selectorSpy);
-        sinon.assert.calledWithExactly(selectorSpy, toolbar.selectorStart + "toggle-button");
+        sinon.assert.calledWithExactly(selectorSpy, toolbarStart + "toggle-button");
 
         sinon.assert.calledOnce(eventSpy);
         sinon.assert.calledWith(eventSpy, "click");
@@ -1283,9 +1268,9 @@ describe("toolbar.js", function() {
       it("should call requestToToggleToolbar() on click", function() {
         const requestToToggleToolbarSpy = sandbox.spy(toolbar, "requestToToggleToolbar");
 
-        toolbar.initToggleToolbar();
+        toolbar.initToggleToolbarBtn();
 
-        $(toolbar.selectorStart + "toggle-button").trigger("click");
+        $(toolbarStart + "toggle-button").trigger("click");
 
         sinon.assert.calledOnce(requestToToggleToolbarSpy);
       });
@@ -1309,7 +1294,7 @@ describe("toolbar.js", function() {
         const topic = "unselected";
         const filter = "no-filter";
         const activity = "unselected";
-        const userEmail = "";
+        const user = "";
         const enabled = false;
 
         chrome.storage.local.get.yields({});
@@ -1322,7 +1307,7 @@ describe("toolbar.js", function() {
         sinon.assert.called(toggleEnhanceButtonSpy);
 
         sinon.assert.calledOnce(verifySignInStatusSpy);
-        sinon.assert.calledWithExactly(verifySignInStatusSpy, userEmail);
+        sinon.assert.calledWithExactly(verifySignInStatusSpy, user);
 
         sinon.assert.calledOnce(restoreAutoEnhanceSpy);
         sinon.assert.calledWithExactly(restoreAutoEnhanceSpy, enabled);
@@ -1338,7 +1323,7 @@ describe("toolbar.js", function() {
         const topic = "nouns";
         const filter = "Sg";
         const activity = "color";
-        const userEmail = "some.mail";
+        const user = "user";
         const enabled = true;
 
         chrome.storage.local.get.yields({
@@ -1346,7 +1331,7 @@ describe("toolbar.js", function() {
           topic,
           filter,
           activity,
-          userEmail,
+          user,
           enabled
         });
 
@@ -1364,7 +1349,7 @@ describe("toolbar.js", function() {
         sinon.assert.called(toggleEnhanceButtonSpy);
 
         sinon.assert.calledOnce(verifySignInStatusSpy);
-        sinon.assert.calledWithExactly(verifySignInStatusSpy, userEmail);
+        sinon.assert.calledWithExactly(verifySignInStatusSpy, user);
 
         sinon.assert.calledOnce(restoreAutoEnhanceSpy);
         sinon.assert.calledWithExactly(restoreAutoEnhanceSpy, enabled);
@@ -1377,7 +1362,6 @@ describe("toolbar.js", function() {
           const topic = "nouns";
           const filter = "Sg";
           const activity = "color";
-          const selected = "selected";
 
           const jsonData = fixture.load("fixtures/json/nouns.json", true);
 
@@ -1406,10 +1390,10 @@ describe("toolbar.js", function() {
 
           toolbar.restoreSelectionMenus(language, topic, filter, activity);
 
-          expect($(toolbar.selectorStart + "language-" + language).prop(selected)).to.be.true;
-          expect($(toolbar.selectorStart + "topic-" + topic).prop(selected)).to.be.true;
-          expect($(toolbar.selectorStart + "filter-" + filter).prop(selected)).to.be.true;
-          expect($(toolbar.selectorStart + "activity-" + activity).prop(selected)).to.be.true;
+          expect($(toolbarStart + "language-" + language).prop(selected)).to.be.true;
+          expect($(toolbarStart + "topic-" + topic).prop(selected)).to.be.true;
+          expect($(toolbarStart + "filter-" + filter).prop(selected)).to.be.true;
+          expect($(toolbarStart + "activity-" + activity).prop(selected)).to.be.true;
         });
 
         it("should restore the determiners special case", function() {
@@ -1420,7 +1404,7 @@ describe("toolbar.js", function() {
 
           toolbar.restoreSelectionMenus(language, topic, filter, activity);
 
-          expect($(toolbar.selectorStart + "topic-" + topic + "-" + language).prop("selected")).to.be.true;
+          expect($(toolbarStart + "topic-" + topic + "-" + language).prop("selected")).to.be.true;
         });
 
         // TODO: can be activated as soon as the "Preps" topic is available
@@ -1433,7 +1417,7 @@ describe("toolbar.js", function() {
         //
         //   toolbar.restoreSelectionMenus(language, topic, activity);
         //
-        //   expect($(toolbar.selectorStart + "topic-" + topic + "-" + language).prop("selected")).to.be.true;
+        //   expect($(toolbarStart + "topic-" + topic + "-" + language).prop("selected")).to.be.true;
         // });
       });
 
@@ -1441,21 +1425,21 @@ describe("toolbar.js", function() {
         it("should call signOut() as the user email is empty", function() {
           const singOutSpy = sandbox.spy(toolbar, "signOut");
 
-          const userEmail = "";
+          const user = "";
 
-          toolbar.verifySignInStatus(userEmail);
+          toolbar.verifySignInStatus(user);
 
           sinon.assert.calledOnce(singOutSpy);
         });
 
         it("should call signIn(userEmail) as the user email is not empty", function() {
           const signInSpy = sandbox.spy(toolbar, "signIn");
-          const userEmail = "some.email";
+          const user = "user";
 
-          toolbar.verifySignInStatus(userEmail);
+          toolbar.verifySignInStatus(user);
 
           sinon.assert.calledOnce(signInSpy);
-          sinon.assert.calledWithExactly(signInSpy, userEmail);
+          sinon.assert.calledWithExactly(signInSpy, user);
         });
       });
 
@@ -1489,10 +1473,10 @@ describe("toolbar.js", function() {
       sinon.assert.calledOnce(chrome.runtime.onMessage.addListener);
     });
 
-    it("should process the message \"show element\"", function() {
+    it("should process the message 'show element'", function() {
       const request = {
         action: "showElement",
-        selector: toolbar.selectorStart + "restore-button"
+        selector: toolbarStart + "restore-button"
       };
 
       chrome.runtime.onMessage.trigger(request);
@@ -1500,10 +1484,10 @@ describe("toolbar.js", function() {
       expect($(request.selector).is(":visible")).to.be.true;
     });
 
-    it("should process the message \"hide element\"", function() {
+    it("should process the message 'hide element'", function() {
       const request = {
         action: "hideElement",
-        selector: toolbar.selectorStart + "restore-button"
+        selector: toolbarStart + "restore-button"
       };
 
       $(request.selector).show();
@@ -1514,57 +1498,49 @@ describe("toolbar.js", function() {
     });
 
     describe("signIn", function() {
-      it("should process the message \"call signIn\"", function() {
+      it("should process the message 'call signIn'", function() {
         const signInSpy = sandbox.spy(toolbar, "signIn");
 
-        const userEmail = "some.email";
+        const user = "user";
 
         const request = {
           action: "signIn",
-          userEmail: userEmail
+          user
         };
 
         chrome.runtime.onMessage.trigger(request);
 
         sinon.assert.calledOnce(signInSpy);
-        sinon.assert.calledWithExactly(signInSpy, userEmail);
+        sinon.assert.calledWithExactly(signInSpy, user);
       });
 
-      it("should sign in the user", function() {
-        const userEmail = "some.email";
+      it("should hide the sign in button", function() {
+        $(toolbarStart + "account-sign-in-button").show();
 
-        $(identityIdStart + "signinlink").show();
+        toolbar.signIn("user");
 
-        $(identityIdStart + "signedinstatus").hide();
-        $(identityIdStart + "signedinuseremail").hide();
-        $(identityIdStart + "signoutlink").hide();
-
-        $(identityIdStart + "signedinuseremail").text("");
-
-        toolbar.signIn(userEmail);
-
-        expect($(identityIdStart + "signinlink").is(":hidden")).to.be.true;
-
-        expect($(identityIdStart + "signedinstatus").is(":visible")).to.be.true;
-        expect($(identityIdStart + "signedinuseremail").is(":visible")).to.be.true;
-        expect($(identityIdStart + "signoutlink").is(":visible")).to.be.true;
-
-        expect($(identityIdStart + "signedinuseremail").text()).to.equal(userEmail);
+        expect($(toolbarStart + "account-sign-in-button").is(":hidden")).to.be.true;
       });
 
-      it("should show the statistics menu button", function() {
-        const userEmail = "some.email";
+      it("should fill the account button text with the first letter of the user", function() {
+        const user = "user";
 
-        $(toolbar.selectorStart + "statistics-menu-button").hide();
+        toolbar.signIn(user);
 
-        toolbar.signIn(userEmail);
+        expect($(toolbarStart + "account-menu-button").text()).to.equal("u");
+      });
 
-        expect($(toolbar.selectorStart + "statistics-menu-button").is(":visible")).to.be.true;
+      it("should show the account button", function() {
+        $(toolbarStart + "account-menu-button").hide();
+
+        toolbar.signIn("user");
+
+        expect($(toolbarStart + "account-menu-button").is(":visible")).to.be.true;
       });
     });
 
     describe("signOut", function() {
-      it("should process the message \"call signOut\"", function() {
+      it("should process the message 'call signOut'", function() {
         const signOutSpy = sandbox.spy(toolbar, "signOut");
 
         const request = {action: "signOut"};
@@ -1574,28 +1550,26 @@ describe("toolbar.js", function() {
         sinon.assert.calledOnce(signOutSpy);
       });
 
-      it("should sign out the user", function() {
-        $(identityIdStart + "signinlink").hide();
-
-        $(identityIdStart + "signedinstatus").show();
-        $(identityIdStart + "signedinuseremail").show();
-        $(identityIdStart + "signoutlink").show();
-
+      it("should fill the account button text with the empty string", function() {
         toolbar.signOut();
 
-        expect($(identityIdStart + "signinlink").is(":visible")).to.be.true;
-
-        expect($(identityIdStart + "signedinstatus").is(":hidden")).to.be.true;
-        expect($(identityIdStart + "signedinuseremail").is(":hidden")).to.be.true;
-        expect($(identityIdStart + "signoutlink").is(":hidden")).to.be.true;
+        expect($(toolbarStart + "account-menu-button").text()).to.equal("");
       });
 
-      it("should hide the statistics menu button", function() {
-        $(toolbar.selectorStart + "statistics-menu-button").show();
+      it("should hide the account button", function() {
+        $(toolbarStart + "account-menu-button").show();
 
         toolbar.signOut();
 
-        expect($(toolbar.selectorStart + "statistics-menu-button").is(":hidden")).to.be.true;
+        expect($(toolbarStart + "account-menu-button").is(":hidden")).to.be.true;
+      });
+
+      it("should show the sign in button", function() {
+        $(toolbarStart + "account-sign-in-button").hide();
+
+        toolbar.signOut();
+
+        expect($(toolbarStart + "account-sign-in-button").is(":visible")).to.be.true;
       });
     });
   });
