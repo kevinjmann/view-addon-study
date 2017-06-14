@@ -138,8 +138,8 @@ describe("toolbar.js", function() {
   });
 
   describe("document ready", function() {
-    it("should call requestTopicsAndInit() when the document is ready", function(done) {
-      const requestTopicsAndInitSpy = sandbox.spy(toolbar, "requestTopicsAndInit");
+    it("should call getTopicsAndInit() when the document is ready", function(done) {
+      const requestTopicsAndInitSpy = sandbox.spy(toolbar, "getTopicsAndInit");
 
       $(document).ready(function() {
         sinon.assert.calledOnce(requestTopicsAndInitSpy);
@@ -148,20 +148,20 @@ describe("toolbar.js", function() {
     });
   });
 
-  describe("requestTopicsAndInit", function() {
+  describe("getTopicsAndInit", function() {
     it("should send a request to send the topics and then start to init the toolbar", function() {
       const initSpy = sandbox.spy(toolbar, "init");
-      const responseData = {topics: "some topics data"};
+      const storageItems = {topics: "some topics data"};
 
-      chrome.runtime.sendMessage.yields(responseData);
+      chrome.storage.local.get.yields(storageItems);
 
-      toolbar.requestTopicsAndInit();
+      toolbar.getTopicsAndInit();
 
-      sinon.assert.calledTwice(chrome.runtime.sendMessage);
-      sinon.assert.calledWith(chrome.runtime.sendMessage.getCall(0), {action: "sendTopics"});
+      sinon.assert.calledTwice(chrome.storage.local.get);
+      sinon.assert.calledWith(chrome.storage.local.get, "topics");
 
       sinon.assert.calledOnce(initSpy);
-      sinon.assert.calledWithExactly(initSpy, responseData.topics);
+      sinon.assert.calledWithExactly(initSpy, storageItems.topics);
     });
   });
 
@@ -1067,7 +1067,7 @@ describe("toolbar.js", function() {
           expect($(toolbarStart + "loading-image").is(":visible")).to.be.true;
 
           sinon.assert.calledOnce(chrome.runtime.sendMessage);
-          sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "callStartToEnhance"});
+          sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "callEnhance"});
         });
       });
     });
