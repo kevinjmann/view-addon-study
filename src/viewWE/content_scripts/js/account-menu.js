@@ -46,12 +46,10 @@ view.accountMenu = {
    */
   openSignOutWindow: function() {
     const signOutWindow = window.open("", "", "width=1,height=1");
-    chrome.storage.local.get("authenticator", function(storageItems) {
-      view.accountMenu.assignHref(
-        signOutWindow,
-        storageItems.authenticator + "?action=sign-out"
-      );
-    });
+    view.accountMenu.assignHref(
+      signOutWindow,
+      view.authenticator + "?action=sign-out"
+    );
   },
 
   /**
@@ -84,32 +82,5 @@ view.accountMenu = {
    */
   toggle: function() {
     $(view.accountMenu.selectorStart + "content").toggle();
-  },
-
-  /**
-   * The extension send the message to sign in the user.
-   *
-   * @param {*} request the message sent by the calling script
-   */
-  signIn: function(request) {
-    view.userEmail = request.userEmail;
-    view.userid = request.userid;
-    view.user = request.user;
-    view.token = request.token;
-
-    view.accountMenu.setAccountInfo();
-  },
-
-  /**
-   * The extension send the message to sign out the user.
-   */
-  signOut: function() {
-    view.userEmail = "";
-    view.userid = "";
-    view.user = "";
-    view.token = "";
-    view.taskId = "";
-
-    view.accountMenu.setAccountInfo();
   }
 };

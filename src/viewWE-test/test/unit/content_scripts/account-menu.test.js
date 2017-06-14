@@ -21,10 +21,6 @@ describe("account-menu.js", function() {
     chrome.extension.getURL.reset();
     chrome.storage.local.get.reset();
     fixture.cleanup();
-    view.user = "";
-    view.userEmail = "";
-    view.userid = "";
-    view.token = "";
   });
 
   describe("jquery selectors", function() {
@@ -156,20 +152,11 @@ describe("account-menu.js", function() {
             );
           });
 
-          it("should get the expected values", function() {
-            view.accountMenu.openSignOutWindow();
-
-            sinon.assert.calledOnce(chrome.storage.local.get);
-            sinon.assert.calledWith(chrome.storage.local.get, "authenticator");
-          });
-
           it("should call assignHref(myWindow, authenticatorLink)", function() {
             const windowOpenSpy = sandbox.spy(window, "open");
             const assignHrefSpy = sandbox.spy(view.accountMenu, "assignHref");
 
-            const authenticator = view.serverURL + "/authenticator.html";
-
-            chrome.storage.local.get.yields({authenticator});
+            view.authenticator = "https://view.aleks.bg/authenticator.html";
 
             view.accountMenu.openSignOutWindow();
 
@@ -178,7 +165,7 @@ describe("account-menu.js", function() {
             sinon.assert.calledOnce(assignHrefSpy);
             sinon.assert.calledWith(assignHrefSpy,
               signInWindow,
-              authenticator + "?action=sign-out"
+              view.authenticator + "?action=sign-out"
             );
           });
         });
@@ -228,72 +215,6 @@ describe("account-menu.js", function() {
       view.accountMenu.toggle();
 
       expect($(view.accountMenu.selectorStart + "content").is(":visible")).to.be.true;
-    });
-  });
-
-  describe("signIn", function() {
-    it("should set user email, user, user-id and token with the values in the request", function() {
-      $(view.accountMenu.selectorStart + "content").show();
-
-      const userEmail = "userEmail";
-      const userid = "userid";
-      const user = "user";
-      const token = "token";
-
-      const request = {
-        userEmail,
-        userid,
-        user,
-        token
-      };
-
-      view.accountMenu.signIn(request);
-
-      expect(view.userEmail).to.equal(userEmail);
-      expect(view.userid).to.equal(userid);
-      expect(view.user).to.equal(user);
-      expect(view.token).to.equal(token);
-    });
-
-    it("should call setAccountInfo()", function() {
-      const setAccountInfoSpy = sandbox.spy(view.accountMenu, "setAccountInfo");
-
-      const userEmail = "userEmail";
-      const userid = "userid";
-      const user = "user";
-      const token = "token";
-
-      const request = {
-        userEmail,
-        userid,
-        user,
-        token
-      };
-
-      view.accountMenu.signIn(request);
-
-      sinon.assert.calledOnce(setAccountInfoSpy);
-    });
-  });
-
-  describe("signOut", function() {
-    it("should set user email, user, user-id and token to their default values", function() {
-      $(view.accountMenu.selectorStart + "content").show();
-
-      view.accountMenu.signOut();
-
-      expect(view.userEmail).to.equal("");
-      expect(view.userid).to.equal("");
-      expect(view.user).to.equal("");
-      expect(view.token).to.equal("");
-    });
-
-    it("should call setAccountInfo()", function() {
-      const setAccountInfoSpy = sandbox.spy(view.accountMenu, "setAccountInfo");
-
-      view.accountMenu.signOut();
-
-      sinon.assert.calledOnce(setAccountInfoSpy);
     });
   });
 });
