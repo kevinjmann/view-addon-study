@@ -19,23 +19,23 @@ function processMessage(request) {
     case "hideAccountMenu":
       view.accountMenu.hide();
       break;
+    case "callSetAccountInfo":
+      view.accountMenu.setAccountInfo();
+      break;
     case "hideStatisticsMenu":
       view.statisticsMenu.hide();
       break;
     case "removeFeedbackDialog":
       view.lib.removeDialog($("#view-feedback-dialog"));
       break;
-    case "callStartToEnhance":
-      view.startToEnhance();
+    case "callEnhance":
+      view.enhancer.enhance();
       break;
     case "initialInteractionState":
       view.enhancer.initialInteractionState();
       break;
     case "addEnhancementMarkup":
       view.enhancer.addEnhancementMarkup(request.data);
-      break;
-    case "setTaskId":
-      view.setTaskId(request.taskId);
       break;
     case "showFeedback":
       view.feedbacker.showFeedback(request.submissionResponseData);
@@ -51,12 +51,6 @@ function processMessage(request) {
       break;
     case "callRestoreToOriginal":
       view.enhancer.restoreToOriginal();
-      break;
-    case "signIn":
-      view.accountMenu.signIn(request);
-      break;
-    case "signOut":
-      view.accountMenu.signOut();
   }
 }
 
