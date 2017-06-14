@@ -1,8 +1,61 @@
+const theServerURL = "https://view.aleks.bg";
 /** @namespace */
 const background = {
   currentTabId: -1,
   clickCounter: 0,
   topics: {},
+  /**
+   * Set all default values to storage.
+   * This is only called once after the add-on was installed.
+   */
+  setDefaults: function() {
+    chrome.storage.local.set({
+      // General options
+      serverURL: theServerURL,
+      servletURL: theServerURL + "/view",
+      serverTaskURL: theServerURL + "/act/task",
+      serverTrackingURL: theServerURL + "/act/tracking",
+      authenticator: theServerURL + "/authenticator.html",
+      cookie_name: "wertiview_userid",
+      cookie_path: "/VIEW/openid",
+      ajaxTimeout: 60000,
+      topics: {},
+      userEmail: "",
+      userid: "",
+
+      // task data
+      user: "",
+      token: "",
+      taskId: "",
+      timestamp: "",
+      numberOfExercises: 0,
+
+      // user options
+      fixedOrPercentage: 0,
+      fixedNumberOfExercises: 25,
+      percentageOfExercises: 100,
+      choiceMode: 0,
+      firstOffset: 0,
+      intervalSize: 1,
+      showInst: false,
+      debugSentenceMarkup: false,
+
+      // enabled, language, topic and activity selections
+      enabled: false, // should the page be enhanced right away?
+      language: "unselected",
+      topic: "unselected",
+      filter: "unselected",
+      activity: "unselected"
+    });
+  },
+
+  /**
+   * A function that is supposed to be a placeholder for a response callback.
+   */
+  noResponse: function() {
+    // this is intentional
+  },
+
   /**
    * The topics are being loaded and set for the first time.
    * When they are set, proceed to toggle the toolbar.
@@ -179,11 +232,11 @@ const background = {
   },
 
   /**
-   * The toolbar ui send the message to call startToEnhance().
-   * Pass it on to view.js.
+   * The toolbar ui send the message to call enhance().
+   * Pass it on to enhancer.js.
    */
-  callStartToEnhance: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {action: "callStartToEnhance"});
+  callEnhance: function() {
+    chrome.tabs.sendMessage(background.currentTabId, {action: "callEnhance"});
   },
 
   /**
@@ -206,16 +259,6 @@ const background = {
    */
   hideElement: function(parameters) {
     chrome.tabs.sendMessage(background.currentTabId, parameters.request);
-  },
-
-  /**
-   * toolbar.js/view.js is ready to receive the topics. Send them to it.
-   *
-   * @param {object} parameters request, sender and sendResponse from
-   * processMessage
-   */
-  sendTopics: function(parameters) {
-    parameters.sendResponse({topics: background.topics});
   },
 
   /**
@@ -333,7 +376,7 @@ const background = {
         .done(function(data, textStatus, xhr) {
           if (data) {
             const taskData = JSON.parse(data);
-            background.callSetTaskId(taskData["task-id"]);
+            background.setTaskId(taskData["task-id"]);
           } else {
             background.ajaxError(xhr, "no-task-data");
           }
@@ -353,15 +396,12 @@ const background = {
   },
 
   /**
-   * Request to call setTaskId(taskId) in view.js.
+   * Set the task id to storage.
    *
    * @param {number} taskId the task id from the server
    */
-  callSetTaskId: function(taskId) {
-    chrome.tabs.sendMessage(background.currentTabId, {
-      action: "setTaskId",
-      taskId: taskId
-    });
+  setTaskId: function(taskId) {
+    chrome.storage.local.set({taskId: taskId}, background.noResponse);
   },
 
   /**
@@ -635,9 +675,11 @@ const background = {
   processUserIdCookie: function(changeInfo) {
     if (changeInfo.removed) {
       background.signOut();
+      background.callSetAccountInfo();
     }
     else if (changeInfo.cookie.value) {
       background.signIn(changeInfo.cookie.value);
+      background.callSetAccountInfo();
     }
   },
 
@@ -655,6 +697,13 @@ const background = {
     }, function() {
       chrome.tabs.sendMessage(background.currentTabId, {action: "signOut"});
     });
+  },
+
+  /**
+   * Send a request to the content script to call view.accountMenu.setAccountInfo().
+   */
+  callSetAccountInfo: function() {
+    chrome.tabs.sendMessage(background.currentTabId, {action: "callSetAccountInfo"});
   },
 
   /**
@@ -682,10 +731,7 @@ const background = {
     }, function() {
       chrome.tabs.sendMessage(background.currentTabId, {
         action: "signIn",
-        userEmail: userEmail,
-        userid: userid,
-        user: user,
-        token: authtoken
+        user: user
       });
     });
   }
@@ -704,6 +750,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
   background.currentTabId = tab.id;
 
   if (background.clickCounter === 1) {
+    background.setDefaults();
     background.setTopics();
   }
   else {
