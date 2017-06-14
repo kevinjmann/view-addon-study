@@ -45,6 +45,7 @@ module.exports = function(grunt) {
           "../viewWE/content_scripts/js/activities/click.js",
           "../viewWE/content_scripts/js/activities/mc.js",
           "../viewWE/content_scripts/js/activities/cloze.js",
+          "test/unit/unit-test.js",
           {pattern: "fixtures/**/*"}
         ],
         preprocessors: {
