@@ -12,14 +12,16 @@ describe("activityHelper.js", function() {
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
     fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
+    unitTest.setViewDefaults();
     view.language = "ru";
-    view.userid = "";
     view.selector.select("Sg");
   });
 
   afterEach(function() {
     sandbox.restore();
     fixture.cleanup();
+    chrome.storage.local.set.reset();
+    chrome.runtime.sendMessage.reset();
   });
 
   describe("jquery selectors", function() {
@@ -303,7 +305,10 @@ describe("activityHelper.js", function() {
 
     describe("getNumberOfExercisesAndRequestTaskId", function() {
       it("should call setNumberOfExercises(numberOfExercises)", function() {
-        const setNumberOfExercisesSpy = sandbox.spy(view, "setNumberOfExercises");
+        const setNumberOfExercisesSpy = sandbox.spy(
+          view.activityHelper,
+          "setNumberOfExercises"
+        );
 
         view.choiceMode = 0;
 
@@ -319,14 +324,86 @@ describe("activityHelper.js", function() {
         sinon.assert.calledWithExactly(setNumberOfExercisesSpy, 17);
       });
 
+      it("should set the number of exercises", function() {
+        const numberOfExercises = 10;
+
+        view.activityHelper.setNumberOfExercises(numberOfExercises);
+
+
+        sinon.assert.calledOnce(chrome.storage.local.set);
+        sinon.assert.calledWithExactly(chrome.storage.local.set, {numberOfExercises});
+      });
+
       it("should call requestToSendTaskDataAndGetTaskId()", function() {
-        const requestToSendTaskDataAndGetTaskIdSpy = sandbox.spy(view, "requestToSendTaskDataAndGetTaskId");
+        const requestToSendTaskDataAndGetTaskIdSpy = sandbox.spy(
+          view.activityHelper,
+          "requestToSendTaskDataAndGetTaskId"
+        );
 
         view.userid = "some-id";
 
         view.activityHelper.getNumberOfExercisesAndRequestTaskId(".viewinput");
 
         sinon.assert.calledOnce(requestToSendTaskDataAndGetTaskIdSpy);
+      });
+
+      describe("requestToSendTaskDataAndGetTaskId", function() {
+        it("should call createTaskData()", function() {
+          const createTaskDataSpy = sandbox.spy(view.activityHelper, "createTaskData");
+
+          view.activityHelper.requestToSendTaskDataAndGetTaskId();
+
+          sinon.assert.calledOnce(createTaskDataSpy);
+        });
+
+        it("should create task data", function() {
+          const token = "some token";
+          const url = "some url";
+          const title = "some title";
+          const language = "some language";
+          const topic = "some topic";
+          const filter = "some filter";
+          const activity = "some activity";
+          const timestamp = 99;
+          const numberOfExercises = 100;
+
+          view.token = token;
+          view.url = url;
+          view.title = title;
+          view.language = language;
+          view.topic = topic;
+          view.filter = filter;
+          view.activity = activity;
+          view.timestamp = timestamp;
+          view.numberOfExercises = numberOfExercises;
+
+          const returnedTaskData = view.activityHelper.createTaskData();
+
+          expect(returnedTaskData).to.eql({
+            token,
+            url,
+            title,
+            language,
+            topic,
+            filter,
+            activity,
+            timestamp,
+            "number-of-exercises": numberOfExercises
+          });
+        });
+
+        it("should send a request to get the task id from the server", function() {
+          const taskData = view.activityHelper.createTaskData();
+
+          view.activityHelper.requestToSendTaskDataAndGetTaskId();
+
+          sinon.assert.calledOnce(chrome.runtime.sendMessage);
+          sinon.assert.calledWith(chrome.runtime.sendMessage, {
+            action: "sendTaskDataAndGetTaskId",
+            taskData,
+            serverTaskURL: "https://view.aleks.bg/act/task"
+          });
+        });
       });
     });
 
@@ -356,7 +433,7 @@ describe("activityHelper.js", function() {
     describe("hintHandler", function() {
       it("should call view.setTimestamp(timestamp)", function() {
         const nowSpy = sandbox.spy(Date, "now");
-        const setTimestampSpy = sandbox.spy(view, "setTimestamp");
+        const setTimestampSpy = sandbox.spy(view.activityHelper, "setTimestamp");
 
         view.mc.run();
 
@@ -448,7 +525,7 @@ describe("activityHelper.js", function() {
   describe("inputHandler", function() {
     it("should call view.setTimestamp(timestamp)", function() {
       const nowSpy = sandbox.spy(Date, "now");
-      const setTimestampSpy = sandbox.spy(view, "setTimestamp");
+      const setTimestampSpy = sandbox.spy(view.activityHelper, "setTimestamp");
 
       view.mc.run();
 

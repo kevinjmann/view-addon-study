@@ -17,7 +17,7 @@ view.click = {
    */
   handler: function() {
     const timestamp = Date.now();
-    view.setTimestamp(timestamp);
+    view.activityHelper.setTimestamp(timestamp);
 
     let isCorrect = false;
     const $EnhancementElement = $(this);

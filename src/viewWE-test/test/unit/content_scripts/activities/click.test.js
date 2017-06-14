@@ -12,8 +12,8 @@ describe("click.js", function() {
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
     fixture.load("/fixtures/ru-nouns-click.html");
+    unitTest.setViewDefaults();
     view.selector.select("Sg");
-    view.userid = "";
   });
 
   afterEach(function() {
@@ -63,7 +63,6 @@ describe("click.js", function() {
         view.activityHelper,
         "getNumberOfExercisesAndRequestTaskId"
       );
-      const setNumberOfExercisesSpy = sandbox.spy(view, "setNumberOfExercises");
 
       const selector = "viewenhancement[data-type!='miss'].selected";
 
@@ -73,9 +72,6 @@ describe("click.js", function() {
 
       sinon.assert.calledOnce(getNumberOfExercisesAndRequestTaskIdSpy);
       sinon.assert.calledWithExactly(getNumberOfExercisesAndRequestTaskIdSpy, selector);
-
-      sinon.assert.calledOnce(setNumberOfExercisesSpy);
-      sinon.assert.calledWithExactly(setNumberOfExercisesSpy, 20);
     });
 
     it("should call the handler on click", function() {
@@ -91,9 +87,9 @@ describe("click.js", function() {
     });
 
     describe("handler", function() {
-      it("should call view.setTimestamp(timestamp)", function() {
+      it("should call view.activityHelper.setTimestamp(timestamp)", function() {
         const nowSpy = sandbox.spy(Date, "now");
-        const setTimestampSpy = sandbox.spy(view, "setTimestamp");
+        const setTimestampSpy = sandbox.spy(view.activityHelper, "setTimestamp");
 
         const $EnhancementElement = $("[data-type='hit'].selected").first();
 

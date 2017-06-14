@@ -8,6 +8,8 @@
 
 describe("background.js", function() {
   let sandbox;
+  const theServerURL = "https://view.aleks.bg";
+
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
   });
@@ -33,20 +35,71 @@ describe("background.js", function() {
       sinon.assert.calledOnce(chrome.browserAction.onClicked.addListener);
     });
 
-    it("should set topics when the button is clicked the first time", function(done) {
-      const setTopicsSpy = sandbox.spy(background, "setTopics");
+    it("should call setDefaults() when the button is clicked the first time", function() {
+      const setDefaultsSpy = sandbox.spy(background, "setDefaults");
 
       chrome.browserAction.onClicked.trigger({id: 5});
 
       expect(background.clickCounter).to.equal(1);
 
-      setTimeout(function() { // wait for asynchronous code to finish
-        sinon.assert.calledOnce(setTopicsSpy);
-        done();
-      }, 0);
+      sinon.assert.calledOnce(setDefaultsSpy);
     });
 
-    it("should send a message to toggle the toolbar without setting topics otherwise", function(done) {
+    it("should set the defaults to the storage", function() {
+      background.setDefaults();
+
+      sinon.assert.calledOnce(chrome.storage.local.set);
+      sinon.assert.calledWith(chrome.storage.local.set, {
+        // General options
+        serverURL: theServerURL,
+        servletURL: theServerURL + "/view",
+        serverTaskURL: theServerURL + "/act/task",
+        serverTrackingURL: theServerURL + "/act/tracking",
+        authenticator: theServerURL + "/authenticator.html",
+        cookie_name: "wertiview_userid",
+        cookie_path: "/VIEW/openid",
+        ajaxTimeout: 60000,
+        topics: {},
+        userEmail: "",
+        userid: "",
+
+        // task data
+        user: "",
+        token: "",
+        taskId: "",
+        timestamp: "",
+        numberOfExercises: 0,
+
+        // user options
+        fixedOrPercentage: 0,
+        fixedNumberOfExercises: 25,
+        percentageOfExercises: 100,
+        choiceMode: 0,
+        firstOffset: 0,
+        intervalSize: 1,
+        showInst: false,
+        debugSentenceMarkup: false,
+
+        // enabled, language, topic and activity selections
+        enabled: false, // should the page be enhanced right away?
+        language: "unselected",
+        topic: "unselected",
+        filter: "unselected",
+        activity: "unselected"
+      });
+    });
+
+    it("should set topics when the button is clicked the first time", function() {
+      const setTopicsSpy = sandbox.stub(background, "setTopics");
+
+      chrome.browserAction.onClicked.trigger({id: 5});
+
+      expect(background.clickCounter).to.equal(1);
+
+      sinon.assert.calledOnce(setTopicsSpy);
+    });
+
+    it("should send a message to toggle the toolbar without setting topics otherwise", function() {
       const toggleToolbarSpy = sandbox.spy(background, "toggleToolbar");
 
       chrome.browserAction.onClicked.trigger({id: 5});
@@ -54,10 +107,7 @@ describe("background.js", function() {
 
       expect(background.clickCounter).to.equal(2);
 
-      setTimeout(function() { // wait for asynchronous code to finish (first trigger on setTopics)
-        sinon.assert.calledOnce(toggleToolbarSpy);
-        done();
-      }, 0);
+      sinon.assert.calledOnce(toggleToolbarSpy);
     });
   });
 
@@ -354,10 +404,10 @@ describe("background.js", function() {
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
     });
 
-    it("should process the message 'callStartToEnhance'", function() {
-      const callStartToEnhanceSpy = sandbox.spy(background, "callStartToEnhance");
+    it("should process the message 'callEnhance'", function() {
+      const callEnhanceSpy = sandbox.spy(background, "callEnhance");
 
-      const request = {action: "callStartToEnhance"};
+      const request = {action: "callEnhance"};
       const sender = {tab: {id: 5}};
       const sendResponse = sandbox.spy();
       const parameters = {
@@ -368,8 +418,8 @@ describe("background.js", function() {
 
       chrome.runtime.onMessage.trigger(request, sender, sendResponse);
 
-      sinon.assert.calledOnce(callStartToEnhanceSpy);
-      sinon.assert.calledWithExactly(callStartToEnhanceSpy, parameters);
+      sinon.assert.calledOnce(callEnhanceSpy);
+      sinon.assert.calledWithExactly(callEnhanceSpy, parameters);
 
       sinon.assert.calledOnce(chrome.tabs.sendMessage);
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
@@ -421,32 +471,6 @@ describe("background.js", function() {
 
       sinon.assert.calledOnce(chrome.tabs.sendMessage);
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
-    });
-
-    it("should process the message 'sendTopics'", function() {
-      const sendTopicsSpy = sandbox.spy(background, "sendTopics");
-
-      const request = {action: "sendTopics"};
-      const sender = {tab: {id: 5}};
-      const sendResponse = sandbox.spy();
-      const parameters = {
-        request,
-        sender,
-        sendResponse
-      };
-
-      const articlesData = {articles: "some articles data"};
-
-      // fill with fake data
-      background.topics = articlesData;
-
-      chrome.runtime.onMessage.trigger(request, sender, sendResponse);
-
-      sinon.assert.calledOnce(sendTopicsSpy);
-      sinon.assert.calledWithExactly(sendTopicsSpy, parameters);
-
-      sinon.assert.calledOnce(sendResponse);
-      sinon.assert.calledWithExactly(sendResponse, {topics: articlesData});
     });
 
     it("should process the message 'callAbort'", function() {
@@ -747,8 +771,8 @@ describe("background.js", function() {
             );
           });
 
-          it("should succeed to send task data, get the task id and call callSetTaskId(taskId)", function() {
-            const callSetTaskIdSpy = sandbox.spy(background, "callSetTaskId");
+          it("should succeed to send task data, get the task id and call setTaskId(taskId)", function() {
+            const callSetTaskIdSpy = sandbox.spy(background, "setTaskId");
 
             const serverTaskURL = "https://view.aleks.bg/act/task";
 
@@ -775,18 +799,13 @@ describe("background.js", function() {
             sinon.assert.calledWithExactly(callSetTaskIdSpy, taskId);
           });
 
-          it("should send a request to call setTaskId(taskId)", function() {
+          it("should set the task id", function() {
             const taskId = 1;
 
-            background.currentTabId = 5;
+            background.setTaskId(taskId);
 
-            background.callSetTaskId(taskId);
-
-            sinon.assert.calledOnce(chrome.tabs.sendMessage);
-            sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
-              action: "setTaskId",
-              taskId: taskId
-            });
+            sinon.assert.calledOnce(chrome.storage.local.set);
+            sinon.assert.calledWith(chrome.storage.local.set, {taskId});
           });
 
           it("should succeed to send task data, but fail to receive data from the server", function() {
@@ -1524,10 +1543,7 @@ describe("background.js", function() {
       sinon.assert.calledOnce(chrome.tabs.sendMessage);
       sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
         action: "signIn",
-        userEmail: userEmail,
-        userid: userid,
-        user: user,
-        token: token
+        user: user
       });
     });
   });

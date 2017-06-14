@@ -35,12 +35,11 @@ const toolbar = {
   selectorStart: "#wertiview-toolbar-",
 
   /**
-   * Send a request to the background script to send the topics.
-   * After they are received we start to initialize the toolbar.
+   * Get the topics from storage and start to initialize the toolbar.
    */
-  requestTopicsAndInit: function() {
-    chrome.runtime.sendMessage({action: "sendTopics"}, function(response) {
-      toolbar.init(response.topics);
+  getTopicsAndInit: function() {
+    chrome.storage.local.get("topics", function(storageItems) {
+      toolbar.init(storageItems.topics);
     });
   },
 
@@ -100,14 +99,7 @@ const toolbar = {
    * toggle the VIEW menu.
    */
   requestToToggleViewMenu: function() {
-    chrome.runtime.sendMessage({action: "toggleVIEWMenu"}, toolbar.noResponse);
-  },
-
-  /**
-   * A function that is supposed to be a placeholder for a response callback.
-   */
-  noResponse: function() {
-    // This is intentional
+    chrome.runtime.sendMessage({action: "toggleVIEWMenu"});
   },
 
   /**
@@ -134,7 +126,7 @@ const toolbar = {
    * hide the VIEW menu.
    */
   requestToHideViewMenu: function() {
-    chrome.runtime.sendMessage({action: "hideVIEWMenu"}, toolbar.noResponse);
+    chrome.runtime.sendMessage({action: "hideVIEWMenu"});
   },
 
   /**
@@ -142,7 +134,7 @@ const toolbar = {
    * hide the account menu.
    */
   requestToHideAccountMenu: function() {
-    chrome.runtime.sendMessage({action: "hideAccountMenu"}, toolbar.noResponse);
+    chrome.runtime.sendMessage({action: "hideAccountMenu"});
   },
 
   /**
@@ -150,7 +142,7 @@ const toolbar = {
    * hide the statistics menu.
    */
   requestToHideStatisticsMenu: function() {
-    chrome.runtime.sendMessage({action: "hideStatisticsMenu"}, toolbar.noResponse);
+    chrome.runtime.sendMessage({action: "hideStatisticsMenu"});
   },
 
   /**
@@ -158,7 +150,7 @@ const toolbar = {
    * remove the feedback dialog.
    */
   requestToRemoveFeedbackDialog: function() {
-    chrome.runtime.sendMessage({action: "removeFeedbackDialog"}, toolbar.noResponse);
+    chrome.runtime.sendMessage({action: "removeFeedbackDialog"});
   },
 
   /**
@@ -446,14 +438,14 @@ const toolbar = {
   /**
    * Disable enhance and restore button, show spinning wheel.
    * Send a request to the background script to pass on the
-   * message to call startToEnhance().
+   * message to call enhance().
    */
   prepareToEnhance: function() {
     toolbar.$cache.get(toolbar.selectorStart + "enhance-button").hide();
     toolbar.$cache.get(toolbar.selectorStart + "restore-button").hide();
     toolbar.$cache.get(toolbar.selectorStart + "loading-image").show();
 
-    chrome.runtime.sendMessage({action: "callStartToEnhance"}, toolbar.noResponse);
+    chrome.runtime.sendMessage({action: "callEnhance"});
   },
 
   /**
@@ -470,7 +462,7 @@ const toolbar = {
    * message to call abort().
    */
   requestToCallAbort: function() {
-    chrome.runtime.sendMessage({action: "callAbort"}, toolbar.noResponse);
+    chrome.runtime.sendMessage({action: "callAbort"});
   },
 
   /**
@@ -487,7 +479,7 @@ const toolbar = {
    * message to call restoreToOriginal().
    */
   requestToCallRestoreToOriginal: function() {
-    chrome.runtime.sendMessage({action: "callRestoreToOriginal"}, toolbar.noResponse);
+    chrome.runtime.sendMessage({action: "callRestoreToOriginal"});
   },
 
   /**
@@ -539,7 +531,7 @@ const toolbar = {
    * message to toggle the account menu.
    */
   requestToToggleAccountMenu: function() {
-    chrome.runtime.sendMessage({action: "toggleAccountMenu"}, toolbar.noResponse);
+    chrome.runtime.sendMessage({action: "toggleAccountMenu"});
   },
 
   /**
@@ -555,7 +547,7 @@ const toolbar = {
    * message to toggle the toolbar.
    */
   requestToToggleToolbar: function() {
-    chrome.runtime.sendMessage({action: "toggleToolbar"}, toolbar.noResponse);
+    chrome.runtime.sendMessage({action: "toggleToolbar"});
   },
 
   /**
@@ -680,7 +672,7 @@ const toolbar = {
  * document is ready.
  */
 toolbar.$cache.get(document).ready(function() {
-  toolbar.requestTopicsAndInit();
+  toolbar.getTopicsAndInit();
 });
 
 /**

@@ -146,12 +146,12 @@ describe("toolbar-iframe.js", function() {
       sinon.assert.called(adjustMarginSpy);
     });
 
-    it("should call setGeneralOptionsAndInitToolbar(), as the toolbar doesn't exists yet", function() {
-      const setGeneralOptionsSpy = sandbox.spy(view, "setGeneralOptionsAndInitToolbar");
+    it("should call setStorageItemsAndInitToolbar(), as the toolbar doesn't exists yet", function() {
+      const setStorageItemsAndInitToolbarSpy = sandbox.spy(view, "setStorageItemsAndInitToolbar");
 
       view.toolbarIframe.toggle();
 
-      sinon.assert.called(setGeneralOptionsSpy);
+      sinon.assert.called(setStorageItemsAndInitToolbarSpy);
     });
   });
 });

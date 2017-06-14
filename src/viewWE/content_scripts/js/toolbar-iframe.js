@@ -39,7 +39,7 @@ view.toolbarIframe = {
       toolbar.toggle();
       view.container.adjustMargin();
     } else {
-      view.setGeneralOptionsAndInitToolbar();
+      view.setStorageItemsAndInitToolbar();
     }
   }
 };
