@@ -1155,6 +1155,10 @@ describe("toolbar.js", function() {
 
         toolbar.initSignInBtn();
 
+        const authenticator = globalServerURL + "/authenticator.html";
+
+        chrome.storage.local.get.yields({authenticator});
+
         $(toolbarStart + "account-sign-in-button").trigger("click");
 
         sinon.assert.calledOnce(openSignInWindowSpy);
@@ -1163,6 +1167,10 @@ describe("toolbar.js", function() {
       describe("openSignInWindow", function() {
         it("should open the sign in window", function() {
           const windowOpenSpy = sandbox.spy(window, "open");
+
+          const authenticator = globalServerURL + "/authenticator.html";
+
+          chrome.storage.local.get.yields({authenticator});
 
           toolbar.openSignInWindow();
 
@@ -1175,6 +1183,10 @@ describe("toolbar.js", function() {
         });
 
         it("should get the expected values", function() {
+          const authenticator = globalServerURL + "/authenticator.html";
+
+          chrome.storage.local.get.yields({authenticator});
+
           toolbar.openSignInWindow();
 
           sinon.assert.calledOnce(chrome.storage.local.get);
