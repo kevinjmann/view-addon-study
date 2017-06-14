@@ -2,9 +2,6 @@ const view = {
   url: document.baseURI,
   title: document.title,
 
-  // original web page content for restoration
-  originalContent: "",
-
   /**
    * Set all items from storage.
    * Afterwards initialize the toolbar iframe.
