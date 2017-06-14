@@ -110,10 +110,52 @@ view.activityHelper = {
     if (view.userid) {
       const numberOfExercises = $(selector).length;
 
-      view.setNumberOfExercises(numberOfExercises);
+      view.activityHelper.setNumberOfExercises(numberOfExercises);
 
-      view.requestToSendTaskDataAndGetTaskId();
+      view.activityHelper.requestToSendTaskDataAndGetTaskId();
     }
+  },
+
+  /**
+   * Set the number of exercises.
+   *
+   * @param {number} numberOfExercises the number of exercises
+   */
+  setNumberOfExercises: function(numberOfExercises) {
+    chrome.storage.local.set({numberOfExercises: numberOfExercises});
+  },
+
+  /**
+   * Send a request to the background script to send task data
+   * and get the task id.
+   */
+  requestToSendTaskDataAndGetTaskId: function() {
+    const taskData = view.activityHelper.createTaskData();
+
+    chrome.runtime.sendMessage({
+      action: "sendTaskDataAndGetTaskId",
+      taskData: taskData,
+      serverTaskURL: view.serverTaskURL
+    }, view.lib.noResponse);
+  },
+
+  /**
+   * Create task data to be sent to the server.
+   *
+   * @returns {object} the data of the latest task
+   */
+  createTaskData: function() {
+    return {
+      token: view.token,
+      url: view.url,
+      title: view.title,
+      language: view.language,
+      topic: view.topic,
+      filter: view.filter,
+      activity: view.activity,
+      timestamp: view.timestamp,
+      "number-of-exercises": view.numberOfExercises
+    };
   },
 
   /**
@@ -121,7 +163,7 @@ view.activityHelper = {
    */
   hintHandler: function() {
     const timestamp = Date.now();
-    view.setTimestamp(timestamp);
+    view.activityHelper.setTimestamp(timestamp);
 
     const $ElementBox = $(this).prev();
     const $EnhancementElement = $ElementBox.parent();
@@ -140,13 +182,22 @@ view.activityHelper = {
   },
 
   /**
+   * Set the timestamp.
+   *
+   * @param {number} timestamp the time stamp
+   */
+  setTimestamp: function(timestamp) {
+    chrome.storage.local.set({timestamp: timestamp});
+  },
+
+  /**
    * Deals with the submission in the mc and cloze activities.
    *
    * @param {object} e the triggered event
    */
   inputHandler: function(e) {
     const timestamp = Date.now();
-    view.setTimestamp(timestamp);
+    view.activityHelper.setTimestamp(timestamp);
 
     let isCorrect = false;
     const $ElementBox = $(e.target);
