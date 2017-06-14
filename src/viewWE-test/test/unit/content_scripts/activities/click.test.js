@@ -12,8 +12,8 @@ describe("click.js", function() {
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
     fixture.load("/fixtures/ru-nouns-click.html");
+    unitTest.setViewDefaults();
     view.selector.select("Sg");
-    view.userid = "";
   });
 
   afterEach(function() {

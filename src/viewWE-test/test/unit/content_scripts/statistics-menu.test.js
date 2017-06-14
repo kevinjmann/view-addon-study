@@ -60,14 +60,13 @@ describe("statistics-menu.js", function() {
     sandbox = sinon.sandbox.create();
     fixture.load("/fixtures/statistics-menu.html");
     sandbox.stub($.fn, "load").yields();
+    unitTest.setViewDefaults();
   });
 
   afterEach(function() {
     sandbox.restore();
     chrome.runtime.sendMessage.reset();
     fixture.cleanup();
-    view.token = "";
-    view.taskId = "";
     $("#view-all-tasks-dialog").remove();
     $("#view-task-dialog").remove();
   });

@@ -22,21 +22,13 @@ describe("enhancer.js", function() {
   beforeEach(function() {
     $("#wertiview-content").html($NoMarkup.html());
     sandbox = sinon.sandbox.create();
+    unitTest.setViewDefaults();
   });
 
   afterEach(function() {
     sandbox.restore();
     fixture.cleanup();
     chrome.runtime.sendMessage.reset();
-    view.activity = "";
-    view.showInst = false;
-    view.topics = {};
-    view.topic = "";
-    view.language = "";
-    view.url = "";
-    view.filter = "";
-    view.enhancer.isAborted = false;
-    view.debugSentenceMarkup = false;
   });
 
   describe("jquery selectors", function() {

@@ -12,8 +12,8 @@ describe("activityHelper.js", function() {
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
     fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
+    unitTest.setViewDefaults();
     view.language = "ru";
-    view.userid = "";
     view.selector.select("Sg");
   });
 
@@ -395,17 +395,13 @@ describe("activityHelper.js", function() {
         it("should send a request to get the task id from the server", function() {
           const taskData = view.activityHelper.createTaskData();
 
-          const serverTaskURL = "https://view.aleks.bg/act/task";
-
-          view.serverTaskURL = serverTaskURL;
-
           view.activityHelper.requestToSendTaskDataAndGetTaskId();
 
           sinon.assert.calledOnce(chrome.runtime.sendMessage);
           sinon.assert.calledWith(chrome.runtime.sendMessage, {
             action: "sendTaskDataAndGetTaskId",
             taskData,
-            serverTaskURL
+            serverTaskURL: "https://view.aleks.bg/act/task"
           });
         });
       });
