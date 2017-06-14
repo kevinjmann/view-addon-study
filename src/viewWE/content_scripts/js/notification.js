@@ -4,13 +4,13 @@ view.notification = {
    * for some time and then removes itself.
    */
   add: function(notice) {
-    var noticeTimeout = 3000; // in ms
+    const noticeTimeout = 3000; // in ms
 
     // create divs for popup notice
-    var $noticediv = $("<div>");
+    const $noticediv = $("<div>");
     $noticediv.attr("id", "wertiview-notification");
 
-    var $messagediv = $("<div>");
+    const $messagediv = $("<div>");
     $messagediv.attr("id", "wertiview-notification-message");
 
     // add message text to div
@@ -42,19 +42,19 @@ view.notification = {
   addInst: function(notice, isAvoidable) {
 
     // create divs for popup notice
-    var $noticediv = $("<div>");
+    const $noticediv = $("<div>");
     $noticediv.attr("id", "wertiview-inst-notification");
 
-    var $messagediv = $("<div>");
+    const $messagediv = $("<div>");
     $messagediv.attr("id", "wertiview-inst-message");
     $messagediv.html(notice);
 
-    var $clickokdiv = $("<div>");
+    const $clickokdiv = $("<div>");
     $clickokdiv.attr("id", "wertiview-inst-click-ok");
     $clickokdiv.text("OK");
 
-    var noticeHeight = 80;
-    var noticeWidth = 400;
+    const noticeHeight = 80;
+    const noticeWidth = 400;
 
     $noticediv.css({
       "min-height": noticeHeight + "px",
@@ -64,12 +64,12 @@ view.notification = {
     $noticediv.append($messagediv);
     $noticediv.append("<br>");
 
-    var $buttondiv = $("<div>");
+    const $buttondiv = $("<div>");
     $buttondiv.attr("id", "wertiview-inst-button");
     $buttondiv.append($clickokdiv);
 
     if (isAvoidable) { // the user can prevent to let it show up each time
-      var $checkdontagain = $("<input>");
+      const $checkdontagain = $("<input>");
       $checkdontagain.attr("id", "wertiview-inst-check-dontagain");
       $checkdontagain.attr("type", "checkbox");
       $checkdontagain.attr("name", "dontshowinst");
