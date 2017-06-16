@@ -43,6 +43,7 @@
       "css": [
         "lib/jquery-ui.min.css",
         "content_scripts/css/view.css",
+        "content_scripts/css/toolbar.css",
         "content_scripts/css/view-menu.css",
         "content_scripts/css/statistics-menu.css",
         "content_scripts/css/account-menu.css",
@@ -58,7 +59,7 @@
         "content_scripts/js/view.js",
         "content_scripts/js/lib.js",
         "content_scripts/js/selector.js",
-        "content_scripts/js/toolbar-iframe.js",
+        "content_scripts/js/toolbar.js",
         "content_scripts/js/container.js",
         "content_scripts/js/enhancer.js",
         "content_scripts/js/view-menu.js",
@@ -97,7 +98,7 @@
   ], 
   
   "web_accessible_resources": [
-  	"toolbar/toolbar.html",
+  	"content_scripts/html/toolbar.html",
     "content_scripts/html/about.html",
     "content_scripts/html/view-menu.html",
     "content_scripts/html/statistics-menu.html",
