@@ -27,7 +27,7 @@ module.exports = function(grunt) {
           "../viewWE/content_scripts/js/view.js",
           "../viewWE/content_scripts/js/lib.js",
           "../viewWE/content_scripts/js/selector.js",
-          "../viewWE/content_scripts/js/toolbar-iframe.js",
+          "../viewWE/content_scripts/js/toolbar.js",
           "../viewWE/content_scripts/js/container.js",
           "../viewWE/content_scripts/js/enhancer.js",
           "../viewWE/content_scripts/js/view-menu.js",
@@ -57,7 +57,8 @@ module.exports = function(grunt) {
           "**/ru-nouns-color.html": ["html2js"],
           "**/ru-nouns-mc-and-cloze.html": ["html2js"],
           "**/debug-sentence-markup.html": ["html2js"],
-          "**/unstressed-o-feedback.html": ["html2js"]
+          "**/unstressed-o-feedback.html": ["html2js"],
+          "**/toolbar.html": ["html2js"]
         },
         plugins: [
           "karma-coverage",
@@ -82,13 +83,11 @@ module.exports = function(grunt) {
       toolbar: {
         files: {
           src: [
-            "../viewWE/toolbar/toolbar.js",
-            "test/unit/toolbar/toolbar.test.js"
+            "test/unit/content_scripts/toolbar.test.js"
           ]
         },
         preprocessors: {
-          "../viewWE/toolbar/toolbar.js": ["coverage"],
-          "**/toolbar.html": ["html2js"]
+          "../viewWE/content_scripts/js/toolbar.js": ["coverage"]
         }
       },
       viewOptions: {
@@ -190,16 +189,6 @@ module.exports = function(grunt) {
         },
         preprocessors: {
           "../viewWE/content_scripts/js/selector.js": ["coverage"]
-        }
-      },
-      toolbarIframe: {
-        files: {
-          src: [
-            "test/unit/content_scripts/toolbar-iframe.test.js"
-          ]
-        },
-        preprocessors: {
-          "../viewWE/content_scripts/js/toolbar-iframe.js": ["coverage"]
         }
       },
       container: {
