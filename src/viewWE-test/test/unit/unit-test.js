@@ -16,8 +16,6 @@ const unitTest = {
       serverTaskURL: testServerURL + "/act/task",
       serverTrackingURL: testServerURL + "/act/tracking",
       authenticator: testServerURL + "/authenticator.html",
-      cookie_name: "wertiview_userid",
-      cookie_path: "/VIEW/openid",
       ajaxTimeout: 60000,
       topics: {},
       userEmail: "",
