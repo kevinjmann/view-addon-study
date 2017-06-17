@@ -6,7 +6,7 @@ const background = {
   topics: {},
   /**
    * Set all default values to storage.
-   * This is only called once after the add-on was installed.
+   * This is only toggleed once after the add-on was installed.
    */
   setDefaults: function() {
     chrome.storage.local.set({
@@ -16,8 +16,6 @@ const background = {
       serverTaskURL: theServerURL + "/act/task",
       serverTrackingURL: theServerURL + "/act/tracking",
       authenticator: theServerURL + "/authenticator.html",
-      cookie_name: "wertiview_userid",
-      cookie_path: "/VIEW/openid",
       ajaxTimeout: 60000,
       topics: {},
       userEmail: "",
@@ -44,7 +42,7 @@ const background = {
       enabled: false, // should the page be enhanced right away?
       language: "unselected",
       topic: "unselected",
-      filter: "unselected",
+      filter: "no-filter",
       activity: "unselected"
     });
   },
@@ -105,18 +103,26 @@ const background = {
    * Get the URLs of all topic json objects and set them.
    */
   getAndSetTopicURLs: function() {
-    background.topics.articles.url = chrome.extension.getURL("topics/articles.json");
+    background.topics.articles.url = chrome.runtime.getURL("topics/articles.json");
 
-    background.topics.determiners.url = chrome.extension.getURL("topics/determiners.json");
+    background.topics.determiners.url = chrome.runtime.getURL("topics/determiners.json");
 
-    background.topics.nouns.url = chrome.extension.getURL("topics/nouns.json");
+    background.topics.nouns.url = chrome.runtime.getURL("topics/nouns.json");
   },
 
   /**
-   * Proceed to set the topics and toggle the toolbar.
+   * Proceed to set the topics and request to toggleOrAdd the toolbar.
    */
   proceedToSetAndToggleToolbar: function() {
-    chrome.storage.local.set({topics: background.topics}, background.toggleToolbar);
+    chrome.storage.local.set({topics: background.topics}, background.requestToToggleOrAddToolbar);
+  },
+
+  /**
+   * Send a request to the content script to call
+   * view.toolbar.toggleOrAddToolbar().
+   */
+  requestToToggleOrAddToolbar: function() {
+    chrome.tabs.sendMessage(background.currentTabId, {action: "toggleOrAddToolbar"});
   },
 
   /**
@@ -168,124 +174,14 @@ const background = {
   },
 
   /**
-   * There was a request to toggle the toolbar.
-   * Pass it on to toolbar-iframe.js.
+   * The content script view-menu.js send the message to open the options page.
    */
-  toggleToolbar: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {action: "toggleToolbar"});
-  },
-
-  /**
-   * The toolbar ui send the message to toggle the VIEW menu.
-   * Pass it on to view-menu.js.
-   */
-  toggleVIEWMenu: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {action: "toggleVIEWMenu"});
-  },
-
-  /**
-   * The toolbar ui send the message to hide the VIEW menu.
-   * Pass it on to view-menu.js.
-   */
-  hideVIEWMenu: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {action: "hideVIEWMenu"});
-  },
-
-  /**
-   * The toolbar ui send the message to toggle the account menu.
-   * Pass it on to account-menu.js.
-   */
-  toggleAccountMenu: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {action: "toggleAccountMenu"});
-  },
-
-  /**
-   * The toolbar ui send the message to hide the account menu.
-   * Pass it on to account-menu.js.
-   */
-  hideAccountMenu: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {action: "hideAccountMenu"});
-  },
-
-  /**
-   * The toolbar ui send the message to toggle the statistics menu.
-   * Pass it on to statistics-menu.js.
-   */
-  toggleStatisticsMenu: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {action: "toggleStatisticsMenu"});
-  },
-
-  /**
-   * The toolbar ui send the message to hide the statistics menu.
-   * Pass it on to statistics-menu.js.
-   */
-  hideStatisticsMenu: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {action: "hideStatisticsMenu"});
-  },
-
-  /**
-   * The toolbar ui send the message to remove the feedback dialog.
-   * Pass it on to lib.js.
-   */
-  removeFeedbackDialog: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {action: "removeFeedbackDialog"});
-  },
-
-  /**
-   * The toolbar ui send the message to call enhance().
-   * Pass it on to enhancer.js.
-   */
-  callEnhance: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {action: "callEnhance"});
-  },
-
-  /**
-   * enhancer.js send the message to show an element
-   * using a selector. Pass it on to toolbar.js.
-   *
-   * @param {object} parameters request, sender and sendResponse from
-   * processMessage
-   */
-  showElement: function(parameters) {
-    chrome.tabs.sendMessage(background.currentTabId, parameters.request);
-  },
-
-  /**
-   * enhancer.js send the message to hide an element
-   * using a selector. Pass it on to toolbar.js.
-   *
-   * @param {object} parameters request, sender and sendResponse from
-   * processMessage
-   */
-  hideElement: function(parameters) {
-    chrome.tabs.sendMessage(background.currentTabId, parameters.request);
-  },
-
-  /**
-   * The toolbar ui send the message to call abort().
-   * Pass it on to enhancer.js.
-   */
-  callAbort: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {action: "callAbort"});
-  },
-
-  /**
-   * The toolbar ui send the message to call restoreToOriginal().
-   * Pass it on to enhancer.js.
-   */
-  callRestoreToOriginal: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {action: "callRestoreToOriginal"});
-  },
-
-  /**
-   * The toolbar ui send the message to open the options page.
-   */
-  callOpenOptionsPage: function() {
+  openOptionsPage: function() {
     chrome.runtime.openOptionsPage();
   },
 
   /**
-   * The toolbar ui send the message to open the help page.
+   * The content script view-menu.js send the message to open the help page.
    */
   openHelpPage: function() {
     const url = "http://sifnos.sfs.uni-tuebingen.de/VIEW/index.jsp?content=activities";
@@ -315,8 +211,7 @@ const background = {
   /**
    * Send the activity data from enhancer.js to the
    * server for processing.
-   * If successful, request a call of addEnhancementMarkup
-   * in enhancer.js.
+   * If successful, request a call of view.enhancer.addEnhancementMarkup(data).
    *
    * @param {object} parameters request, sender and sendResponse from
    * processMessage
@@ -333,7 +228,7 @@ const background = {
           ajaxTimeout)
         .done(function(data, textStatus, xhr) {
           if (data) {
-            background.callAddEnhancementMarkup(data);
+            background.requestToAddEnhancementMarkup(data);
           } else {
             background.ajaxError(xhr, "nodata");
           }
@@ -346,12 +241,12 @@ const background = {
   },
 
   /**
-   * Send enhancement markup data from the server to enhancer.js so that
-   * the addEnhancementMarkup method there will be called.
+   * Add enhancement markup data from the server by sending a request to the
+   * content script to call view.enhancer.addEnhancementMarkup(data).
    *
    * @param {string} data the html markup to be added to the current page
    */
-  callAddEnhancementMarkup: function(data) {
+  requestToAddEnhancementMarkup: function(data) {
     chrome.tabs.sendMessage(background.currentTabId, {
       action: "addEnhancementMarkup",
       data: data
@@ -359,8 +254,8 @@ const background = {
   },
 
   /**
-   * Send the task data from view.js to the server for processing.
-   * If successful, request to call setTaskId(taskId) in view.js.
+   * Send the task data to the server for processing, get and set
+   * the task id obtained from the server.
    *
    * @param {object} parameters request, sender and sendResponse from
    * processMessage
@@ -407,7 +302,7 @@ const background = {
   /**
    * Send the tracking data to the server for processing.
    * If successful, request to call
-   * showFeedback(submissionResponseData) in feedbacker.js.
+   * view.feedbacker.showFeedback(submissionResponseData).
    *
    * @param {object} parameters request, sender and sendResponse from
    * processMessage
@@ -423,7 +318,7 @@ const background = {
         .done(function(data, textStatus, xhr) {
           if (data) {
             const submissionResponseData = JSON.parse(data);
-            background.callShowFeedback(submissionResponseData);
+            background.requestToShowFeedback(submissionResponseData);
           } else {
             background.ajaxError(xhr, "no-performance-data");
           }
@@ -433,13 +328,13 @@ const background = {
   },
 
   /**
-   * Request to call showFeedback(submissionResponseData)
-   * in feedbacker.js.
+   * Send a request to the content script to call
+   * view.feedbacker.showFeedback(submissionResponseData).
    *
    * @param {Object} submissionResponseData the response from the
    * server after tracking data was processed
    */
-  callShowFeedback: function(submissionResponseData) {
+  requestToShowFeedback: function(submissionResponseData) {
     chrome.tabs.sendMessage(background.currentTabId, {
       action: "showFeedback",
       submissionResponseData: submissionResponseData
@@ -466,8 +361,7 @@ const background = {
   /**
    * Send the request from statistics-menu.js to the
    * server to get all tasks.
-   * If successful, request a call of showAllTasks(data)
-   * in statistics-menu.js.
+   * If successful, request a call of view.statisticsMenu.showAllTasks(data).
    *
    * @param {object} parameters request, sender and sendResponse from
    * processMessage
@@ -480,7 +374,7 @@ const background = {
       ajaxTimeout)
     .done(function(data, textStatus, xhr) {
       if (data) {
-        background.callShowAllTasks(data);
+        background.requestToShowAllTasks(data);
       } else {
         background.ajaxError(xhr, "no-task-data");
       }
@@ -491,12 +385,12 @@ const background = {
   },
 
   /**
-   * Send task data from the server to statistics-menu.js so that
-   * the showAllTasks method there will be called.
+   * Send a request to the content script to call
+   * view.statisticsMenu.showAllTasks(data).
    *
    * @param {string} tasksData data containing all tasks
    */
-  callShowAllTasks: function(tasksData) {
+  requestToShowAllTasks: function(tasksData) {
     chrome.tabs.sendMessage(background.currentTabId, {
       action: "showAllTasks",
       tasksData: tasksData
@@ -506,8 +400,7 @@ const background = {
   /**
    * Send the request from statistics-menu.js to the
    * server to get a list of performances for a task.
-   * If successful, request a call of showTask(data)
-   * in statistics-menu.js.
+   * If successful, request a call of view.statisticsMenu.showTask(data).
    *
    * @param {object} parameters request, sender and sendResponse from
    * processMessage
@@ -520,7 +413,7 @@ const background = {
       ajaxTimeout)
     .done(function(data, textStatus, xhr) {
       if (data) {
-        background.callShowTask(data);
+        background.requestToShowTask(data);
       } else {
         background.ajaxError(xhr, "no-performance-data");
       }
@@ -531,13 +424,13 @@ const background = {
   },
 
   /**
-   * Send task data from the server to statistics-menu.js so that
-   * the showTask method there will be called.
+   * Send a request to the content script to call
+   * view.statisticsMenu.showTask(data).
    *
    * @param {string} performancesData data containing all performances for
    * a task
    */
-  callShowTask: function(performancesData) {
+  requestToShowTask: function(performancesData) {
     chrome.tabs.sendMessage(background.currentTabId, {
       action: "showTask",
       performancesData: performancesData
@@ -554,7 +447,7 @@ const background = {
    * "abort", "nodata" and "parsererror"
    */
   ajaxError: function(xhr, textStatus) {
-    background.callInitialInteractionState();
+    background.requestToCallInitialInteractionState();
 
     if (!xhr || !textStatus) {
       background.createBasicNotification(
@@ -593,7 +486,6 @@ const background = {
           "Timeout!",
           "The VIEW server is taking too long to respond."
         );
-        background.callAbort();
         break;
       case "error":
         switch (xhr.status) {
@@ -646,10 +538,10 @@ const background = {
   },
 
   /**
-   * Send a request to the content script to return to the initial interaction
-   * state.
+   * Send a request to the content script to call
+   * view.toolbar.initialInteractionState().
    */
-  callInitialInteractionState: function() {
+  requestToCallInitialInteractionState: function() {
     chrome.tabs.sendMessage(background.currentTabId, {action: "initialInteractionState"});
   },
 
@@ -675,12 +567,11 @@ const background = {
   processUserIdCookie: function(changeInfo) {
     if (changeInfo.removed) {
       background.signOut();
-      background.callSetAccountInfo();
     }
     else if (changeInfo.cookie.value) {
       background.signIn(changeInfo.cookie.value);
-      background.callSetAccountInfo();
     }
+    background.requestToSetAccountInfo();
   },
 
   /**
@@ -694,16 +585,14 @@ const background = {
       user: "",
       token: "",
       taskId: ""
-    }, function() {
-      chrome.tabs.sendMessage(background.currentTabId, {action: "signOut"});
-    });
+    }, background.requestToSignOut);
   },
 
   /**
-   * Send a request to the content script to call view.accountMenu.setAccountInfo().
+   * Send a request to the content script to call view.toolbar.signOut().
    */
-  callSetAccountInfo: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {action: "callSetAccountInfo"});
+  requestToSignOut: function() {
+    chrome.tabs.sendMessage(background.currentTabId, {action: "signOut"});
   },
 
   /**
@@ -729,17 +618,31 @@ const background = {
       user: user,
       token: authtoken
     }, function() {
-      chrome.tabs.sendMessage(background.currentTabId, {
-        action: "signIn",
-        user: user
-      });
+      background.requestToSignIn(user);
     });
+  },
+
+  /**
+   * Send a request to the content script to call view.toolbar.signIn().
+   */
+  requestToSignIn: function(user) {
+    chrome.tabs.sendMessage(background.currentTabId, {
+      action: "signIn",
+      user: user
+    });
+  },
+
+  /**
+   * Send a request to the content script to call view.accountMenu.setAccountInfo().
+   */
+  requestToSetAccountInfo: function() {
+    chrome.tabs.sendMessage(background.currentTabId, {action: "setAccountInfo"});
   }
 };
 
 /**
  * Handle the browser action button.
- * Initialize topics, if necessary, and toggle the toolbar.
+ * Initialize topics, if necessary, and toggleOrAdd the toolbar.
  *
  * @param {number} tab the tab the toolbar
  * is located at
@@ -754,7 +657,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
     background.setTopics();
   }
   else {
-    background.toggleToolbar();
+    background.requestToToggleOrAddToolbar();
   }
 });
 
