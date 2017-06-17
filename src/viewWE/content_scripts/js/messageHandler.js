@@ -1,3 +1,5 @@
+const view = require('./view.js');
+
 /**
  * Processes all messages received from background.js.
  * Sends requests to backround.js or handles requests here.
