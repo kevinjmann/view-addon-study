@@ -40,5 +40,3 @@ const view = {
     }
   }
 };
-
-chrome.storage.onChanged.addListener(view.setStorageChange);

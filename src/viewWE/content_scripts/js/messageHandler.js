@@ -55,3 +55,4 @@ function processMessage(request) {
 }
 
 chrome.runtime.onMessage.addListener(processMessage);
+chrome.storage.onChanged.addListener(view.setStorageChange);
