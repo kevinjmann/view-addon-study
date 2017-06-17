@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="toolbar.css"/>
-    <script src="../lib/jquery-3.1.1.min.js"></script>
-</head>
-<body>
+<div id="wertiview-toolbar">
 <div id="wertiview-VIEW-menu" class="wertiview-toolbar-dropdown">
     <button id="wertiview-VIEW-menu-btn" class="wertiview-toolbar-btn">VIEW</button>
 </div>
@@ -86,12 +79,10 @@
 <button type="button" id="wertiview-toolbar-enhance-button" class="wertiview-toolbar-btn">Enhance</button>
 <!-- Only displayed when the enhancement finished -->
 <button id="wertiview-toolbar-restore-button" class="wertiview-toolbar-btn">Restore</button>
-<!-- Only displayed during the enhancement (TODO: maybe div element?)-->
-<img id="wertiview-toolbar-loading-image" src="../icons/loading.gif">
+<!-- Only displayed during the enhancement -->
+<div id="wertiview-toolbar-loading"></div>
 <button id="wertiview-toolbar-abort-button" class="wertiview-toolbar-btn">Abort</button>
 <button id="wertiview-toolbar-account-sign-in-button" class="wertiview-toolbar-btn">Sign in</button>
 <button id="wertiview-toolbar-account-menu-button" class="wertiview-toolbar-btn"></button><!-- value to be filled dynamically -->
 <button id="wertiview-toolbar-toggle-button" class="wertiview-toolbar-btn">X</button>
-<script src="toolbar.js"></script>
-</body>
-</html>
+</div>
