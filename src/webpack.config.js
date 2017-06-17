@@ -15,8 +15,9 @@ module.exports = {
     'background/background': path.resolve(source_path, "background.js"),
     'toolbar/toolbar': glob.sync(path.resolve(source_path, "toolbar/toolbar.*")),
     'options/options': glob.sync(path.resolve(source_path, "options/options.*")),
-    'content_scripts/view': [].concat(
-      glob.sync(path.resolve(source_path, "content_scripts/js/**/*.js")),
+    'content_scripts/view': [
+      path.resolve(source_path, "content_scripts/js/messageHandler.js")
+    ].concat(
       glob.sync(path.resolve(source_path, "content_scripts/css/**/*.css"))
     )
   },
