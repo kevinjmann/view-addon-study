@@ -44,8 +44,17 @@ const unitTest = {
       enabled: false, // should the page be enhanced right away?
       language: "unselected",
       topic: "unselected",
-      filter: "unselected",
+      filter: "no-filter",
       activity: "unselected"
     })
+  },
+
+  /**
+   * Set all given items to view.
+   *
+   * @param {object} items the items to set
+   */
+  setViewItems: function(items) {
+    view.setItems(items);
   }
 };
