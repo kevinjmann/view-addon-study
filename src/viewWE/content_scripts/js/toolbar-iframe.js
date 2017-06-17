@@ -1,45 +1,49 @@
-view.toolbarIframe = {
-  /**
-   * Create the toolbar ui toolbar and inject it in the current page.
-   *
-   * @returns the toolbar containing the toolbar
-   */
-  init: function() {
-    const toolbarHTML = chrome.runtime.getURL("toolbar/toolbar.html");
+const $ = require('jquery');
 
-    const $iframe = $("<iframe>");
-    $iframe.attr("id", "view-toolbar-iframe");
-    $iframe.attr("src", toolbarHTML);
+module.exports = function(view) {
+  return {
+    /**
+     * Create the toolbar ui toolbar and inject it in the current page.
+     *
+     * @returns the toolbar containing the toolbar
+     */
+    init: function() {
+      const toolbarHTML = chrome.runtime.getURL("toolbar/toolbar.html");
 
-    const $Body = $("body");
+      const $iframe = $("<iframe>");
+      $iframe.attr("id", "view-toolbar-iframe");
+      $iframe.attr("src", toolbarHTML);
 
-    $("head").append($Body.find("script"));
+      const $Body = $("body");
 
-    view.container.add($Body);
+      $("head").append($Body.find("script"));
 
-    view.VIEWmenu.add();
+      view.container.add($Body);
 
-    view.accountMenu.add();
+      view.VIEWmenu.add();
 
-    view.statisticsMenu.add();
+      view.accountMenu.add();
 
-    view.lib.initOnWindowClick();
+      view.statisticsMenu.add();
 
-    $Body.prepend($iframe);
-  },
+      view.lib.initOnWindowClick();
 
-  /**
-   * Toggle the toolbar directly if it already exists,
-   * initialize it otherwise.
-   * Hide the view menu in case it is still open.
-   */
-  toggle: function() {
-    const toolbar = $("#view-toolbar-iframe");
-    if (toolbar.length) {
-      toolbar.toggle();
-      view.container.adjustMargin();
-    } else {
-      view.setStorageItemsAndInitToolbar();
+      $Body.prepend($iframe);
+    },
+
+    /**
+     * Toggle the toolbar directly if it already exists,
+     * initialize it otherwise.
+     * Hide the view menu in case it is still open.
+     */
+    toggle: function() {
+      const toolbar = $("#view-toolbar-iframe");
+      if (toolbar.length) {
+        toolbar.toggle();
+        view.container.adjustMargin();
+      } else {
+        view.setStorageItemsAndInitToolbar();
+      }
     }
-  }
+  };
 };

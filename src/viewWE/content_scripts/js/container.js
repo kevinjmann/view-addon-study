@@ -1,42 +1,46 @@
-view.container = {
-  /**
-   * Add a container that wraps all children inside the parent element
-   * given the selector of the parent.
-   *
-   * @param {Object} $Element the parent element
-   */
-  add: function($Element) {
-    const $Container = $("<div id='wertiview-container'>");
+const $ = require('jquery');
 
-    let $Content = $("<div id='wertiview-content'>");
+module.exports = function(view) {
+  return {
+    /**
+     * Add a container that wraps all children inside the parent element
+     * given the selector of the parent.
+     *
+     * @param {Object} $Element the parent element
+     */
+    add: function($Element) {
+      const $Container = $("<div id='wertiview-container'>");
 
-    const $OriginalContent = $Element.children();
+      let $Content = $("<div id='wertiview-content'>");
 
-    view.originalContent = $OriginalContent.clone(true);
+      const $OriginalContent = $Element.children();
 
-    $OriginalContent.wrapAll($Content);
+      view.originalContent = $OriginalContent.clone(true);
 
-    $Content = $("#wertiview-content");
+      $OriginalContent.wrapAll($Content);
 
-    $Container.append($Content);
+      $Content = $("#wertiview-content");
 
-    $Element.append($Container);
-  },
+      $Container.append($Content);
 
-  /**
-   * Make some margin at the bottom so that there is place
-   * for the toolbar and the page content can be fully seen.
-   * Remove the margin at the bottom when the toolbar is closed.
-   */
-  adjustMargin: function() {
-    const $Container = $("#wertiview-container");
+      $Element.append($Container);
+    },
 
-    if ($("#view-toolbar-iframe").is(":visible")) {
-      $Container.addClass("margin-at-bottom");
+    /**
+     * Make some margin at the bottom so that there is place
+     * for the toolbar and the page content can be fully seen.
+     * Remove the margin at the bottom when the toolbar is closed.
+     */
+    adjustMargin: function() {
+      const $Container = $("#wertiview-container");
+
+      if ($("#view-toolbar-iframe").is(":visible")) {
+        $Container.addClass("margin-at-bottom");
+      }
+      else {
+        view.enhancer.restoreToOriginal();
+        $Container.removeClass("margin-at-bottom");
+      }
     }
-    else {
-      view.enhancer.restoreToOriginal();
-      $Container.removeClass("margin-at-bottom");
-    }
-  }
+  };
 };

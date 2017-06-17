@@ -1,3 +1,4 @@
+const $ = require('jquery');
 const view = require('./view.js');
 
 /**

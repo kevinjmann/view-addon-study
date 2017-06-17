@@ -1,4 +1,4 @@
-view.assessment = {
+module.exports = {
   PROVIDED_SOLUTION: "Solution was provided",
   EXACT_MATCH: "Perfect solution",
   LOWERCASE_MATCH: "Capitalization error",

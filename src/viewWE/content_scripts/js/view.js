@@ -41,4 +41,30 @@ const view = {
   }
 };
 
+/* VIEW components */
+view.about = require('./about.js');
+view.assessment = require('./assessment.js');
+view.blur = require('./blur.js');
+view.selector = require('./selector.js');
+
+/* VIEW components with dependencies */
+view.accountMenu = require('./account-menu.js')(view);
+view.container = require('./container.js')(view);
+view.enhancer = require('./enhancer.js')(view);
+view.feedbacker = require('./feedbacker.js')(view);
+view.lib = require('./lib.js')(view);
+view.notification = require('./notification.js')(view);
+view.sidebar = require('./sidebar.js')(view);
+view.statisticsMenu = require('./statistics-menu.js')(view);
+view.toolbarIframe = require('./toolbar-iframe.js')(view);
+view.VIEWmenu = require('./view-menu.js')(view);
+
+/* Activities */
+view.activityHelper = require('./activities/activityHelper.js')(view);
+view.click = require('./activities/click.js')(view);
+view.mc = require('./activities/mc.js')(view);
+view.cloze = require('./activities/cloze.js')(view);
+view.color = require('./activities/color.js');
+view.tracker = require('./activities/tracker.js')(view);
+
 module.exports = view;

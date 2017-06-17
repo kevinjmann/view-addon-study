@@ -1,44 +1,48 @@
-view.click = {
-  /**
-   * Run the click activity.
-   */
-  run: function() {
-    const $Enhancements = $("viewenhancement");
+const $ = require('jquery');
 
-    $Enhancements.addClass("click-style-pointer");
+module.exports = function(view) {
+  return {
+    /**
+     * Run the click activity.
+     */
+    run: function() {
+      const $Enhancements = $("viewenhancement");
 
-    view.activityHelper.getNumberOfExercisesAndRequestTaskId("viewenhancement[data-type!='miss'].selected");
+      $Enhancements.addClass("click-style-pointer");
 
-    $Enhancements.on("click", view.click.handler);
-  },
+      view.activityHelper.getNumberOfExercisesAndRequestTaskId("viewenhancement[data-type!='miss'].selected");
 
-  /**
-   * Turn correctly clicked hits green and incorrect ones red.
-   */
-  handler: function() {
-    const timestamp = Date.now();
-    view.activityHelper.setTimestamp(timestamp);
+      $Enhancements.on("click", view.click.handler);
+    },
 
-    let isCorrect = false;
-    const $EnhancementElement = $(this);
-    const usedSolution = false;
+    /**
+     * Turn correctly clicked hits green and incorrect ones red.
+     */
+    handler: function() {
+      const timestamp = Date.now();
+      view.activityHelper.setTimestamp(timestamp);
 
-    if ($EnhancementElement.is("viewenhancement[data-type!='miss'].selected")) {
-      isCorrect = true;
-      $EnhancementElement.addClass("click-style-correct");
-    } else {
-      $EnhancementElement.addClass("click-style-incorrect");
+      let isCorrect = false;
+      const $EnhancementElement = $(this);
+      const usedSolution = false;
+
+      if ($EnhancementElement.is("viewenhancement[data-type!='miss'].selected")) {
+        isCorrect = true;
+        $EnhancementElement.addClass("click-style-correct");
+      } else {
+        $EnhancementElement.addClass("click-style-incorrect");
+      }
+
+      $EnhancementElement.removeClass("click-style-pointer");
+
+      view.tracker.trackData(
+        $EnhancementElement,
+        $EnhancementElement.text(),
+        isCorrect,
+        usedSolution
+      );
+
+      $EnhancementElement.off("click");
     }
-
-    $EnhancementElement.removeClass("click-style-pointer");
-
-    view.tracker.trackData(
-      $EnhancementElement,
-      $EnhancementElement.text(),
-      isCorrect,
-      usedSolution
-    );
-
-    $EnhancementElement.off("click");
-  }
+  };
 };
