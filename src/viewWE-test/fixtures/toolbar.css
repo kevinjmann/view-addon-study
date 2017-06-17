@@ -1,7 +1,6 @@
-body {
-    overflow: hidden;
-    color: black;
+#wertiview-toolbar {
     background: #d6d8db;
+    padding: 6px;
 }
 
 .wertiview-toolbar-menu {
@@ -48,7 +47,11 @@ body {
     background-color: red;
 }
 
-#wertiview-toolbar-loading-image {
+#wertiview-toolbar-loading {
+    display: inline;
+}
+
+#wertiview-toolbar-loading img{
     width: 18px;
 }
 
@@ -66,6 +69,6 @@ body {
 }
 
 #wertiview-toolbar-toggle-button {
-    right: 4px;
+    right: 6px;
     position: absolute;
 }
