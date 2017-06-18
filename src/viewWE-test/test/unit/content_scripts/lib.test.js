@@ -61,46 +61,73 @@ describe("lib.js", function() {
       sinon.assert.calledWith(eventSpy, "click");
     });
 
-    it("should call statisticsMenu.hide() on click, because the target was not the statistics button", function() {
-      const hideSpy = sandbox.spy(view.statisticsMenu, "hide");
+    it("should call VIEWmenu.hide() on click, because the target was not the view menu button", function() {
+      const viewMenuHideSpy = sandbox.spy(view.VIEWmenu, "hide");
 
       view.lib.initOnWindowClick();
 
       $(window).trigger("click");
 
-      sinon.assert.calledOnce(hideSpy);
+      sinon.assert.calledOnce(viewMenuHideSpy);
+    });
+
+    it("should not call VIEWmenu.hide() on click, because the target was the view menu button", function() {
+      const viewMenuHideSpy = sandbox.spy(view.VIEWmenu, "hide");
+      const viewMenuButtonId = "wertiview-VIEW-menu-btn";
+
+      $("body").append("<div>").attr("id", viewMenuButtonId);
+
+      view.lib.initOnWindowClick();
+
+      $("#" + viewMenuButtonId).trigger("click");
+
+      sinon.assert.notCalled(viewMenuHideSpy);
+    });
+
+    it("should call accountMenu.hide() on click, because the target was not the account menu button", function() {
+      const accountMenuHideSpy = sandbox.spy(view.accountMenu, "hide");
+
+      view.lib.initOnWindowClick();
+
+      $(window).trigger("click");
+
+      sinon.assert.calledOnce(accountMenuHideSpy);
+    });
+
+    it("should not call statisticsMenu.hide() on click, because the target was the account menu button", function() {
+      const accountMenuHideSpy = sandbox.spy(view.accountMenu, "hide");
+      const accountMenuButtonIdSelector = view.toolbar.selectorStart + "account-menu-button";
+
+      $("body").append("<div>").attr("id", accountMenuButtonIdSelector.substring(1));
+
+      view.lib.initOnWindowClick();
+
+      $(accountMenuButtonIdSelector).trigger("click");
+
+      sinon.assert.notCalled(accountMenuHideSpy);
+    });
+
+    it("should call statisticsMenu.hide() on click, because the target was not the statistics button", function() {
+      const statisticsMenuHideSpy = sandbox.spy(view.statisticsMenu, "hide");
+
+      view.lib.initOnWindowClick();
+
+      $(window).trigger("click");
+
+      sinon.assert.calledOnce(statisticsMenuHideSpy);
     });
 
     it("should not call statisticsMenu.hide() on click, because the target was the statistics button", function() {
-      const hideSpy = sandbox.spy(view.statisticsMenu, "hide");
+      const statisticsMenuHideSpy = sandbox.spy(view.statisticsMenu, "hide");
+      const staisticsButtonIdSelector = view.accountMenu.selectorStart + "statistics";
 
-      $("body").append("<div>").attr("id", view.accountMenu.selectorStart.substr(1) + "statistics");
-
-      view.lib.initOnWindowClick();
-
-      $(view.accountMenu.selectorStart + "statistics").trigger("click");
-
-      sinon.assert.notCalled(hideSpy);
-    });
-
-    it("should call VIEWmenu.hide() on click", function() {
-      const hideSpy = sandbox.spy(view.VIEWmenu, "hide");
+      $("body").append("<div>").attr("id", staisticsButtonIdSelector.substr(1));
 
       view.lib.initOnWindowClick();
 
-      $(window).trigger("click");
+      $(staisticsButtonIdSelector).trigger("click");
 
-      sinon.assert.calledOnce(hideSpy);
-    });
-
-    it("should call accountMenu.hide() on click", function() {
-      const hideSpy = sandbox.spy(view.accountMenu, "hide");
-
-      view.lib.initOnWindowClick();
-
-      $(window).trigger("click");
-
-      sinon.assert.calledOnce(hideSpy);
+      sinon.assert.notCalled(statisticsMenuHideSpy);
     });
 
     it("should call lib.removeDialog($Dialog) on click, as the dialog was not clicked", function() {
