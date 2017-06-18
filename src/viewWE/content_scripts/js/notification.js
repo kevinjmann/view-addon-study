@@ -103,15 +103,13 @@ view.notification = {
     $("#wertiview-inst-notification").remove();
   },
 
-  clickToRemoveInstNotification: function(event) {
+  clickToRemoveInstNotification: function() {
     if ($("#wertiview-inst-check-dontagain").is(":checked")) {
       chrome.storage.local.set({
         showInst: false
       });
     }
 
-    $("#wertiview-inst-notification").hide(0, function() {
-      $(this).remove();
-    });
+    view.notification.removeInst();
   }
 };
