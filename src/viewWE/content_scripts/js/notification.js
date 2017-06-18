@@ -29,8 +29,8 @@ view.notification = {
     view.notification.remove();
   },
 
-  /*
-   * The notification dialog gets removed.
+  /**
+   * The notification gets removed.
    */
   remove: function() {
     $("#wertiview-notification-message").hide("fast");
@@ -94,6 +94,13 @@ view.notification = {
     $("#wertiview-inst-notification").show("50");
 
     $("body").on("click", "#wertiview-inst-click-ok", view.notification.clickToRemoveInstNotification);
+  },
+
+  /**
+   * The instruction notification gets removed.
+   */
+  removeInst: function() {
+    $("#wertiview-inst-notification").remove();
   },
 
   clickToRemoveInstNotification: function(event) {
