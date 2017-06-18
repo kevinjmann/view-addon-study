@@ -11,32 +11,28 @@ describe("view.js", function() {
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
-    sandbox.stub($.fn, "load").yields();
   });
 
   afterEach(function() {
     sandbox.restore();
-    chrome.runtime.sendMessage.reset();
     chrome.storage.local.get.reset();
-    chrome.storage.local.set.reset();
     view.item1 = "";
     view.item2 = "";
-
-    $("#view-toolbar-iframe").remove();
   });
 
-  describe("setStorageItemsAndInitToolbar", function() {
+  describe("setStorageItemsAndAddToolbar", function() {
     it("should call setItems(storageItems)", function() {
-      const setItemsSpy = sandbox.spy(view, "setItems");
+      const setItemsStub = sandbox.stub(view, "setItems");
+      sandbox.stub(view.toolbar, "add");
 
       const storageItems = {};
 
       chrome.storage.local.get.yields(storageItems);
 
-      view.setStorageItemsAndInitToolbar();
+      view.setStorageItemsAndAddToolbar();
 
-      sinon.assert.calledOnce(setItemsSpy);
-      sinon.assert.calledWithExactly(setItemsSpy, storageItems);
+      sinon.assert.calledOnce(setItemsStub);
+      sinon.assert.calledWithExactly(setItemsStub, storageItems);
     });
 
     it("should set the given items to view", function() {
@@ -50,14 +46,14 @@ describe("view.js", function() {
       expect(view.item2).to.equal(item2);
     });
 
-    it("should call view.toolbarIframe.init()", function() {
-      const toolbarIframeInitSpy = sandbox.spy(view.toolbarIframe, "init");
+    it("should call view.toolbar.add()", function() {
+      const toolbarAddStub = sandbox.stub(view.toolbar, "add");
 
       chrome.storage.local.get.yields({});
 
-      view.setStorageItemsAndInitToolbar();
+      view.setStorageItemsAndAddToolbar();
 
-      sinon.assert.calledOnce(toolbarIframeInitSpy);
+      sinon.assert.calledOnce(toolbarAddStub);
     });
   });
 
