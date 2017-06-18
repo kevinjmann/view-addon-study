@@ -4,32 +4,11 @@
  */
 function processMessage(request) {
   switch (request.action) {
-    case "toggleToolbar":
-      view.toolbarIframe.toggle();
+    case "toggleOrAddToolbar":
+      view.toolbar.toggleOrAdd();
       break;
-    case "toggleVIEWMenu":
-      view.VIEWmenu.toggle();
-      break;
-    case "hideVIEWMenu":
-      view.VIEWmenu.hide();
-      break;
-    case "toggleAccountMenu":
-      view.accountMenu.toggle();
-      break;
-    case "hideAccountMenu":
-      view.accountMenu.hide();
-      break;
-    case "callSetAccountInfo":
+    case "setAccountInfo":
       view.accountMenu.setAccountInfo();
-      break;
-    case "hideStatisticsMenu":
-      view.statisticsMenu.hide();
-      break;
-    case "removeFeedbackDialog":
-      view.lib.removeDialog($("#view-feedback-dialog"));
-      break;
-    case "callEnhance":
-      view.enhancer.enhance();
       break;
     case "initialInteractionState":
       view.enhancer.initialInteractionState();
@@ -46,11 +25,11 @@ function processMessage(request) {
     case "showTask":
       view.statisticsMenu.showTask(request.performancesData);
       break;
-    case "callAbort":
-      view.enhancer.abort();
+    case "signIn":
+      view.toolbar.signIn(request.user);
       break;
-    case "callRestoreToOriginal":
-      view.enhancer.restoreToOriginal();
+    case "signOut":
+      view.toolbar.signOut();
   }
 }
 
