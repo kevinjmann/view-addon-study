@@ -2,13 +2,14 @@ view.VIEWmenu = {
   selectorStart : "#view-VIEW-menu-",
 
   add: function() {
-    const viewMenuHTML = chrome.extension.getURL("content_scripts/html/view-menu.html");
+    const viewMenuHTML = chrome.runtime.getURL("content_scripts/html/view-menu.html");
 
     const $ViewMenu = $("<div>");
+    $ViewMenu.attr("id", "view-VIEW-menu-container");
 
     $ViewMenu.load(viewMenuHTML, view.VIEWmenu.init);
 
-    $("body").prepend($ViewMenu);
+    $("body").append($ViewMenu);
   },
 
   /**
@@ -34,14 +35,14 @@ view.VIEWmenu = {
    */
   initOpenOptionsPageHandler: function() {
     $(view.VIEWmenu.selectorStart + "options").on("click",
-      view.VIEWmenu.requestToCallOpenOptionsPage);
+      view.VIEWmenu.requestToOpenOptionsPage);
   },
 
   /**
    * Send a request to the background script to call openOptionsPage().
    */
-  requestToCallOpenOptionsPage: function() {
-    chrome.runtime.sendMessage({action: "callOpenOptionsPage"});
+  requestToOpenOptionsPage: function() {
+    chrome.runtime.sendMessage({action: "openOptionsPage"});
   },
 
   /**

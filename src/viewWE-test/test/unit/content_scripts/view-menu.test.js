@@ -38,22 +38,22 @@ describe("view-menu.js", function() {
   });
 
   describe("add", function() {
-    it("should get the url for the view menu, call init() and prepend(viewMenu)", function() {
+    it("should get the url for the view menu, call init() and append(viewMenu)", function() {
       const selectorSpy = sandbox.spy($.fn, "find");
-      const prependSpy = sandbox.spy($.fn, "prepend");
+      const appendSpy = sandbox.spy($.fn, "append");
       const initSpy = sandbox.spy(view.VIEWmenu, "init");
 
       view.VIEWmenu.add();
 
-      sinon.assert.calledOnce(chrome.extension.getURL);
-      sinon.assert.calledWithExactly(chrome.extension.getURL, "content_scripts/html/view-menu.html");
+      sinon.assert.calledOnce(chrome.runtime.getURL);
+      sinon.assert.calledWithExactly(chrome.runtime.getURL, "content_scripts/html/view-menu.html");
 
       sinon.assert.calledOnce(initSpy);
 
       sinon.assert.calledOnce(selectorSpy);
       sinon.assert.calledWithExactly(selectorSpy, "body");
 
-      sinon.assert.calledOnce(prependSpy);
+      sinon.assert.calledOnce(appendSpy);
     });
 
     describe("init", function() {
@@ -83,8 +83,8 @@ describe("view-menu.js", function() {
           sinon.assert.calledWith(eventSpy, "click");
         });
 
-        it("should call requestToCallOpenOptionsPage() on click", function() {
-          const requestToCallOpenOptionsPageSpy = sandbox.spy(view.VIEWmenu, "requestToCallOpenOptionsPage");
+        it("should call requestToOpenOptionsPage() on click", function() {
+          const requestToCallOpenOptionsPageSpy = sandbox.spy(view.VIEWmenu, "requestToOpenOptionsPage");
 
           view.VIEWmenu.initOpenOptionsPageHandler();
 
@@ -94,10 +94,10 @@ describe("view-menu.js", function() {
         });
 
         it("should send a request to call openOptionsPage()", function() {
-          view.VIEWmenu.requestToCallOpenOptionsPage();
+          view.VIEWmenu.requestToOpenOptionsPage();
 
           sinon.assert.calledOnce(chrome.runtime.sendMessage);
-          sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "callOpenOptionsPage"});
+          sinon.assert.calledWith(chrome.runtime.sendMessage, {action: "openOptionsPage"});
         });
       });
 
