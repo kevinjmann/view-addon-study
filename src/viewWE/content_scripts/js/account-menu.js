@@ -2,9 +2,10 @@ view.accountMenu = {
   selectorStart : "#view-account-menu-",
 
   add: function() {
-    const accountHTML = chrome.extension.getURL("content_scripts/html/account-menu.html");
+    const accountHTML = chrome.runtime.getURL("content_scripts/html/account-menu.html");
 
     const $Account = $("<div>");
+    $Account.attr("id", "view-account-menu-container");
 
     $Account.load(accountHTML, view.accountMenu.init);
 
