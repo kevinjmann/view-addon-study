@@ -17,7 +17,7 @@ view.enhancer = {
       view.enhancer.constructInstruction();
     }
 
-    $("#wertiview-toolbar-abort-button").show();
+    view.toolbar.$cache.get(view.toolbar.selectorStart + "abort-button").show();
 
     const activityData = view.enhancer.createActivityData();
 
@@ -32,12 +32,12 @@ view.enhancer = {
     if($("viewenhancement").length){
       $("#wertiview-content").html(view.originalContent);
 
-      $("#wertiview-toolbar-restore-button").hide();
+      view.toolbar.hideRestoreButton();
 
       view.notification.remove();
       view.blur.remove();
 
-      $("#wertiview-inst-notification").remove();
+      view.notification.removeInst();
     }
   },
 
@@ -107,14 +107,14 @@ view.enhancer = {
       view.enhancer.isAborted = false;
     }
     else{
-      $("#wertiview-toolbar-abort-button").hide();
+      view.toolbar.hideAbortButton();
 
       $("#wertiview-content").html(enhancementMarkup);
 
       view.selector.select(view.filter);
       view.enhancer.runActivity();
       view.toolbar.initialInteractionState();
-      $("#wertiview-toolbar-restore-button").show();
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "restore-button").show();
       view.enhancer.loadDebuggingOptions();
     }
   },
