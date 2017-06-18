@@ -31,7 +31,7 @@ view.container = {
   adjustMargin: function() {
     const $Container = $("#wertiview-container");
 
-    if ($("#view-toolbar-iframe").is(":visible")) {
+    if ($("#wertiview-toolbar-container").is(":visible")) {
       $Container.addClass("margin-at-bottom");
     }
     else {
