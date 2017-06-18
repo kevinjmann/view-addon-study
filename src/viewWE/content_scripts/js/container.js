@@ -1,43 +1,47 @@
-view.container = {
-  /**
-   * Add a container that wraps all children inside the parent element
-   * given the selector of the parent.
-   *
-   * @param {Object} $Element the parent element
-   */
-  add: function($Element) {
-    const $Container = $("<div id='wertiview-container'>");
+const $ = require('jquery');
 
-    let $Content = $("<div id='wertiview-content'>");
+module.exports = function(view) {
+  return {
+    /**
+     * Add a container that wraps all children inside the parent element
+     * given the selector of the parent.
+     *
+     * @param {Object} $Element the parent element
+     */
+    add: function($Element) {
+      const $Container = $("<div id='wertiview-container'>");
 
-    const $OriginalContent = $Element.children();
+      let $Content = $("<div id='wertiview-content'>");
 
-    view.originalContent = $OriginalContent.clone(true);
+      const $OriginalContent = $Element.children();
 
-    $OriginalContent.wrapAll($Content);
+      view.originalContent = $OriginalContent.clone(true);
 
-    $Content = $("#wertiview-content");
+      $OriginalContent.wrapAll($Content);
 
-    $Container.append($Content);
+      $Content = $("#wertiview-content");
 
-    $Element.append($Container);
-  },
+      $Container.append($Content);
 
-  /**
-   * Make some margin at the bottom so that there is place
-   * for the toolbar and the page content can be fully seen.
-   * Remove the margin at the bottom when the toolbar is closed.
-   */
-  adjustMargin: function() {
-    const $Container = $("#wertiview-container");
-    const marginClass = "margin-at-bottom";
+      $Element.append($Container);
+    },
 
-    if ($Container.hasClass(marginClass)) {
-      view.enhancer.restoreToOriginal();
-      $Container.removeClass(marginClass);
+    /**
+     * Make some margin at the bottom so that there is place
+     * for the toolbar and the page content can be fully seen.
+     * Remove the margin at the bottom when the toolbar is closed.
+     */
+    adjustMargin: function() {
+      const $Container = $("#wertiview-container");
+      const marginClass = "margin-at-bottom";
+
+      if ($Container.hasClass(marginClass)) {
+        view.enhancer.restoreToOriginal();
+        $Container.removeClass(marginClass);
+      }
+      else {
+        $Container.addClass(marginClass);
+      }
     }
-    else {
-      $Container.addClass(marginClass);
-    }
-  }
+  };
 };

@@ -1,6 +1,7 @@
+const $ = require('jquery');
 const aboutDialogContent = require('../html/about.html');
 
-view.about = {
+module.exports = {
   /**
    * The extension send the message to open the about dialog.
    * Create it with "about.html" and insert the image "view-128.png".

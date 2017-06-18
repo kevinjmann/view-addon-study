@@ -1,3 +1,6 @@
+const $ = require('jquery');
+const toolbarHTML = require('../html/toolbar.html');
+
 /**
  * From: https://gist.github.com/jtsternberg/1e03f5fd5be8427170c5
  * Caches jquery selectors when they are requested, so that each element
@@ -25,577 +28,595 @@ function Selector_Cache() {
   return {get: get_from_cache};
 }
 
-view.toolbar = {
-  activitySelectors: {},
+module.exports = function(view) {
+  return {
+    activitySelectors: {},
 
-  $cache: new Selector_Cache(),
+    $cache: new Selector_Cache(),
 
-  selectorStart: "#wertiview-toolbar-",
+    selectorStart: "#wertiview-toolbar-",
 
-  /**
-   * Create the toolbar ui and add it to the body.
-   */
-  add: function() {
-    const toolbarHTML = chrome.runtime.getURL("content_scripts/html/toolbar.html");
+    /**
+     * Create the toolbar ui and add it to the body.
+     */
+    add: function() {
+      const toolbarHTML = chrome.runtime.getURL("content_scripts/html/toolbar.html");
 
-    const $Toolbar = $("<div>");
-    $Toolbar.attr("id", "wertiview-toolbar-container");
+      const $Toolbar = $("<div>");
+      $Toolbar.attr("id", "wertiview-toolbar-container");
 
-    const $Body = $("body");
+      const $Body = $("body");
 
-    $Toolbar.load(toolbarHTML, view.toolbar.init);
+      $Toolbar.load(toolbarHTML, view.toolbar.init);
 
-    $("head").append($Body.find("script"));
+      $("head").append($Body.find("script"));
 
-    view.container.add($Body);
+      view.container.add($Body);
 
-    view.VIEWmenu.add();
+      view.VIEWmenu.add();
 
-    view.accountMenu.add();
+      view.accountMenu.add();
 
-    view.statisticsMenu.add();
+      view.statisticsMenu.add();
 
-    view.lib.initOnWindowClick();
+      view.lib.initOnWindowClick();
 
-    $Body.append($Toolbar);
-  },
+      $Body.append($Toolbar);
+    },
 
-  /**
-   * Toggle the toolbar directly if it already exists,
-   * set storage items and add it otherwise.
-   */
-  toggleOrAdd: function() {
-    if (view.toolbarExists) {
-      view.toolbar.toggle();
-    } else {
-      view.setStorageItemsAndAddToolbar();
-      view.toolbarExists = true;
-    }
-  },
-
-  /**
-   * Toggle the toolbar.
-   */
-  toggle: function() {
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "container").toggle();
-    view.container.adjustMargin();
-  },
-
-  /**
-   * Initialization of the toolbar and active event handlers on the toolbar.
-   */
-  init: function() {
-    view.toolbar.initViewMenuBtn();
-
-    view.toolbar.initAutoEnhance();
-
-    view.toolbar.initLanguageMenu();
-
-    view.toolbar.initTopicMenu();
-
-    view.toolbar.initFilterAndActivityMenu();
-
-    view.toolbar.initActivitySelectors();
-
-    view.toolbar.initialInteractionState();
-
-    view.toolbar.initEnhanceBtn();
-
-    view.toolbar.initAbortBtn();
-
-    view.toolbar.initRestoreBtn();
-
-    view.toolbar.initLoadingImage();
-
-    view.toolbar.initSignInBtn();
-
-    view.toolbar.initAccountMenuBtn();
-
-    view.toolbar.initToggleToolbarBtn();
-
-    view.toolbar.restoreSelections();
-
-    view.toolbar.toggle();
-  },
-
-  /**
-   * Init the view menu handler.
-   */
-  initViewMenuBtn: function() {
-    view.toolbar.$cache.get("#wertiview-VIEW-menu-btn").on("click",
-      view.VIEWmenu.toggle);
-  },
-
-  /**
-   * Init the handler for the auto enhance enabled/disabled buttons.
-   * A click on the enabled button will hide it and show the disabled button
-   * and vice versa.
-   */
-  initAutoEnhance: function() {
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "enabled").on("click",
-      view.toolbar.turnOffAutoEnhanceAndSet);
-
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "disabled").on("click",
-      view.toolbar.turnOnAutoEnhanceAndSet);
-  },
-
-  /**
-   * Turn off auto enhance and set enabled to "false".
-   */
-  turnOffAutoEnhanceAndSet: function() {
-    view.toolbar.turnOffAutoEnhance();
-    chrome.storage.local.set({enabled: false});
-  },
-
-  /**
-   * Turn off auto enhance by hiding the enabled button
-   * and showing the disabled button.
-   */
-  turnOffAutoEnhance: function() {
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "enabled").hide();
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "disabled").show();
-  },
-
-  /**
-   * Turn on auto enhance and set enabled to "true".
-   */
-  turnOnAutoEnhanceAndSet: function() {
-    view.toolbar.turnOnAutoEnhance();
-    chrome.storage.local.set({enabled: true});
-  },
-
-  /**
-   * Turn on auto enhance by hiding the disabled button
-   * and showing the enabled button.
-   */
-  turnOnAutoEnhance: function() {
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "disabled").hide();
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "enabled").show();
-  },
-
-  /**
-   * Init the handler for the language menu selection box.
-   * Select the topic menu according to the language on change.
-   */
-  initLanguageMenu: function() {
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "language-menu").on("change", function() {
-      view.toolbar.selectTopicMenu($(this).val());
-    });
-  },
-
-  /**
-   * Select the topic menu according to the language option.
-   * Hide all other topic menus.
-   *
-   * @param {string} selectedLanguage the language selected by the user
-   */
-  selectTopicMenu: function(selectedLanguage) {
-    const $topicMenu = view.toolbar.$cache.get(view.toolbar.selectorStart + "topic-menu-" + selectedLanguage);
-    const selectedTopicMenu = "selected-toolbar-topic-menu";
-
-    $(".wertiview-topic-menu").removeClass(selectedTopicMenu).hide();
-
-    $topicMenu.addClass(selectedTopicMenu).show();
-
-    const topic = $topicMenu.val();
-
-    view.toolbar.checkForFilters(selectedLanguage, topic);
-    view.toolbar.updateActivities(selectedLanguage, topic);
-  },
-
-  /**
-   * Check if filters are available for the topic and language selection.
-   *
-   * @param {string} language the current language
-   * @param {string} topic the current topic
-   */
-  checkForFilters: function(language, topic) {
-    const $FilterMenu = view.toolbar.$cache.get(view.toolbar.selectorStart + "filter-menu");
-
-    $FilterMenu.hide();
-    $FilterMenu.val("no-filter");
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "filter-unselected").next().nextAll().remove();
-
-    if(view.topics[topic] &&
-      view.topics[topic][language]){
-      const filters = view.topics[topic][language].filters;
-
-      if(filters){
-        view.toolbar.showFilterMenu(filters);
+    /**
+     * Toggle the toolbar directly if it already exists,
+     * set storage items and add it otherwise.
+     */
+    toggleOrAdd: function() {
+      if (view.toolbarExists) {
+        view.toolbar.toggle();
+      } else {
+        view.setStorageItemsAndAddToolbar();
+        view.toolbarExists = true;
       }
-    }
-  },
+    },
 
-  /**
-   * Show the filter menu with the filters defined for the topic.
-   *
-   * @param {Object} filters the available filters for the topic
-   */
-  showFilterMenu: function(filters) {
-    const $FilterMenu = view.toolbar.$cache.get(view.toolbar.selectorStart + "filter-menu");
+    /**
+     * Toggle the toolbar.
+     */
+    toggle: function() {
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "container").toggle();
+      view.container.adjustMargin();
+    },
 
-    $FilterMenu.val("unselected");
+    /**
+     * Initialization of the toolbar and active event handlers on the toolbar.
+     */
+    init: function() {
+      view.toolbar.initViewMenuBtn();
 
-    view.toolbar.addFilterOptions(filters, $FilterMenu);
+      view.toolbar.initAutoEnhance();
 
-    $FilterMenu.show();
-  },
+      view.toolbar.initLanguageMenu();
 
-  /**
-   * Add filter options to the filter menu.
-   *
-   * @param {Object} filters the available filters for the topic
-   * @param {Object} $FilterMenu the filter menu the options are added to
-   */
-  addFilterOptions: function(filters, $FilterMenu) {
-    $.each(filters, function(filter) {
-      const filterObject = filters[filter];
-      const $Option = $("<option>");
+      view.toolbar.initTopicMenu();
 
-      $Option.attr("id", filterObject.id);
-      $Option.val(filterObject.val);
-      $Option.text(filterObject.text);
+      view.toolbar.initFilterAndActivityMenu();
 
-      $FilterMenu.append($Option);
-    });
-  },
+      view.toolbar.initActivitySelectors();
 
-  /**
-   * Update activities when the topic is changed. Enable activities available
-   * to the topic and disable the ones that aren't.
-   * Activity "Pick an Activity" is always enabled, selected and visible.
-   *
-   * @param language the current language
-   * @param topic the current topic
-   */
-  updateActivities: function(language, topic) {
-    const unselected = "unselected";
-    const $ActivityMenu = view.toolbar.$cache.get(view.toolbar.selectorStart + "activity-menu");
+      view.toolbar.initialInteractionState();
 
-    $ActivityMenu.children().remove();
+      view.toolbar.initEnhanceBtn();
 
-    $ActivityMenu.append(view.toolbar.activitySelectors[unselected]);
+      view.toolbar.initAbortBtn();
 
-    if(
-      language !== unselected &&
-      !topic.startsWith(unselected) &&
-      view.topics[topic] &&
-      view.topics[topic][language]){
-      view.toolbar.enableAndShowActivities(language, topic);
-    }
+      view.toolbar.initRestoreBtn();
 
-    view.toolbar.toggleEnhanceButton();
-  },
+      view.toolbar.initLoadingImage();
 
-  /**
-   * Toggle the enhance button depending on activity selection
-   * and eventually filter selection.
-   */
-  toggleEnhanceButton: function() {
-    const $EnhanceButton = view.toolbar.$cache.get(view.toolbar.selectorStart + "enhance-button");
+      view.toolbar.initSignInBtn();
 
-    if(view.toolbar.$cache.get(view.toolbar.selectorStart + "filter-menu").val() === "unselected" ||
-      view.toolbar.$cache.get(view.toolbar.selectorStart + "activity-menu").val() === "unselected"){
-      $EnhanceButton.prop("disabled", true);
-    }
-    else{
-      $EnhanceButton.prop("disabled", false);
-    }
-  },
+      view.toolbar.initAccountMenuBtn();
 
-  /**
-   * Enable and show only activities that are available for the language and
-   * topic combination. Show the horizontal separator.
-   *
-   * @param {string} language the selected language
-   * @param {string} topic the selected topic
-   */
-  enableAndShowActivities: function(language, topic) {
-    const $ActivityMenu = view.toolbar.$cache.get(view.toolbar.selectorStart + "activity-menu");
-    const activitySelectors = view.toolbar.activitySelectors;
-    const availableActivities = view.topics[topic][language].activities;
+      view.toolbar.initToggleToolbarBtn();
 
-    $ActivityMenu.append(activitySelectors["splitter"]);
+      view.toolbar.restoreSelections();
 
-    $.each(availableActivities, function(activity) {
-      $ActivityMenu.append(activitySelectors[activity]);
-    });
+      view.toolbar.toggle();
+    },
 
-    $ActivityMenu.val("unselected");
-  },
+    /**
+     * Init the view menu handler.
+     */
+    initViewMenuBtn: function() {
+      view.toolbar.$cache.get("#wertiview-VIEW-menu-btn").on(
+        "click",
+        view.VIEWmenu.toggle
+      );
+    },
 
-  /**
-   * Init the handler for the topic menu selection box.
-   * Update the activities according to language and topic on change.
-   */
-  initTopicMenu: function() {
-    view.toolbar.$cache.get(
-      view.toolbar.selectorStart + "topic-menu-unselected, " +
-      view.toolbar.selectorStart + "topic-menu-en, " +
-      view.toolbar.selectorStart + "topic-menu-de, " +
-      view.toolbar.selectorStart + "topic-menu-es, " +
-      view.toolbar.selectorStart + "topic-menu-ru").on("change", function() {
-      const language = view.toolbar.$cache.get(view.toolbar.selectorStart + "language-menu").val();
-      const topic = $(this).val();
+    /**
+     * Init the handler for the auto enhance enabled/disabled buttons.
+     * A click on the enabled button will hide it and show the disabled button
+     * and vice versa.
+     */
+    initAutoEnhance: function() {
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "enabled").on(
+        "click",
+        view.toolbar.turnOffAutoEnhanceAndSet
+      );
 
-      view.toolbar.checkForFilters(language, topic);
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "disabled").on(
+        "click",
+        view.toolbar.turnOnAutoEnhanceAndSet
+      );
+    },
 
-      view.toolbar.updateActivities(language, topic);
-    });
-  },
-
-  /**
-   * Initialize the filter and activity menu handler.
-   */
-  initFilterAndActivityMenu: function() {
-    view.toolbar.$cache.get(
-      view.toolbar.selectorStart + "filter-menu, " +
-      view.toolbar.selectorStart + "activity-menu").on("change",
-      view.toolbar.toggleEnhanceButton
-    );
-  },
-
-  /**
-   * Init all activity selectors in order to retrieve
-   * the proper activity options for a topic.
-   */
-  initActivitySelectors: function() {
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "activity-menu").find("option").each(function() {
-      const $ActivityOption = $(this);
-
-      view.toolbar.activitySelectors[$ActivityOption.val()] = $ActivityOption;
-    });
-  },
-
-  /**
-   * Returns to initial interaction state, where the loading image, abort
-   * and restore button are hidden and the enhance button is enabled.
-   * Blur overlay is removed.
-   */
-  initialInteractionState: function() {
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "enhance-button").show();
-    view.toolbar.hideRestoreButton();
-    view.toolbar.hideAbortButton();
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "loading").hide();
-    view.blur.remove();
-  },
-
-  /**
-   * Hide the restore button.
-   */
-  hideRestoreButton: function() {
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "restore-button").hide();
-  },
-
-  /**
-   * Hide the abort button.
-   */
-  hideAbortButton: function() {
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "abort-button").hide();
-  },
-
-  /**
-   * Init the handler for the enhance button.
-   */
-  initEnhanceBtn: function() {
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "enhance-button").on("click",
-      view.toolbar.setSelectionsPrepareAndEnhance);
-  },
-
-  /**
-   * Set language, topic, activity and timestamp if none of the activities
-   * are "unselected".
-   * Afterwards prepare to enhance the page.
-   */
-  setSelectionsPrepareAndEnhance: function() {
-    const timestamp = Date.now();
-    const language = view.toolbar.$cache.get(view.toolbar.selectorStart + "language-menu").val();
-    const topic = $(".selected-toolbar-topic-menu").val();
-    const filter = view.toolbar.$cache.get(view.toolbar.selectorStart + "filter-menu").val();
-    const activity = view.toolbar.$cache.get(view.toolbar.selectorStart + "activity-menu").val();
-
-    chrome.storage.local.set({
-      language: language,
-      topic: topic,
-      filter: filter,
-      activity: activity,
-      timestamp: timestamp
-    }, view.toolbar.prepareAndEnhance);
-  },
-
-  /**
-   * Prepare buttons and loading image, then start the enhancement.
-   */
-  prepareAndEnhance: function() {
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "enhance-button").hide();
-    view.toolbar.hideRestoreButton();
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "loading").show();
-
-    view.enhancer.enhance();
-  },
-
-  /**
-   * Init the handler for the abort button.
-   */
-  initAbortBtn: function() {
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "abort-button").on("click",
-      view.enhancer.abort);
-  },
-
-  /**
-   * Init the handler for the restore button.
-   */
-  initRestoreBtn: function() {
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "restore-button").on("click",
-      view.enhancer.restoreToOriginal);
-  },
-
-  /**
-   * Init the loading image.
-   */
-  initLoadingImage: function() {
-    const loadingGif = chrome.runtime.getURL("icons/loading.gif");
-    const $LoadingImg = $("<img>").attr("src", loadingGif);
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "loading").append($LoadingImg);
-  },
-
-  /**
-   * Init the handler for the sign in button.
-   */
-  initSignInBtn: function() {
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "account-sign-in-button").on("click",
-      view.toolbar.openSignInWindow);
-  },
-
-  /**
-   * Open the authenticator sign in window.
-   */
-  openSignInWindow: function() {
-    const signInWindow = window.open("", "", "width=985,height=735");
-    view.toolbar.assignHrefAndFocus(
-      signInWindow,
-      view.authenticator + "?action=sign-in"
-    );
-  },
-
-  /**
-   * Assign the authenticator to the href attribute of the given window
-   * and focus on it.
-   *
-   * @param {object} myWindow the window we assign the href attribute of
-   * @param {string} authenticatorLink the value to be assigned
-   */
-  assignHrefAndFocus: function(myWindow, authenticatorLink) {
-    myWindow.location.href = authenticatorLink;
-    myWindow.focus();
-  },
-
-  /**
-   * Init the handler for the account menu button.
-   */
-  initAccountMenuBtn: function() {
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "account-menu-button").on("click",
-      view.accountMenu.toggle);
-  },
-
-  /**
-   * Init the handler for the "X" button.
-   */
-  initToggleToolbarBtn: function() {
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "toggle-button").on("click", view.toolbar.toggle);
-  },
-
-  /**
-   * Restores all selections from language, topic, filter and activity.
-   * Restore auto-run option (enabled/disabled).
-   */
-  restoreSelections: function() {
-    view.toolbar.restoreSelectionMenus();
-
-    view.toolbar.toggleEnhanceButton();
-
-    view.toolbar.verifySignInStatus();
-
-    view.toolbar.restoreAutoEnhance();
-  },
-
-  /**
-   * Restore all selections of the selection menus.
-   */
-  restoreSelectionMenus: function() {
-    const selected = "selected";
-    const language = view.language;
-    const topic = view.topic;
-
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "language-" + language).prop(selected, true);
-
-    const topicMenu = view.toolbar.selectorStart + "topic-" + topic;
-
-    // special case Dets and Preps are shared between en, de and es
-    if(topic === "determiners" || topic === "Preps"){
-      view.toolbar.$cache.get(topicMenu + "-" + language).prop(selected, true);
-    }
-    else{
-      view.toolbar.$cache.get(topicMenu).prop(selected, true);
-    }
-
-    view.toolbar.selectTopicMenu(language);
-
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "filter-" + view.filter).prop(selected, true);
-
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "activity-" + view.activity).prop(selected, true);
-  },
-
-  /**
-   * The user will be signed in/out according to the value of the
-   * stored user.
-   */
-  verifySignInStatus: function() {
-    const user = view.user;
-
-    if(!user){
-      view.toolbar.signOut()
-    }
-    else{
-      view.toolbar.signIn(user);
-    }
-  },
-
-  /**
-   * Restore enabled/disabled auto-enhance selection.
-   * If auto-enhance is enabled, set selections and prepare to enhance.
-   */
-  restoreAutoEnhance: function() {
-    if(view.enabled){
-      view.toolbar.turnOnAutoEnhance();
-
-      view.toolbar.setSelectionsPrepareAndEnhance();
-    }
-    else{
+    /**
+     * Turn off auto enhance and set enabled to "false".
+     */
+    turnOffAutoEnhanceAndSet: function() {
       view.toolbar.turnOffAutoEnhance();
+      chrome.storage.local.set({enabled: false});
+    },
+
+    /**
+     * Turn off auto enhance by hiding the enabled button
+     * and showing the disabled button.
+     */
+    turnOffAutoEnhance: function() {
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "enabled").hide();
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "disabled").show();
+    },
+
+    /**
+     * Turn on auto enhance and set enabled to "true".
+     */
+    turnOnAutoEnhanceAndSet: function() {
+      view.toolbar.turnOnAutoEnhance();
+      chrome.storage.local.set({enabled: true});
+    },
+
+    /**
+     * Turn on auto enhance by hiding the disabled button
+     * and showing the enabled button.
+     */
+    turnOnAutoEnhance: function() {
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "disabled").hide();
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "enabled").show();
+    },
+
+    /**
+     * Init the handler for the language menu selection box.
+     * Select the topic menu according to the language on change.
+     */
+    initLanguageMenu: function() {
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "language-menu").on("change", function() {
+        view.toolbar.selectTopicMenu($(this).val());
+      });
+    },
+
+    /**
+     * Select the topic menu according to the language option.
+     * Hide all other topic menus.
+     *
+     * @param {string} selectedLanguage the language selected by the user
+     */
+    selectTopicMenu: function(selectedLanguage) {
+      const $topicMenu = view.toolbar.$cache.get(view.toolbar.selectorStart + "topic-menu-" + selectedLanguage);
+      const selectedTopicMenu = "selected-toolbar-topic-menu";
+
+      $(".wertiview-topic-menu").removeClass(selectedTopicMenu).hide();
+
+      $topicMenu.addClass(selectedTopicMenu).show();
+
+      const topic = $topicMenu.val();
+
+      view.toolbar.checkForFilters(selectedLanguage, topic);
+      view.toolbar.updateActivities(selectedLanguage, topic);
+    },
+
+    /**
+     * Check if filters are available for the topic and language selection.
+     *
+     * @param {string} language the current language
+     * @param {string} topic the current topic
+     */
+    checkForFilters: function(language, topic) {
+      const $FilterMenu = view.toolbar.$cache.get(view.toolbar.selectorStart + "filter-menu");
+
+      $FilterMenu.hide();
+      $FilterMenu.val("no-filter");
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "filter-unselected").next().nextAll().remove();
+
+      if(view.topics[topic] &&
+         view.topics[topic][language]){
+        const filters = view.topics[topic][language].filters;
+
+        if(filters){
+          view.toolbar.showFilterMenu(filters);
+        }
+      }
+    },
+
+    /**
+     * Show the filter menu with the filters defined for the topic.
+     *
+     * @param {Object} filters the available filters for the topic
+     */
+    showFilterMenu: function(filters) {
+      const $FilterMenu = view.toolbar.$cache.get(view.toolbar.selectorStart + "filter-menu");
+
+      $FilterMenu.val("unselected");
+
+      view.toolbar.addFilterOptions(filters, $FilterMenu);
+
+      $FilterMenu.show();
+    },
+
+    /**
+     * Add filter options to the filter menu.
+     *
+     * @param {Object} filters the available filters for the topic
+     * @param {Object} $FilterMenu the filter menu the options are added to
+     */
+    addFilterOptions: function(filters, $FilterMenu) {
+      $.each(filters, function(filter) {
+        const filterObject = filters[filter];
+        const $Option = $("<option>");
+
+        $Option.attr("id", filterObject.id);
+        $Option.val(filterObject.val);
+        $Option.text(filterObject.text);
+
+        $FilterMenu.append($Option);
+      });
+    },
+
+    /**
+     * Update activities when the topic is changed. Enable activities available
+     * to the topic and disable the ones that aren't.
+     * Activity "Pick an Activity" is always enabled, selected and visible.
+     *
+     * @param language the current language
+     * @param topic the current topic
+     */
+    updateActivities: function(language, topic) {
+      const unselected = "unselected";
+      const $ActivityMenu = view.toolbar.$cache.get(view.toolbar.selectorStart + "activity-menu");
+
+      $ActivityMenu.children().remove();
+
+      $ActivityMenu.append(view.toolbar.activitySelectors[unselected]);
+
+      if(
+        language !== unselected &&
+          !topic.startsWith(unselected) &&
+          view.topics[topic] &&
+          view.topics[topic][language]){
+        view.toolbar.enableAndShowActivities(language, topic);
+      }
+
+      view.toolbar.toggleEnhanceButton();
+    },
+
+    /**
+     * Toggle the enhance button depending on activity selection
+     * and eventually filter selection.
+     */
+    toggleEnhanceButton: function() {
+      const $EnhanceButton = view.toolbar.$cache.get(view.toolbar.selectorStart + "enhance-button");
+
+      if(view.toolbar.$cache.get(view.toolbar.selectorStart + "filter-menu").val() === "unselected" ||
+         view.toolbar.$cache.get(view.toolbar.selectorStart + "activity-menu").val() === "unselected"){
+        $EnhanceButton.prop("disabled", true);
+      }
+      else{
+        $EnhanceButton.prop("disabled", false);
+      }
+    },
+
+    /**
+     * Enable and show only activities that are available for the language and
+     * topic combination. Show the horizontal separator.
+     *
+     * @param {string} language the selected language
+     * @param {string} topic the selected topic
+     */
+    enableAndShowActivities: function(language, topic) {
+      const $ActivityMenu = view.toolbar.$cache.get(view.toolbar.selectorStart + "activity-menu");
+      const activitySelectors = view.toolbar.activitySelectors;
+      const availableActivities = view.topics[topic][language].activities;
+
+      $ActivityMenu.append(activitySelectors["splitter"]);
+
+      $.each(availableActivities, function(activity) {
+        $ActivityMenu.append(activitySelectors[activity]);
+      });
+
+      $ActivityMenu.val("unselected");
+    },
+
+    /**
+     * Init the handler for the topic menu selection box.
+     * Update the activities according to language and topic on change.
+     */
+    initTopicMenu: function() {
+      view.toolbar.$cache.get(
+        view.toolbar.selectorStart + "topic-menu-unselected, " +
+          view.toolbar.selectorStart + "topic-menu-en, " +
+          view.toolbar.selectorStart + "topic-menu-de, " +
+          view.toolbar.selectorStart + "topic-menu-es, " +
+          view.toolbar.selectorStart + "topic-menu-ru").on("change", function() {
+            const language = view.toolbar.$cache.get(view.toolbar.selectorStart + "language-menu").val();
+            const topic = $(this).val();
+
+            view.toolbar.checkForFilters(language, topic);
+
+            view.toolbar.updateActivities(language, topic);
+          });
+    },
+
+    /**
+     * Initialize the filter and activity menu handler.
+     */
+    initFilterAndActivityMenu: function() {
+      view.toolbar.$cache.get(
+        view.toolbar.selectorStart + "filter-menu, " +
+          view.toolbar.selectorStart + "activity-menu").on("change",
+                                                           view.toolbar.toggleEnhanceButton
+                                                          );
+    },
+
+    /**
+     * Init all activity selectors in order to retrieve
+     * the proper activity options for a topic.
+     */
+    initActivitySelectors: function() {
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "activity-menu").find("option").each(function() {
+        const $ActivityOption = $(this);
+
+        view.toolbar.activitySelectors[$ActivityOption.val()] = $ActivityOption;
+      });
+    },
+
+    /**
+     * Returns to initial interaction state, where the loading image, abort
+     * and restore button are hidden and the enhance button is enabled.
+     * Blur overlay is removed.
+     */
+    initialInteractionState: function() {
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "enhance-button").show();
+      view.toolbar.hideRestoreButton();
+      view.toolbar.hideAbortButton();
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "loading").hide();
+      view.blur.remove();
+    },
+
+    /**
+     * Hide the restore button.
+     */
+    hideRestoreButton: function() {
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "restore-button").hide();
+    },
+
+    /**
+     * Hide the abort button.
+     */
+    hideAbortButton: function() {
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "abort-button").hide();
+    },
+
+    /**
+     * Init the handler for the enhance button.
+     */
+    initEnhanceBtn: function() {
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "enhance-button").on(
+        "click",
+        view.toolbar.setSelectionsPrepareAndEnhance
+      );
+    },
+
+    /**
+     * Set language, topic, activity and timestamp if none of the activities
+     * are "unselected".
+     * Afterwards prepare to enhance the page.
+     */
+    setSelectionsPrepareAndEnhance: function() {
+      const timestamp = Date.now();
+      const language = view.toolbar.$cache.get(view.toolbar.selectorStart + "language-menu").val();
+      const topic = $(".selected-toolbar-topic-menu").val();
+      const filter = view.toolbar.$cache.get(view.toolbar.selectorStart + "filter-menu").val();
+      const activity = view.toolbar.$cache.get(view.toolbar.selectorStart + "activity-menu").val();
+
+      chrome.storage.local.set({
+        language: language,
+        topic: topic,
+        filter: filter,
+        activity: activity,
+        timestamp: timestamp
+      }, view.toolbar.prepareAndEnhance);
+    },
+
+    /**
+     * Prepare buttons and loading image, then start the enhancement.
+     */
+    prepareAndEnhance: function() {
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "enhance-button").hide();
+      view.toolbar.hideRestoreButton();
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "loading").show();
+
+      view.enhancer.enhance();
+    },
+
+    /**
+     * Init the handler for the abort button.
+     */
+    initAbortBtn: function() {
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "abort-button").on(
+        "click",
+        view.enhancer.abort
+      );
+    },
+
+    /**
+     * Init the handler for the restore button.
+     */
+    initRestoreBtn: function() {
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "restore-button").on(
+        "click",
+        view.enhancer.restoreToOriginal
+      );
+    },
+
+    /**
+     * Init the loading image.
+     */
+    initLoadingImage: function() {
+      const loadingGif = chrome.runtime.getURL("icons/loading.gif");
+      const $LoadingImg = $("<img>").attr("src", loadingGif);
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "loading").append($LoadingImg);
+    },
+
+    /**
+     * Init the handler for the sign in button.
+     */
+    initSignInBtn: function() {
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "account-sign-in-button").on(
+        "click",
+        view.toolbar.openSignInWindow
+      );
+    },
+
+    /**
+     * Open the authenticator sign in window.
+     */
+    openSignInWindow: function() {
+      const signInWindow = window.open("", "", "width=985,height=735");
+      view.toolbar.assignHrefAndFocus(
+        signInWindow,
+        view.authenticator + "?action=sign-in"
+      );
+    },
+
+    /**
+     * Assign the authenticator to the href attribute of the given window
+     * and focus on it.
+     *
+     * @param {object} myWindow the window we assign the href attribute of
+     * @param {string} authenticatorLink the value to be assigned
+     */
+    assignHrefAndFocus: function(myWindow, authenticatorLink) {
+      myWindow.location.href = authenticatorLink;
+      myWindow.focus();
+    },
+
+    /**
+     * Init the handler for the account menu button.
+     */
+    initAccountMenuBtn: function() {
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "account-menu-button").on(
+        "click",
+        view.accountMenu.toggle
+      );
+    },
+
+    /**
+     * Init the handler for the "X" button.
+     */
+    initToggleToolbarBtn: function() {
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "toggle-button").on("click", view.toolbar.toggle);
+    },
+
+    /**
+     * Restores all selections from language, topic, filter and activity.
+     * Restore auto-run option (enabled/disabled).
+     */
+    restoreSelections: function() {
+      view.toolbar.restoreSelectionMenus();
+
+      view.toolbar.toggleEnhanceButton();
+
+      view.toolbar.verifySignInStatus();
+
+      view.toolbar.restoreAutoEnhance();
+    },
+
+    /**
+     * Restore all selections of the selection menus.
+     */
+    restoreSelectionMenus: function() {
+      const selected = "selected";
+      const language = view.language;
+      const topic = view.topic;
+
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "language-" + language).prop(selected, true);
+
+      const topicMenu = view.toolbar.selectorStart + "topic-" + topic;
+
+      // special case Dets and Preps are shared between en, de and es
+      if(topic === "determiners" || topic === "Preps"){
+        view.toolbar.$cache.get(topicMenu + "-" + language).prop(selected, true);
+      }
+      else{
+        view.toolbar.$cache.get(topicMenu).prop(selected, true);
+      }
+
+      view.toolbar.selectTopicMenu(language);
+
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "filter-" + view.filter).prop(selected, true);
+
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "activity-" + view.activity).prop(selected, true);
+    },
+
+    /**
+     * The user will be signed in/out according to the value of the
+     * stored user.
+     */
+    verifySignInStatus: function() {
+      const user = view.user;
+
+      if(!user){
+        view.toolbar.signOut()
+      }
+      else{
+        view.toolbar.signIn(user);
+      }
+    },
+
+    /**
+     * Restore enabled/disabled auto-enhance selection.
+     * If auto-enhance is enabled, set selections and prepare to enhance.
+     */
+    restoreAutoEnhance: function() {
+      if(view.enabled){
+        view.toolbar.turnOnAutoEnhance();
+
+        view.toolbar.setSelectionsPrepareAndEnhance();
+      }
+      else{
+        view.toolbar.turnOffAutoEnhance();
+      }
+    },
+
+    /**
+     * Hide the sign in button and show the account menu button.
+     *
+     * @param {string} user the user name
+     */
+    signIn: function(user) {
+      const accountIdStart = view.toolbar.selectorStart + "account-";
+      const firstLetterOfUser = user.substring(0, 1);
+
+      view.toolbar.$cache.get(accountIdStart + "sign-in-button").hide();
+      view.toolbar.$cache.get(accountIdStart + "menu-button").text(firstLetterOfUser).show();
+    },
+
+    /**
+     * Show the sign in button and hide the account menu button.
+     */
+    signOut: function() {
+      const accountIdStart = view.toolbar.selectorStart + "account-";
+
+      view.toolbar.$cache.get(accountIdStart + "menu-button").text("").hide();
+      view.toolbar.$cache.get(accountIdStart + "sign-in-button").show();
     }
-  },
-
-  /**
-   * Hide the sign in button and show the account menu button.
-   *
-   * @param {string} user the user name
-   */
-  signIn: function(user) {
-    const accountIdStart = view.toolbar.selectorStart + "account-";
-    const firstLetterOfUser = user.substring(0, 1);
-
-    view.toolbar.$cache.get(accountIdStart + "sign-in-button").hide();
-    view.toolbar.$cache.get(accountIdStart + "menu-button").text(firstLetterOfUser).show();
-  },
-
-  /**
-   * Show the sign in button and hide the account menu button.
-   */
-  signOut: function() {
-    const accountIdStart = view.toolbar.selectorStart + "account-";
-
-    view.toolbar.$cache.get(accountIdStart + "menu-button").text("").hide();
-    view.toolbar.$cache.get(accountIdStart + "sign-in-button").show();
-  }
+  };
 };

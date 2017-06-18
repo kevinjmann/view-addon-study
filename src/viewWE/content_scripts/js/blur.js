@@ -1,4 +1,6 @@
-view.blur = {
+const $ = require('jquery');
+
+module.exports = {
   /*
    * Blur the page with an overlay and  a loading
    * image on top.

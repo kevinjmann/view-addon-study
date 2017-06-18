@@ -1,87 +1,93 @@
-view.accountMenu = {
-  selectorStart : "#view-account-menu-",
+const $ = require('jquery');
 
-  add: function() {
-    const accountHTML = chrome.runtime.getURL("content_scripts/html/account-menu.html");
+module.exports = function(view) {
+  return {
+    selectorStart : "#view-account-menu-",
 
-    const $Account = $("<div>");
-    $Account.attr("id", "view-account-menu-container");
+    add: function() {
+      const accountHTML = chrome.runtime.getURL("content_scripts/html/account-menu.html");
 
-    $Account.load(accountHTML, view.accountMenu.init);
+      const $Account = $("<div>");
+      $Account.attr("id", "view-account-menu-container");
 
-    $("body").append($Account);
-  },
+      $Account.load(accountHTML, view.accountMenu.init);
 
-  /**
-   * Init the handlers for the view menu.
-   */
-  init: function() {
-    view.accountMenu.initStatisticsMenuHandler();
+      $("body").append($Account);
+    },
 
-    view.accountMenu.initSignOutHandler();
+    /**
+     * Init the handlers for the view menu.
+     */
+    init: function() {
+      view.accountMenu.initStatisticsMenuHandler();
 
-    view.accountMenu.setAccountInfo();
-  },
+      view.accountMenu.initSignOutHandler();
 
-  /**
-   * Toggle the statistics menu on click.
-   */
-  initStatisticsMenuHandler: function() {
-    $(view.accountMenu.selectorStart + "statistics").on("click",
-      view.statisticsMenu.toggle
-    );
-  },
+      view.accountMenu.setAccountInfo();
+    },
 
-  /**
-   * Init the handler for the sign out.
-   * Call openSignOutWindow() on click.
-   */
-  initSignOutHandler: function() {
-    $(view.accountMenu.selectorStart + "sign-out").on("click",
-      view.accountMenu.openSignOutWindow
-    );
-  },
+    /**
+     * Toggle the statistics menu on click.
+     */
+    initStatisticsMenuHandler: function() {
+      $(view.accountMenu.selectorStart + "statistics").on(
+        "click",
+        view.statisticsMenu.toggle
+      );
+    },
 
-  /**
-   * Open the authenticator sign out window.
-   */
-  openSignOutWindow: function() {
-    const signOutWindow = window.open("", "", "width=1,height=1");
-    view.accountMenu.assignHref(
-      signOutWindow,
-      view.authenticator + "?action=sign-out"
-    );
-  },
+    /**
+     * Init the handler for the sign out.
+     * Call openSignOutWindow() on click.
+     */
+    initSignOutHandler: function() {
+      $(view.accountMenu.selectorStart + "sign-out").on(
+        "click",
+        view.accountMenu.openSignOutWindow
+      );
+    },
 
-  /**
-   * Assign the authenticator to the href attribute of the given window.
-   *
-   * @param {object} myWindow the window we assign the href attribute of
-   * @param {string} authenticatorLink the value to be assigned
-   */
-  assignHref: function(myWindow, authenticatorLink) {
-    myWindow.location.href = authenticatorLink;
-  },
+    /**
+     * Open the authenticator sign out window.
+     */
+    openSignOutWindow: function() {
+      const signOutWindow = window.open("", "", "width=1,height=1");
+      view.accountMenu.assignHref(
+        signOutWindow,
+        view.authenticator + "?action=sign-out"
+      );
+    },
 
-  /**
-   * Set the text of user and e-mail.
-   */
-  setAccountInfo: function() {
-    $(view.accountMenu.selectorStart + "user").text(view.user);
-    $(view.accountMenu.selectorStart + "e-mail").text(view.userEmail);
-  },
+    /**
+     * Assign the authenticator to the href attribute of the given window.
+     *
+     * @param {object} myWindow the window we assign the href attribute of
+     * @param {string} authenticatorLink the value to be assigned
+     */
+    assignHref: function(myWindow, authenticatorLink) {
+      myWindow.location.href = authenticatorLink;
+    },
 
-  /**
-   * Hide the accountMenu content.
-   */
-  hide: function() {
-    $(view.accountMenu.selectorStart + "content").hide();
-  },
+    /**
+     * Set the text of user and e-mail.
+     */
+    setAccountInfo: function() {
+      $(view.accountMenu.selectorStart + "user").text(view.user);
+      $(view.accountMenu.selectorStart + "e-mail").text(view.userEmail);
+    },
 
-  /**
-   * Toggle the accountMenu content.
-   */
-  toggle: function() {
-    $(view.accountMenu.selectorStart + "content").toggle();
-  }
+    /**
+     * Hide the accountMenu content.
+     */
+    hide: function() {
+      $(view.accountMenu.selectorStart + "content").hide();
+    },
+
+    /**
+     * Toggle the accountMenu content.
+     */
+    toggle: function() {
+      $(view.accountMenu.selectorStart + "content").toggle();
+    }
+  };
 };

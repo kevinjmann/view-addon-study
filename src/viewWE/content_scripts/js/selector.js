@@ -1,4 +1,6 @@
-view.selector = {
+const $ = require('jquery');
+
+module.exports = {
   select: function(filter) {
     $("sentence:not([data-isbasedonblock])").each(function() {
       const $Sentence = $(this);

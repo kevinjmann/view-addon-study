@@ -1,4 +1,6 @@
-view.color = {
+const $ = require('jquery');
+
+module.exports = {
   /**
    * Run the colorize activity.
    *
