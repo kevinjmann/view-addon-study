@@ -5,13 +5,14 @@ view.statisticsMenu = {
    * Add the statistics menu to the page.
    */
   add: function() {
-    const statisticsMenuURL = chrome.extension.getURL("content_scripts/html/statistics-menu.html");
+    const statisticsMenuURL = chrome.runtime.getURL("content_scripts/html/statistics-menu.html");
 
     const $StatisticsMenu = $("<div>");
+    $StatisticsMenu.attr("id", "view-statistics-menu-container");
 
     $StatisticsMenu.load(statisticsMenuURL, view.statisticsMenu.init);
 
-    $("body").prepend($StatisticsMenu);
+    $("body").append($StatisticsMenu);
   },
 
   /**

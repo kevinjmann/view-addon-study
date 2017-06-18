@@ -90,8 +90,8 @@ describe("statistics-menu.js", function() {
     it("should get the url for the statistics menu", function() {
       view.statisticsMenu.add();
 
-      sinon.assert.calledOnce(chrome.extension.getURL);
-      sinon.assert.calledWithExactly(chrome.extension.getURL, "content_scripts/html/statistics-menu.html");
+      sinon.assert.calledOnce(chrome.runtime.getURL);
+      sinon.assert.calledWithExactly(chrome.runtime.getURL, "content_scripts/html/statistics-menu.html");
     });
 
     it("should call init()", function() {
@@ -102,16 +102,16 @@ describe("statistics-menu.js", function() {
       sinon.assert.calledOnce(initSpy);
     });
 
-    it("should call prepend(statisticMenu)", function() {
+    it("should call append(statisticMenu)", function() {
       const selectorSpy = sandbox.spy($.fn, "find");
-      const prependSpy = sandbox.spy($.fn, "prepend");
+      const appendSpy = sandbox.spy($.fn, "append");
 
       view.statisticsMenu.add();
 
       sinon.assert.calledOnce(selectorSpy);
       sinon.assert.calledWithExactly(selectorSpy, "body");
 
-      sinon.assert.calledOnce(prependSpy);
+      sinon.assert.calledOnce(appendSpy);
     });
 
     describe("init", function() {
