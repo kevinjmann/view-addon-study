@@ -43,7 +43,11 @@ const unitTest = {
       language: "unselected",
       topic: "unselected",
       filter: "no-filter",
-      activity: "unselected"
+      activity: "unselected",
+
+      // properties not stored in local storage
+      toolbarExists: false,
+      originalContent: ""
     })
   },
 
