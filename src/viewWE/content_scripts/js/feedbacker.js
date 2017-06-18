@@ -73,7 +73,7 @@ view.feedbacker = {
       return {
         my: "left bottom",
         at: "left top",
-        of: "#view-toolbar-iframe"
+        of: "#wertiview-toolbar-container"
       };
     }
     else {
