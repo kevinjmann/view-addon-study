@@ -1405,7 +1405,7 @@ describe("toolbar.js", function() {
     it("should call toggle(), as the toolbar already exists", function() {
       const toggleStub = sandbox.stub(view.toolbar, "toggle");
 
-      $("body").append($("<div id='wertiview-toolbar-container'>"));
+      view.toolbarExists = true;
 
       view.toolbar.toggleOrAdd();
 
@@ -1436,6 +1436,8 @@ describe("toolbar.js", function() {
 
     it("should call setStorageItemsAndAddToolbar(), as the toolbar doesn't exists yet", function() {
       const setStorageItemsAndAddToolbarStub = sandbox.stub(view, "setStorageItemsAndAddToolbar");
+
+      view.toolbarExists = false;
 
       view.toolbar.toggleOrAdd();
 

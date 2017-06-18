@@ -65,10 +65,11 @@ view.toolbar = {
    * set storage items and add it otherwise.
    */
   toggleOrAdd: function() {
-    if ($(view.toolbar.selectorStart + "container").length) {
+    if (view.toolbarExists) {
       view.toolbar.toggle();
     } else {
       view.setStorageItemsAndAddToolbar();
+      view.toolbarExists = true;
     }
   },
 
@@ -76,7 +77,7 @@ view.toolbar = {
    * Toggle the toolbar.
    */
   toggle: function() {
-    $(view.toolbar.selectorStart + "container").toggle();
+    view.toolbar.$cache.get(view.toolbar.selectorStart + "container").toggle();
     view.container.adjustMargin();
   },
 
