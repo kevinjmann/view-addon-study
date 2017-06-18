@@ -830,17 +830,51 @@ describe("toolbar.js", function() {
       });
 
       describe("initialInteractionState", function() {
-        it("should put the toolbar into the initial interaction state", function() {
+        it("should show the enhance button", function() {
           $(toolbarStart + "enhance-button").hide();
-          $(toolbarStart + "restore-button").show();
-          $(toolbarStart + "abort-button").show();
-          $(toolbarStart + "loading").show();
 
           view.toolbar.initialInteractionState();
 
           expect($(toolbarStart + "enhance-button").is(":visible")).to.be.true;
+        });
+
+        it("should call hideRestoreButton", function() {
+          const hideRestoreButtonStub = sandbox.stub(view.toolbar, "hideRestoreButton");
+
+          view.toolbar.initialInteractionState();
+
+          sinon.assert.calledOnce(hideRestoreButtonStub);
+        });
+
+        it("should hide the restore button", function() {
+          $(toolbarStart + "restore-button").show();
+
+          view.toolbar.hideRestoreButton();
+
           expect($(toolbarStart + "restore-button").is(":hidden")).to.be.true;
+        });
+
+        it("should call hideAbortButton", function() {
+          const hideAbortButtonStub = sandbox.stub(view.toolbar, "hideAbortButton");
+
+          view.toolbar.initialInteractionState();
+
+          sinon.assert.calledOnce(hideAbortButtonStub);
+        });
+
+        it("should hide the abort button", function() {
+          $(toolbarStart + "abort-button").show();
+
+          view.toolbar.hideAbortButton();
+
           expect($(toolbarStart + "abort-button").is(":hidden")).to.be.true;
+        });
+
+        it("should hide the loading image", function() {
+          $(toolbarStart + "loading").show();
+
+          view.toolbar.initialInteractionState();
+
           expect($(toolbarStart + "loading").is(":hidden")).to.be.true;
         });
 

@@ -374,10 +374,24 @@ view.toolbar = {
    */
   initialInteractionState: function() {
     view.toolbar.$cache.get(view.toolbar.selectorStart + "enhance-button").show();
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "restore-button").hide();
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "abort-button").hide();
+    view.toolbar.hideRestoreButton();
+    view.toolbar.hideAbortButton();
     view.toolbar.$cache.get(view.toolbar.selectorStart + "loading").hide();
     view.blur.remove();
+  },
+
+  /**
+   * Hide the restore button.
+   */
+  hideRestoreButton: function() {
+    view.toolbar.$cache.get(view.toolbar.selectorStart + "restore-button").hide();
+  },
+
+  /**
+   * Hide the abort button.
+   */
+  hideAbortButton: function() {
+    view.toolbar.$cache.get(view.toolbar.selectorStart + "abort-button").hide();
   },
 
   /**
@@ -414,7 +428,7 @@ view.toolbar = {
    */
   prepareAndEnhance: function() {
     view.toolbar.$cache.get(view.toolbar.selectorStart + "enhance-button").hide();
-    view.toolbar.$cache.get(view.toolbar.selectorStart + "restore-button").hide();
+    view.toolbar.hideRestoreButton();
     view.toolbar.$cache.get(view.toolbar.selectorStart + "loading").show();
 
     view.enhancer.enhance();
