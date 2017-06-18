@@ -18,7 +18,7 @@ describe("account-menu.js", function() {
   afterEach(function() {
     sandbox.restore();
     chrome.runtime.sendMessage.reset();
-    chrome.extension.getURL.reset();
+    chrome.runtime.getURL.reset();
     chrome.storage.local.get.reset();
     fixture.cleanup();
   });
@@ -44,8 +44,8 @@ describe("account-menu.js", function() {
     it("should get the url for the account menu", function() {
       view.accountMenu.add();
 
-      sinon.assert.calledOnce(chrome.extension.getURL);
-      sinon.assert.calledWithExactly(chrome.extension.getURL, "content_scripts/html/account-menu.html");
+      sinon.assert.calledOnce(chrome.runtime.getURL);
+      sinon.assert.calledWithExactly(chrome.runtime.getURL, "content_scripts/html/account-menu.html");
     });
 
     it("should call init()", function() {
