@@ -4,13 +4,13 @@ const view = {
 
   /**
    * Set all items from storage.
-   * Afterwards initialize the toolbar iframe.
+   * Afterwards add the toolbar.
    */
-  setStorageItemsAndInitToolbar: function() {
+  setStorageItemsAndAddToolbar: function() {
     chrome.storage.local.get(function(storageItems) {
       view.setItems(storageItems);
 
-      view.toolbarIframe.init();
+      view.toolbar.add();
     });
   },
 

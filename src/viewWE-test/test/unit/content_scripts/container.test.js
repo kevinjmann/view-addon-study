@@ -12,15 +12,14 @@ describe("container.js", function() {
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
 
-    sandbox.stub($.fn, "load").yields();
+    fixture.load("/fixtures/ru-no-markup.html");
   });
 
   afterEach(function() {
     sandbox.restore();
-    chrome.extension.getURL.reset();
-    $("#view-toolbar-iframe").remove();
-    $("body").append($("#ru-no-markup-body"));
+    chrome.runtime.getURL.reset();
     $("#wertiview-container").remove();
+    $("body").append($("#ru-no-markup-body"));
     view.originalContent = "";
     fixture.cleanup();
   });
@@ -33,11 +32,8 @@ describe("container.js", function() {
       // maintain this test, if there are additions or changes
       // the expectations below don't need to be tested in other tests again
       // the selectors below can be freely used in the tests without problems
-      fixture.load("/fixtures/ru-no-markup.html");
+      view.container.add($("#ru-no-markup-body"));
 
-      view.toolbarIframe.init();
-
-      expect($("#view-toolbar-iframe").length).to.be.above(0);
       expect($("#wertiview-container").length).to.be.above(0);
       expect($("#wertiview-content").length).to.be.above(0);
       expect($("#ru-no-markup-body").length).to.be.above(0);
@@ -46,8 +42,6 @@ describe("container.js", function() {
 
   describe("add", function() {
     it("should call clone(true)", function() {
-      fixture.load("/fixtures/ru-no-markup.html");
-
       const cloneSpy = sandbox.spy($.fn, "clone");
       const fixtureInnerHTML = $("#ru-no-markup-body").html();
       const $FixtureBody = $("<div>");
@@ -63,8 +57,6 @@ describe("container.js", function() {
     });
 
     it("should store the body content into view.originalContent", function() {
-      fixture.load("/fixtures/ru-no-markup.html");
-
       const fixtureInnerHTML = $("#ru-no-markup-body").html();
       const $FixtureBody = $("<div>");
 
@@ -88,8 +80,6 @@ describe("container.js", function() {
     });
 
     it("should wrap all body content of 'ru-no-markup.html' into a new element", function() {
-      fixture.load("/fixtures/ru-no-markup.html");
-
       const fixtureInnerHTML = $("#ru-no-markup-body").html();
       const $FixtureBody = $("<div>");
 
@@ -105,8 +95,6 @@ describe("container.js", function() {
     });
 
     it("should put wrapped body content into the container", function() {
-      fixture.load("/fixtures/ru-no-markup.html");
-
       const fixtureInnerHTML = $("#ru-no-markup-body").html();
       const $FixtureBody = $("<div>");
 
@@ -116,9 +104,7 @@ describe("container.js", function() {
 
       view.container.add($FixtureBody);
 
-      const bodyContainerSelector = "#wertiview-container";
-
-      expect($(bodyContainerSelector).html())
+      expect($("#wertiview-container").html())
       .to.equal("<div id=\"wertiview-content\">" + fixtureInnerHTML + "</div>");
 
       $FixtureBody.remove();
@@ -126,36 +112,44 @@ describe("container.js", function() {
   });
 
   describe("adjustMargin", function() {
-    it("should find the class 'margin-at-bottom' inside the container, as the toolbar is visible", function() {
-      view.toolbarIframe.init();
+    it("should add the class 'margin-at-bottom', as the class isn't present", function() {
+      const $Container = $("<div>");
+      $Container.attr("id", "wertiview-container");
 
-      expect($("#wertiview-container").hasClass("margin-at-bottom")).to.be.false;
+      $("body").append($Container);
 
       view.container.adjustMargin();
 
-      expect($("#wertiview-container").hasClass("margin-at-bottom")).to.be.true;
+      expect($Container.hasClass("margin-at-bottom")).to.be.true;
     });
 
-    it("should call restoreToOriginal()", function() {
+    it("should call restoreToOriginal(), because the class 'margin-at-bottom'" +
+      " is present", function() {
       const restoreToOriginalSpy = sandbox.spy(view.enhancer, "restoreToOriginal");
+
+      const $Container = $("<div>");
+      $Container.attr("id", "wertiview-container");
+      $Container.addClass("margin-at-bottom");
+
+      $("body").append($Container);
 
       view.container.adjustMargin();
 
       sinon.assert.calledOnce(restoreToOriginalSpy);
     });
 
-    it("should not find the class 'margin-at-bottom' inside the container, as the toolbar is hidden", function() {
-      view.toolbarIframe.init();
+    it("should remove the class 'margin-at-bottom', because it is present", function() {
+      const marginClass = "margin-at-bottom";
+
+      const $Container = $("<div>");
+      $Container.attr("id", "wertiview-container");
+      $Container.addClass(marginClass);
+
+      $("body").append($Container);
 
       view.container.adjustMargin();
 
-      expect($("#wertiview-container").hasClass("margin-at-bottom")).to.be.true;
-
-      $("#view-toolbar-iframe").hide();
-
-      view.container.adjustMargin();
-
-      expect($("#wertiview-container").hasClass("margin-at-bottom")).to.be.false;
+      expect($Container.hasClass(marginClass)).to.be.false;
     });
   });
 });

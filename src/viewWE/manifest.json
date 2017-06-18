@@ -64,7 +64,6 @@
   ],
 
   "web_accessible_resources": [
-    "toolbar/toolbar.html",
     "icons/view-128.png",
     "icons/loading.gif",
     "topics/articles.json",

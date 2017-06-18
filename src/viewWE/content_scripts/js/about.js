@@ -9,7 +9,7 @@ view.about = {
   open: function() {
     if (!$("#view-about").length) {
       // get the url of the view icon
-      const viewLogo = chrome.extension.getURL("icons/view-128.png");
+      const viewLogo = chrome.runtime.getURL("icons/view-128.png");
 
       // create image element with the view icon
       const $viewImg = $("<img>");
@@ -36,7 +36,6 @@ view.about = {
       });
 
       $aboutDialog.on("dialogclose", function() {
-        console.log("click on X: close about dialog");
         // remove the about dialog so that it can be loaded properly next time
         $aboutDialog.remove();
       });

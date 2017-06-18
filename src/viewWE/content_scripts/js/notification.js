@@ -29,8 +29,8 @@ view.notification = {
     view.notification.remove();
   },
 
-  /*
-   * The notification dialog gets removed.
+  /**
+   * The notification gets removed.
    */
   remove: function() {
     $("#wertiview-notification-message").hide("fast");
@@ -96,15 +96,20 @@ view.notification = {
     $("body").on("click", "#wertiview-inst-click-ok", view.notification.clickToRemoveInstNotification);
   },
 
-  clickToRemoveInstNotification: function(event) {
+  /**
+   * The instruction notification gets removed.
+   */
+  removeInst: function() {
+    $("#wertiview-inst-notification").remove();
+  },
+
+  clickToRemoveInstNotification: function() {
     if ($("#wertiview-inst-check-dontagain").is(":checked")) {
       chrome.storage.local.set({
         showInst: false
       });
     }
 
-    $("#wertiview-inst-notification").hide(0, function() {
-      $(this).remove();
-    });
+    view.notification.removeInst();
   }
 };

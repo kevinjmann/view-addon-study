@@ -30,13 +30,14 @@ view.container = {
    */
   adjustMargin: function() {
     const $Container = $("#wertiview-container");
+    const marginClass = "margin-at-bottom";
 
-    if ($("#view-toolbar-iframe").is(":visible")) {
-      $Container.addClass("margin-at-bottom");
+    if ($Container.hasClass(marginClass)) {
+      view.enhancer.restoreToOriginal();
+      $Container.removeClass(marginClass);
     }
     else {
-      view.enhancer.restoreToOriginal();
-      $Container.removeClass("margin-at-bottom");
+      $Container.addClass(marginClass);
     }
   }
 };

@@ -17,10 +17,7 @@ view.enhancer = {
       view.enhancer.constructInstruction();
     }
 
-    view.enhancer.requestToToggleElement(
-      "showElement",
-      "#wertiview-toolbar-abort-button"
-    );
+    view.toolbar.$cache.get(view.toolbar.selectorStart + "abort-button").show();
 
     const activityData = view.enhancer.createActivityData();
 
@@ -35,30 +32,13 @@ view.enhancer = {
     if($("viewenhancement").length){
       $("#wertiview-content").html(view.originalContent);
 
-      view.enhancer.requestToToggleElement(
-        "hideElement",
-        "#wertiview-toolbar-restore-button"
-      );
+      view.toolbar.hideRestoreButton();
 
       view.notification.remove();
       view.blur.remove();
 
-      $("#wertiview-inst-notification").remove();
+      view.notification.removeInst();
     }
-  },
-
-  /**
-   * Send a request to toolbar.js to toggle (show/hide) the element with the
-   * given selector.
-   *
-   * @param {String} action the request message "show/hide element"
-   * @param {String} selector the selector of the element to toggle
-   */
-  requestToToggleElement: function(action, selector) {
-    chrome.runtime.sendMessage({
-      action: action,
-      selector: selector
-    }, view.lib.noResponse);
   },
 
   /**
@@ -117,26 +97,6 @@ view.enhancer = {
   },
 
   /**
-   * Returns to initial interaction state, where the loading image and abort
-   * button are hidden and the enhance button is enabled. Blur overlay is removed.
-   */
-  initialInteractionState: function() {
-    view.enhancer.requestToToggleElement(
-      "hideElement",
-      "#wertiview-toolbar-loading-image"
-    );
-    view.enhancer.requestToToggleElement(
-      "hideElement",
-      "#wertiview-toolbar-abort-button"
-    );
-    view.enhancer.requestToToggleElement(
-      "showElement",
-      "#wertiview-toolbar-enhance-button"
-    );
-    view.blur.remove();
-  },
-
-  /**
    * Adds the enhancement markup sent from the server to the page.
    * Will only proceed if the user didn't abort the enhancement.
    *
@@ -147,20 +107,14 @@ view.enhancer = {
       view.enhancer.isAborted = false;
     }
     else{
-      view.enhancer.requestToToggleElement(
-        "hideElement",
-        "#wertiview-toolbar-abort-button"
-      );
+      view.toolbar.hideAbortButton();
 
       $("#wertiview-content").html(enhancementMarkup);
 
       view.selector.select(view.filter);
       view.enhancer.runActivity();
-      view.enhancer.initialInteractionState();
-      view.enhancer.requestToToggleElement(
-        "showElement",
-        "#wertiview-toolbar-restore-button"
-      );
+      view.toolbar.initialInteractionState();
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "restore-button").show();
       view.enhancer.loadDebuggingOptions();
     }
   },
@@ -221,7 +175,7 @@ view.enhancer = {
    * Abort the enhancement process.
    */
   abort: function() {
-    view.enhancer.initialInteractionState();
+    view.toolbar.initialInteractionState();
     view.enhancer.isAborted = true;
   }
 };

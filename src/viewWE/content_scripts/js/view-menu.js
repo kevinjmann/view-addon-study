@@ -6,6 +6,7 @@ view.VIEWmenu = {
   add: function() {
     const $ViewMenu = $(viewMenuContent);
 
+    $ViewMenu.attr("id", "view-VIEW-menu-container");    
     $("body").prepend($ViewMenu);
 
     view.VIEWmenu.init();
@@ -34,14 +35,14 @@ view.VIEWmenu = {
    */
   initOpenOptionsPageHandler: function() {
     $(view.VIEWmenu.selectorStart + "options").on("click",
-      view.VIEWmenu.requestToCallOpenOptionsPage);
+      view.VIEWmenu.requestToOpenOptionsPage);
   },
 
   /**
    * Send a request to the background script to call openOptionsPage().
    */
-  requestToCallOpenOptionsPage: function() {
-    chrome.runtime.sendMessage({action: "callOpenOptionsPage"});
+  requestToOpenOptionsPage: function() {
+    chrome.runtime.sendMessage({action: "openOptionsPage"});
   },
 
   /**

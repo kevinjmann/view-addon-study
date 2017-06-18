@@ -54,7 +54,6 @@ Currently we have the modules:<br>
 - activityHelper
 - tracker
 - selector
-- toolbarIframe
 - container
 - enhancer
 - accountMenu

@@ -18,7 +18,7 @@ describe("background.js", function() {
     sandbox.restore();
 
     // reset calls to all chrome functions
-    chrome.extension.getURL.reset();
+    chrome.runtime.getURL.reset();
     chrome.tabs.sendMessage.reset();
     chrome.storage.local.set.reset();
     chrome.storage.local.get.reset();
@@ -56,8 +56,6 @@ describe("background.js", function() {
         serverTaskURL: theServerURL + "/act/task",
         serverTrackingURL: theServerURL + "/act/tracking",
         authenticator: theServerURL + "/authenticator.html",
-        cookie_name: "wertiview_userid",
-        cookie_path: "/VIEW/openid",
         ajaxTimeout: 60000,
         topics: {},
         userEmail: "",
@@ -84,7 +82,7 @@ describe("background.js", function() {
         enabled: false, // should the page be enhanced right away?
         language: "unselected",
         topic: "unselected",
-        filter: "unselected",
+        filter: "no-filter",
         activity: "unselected"
       });
     });
@@ -99,15 +97,16 @@ describe("background.js", function() {
       sinon.assert.calledOnce(setTopicsSpy);
     });
 
-    it("should send a message to toggle the toolbar without setting topics otherwise", function() {
-      const toggleToolbarSpy = sandbox.spy(background, "toggleToolbar");
+    it("should send a message to toggle or add the toolbar without setting topics otherwise", function() {
+      const requestToToggleOrAddToolbarSpy =
+        sandbox.spy(background, "requestToToggleOrAddToolbar");
 
       chrome.browserAction.onClicked.trigger({id: 5});
       chrome.browserAction.onClicked.trigger({id: 5});
 
       expect(background.clickCounter).to.equal(2);
 
-      sinon.assert.calledOnce(toggleToolbarSpy);
+      sinon.assert.calledOnce(requestToToggleOrAddToolbarSpy);
     });
   });
 
@@ -143,10 +142,10 @@ describe("background.js", function() {
       background.initTopics();
       background.getAndSetTopicURLs();
 
-      sinon.assert.callCount(chrome.extension.getURL, 3);
-      sinon.assert.calledWithExactly(chrome.extension.getURL.getCall(0), "topics/articles.json");
-      sinon.assert.calledWithExactly(chrome.extension.getURL.getCall(1), "topics/determiners.json");
-      sinon.assert.calledWithExactly(chrome.extension.getURL.getCall(2), "topics/nouns.json");
+      sinon.assert.callCount(chrome.runtime.getURL, 3);
+      sinon.assert.calledWithExactly(chrome.runtime.getURL.getCall(0), "topics/articles.json");
+      sinon.assert.calledWithExactly(chrome.runtime.getURL.getCall(1), "topics/determiners.json");
+      sinon.assert.calledWithExactly(chrome.runtime.getURL.getCall(2), "topics/nouns.json");
     });
 
     it("should call for all topic json objects, store activity data and proceed to set", function() {
@@ -168,7 +167,7 @@ describe("background.js", function() {
       fixture.cleanup();
     });
 
-    it("should proceed to set topics and toggle the toolbar", function() {
+    it("should proceed to set topics and call view.toolbar.toggleOrAddToolbar()", function() {
       const jsonData = fixture.load("fixtures/json/articles.json");
 
       chrome.storage.local.set.yields(); // make chrome.storage.local.set synchronous
@@ -186,7 +185,7 @@ describe("background.js", function() {
       sinon.assert.calledWithMatch(chrome.storage.local.set, {topics: background.topics});
 
       sinon.assert.calledOnce(chrome.tabs.sendMessage);
-      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {action: "toggleToolbar"});
+      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {action: "toggleOrAddToolbar"});
 
       fixture.cleanup();
     });
@@ -236,10 +235,10 @@ describe("background.js", function() {
       sinon.assert.calledOnce(chrome.runtime.onMessage.addListener);
     });
 
-    it("should process the message 'toggleToolbar'", function() {
-      const toggleToolbarSpy = sandbox.spy(background, "toggleToolbar");
+    it("should process the message 'openOptionsPage'", function() {
+      const openOptionsPageSpy = sandbox.spy(background, "openOptionsPage");
 
-      const request = {action: "toggleToolbar"};
+      const request = {action: "openOptionsPage"};
       const sender = {tab: {id: 5}};
       const sendResponse = sandbox.spy();
       const parameters = {
@@ -250,287 +249,8 @@ describe("background.js", function() {
 
       chrome.runtime.onMessage.trigger(request, sender, sendResponse);
 
-      sinon.assert.calledOnce(toggleToolbarSpy);
-      sinon.assert.calledWithExactly(toggleToolbarSpy, parameters);
-
-      sinon.assert.calledOnce(chrome.tabs.sendMessage);
-      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
-    });
-
-    it("should process the message 'toggleVIEWMenu'", function() {
-      const toggleMenuVIEWSpy = sandbox.spy(background, "toggleVIEWMenu");
-
-      const request = {action: "toggleVIEWMenu"};
-      const sender = {tab: {id: 5}};
-      const sendResponse = sandbox.spy();
-      const parameters = {
-        request,
-        sender,
-        sendResponse
-      };
-
-      chrome.runtime.onMessage.trigger(request, sender, sendResponse);
-
-      sinon.assert.calledOnce(toggleMenuVIEWSpy);
-      sinon.assert.calledWithExactly(toggleMenuVIEWSpy, parameters);
-
-      sinon.assert.calledOnce(chrome.tabs.sendMessage);
-      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
-    });
-
-    it("should process the message 'hideVIEWMenu'", function() {
-      const hideVIEWMenuSpy = sandbox.spy(background, "hideVIEWMenu");
-
-      const request = {action: "hideVIEWMenu"};
-      const sender = {tab: {id: 5}};
-      const sendResponse = sandbox.spy();
-      const parameters = {
-        request,
-        sender,
-        sendResponse
-      };
-
-      chrome.runtime.onMessage.trigger(request, sender, sendResponse);
-
-      sinon.assert.calledOnce(hideVIEWMenuSpy);
-      sinon.assert.calledWithExactly(hideVIEWMenuSpy, parameters);
-
-      sinon.assert.calledOnce(chrome.tabs.sendMessage);
-      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
-    });
-
-    it("should process the message 'toggleAccountMenu'", function() {
-      const toggleAccountMenuSpy = sandbox.spy(background, "toggleAccountMenu");
-
-      const request = {action: "toggleAccountMenu"};
-      const sender = {tab: {id: 5}};
-      const sendResponse = sandbox.spy();
-      const parameters = {
-        request,
-        sender,
-        sendResponse
-      };
-
-      chrome.runtime.onMessage.trigger(request, sender, sendResponse);
-
-      sinon.assert.calledOnce(toggleAccountMenuSpy);
-      sinon.assert.calledWithExactly(toggleAccountMenuSpy, parameters);
-
-      sinon.assert.calledOnce(chrome.tabs.sendMessage);
-      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
-    });
-
-    it("should process the message 'hideAccountMenu'", function() {
-      const hideAccountMenuSpy = sandbox.spy(background, "hideAccountMenu");
-
-      const request = {action: "hideAccountMenu"};
-      const sender = {tab: {id: 5}};
-      const sendResponse = sandbox.spy();
-      const parameters = {
-        request,
-        sender,
-        sendResponse
-      };
-
-      chrome.runtime.onMessage.trigger(request, sender, sendResponse);
-
-      sinon.assert.calledOnce(hideAccountMenuSpy);
-      sinon.assert.calledWithExactly(hideAccountMenuSpy, parameters);
-
-      sinon.assert.calledOnce(chrome.tabs.sendMessage);
-      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
-    });
-
-    it("should process the message 'toggleStatisticsMenu'", function() {
-      const toggleStatisticsMenuSpy = sandbox.spy(background, "toggleStatisticsMenu");
-
-      const request = {action: "toggleStatisticsMenu"};
-      const sender = {tab: {id: 5}};
-      const sendResponse = sandbox.spy();
-      const parameters = {
-        request,
-        sender,
-        sendResponse
-      };
-
-      chrome.runtime.onMessage.trigger(request, sender, sendResponse);
-
-      sinon.assert.calledOnce(toggleStatisticsMenuSpy);
-      sinon.assert.calledWithExactly(toggleStatisticsMenuSpy, parameters);
-
-      sinon.assert.calledOnce(chrome.tabs.sendMessage);
-      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
-    });
-
-    it("should process the message 'hideStatisticsMenu'", function() {
-      const hideStatisticsMenuSpy = sandbox.spy(background, "hideStatisticsMenu");
-
-      const request = {action: "hideStatisticsMenu"};
-      const sender = {tab: {id: 5}};
-      const sendResponse = sandbox.spy();
-      const parameters = {
-        request,
-        sender,
-        sendResponse
-      };
-
-      chrome.runtime.onMessage.trigger(request, sender, sendResponse);
-
-      sinon.assert.calledOnce(hideStatisticsMenuSpy);
-      sinon.assert.calledWithExactly(hideStatisticsMenuSpy, parameters);
-
-      sinon.assert.calledOnce(chrome.tabs.sendMessage);
-      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
-    });
-
-    it("should process the message 'removeFeedbackDialog'", function() {
-      const removeFeedbackDialogSpy = sandbox.spy(background, "removeFeedbackDialog");
-
-      const request = {action: "removeFeedbackDialog"};
-      const sender = {tab: {id: 5}};
-      const sendResponse = sandbox.spy();
-      const parameters = {
-        request,
-        sender,
-        sendResponse
-      };
-
-      chrome.runtime.onMessage.trigger(request, sender, sendResponse);
-
-      sinon.assert.calledOnce(removeFeedbackDialogSpy);
-      sinon.assert.calledWithExactly(removeFeedbackDialogSpy, parameters);
-
-      sinon.assert.calledOnce(chrome.tabs.sendMessage);
-      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
-    });
-
-    it("should process the message 'callEnhance'", function() {
-      const callEnhanceSpy = sandbox.spy(background, "callEnhance");
-
-      const request = {action: "callEnhance"};
-      const sender = {tab: {id: 5}};
-      const sendResponse = sandbox.spy();
-      const parameters = {
-        request,
-        sender,
-        sendResponse
-      };
-
-      chrome.runtime.onMessage.trigger(request, sender, sendResponse);
-
-      sinon.assert.calledOnce(callEnhanceSpy);
-      sinon.assert.calledWithExactly(callEnhanceSpy, parameters);
-
-      sinon.assert.calledOnce(chrome.tabs.sendMessage);
-      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
-    });
-
-    it("should process the message 'showElement'", function() {
-      const showElementSpy = sandbox.spy(background, "showElement");
-
-      const request = {
-        action: "showElement",
-        selector: "some jquery selector"
-      };
-      const sender = {tab: {id: 5}};
-      const sendResponse = sandbox.spy();
-      const parameters = {
-        request,
-        sender,
-        sendResponse
-      };
-
-      chrome.runtime.onMessage.trigger(request, sender, sendResponse);
-
-      sinon.assert.calledOnce(showElementSpy);
-      sinon.assert.calledWithExactly(showElementSpy, parameters);
-
-      sinon.assert.calledOnce(chrome.tabs.sendMessage);
-      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
-    });
-
-    it("should process the message 'hideElement'", function() {
-      const hideElementSpy = sandbox.spy(background, "hideElement");
-
-      const request = {
-        action: "hideElement",
-        selector: "some jquery selector"
-      };
-      const sender = {tab: {id: 5}};
-      const sendResponse = sandbox.spy();
-      const parameters = {
-        request,
-        sender,
-        sendResponse
-      };
-
-      chrome.runtime.onMessage.trigger(request, sender, sendResponse);
-
-      sinon.assert.calledOnce(hideElementSpy);
-      sinon.assert.calledWithExactly(hideElementSpy, parameters);
-
-      sinon.assert.calledOnce(chrome.tabs.sendMessage);
-      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
-    });
-
-    it("should process the message 'callAbort'", function() {
-      const callAbortSpy = sandbox.spy(background, "callAbort");
-
-      const request = {action: "callAbort"};
-      const sender = {tab: {id: 5}};
-      const sendResponse = sandbox.spy();
-      const parameters = {
-        request,
-        sender,
-        sendResponse
-      };
-
-      chrome.runtime.onMessage.trigger(request, sender, sendResponse);
-
-      sinon.assert.calledOnce(callAbortSpy);
-      sinon.assert.calledWithExactly(callAbortSpy, parameters);
-
-      sinon.assert.calledOnce(chrome.tabs.sendMessage);
-      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
-    });
-
-    it("should process the message 'callRestoreToOriginal'", function() {
-      const callRestoreToOriginalSpy = sandbox.spy(background, "callRestoreToOriginal");
-
-      const request = {action: "callRestoreToOriginal"};
-      const sender = {tab: {id: 5}};
-      const sendResponse = sandbox.spy();
-      const parameters = {
-        request,
-        sender,
-        sendResponse
-      };
-
-      chrome.runtime.onMessage.trigger(request, sender, sendResponse);
-
-      sinon.assert.calledOnce(callRestoreToOriginalSpy);
-      sinon.assert.calledWithExactly(callRestoreToOriginalSpy, parameters);
-
-      sinon.assert.calledOnce(chrome.tabs.sendMessage);
-      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, request);
-    });
-
-    it("should process the message 'callOpenOptionsPage'", function() {
-      const callOpenOptionsPageSpy = sandbox.spy(background, "callOpenOptionsPage");
-
-      const request = {action: "callOpenOptionsPage"};
-      const sender = {tab: {id: 5}};
-      const sendResponse = sandbox.spy();
-      const parameters = {
-        request,
-        sender,
-        sendResponse
-      };
-
-      chrome.runtime.onMessage.trigger(request, sender, sendResponse);
-
-      sinon.assert.calledOnce(callOpenOptionsPageSpy);
-      sinon.assert.calledWithExactly(callOpenOptionsPageSpy, parameters);
+      sinon.assert.calledOnce(openOptionsPageSpy);
+      sinon.assert.calledWithExactly(openOptionsPageSpy, parameters);
 
       sinon.assert.calledOnce(chrome.runtime.openOptionsPage);
     });
@@ -638,7 +358,8 @@ describe("background.js", function() {
           });
 
           it("should succeed to send activity data and call addEnhancementMarkup(data)", function() {
-            const callAddEnhancementMarkupSpy = sandbox.spy(background, "callAddEnhancementMarkup");
+            const requestToAddEnhancementMarkupSpy =
+              sandbox.spy(background, "requestToAddEnhancementMarkup");
             const serverURL = "https://some.url";
 
             const request = {
@@ -659,16 +380,16 @@ describe("background.js", function() {
 
             sandbox.server.respond();
 
-            sinon.assert.calledOnce(callAddEnhancementMarkupSpy);
-            sinon.assert.calledWithExactly(callAddEnhancementMarkupSpy, serverData);
+            sinon.assert.calledOnce(requestToAddEnhancementMarkupSpy);
+            sinon.assert.calledWithExactly(requestToAddEnhancementMarkupSpy, serverData);
           });
 
-          it("should send a request to the content script to add server markup", function() {
+          it("should send a request to the content script to call view.enhancer.addEnhancementMarkup()", function() {
             const serverData = "some server data";
 
             background.currentTabId = 5;
 
-            background.callAddEnhancementMarkup(serverData);
+            background.requestToAddEnhancementMarkup(serverData);
 
             sinon.assert.calledOnce(chrome.tabs.sendMessage);
             sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
@@ -931,8 +652,8 @@ describe("background.js", function() {
             );
           });
 
-          it("should succeed to send tracking data, get the submission response data and call callShowFeedback(data)", function() {
-            const callShowFeedbackSpy = sandbox.spy(background, "callShowFeedback");
+          it("should succeed to send tracking data, get the submission response data and call requestToShowFeedback(data)", function() {
+            const callShowFeedbackSpy = sandbox.spy(background, "requestToShowFeedback");
 
             const serverTrackingURL = "https://view.aleks.bg/act/tracking";
             const trackingData = "some tracking data";
@@ -958,12 +679,12 @@ describe("background.js", function() {
             sinon.assert.calledWithExactly(callShowFeedbackSpy, submissionResponseData);
           });
 
-          it("should send a request to call showFeedback(data)", function() {
+          it("should send a request to call view.feedbacker.showFeedback(data)", function() {
             const submissionResponseData = "some submission response data";
 
             background.currentTabId = 5;
 
-            background.callShowFeedback(submissionResponseData);
+            background.requestToShowFeedback(submissionResponseData);
 
             sinon.assert.calledOnce(chrome.tabs.sendMessage);
             sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
@@ -1040,8 +761,8 @@ describe("background.js", function() {
             sinon.assert.calledWithExactly(getAllTasksSpy, parameters);
           });
 
-          it("should succeed to get all tasks and call callShowAllTasks(data)", function() {
-            const callShowAllTasksSpy = sandbox.spy(background, "callShowAllTasks");
+          it("should succeed to get all tasks and call requestToShowAllTasks(data)", function() {
+            const callShowAllTasksSpy = sandbox.spy(background, "requestToShowAllTasks");
 
             const serverTaskURL= "https://view.aleks.bg/act/task";
             const queryParam = "?token=token";
@@ -1069,12 +790,12 @@ describe("background.js", function() {
             sinon.assert.calledWithExactly(callShowAllTasksSpy, serverData);
           });
 
-          it("should send a request to the content script to call showAllTasks(data)", function() {
+          it("should send a request to the content script to call view.feedbacker.showAllTasks(data)", function() {
             const serverData = "some server data";
 
             background.currentTabId = 5;
 
-            background.callShowAllTasks(serverData);
+            background.requestToShowAllTasks(serverData);
 
             sinon.assert.calledOnce(chrome.tabs.sendMessage);
             sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
@@ -1164,8 +885,8 @@ describe("background.js", function() {
             sinon.assert.calledWithExactly(getTaskSpy, parameters);
           });
 
-          it("should succeed to get the task and call callShowTask(data)", function() {
-            const ccallShowTaskSpy = sandbox.spy(background, "callShowTask");
+          it("should succeed to get the task and call requestToShowTask(data)", function() {
+            const ccallShowTaskSpy = sandbox.spy(background, "requestToShowTask");
 
             const serverTrackingURL= "https://view.aleks.bg/act/tracking";
             const queryParam = "?token=token&taskId=7";
@@ -1193,12 +914,12 @@ describe("background.js", function() {
             sinon.assert.calledWithExactly(ccallShowTaskSpy, serverData);
           });
 
-          it("should send a request to the content script to call callShowTask(data)", function() {
+          it("should send a request to the content script to call view.feedbacker.showTask(data)", function() {
             const serverData = "some server data";
 
             background.currentTabId = 5;
 
-            background.callShowTask(serverData);
+            background.requestToShowTask(serverData);
 
             sinon.assert.calledOnce(chrome.tabs.sendMessage);
             sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
@@ -1267,7 +988,7 @@ describe("background.js", function() {
         it("should send a request to the content script to return to the initial interaction state", function() {
           background.currentTabId = 5;
 
-          background.callInitialInteractionState();
+          background.requestToCallInitialInteractionState();
 
           sinon.assert.calledOnce(chrome.tabs.sendMessage);
           sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {action: "initialInteractionState"});
@@ -1338,9 +1059,8 @@ describe("background.js", function() {
           sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
         });
 
-        it("should create the 'timeout-notification' and call callAbort()", function() {
+        it("should create the 'timeout-notification'", function() {
           const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
-          const callAbortSpy = sandbox.spy(background, "callAbort");
 
           const id = "timeout-notification";
           const title = "Timeout!";
@@ -1350,8 +1070,6 @@ describe("background.js", function() {
 
           sinon.assert.calledOnce(createBasicNotificationSpy);
           sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
-
-          sinon.assert.calledOnce(callAbortSpy);
         });
 
         it("should create the 'error-490-notification'", function() {
@@ -1476,74 +1194,136 @@ describe("background.js", function() {
       sinon.assert.notCalled(processUserIdCookieSpy);
     });
 
-    it("should sign out the user as the cookie got removed", function() {
-      const signOutSpy = sandbox.spy(background, "signOut");
+    describe("processUserIdCookie", function() {
+      it("should sign out the user as the cookie got removed", function() {
+        const signOutSpy = sandbox.spy(background, "signOut");
 
-      background.processUserIdCookie({removed: true});
+        background.processUserIdCookie({removed: true});
 
-      sinon.assert.calledOnce(signOutSpy);
-    });
-
-    it("should sign in the user as the cookie has a value", function() {
-      const signInSpy = sandbox.spy(background, "signIn");
-
-      const cookieInfo = {
-        name: "wertiview_userid",
-        value: "name/email/id"
-      };
-
-      const cookieChangeInfo = {
-        cookie: cookieInfo
-      };
-
-      background.processUserIdCookie(cookieChangeInfo);
-
-      sinon.assert.calledOnce(signInSpy);
-      sinon.assert.calledWithExactly(signInSpy, cookieInfo.value);
-    });
-
-    it("should reset user email and id and send a request to sign out the user", function() {
-      background.currentTabId = 5;
-
-      background.signOut();
-
-      sinon.assert.calledOnce(chrome.storage.local.set);
-      sinon.assert.calledWith(chrome.storage.local.set, {
-        userEmail: "",
-        userid: "",
-        user: "",
-        token: "",
-        taskId: ""
+        sinon.assert.calledOnce(signOutSpy);
       });
 
-      sinon.assert.calledOnce(chrome.tabs.sendMessage);
-      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {action: "signOut"});
-    });
+      it("should sign in the user as the cookie has a value", function() {
+        const signInSpy = sandbox.spy(background, "signIn");
 
-    it("should set user email and id and send a request to sign in the user", function() {
-      const encodedUser = "user%20name";
-      const userData = encodedUser + "/email/id/authtoken";
-      const userEmail = "email";
-      const userid = "id";
-      const user = "user name";
-      const token = "authtoken";
+        const cookieInfo = {
+          name: "wertiview_userid",
+          value: "name/email/id"
+        };
 
-      background.currentTabId = 5;
+        const cookieChangeInfo = {
+          cookie: cookieInfo
+        };
 
-      background.signIn(userData);
+        background.processUserIdCookie(cookieChangeInfo);
 
-      sinon.assert.calledOnce(chrome.storage.local.set);
-      sinon.assert.calledWith(chrome.storage.local.set, {
-        userEmail: userEmail,
-        userid: userid,
-        user: user,
-        token: token
+        sinon.assert.calledOnce(signInSpy);
+        sinon.assert.calledWithExactly(signInSpy, cookieInfo.value);
       });
 
-      sinon.assert.calledOnce(chrome.tabs.sendMessage);
-      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
-        action: "signIn",
-        user: user
+      it("should call requestToSetAccountInfo() in any case", function() {
+        const requestToSetAccountInfoSpy = sandbox.spy(background, "requestToSetAccountInfo");
+
+        const cookieInfo = {
+          name: "wertiview_userid",
+          value: "name/email/id"
+        };
+
+        const cookieChangeInfo = {
+          cookie: cookieInfo
+        };
+
+        background.processUserIdCookie(cookieChangeInfo);
+
+        sinon.assert.calledOnce(requestToSetAccountInfoSpy);
+      });
+
+      it("should send the message to call view.accountMenu.setAccountInfo()", function() {
+        background.currentTabId = 5;
+
+        background.requestToSetAccountInfo();
+
+        sinon.assert.calledOnce(chrome.tabs.sendMessage);
+        sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {action: "setAccountInfo"});
+      });
+    });
+
+    describe("signOut", function() {
+      it("should reset user email, user id, user, token and task id", function() {
+        background.signOut();
+
+        sinon.assert.calledOnce(chrome.storage.local.set);
+        sinon.assert.calledWith(chrome.storage.local.set, {
+          userEmail: "",
+          userid: "",
+          user: "",
+          token: "",
+          taskId: ""
+        });
+      });
+
+      it("should call requestToSignOut()", function() {
+        const requestToSignOutSpy = sandbox.spy(background, "requestToSignOut");
+
+        background.signOut();
+
+        sinon.assert.calledOnce(requestToSignOutSpy);
+      });
+
+      it("should send the message to call view.accountMenu.signOut()", function() {
+        background.currentTabId = 5;
+
+        background.requestToSignOut();
+
+        sinon.assert.calledOnce(chrome.tabs.sendMessage);
+        sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {action: "signOut"});
+      });
+    });
+
+    describe("signIn", function() {
+      it("should set user email, user id, user and token", function() {
+        const encodedUser = "user%20name";
+        const userData = encodedUser + "/email/id/authtoken";
+        const userEmail = "email";
+        const userid = "id";
+        const user = "user name";
+        const token = "authtoken";
+
+        background.signIn(userData);
+
+        sinon.assert.calledOnce(chrome.storage.local.set);
+        sinon.assert.calledWith(chrome.storage.local.set, {
+          userEmail: userEmail,
+          userid: userid,
+          user: user,
+          token: token
+        });
+      });
+
+      it("should call requestToSignIn()", function() {
+        const requestToSignInSpy = sandbox.spy(background, "requestToSignIn");
+
+        const user = "user name";
+
+        background.signIn(user + "/email/id/authtoken");
+
+        sinon.assert.calledOnce(requestToSignInSpy);
+        sinon.assert.calledWithExactly(requestToSignInSpy, user);
+
+      });
+
+      it("should send the message to view.accountMenu.signIn()", function() {
+        background.currentTabId = 5;
+
+        const user = "user name";
+
+        background.requestToSignIn(user);
+
+        sinon.assert.calledOnce(chrome.tabs.sendMessage);
+        sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
+          action: "signIn",
+          user: user
+        });
       });
     });
   });

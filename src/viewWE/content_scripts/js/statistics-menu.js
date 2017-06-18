@@ -8,6 +8,7 @@ view.statisticsMenu = {
    */
   add: function() {
     $("body").prepend(statisticsMenuContent);
+    $StatisticsMenu.attr("id", "view-statistics-menu-container");
     view.statisticsMenu.init();
   },
 

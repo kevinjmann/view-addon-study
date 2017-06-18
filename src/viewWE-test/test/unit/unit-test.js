@@ -16,8 +16,6 @@ const unitTest = {
       serverTaskURL: testServerURL + "/act/task",
       serverTrackingURL: testServerURL + "/act/tracking",
       authenticator: testServerURL + "/authenticator.html",
-      cookie_name: "wertiview_userid",
-      cookie_path: "/VIEW/openid",
       ajaxTimeout: 60000,
       topics: {},
       userEmail: "",
@@ -44,8 +42,21 @@ const unitTest = {
       enabled: false, // should the page be enhanced right away?
       language: "unselected",
       topic: "unselected",
-      filter: "unselected",
-      activity: "unselected"
+      filter: "no-filter",
+      activity: "unselected",
+
+      // properties not stored in local storage
+      toolbarExists: false,
+      originalContent: ""
     })
+  },
+
+  /**
+   * Set all given items to view.
+   *
+   * @param {object} items the items to set
+   */
+  setViewItems: function(items) {
+    view.setItems(items);
   }
 };

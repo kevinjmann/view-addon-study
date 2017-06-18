@@ -54,22 +54,20 @@ describe("feedbacker.js", function() {
       // the expectations below don't need to be tested in other tests again
       // the selectors below can be freely used in the tests without problems
       sandbox.stub($.fn, "load").yields();
+      sandbox.stub(view.toolbar, "init");
 
-      view.toolbarIframe.init();
+      view.toolbar.add();
 
-      expect($("#view-toolbar-iframe").length).to.be.above(0);
+      expect($("#wertiview-toolbar-container").length).to.be.above(0);
 
       expect($(".feedback-hint-btn").length).to.equal(3);
       expect($(".feedback-hint").length).to.equal(3);
 
-      expect($("#feedback-hint-btn-1").length).to.be.above(0);
-      expect($("#feedback-hint-btn-2").length).to.be.above(0);
-      expect($("#feedback-hint-btn-3").length).to.be.above(0);
-      expect($("#feedback-rule-btn").length).to.be.above(0);
-
       expect($("#feedback-hint-btn-1").data("feedback-level")).to.equal(1);
       expect($("#feedback-hint-btn-2").data("feedback-level")).to.equal(2);
       expect($("#feedback-hint-btn-3").data("feedback-level")).to.equal(3);
+      expect($("#feedback-rule-btn").length).to.be.above(0);
+
 
       expect($("#feedback-hint-1").length).to.be.above(0);
       expect($("#feedback-hint-2").length).to.be.above(0);
@@ -149,7 +147,7 @@ describe("feedbacker.js", function() {
         expect(position).to.eql({
           my: "left bottom",
           at: "left top",
-          of: "#view-toolbar-iframe"
+          of: "#wertiview-toolbar-container"
         })
       });
 
@@ -179,7 +177,7 @@ describe("feedbacker.js", function() {
         position: {
           my: "left bottom",
           at: "left top",
-          of: "#view-toolbar-iframe"
+          of: "#wertiview-toolbar-container"
         }
       };
 
@@ -218,7 +216,7 @@ describe("feedbacker.js", function() {
       sinon.assert.calledWithExactly(initFeedbackRuleBtnSpy, {
         my: "left bottom",
         at: "left top",
-        of: "#view-toolbar-iframe"
+        of: "#wertiview-toolbar-container"
       });
     });
 
@@ -317,7 +315,7 @@ describe("feedbacker.js", function() {
       sinon.assert.calledWithExactly(initFeedbackHintBtnSpy, {
         my: "left bottom",
         at: "left top",
-        of: "#view-toolbar-iframe"
+        of: "#wertiview-toolbar-container"
       });
     });
 

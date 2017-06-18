@@ -14,12 +14,15 @@ view.lib = {
     $(window).on("click", function(event) {
       const $Target = $(event.target);
 
+      if(!$Target.closest("#wertiview-VIEW-menu-btn").length){
+        view.VIEWmenu.hide();
+      }
+      if(!$Target.closest(view.toolbar.selectorStart + "account-menu-button").length){
+        view.accountMenu.hide();
+      }
       if(!$Target.closest(view.accountMenu.selectorStart + "statistics").length){
         view.statisticsMenu.hide();
       }
-
-      view.VIEWmenu.hide();
-      view.accountMenu.hide();
 
       const $Dialog = $("#view-feedback-dialog").parent();
       if(!$Target.closest($Dialog).length){
