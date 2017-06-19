@@ -1,3 +1,5 @@
+const $ = require('jquery');
+
 /**
  * From: https://gist.github.com/jtsternberg/1e03f5fd5be8427170c5
  * Caches jquery selectors when they are requested, so that each element
