@@ -13,7 +13,6 @@ const source_path = path.resolve(__dirname, "./viewWE");
 module.exports = {
   entry: {
     'background/background': path.resolve(source_path, "background.js"),
-    'toolbar/toolbar': glob.sync(path.resolve(source_path, "toolbar/toolbar.*")),
     'options/options': glob.sync(path.resolve(source_path, "options/options.*")),
     'content_scripts/view': [
       path.resolve(source_path, "content_scripts/js/messageHandler.js")
@@ -56,10 +55,14 @@ module.exports = {
       },
       {
         test: /.*content_scripts.*\.html$/,
-        loader: "file-loader"
+        loader: "html-loader"
       },
       {
-        test: /.*(options|toolbar).*\.html$/,
+        test: /.*\.png$/,
+        loader: "url-loader?mimetype=image/png"
+      },
+      {
+        test: /.*(options).*\.html$/,
         loader: HtmlTextPlugin.extract({use: "raw-loader"})
       }
     ]

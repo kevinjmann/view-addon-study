@@ -40,14 +40,13 @@ module.exports = function(view) {
      * Create the toolbar ui and add it to the body.
      */
     add: function() {
-      const toolbarHTML = chrome.runtime.getURL("content_scripts/html/toolbar.html");
-
       const $Toolbar = $("<div>");
       $Toolbar.attr("id", "wertiview-toolbar-container");
 
       const $Body = $("body");
 
-      $Toolbar.load(toolbarHTML, view.toolbar.init);
+      $Toolbar.html(toolbarHTML);
+      view.toolbar.init();
 
       $("head").append($Body.find("script"));
 
