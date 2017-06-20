@@ -46,11 +46,12 @@ module.exports = function(view) {
       const $Body = $("body");
 
       $Toolbar.html(toolbarHTML);
-      view.toolbar.init();
 
       $("head").append($Body.find("script"));
 
       view.container.add($Body);
+
+      $Body.append($Toolbar);
 
       view.VIEWmenu.add();
 
@@ -60,7 +61,7 @@ module.exports = function(view) {
 
       view.lib.initOnWindowClick();
 
-      $Body.append($Toolbar);
+      view.toolbar.init();
     },
 
     /**
