@@ -1,18 +1,17 @@
 const $ = require('jquery');
+const accountHTML = require('../html/account-menu.html');
 
 module.exports = function(view) {
   return {
     selectorStart : "#view-account-menu-",
 
     add: function() {
-      const accountHTML = chrome.runtime.getURL("content_scripts/html/account-menu.html");
-
       const $Account = $("<div>");
       $Account.attr("id", "view-account-menu-container");
-
-      $Account.load(accountHTML, view.accountMenu.init);
-
+      $Account.html(accountHTML);
       $("body").append($Account);
+
+      view.accountMenu.init();
     },
 
     /**
