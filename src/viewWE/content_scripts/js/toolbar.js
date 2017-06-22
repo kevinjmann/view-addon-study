@@ -42,16 +42,11 @@ module.exports = function(view) {
     add: function() {
       const $Toolbar = $("<div>");
       $Toolbar.attr("id", "wertiview-toolbar-container");
+      $Toolbar.html(toolbarHTML);
 
       const $Body = $("body");
 
-      $Toolbar.html(toolbarHTML);
-
-      $("head").append($Body.find("script"));
-
       view.container.add($Body);
-
-      $Body.append($Toolbar);
 
       view.VIEWmenu.add();
 
@@ -60,6 +55,8 @@ module.exports = function(view) {
       view.statisticsMenu.add();
 
       view.lib.initOnWindowClick();
+
+      $Body.append($Toolbar);
 
       view.toolbar.init();
     },

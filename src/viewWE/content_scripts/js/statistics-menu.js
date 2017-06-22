@@ -9,9 +9,9 @@ module.exports = function(view) {
      * Add the statistics menu to the page.
      */
     add: function() {
-      const $StatisticsMenu = $('div');
+      const $StatisticsMenu = $('<div>');
       $StatisticsMenu.attr("id", "view-statistics-menu-container");
-      $StatisticsMenu.prepend(statisticsMenuContent);
+      $StatisticsMenu.append(statisticsMenuContent);
       $('body').append($StatisticsMenu);
       view.statisticsMenu.init();
     },

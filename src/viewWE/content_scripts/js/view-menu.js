@@ -6,10 +6,11 @@ module.exports = function(view) {
     selectorStart : "#view-VIEW-menu-",
 
     add: function() {
-      const $ViewMenu = $(viewMenuContent);
-
+      const $ViewMenu = $('<div>');
       $ViewMenu.attr("id", "view-VIEW-menu-container");
-      $("body").prepend($ViewMenu);
+      $ViewMenu.html(viewMenuContent);
+
+      $("body").append($ViewMenu);
 
       view.VIEWmenu.init();
     },
