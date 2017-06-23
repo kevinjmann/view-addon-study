@@ -152,7 +152,7 @@ describe("background.js", function() {
       const getJSONStub = sandbox.stub($, "getJSON");
       const setAndToggleSpy = sandbox.spy(background, "proceedToSetAndToggleToolbar");
 
-      const jsonData = fixture.load("fixtures/json/articles.json");
+      const jsonData = fixture.load("/viewWE-test/fixtures/json/articles.json");
 
       getJSONStub.yields(jsonData); // make $.getJSON synchronous
 
@@ -168,7 +168,7 @@ describe("background.js", function() {
     });
 
     it("should proceed to set topics and call view.toolbar.toggleOrAddToolbar()", function() {
-      const jsonData = fixture.load("fixtures/json/articles.json");
+      const jsonData = fixture.load("/viewWE-test/fixtures/json/articles.json");
 
       chrome.storage.local.set.yields(); // make chrome.storage.local.set synchronous
 

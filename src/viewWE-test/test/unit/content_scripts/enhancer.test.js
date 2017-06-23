@@ -13,17 +13,17 @@ describe("enhancer.js", function() {
   const $NoMarkup = $("<div>");
 
   before(function() {
-    fixture.load("/fixtures/ru-no-markup.html");
+    fixture.load("/viewWE-test/fixtures/ru-no-markup.html");
     $NoMarkup.html($("#ru-no-markup-body").html());
     $("body").append($("<div id='wertiview-content'>"));
   });
 
   beforeEach(function() {
-    fixture.load("/fixtures/toolbar.html", true);
-    fixture.load("/fixtures/debug-sentence-markup.html", true);
-    fixture.load("/fixtures/ru-nouns-mc-and-cloze.html", true);
+    fixture.load("/viewWE-test/fixtures/toolbar.html", true);
+    fixture.load("/viewWE-test/fixtures/debug-sentence-markup.html", true);
+    fixture.load("/viewWE-test/fixtures/ru-nouns-mc-and-cloze.html", true);
 
-    jsonDataNouns = fixture.load("fixtures/json/nouns.json", true);
+    jsonDataNouns = fixture.load("/viewWE-test/fixtures/json/nouns.json", true);
 
     $("#wertiview-content").html($NoMarkup.html());
 

@@ -12,7 +12,7 @@ describe("container.js", function() {
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
 
-    fixture.load("/fixtures/ru-no-markup.html");
+    fixture.load("/viewWE-test/fixtures/ru-no-markup.html");
   });
 
   afterEach(function() {

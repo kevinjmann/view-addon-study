@@ -11,7 +11,7 @@ describe("account-menu.js", function() {
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
-    fixture.load("/fixtures/account-menu.html");
+    fixture.load("/viewWE-test/fixtures/account-menu.html");
     sandbox.stub($.fn, "load").yields();
   });
 

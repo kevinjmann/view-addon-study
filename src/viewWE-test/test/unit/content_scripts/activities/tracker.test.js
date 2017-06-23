@@ -11,7 +11,7 @@ describe("tracker.js", function() {
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
-    fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
+    fixture.load("/viewWE-test/fixtures/ru-nouns-mc-and-cloze.html");
     unitTest.setViewDefaults();
     view.userid = "some-id";
   });

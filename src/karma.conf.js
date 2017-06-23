@@ -4,7 +4,8 @@ module.exports = function(config) {
   config.set({
     files: [
       'viewWE-test/**/*.test.js',
-      'spec/fixtures/**/*'
+      'viewWE-test/fixtures/*.html',
+      'viewWE-test/fixtures/json/*.json'
     ],
 
     preprocessors: {
@@ -12,8 +13,8 @@ module.exports = function(config) {
       'viewWE-test/**/*.test.js': ['webpack', 'sourcemap'],
 
       // fixtures
-      '**/*.html'   : ['html2js'],
-      '**/*.json'   : ['json_fixtures']
+      'viewWE-test/fixtures/*.html': ['html2js'],
+      'viewWE-test/fixtures/json/*.json': ['json_fixtures']
     },
 
     jsonFixturesPreprocessor: {

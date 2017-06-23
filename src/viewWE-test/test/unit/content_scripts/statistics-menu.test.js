@@ -58,7 +58,7 @@ describe("statistics-menu.js", function() {
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
-    fixture.load("/fixtures/statistics-menu.html");
+    fixture.load("/viewWE-test/fixtures/statistics-menu.html");
     sandbox.stub($.fn, "load").yields();
     unitTest.setViewDefaults();
   });

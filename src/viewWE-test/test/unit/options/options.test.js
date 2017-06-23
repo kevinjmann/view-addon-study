@@ -11,7 +11,7 @@ describe("options.js", function() {
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
-    fixture.load("/fixtures/options.html");
+    fixture.load("/viewWE-test/fixtures/options.html");
   });
 
   afterEach(function() {

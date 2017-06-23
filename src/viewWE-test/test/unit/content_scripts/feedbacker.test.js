@@ -9,8 +9,6 @@
 describe("feedbacker.js", function() {
   let sandbox;
 
-  fixture.load("/fixtures/unstressed-o-feedback.html");
-  
   const performanceData = {
     "enhancement-id": "VIEW-N-Msc-Inan-Sg-Nom-5",
     "task-id": 1,
@@ -31,6 +29,8 @@ describe("feedbacker.js", function() {
   };
 
   before(function() {
+    fixture.load("/viewWE-test/fixtures/unstressed-o-feedback.html");
+
     $("body").append("<viewenhancement id='" + performanceData["enhancement-id"] + "'>" +
       "процесс</viewenhancement>");
   });

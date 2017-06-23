@@ -15,13 +15,13 @@ describe("toolbar.js", function() {
     sandbox = sinon.sandbox.create();
     sandbox.stub($.fn, "load").yields();
 
-    fixture.load("/fixtures/toolbar.html");
+    fixture.load("/viewWE-test/fixtures/toolbar.html");
 
     view.toolbar.activitySelectors = {};
     view.toolbar.$cache = new Selector_Cache();
 
-    const jsonDataNouns = fixture.load("fixtures/json/nouns.json", true);
-    const jsonDataArticles = fixture.load("fixtures/json/articles.json", true);
+    const jsonDataNouns = fixture.load("/viewWE-test/fixtures/json/nouns.json", true);
+    const jsonDataArticles = fixture.load("/viewWE-test/fixtures/json/articles.json", true);
 
     view.topics = {
       nouns: jsonDataNouns,

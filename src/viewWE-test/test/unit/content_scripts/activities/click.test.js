@@ -11,7 +11,7 @@ describe("click.js", function() {
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
-    fixture.load("/fixtures/ru-nouns-click.html");
+    fixture.load("/viewWE-test/fixtures/ru-nouns-click.html");
     unitTest.setViewDefaults();
     view.selector.select("Sg");
   });

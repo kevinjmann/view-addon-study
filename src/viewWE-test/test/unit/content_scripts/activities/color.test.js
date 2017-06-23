@@ -11,7 +11,7 @@ describe("color.js", function() {
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
-    fixture.load("/fixtures/ru-nouns-color.html");
+    fixture.load("/viewWE-test/fixtures/ru-nouns-color.html");
     view.selector.select("Sg");
   });
 

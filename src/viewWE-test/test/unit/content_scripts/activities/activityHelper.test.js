@@ -11,7 +11,7 @@ describe("activityHelper.js", function() {
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
-    fixture.load("/fixtures/ru-nouns-mc-and-cloze.html");
+    fixture.load("/viewWE-test/fixtures/ru-nouns-mc-and-cloze.html");
     unitTest.setViewDefaults();
     view.language = "ru";
     view.selector.select("Sg");
@@ -851,7 +851,7 @@ describe("activityHelper.js", function() {
     });
 
     it("should return the hit original text as 'correctform' does not exist", function() {
-      fixture.load("/fixtures/en-det-mc-and-cloze.html");
+      fixture.load("/viewWE-test/fixtures/en-det-mc-and-cloze.html");
       const $hit = $("[data-type='hit']").first();
 
       view.cloze.createExercise($hit);
