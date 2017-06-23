@@ -62,6 +62,10 @@ module.exports = {
         loader: "url-loader?mimetype=image/png"
       },
       {
+        test: /.*\.gif$/,
+        loader: "url-loader?mimetype=image/gif"
+      },
+      {
         test: /.*(options).*\.html$/,
         loader: HtmlTextPlugin.extract({use: "raw-loader"})
       }

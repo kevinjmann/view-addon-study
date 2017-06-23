@@ -467,7 +467,7 @@ module.exports = function(view) {
      * Init the loading image.
      */
     initLoadingImage: function() {
-      const loadingGif = chrome.runtime.getURL("icons/loading.gif");
+      const loadingGif = require('../../icons/loading.gif');
       const $LoadingImg = $("<img>").attr("src", loadingGif);
       view.toolbar.$cache.get(view.toolbar.selectorStart + "loading").append($LoadingImg);
     },

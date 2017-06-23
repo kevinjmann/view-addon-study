@@ -14,7 +14,7 @@ module.exports = {
 
       var $loadingimg = $("<img>");
       $loadingimg.attr("id", "wertiview-blur-loading");
-      $loadingimg.attr("src", chrome.runtime.getURL("icons/loading.gif"));
+      $loadingimg.attr("src", require("../../icons/loading.gif"));
       $loadingimg.attr("width", "32");
       $loadingimg.attr("height", "32");
 

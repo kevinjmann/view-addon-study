@@ -61,10 +61,5 @@
     "*://sifnos.sfs.uni-tuebingen.de/*",
     "https://view.aleks.bg/*",
     "*://*.localhost/*"
-  ],
-
-  "web_accessible_resources": [
-    "icons/view-128.png",
-    "icons/loading.gif"
   ]
 }
