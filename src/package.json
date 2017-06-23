@@ -2,7 +2,10 @@
   "name": "VIEWWebExtension",
   "version": "1.1.0",
   "description": "VIEW provides supplementary language learning activities using authentic texts selected by the learner.",
-  "repository": "https://git.aleks.bg/view/view-addon",
+  "repository": {
+    "type": "git",
+    "url": "https://git.aleks.bg/view/view-addon"
+  },
   "scripts": {
     "build": "webpack",
     "bundle": "web-ext -s ./addon -a dist build",
