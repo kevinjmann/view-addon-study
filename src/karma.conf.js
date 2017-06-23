@@ -1,3 +1,5 @@
+const webpackConfig = require('./webpack.config.js');
+
 module.exports = function(config) {
   config.set({
     files: [
@@ -5,19 +7,21 @@ module.exports = function(config) {
     ],
 
     preprocessors: {
-      'test/**/*.test.js': ['webpack', 'sourcemap']
+      'viewWE-test/**/*.test.js': ['webpack', 'sourcemap']
     },
 
-    webpack: {
-      devtool: 'inline-source-map'
-    },
+    webpack: webpackConfig,
+
+    browsers: ['Firefox'],
 
     webpackMiddleware: {
       stats: 'errors-only'
     },
 
     plugins: [
-      require('karma-webpack')
+      require('karma-webpack'),
+      require('karma-firefox-launcher'),
+      require('karma-sourcemap-loader')
     ]
   });
 };
