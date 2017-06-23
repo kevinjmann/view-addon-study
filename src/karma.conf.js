@@ -12,17 +12,12 @@ module.exports = function(config) {
 
     webpack: webpackConfig,
 
+    frameworks: ['chai', 'mocha', 'sinon'],
+
     browsers: ['Firefox', 'ChromiumHeadless'],
 
     webpackMiddleware: {
       stats: 'errors-only'
-    },
-
-    plugins: [
-      require('karma-webpack'),
-      require('karma-firefox-launcher'),
-      require('karma-chrome-launcher'),
-      require('karma-sourcemap-loader')
-    ]
+    }
   });
 };
