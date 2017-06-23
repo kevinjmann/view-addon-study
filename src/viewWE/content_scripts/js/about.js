@@ -1,4 +1,6 @@
 const $ = require('jquery');
+require('jquery-ui/ui/widgets/dialog');
+require('jquery-ui/themes/base/dialog.css');
 const aboutDialogContent = require('../html/about.html');
 
 module.exports = {
