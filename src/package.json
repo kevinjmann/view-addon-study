@@ -13,7 +13,7 @@
     "lint": "npm-run-all lint:*",
     "lint:webext": "web-ext -s ./addon lint",
     "test": "npm-run-all test:*",
-    "test:karma": "karma start --single-run --browsers Firefox",
+    "test:karma": "karma start --single-run --browsers ChromiumHeadless",
     "test:func": "export FIREFOX_BINARY=${FIREFOX_BINARY:-firefox} && npm run bundle && XPI_NAME=dist/view-1.1.0.zip mocha viewWE-test/test/functional/",
     "watch": "webpack  --progress --colors --watch"
   },

@@ -12,7 +12,7 @@ module.exports = function(config) {
 
     webpack: webpackConfig,
 
-    browsers: ['Firefox'],
+    browsers: ['Firefox', 'ChromiumHeadless'],
 
     webpackMiddleware: {
       stats: 'errors-only'
@@ -21,6 +21,7 @@ module.exports = function(config) {
     plugins: [
       require('karma-webpack'),
       require('karma-firefox-launcher'),
+      require('karma-chrome-launcher'),
       require('karma-sourcemap-loader')
     ]
   });
