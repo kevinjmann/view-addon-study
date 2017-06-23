@@ -6,6 +6,8 @@
 
 "use strict";
 
+const $ = require('jquery');
+
 describe("click.js", function() {
   let sandbox;
 

@@ -6,6 +6,8 @@
 
 "use strict";
 
+const $ = require('jquery');
+
 describe("feedbacker.js", function() {
   let sandbox;
 

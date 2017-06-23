@@ -6,6 +6,8 @@
 
 "use strict";
 
+const $ = require('jquery');
+
 describe("color.js", function() {
   let sandbox;
 

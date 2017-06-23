@@ -6,6 +6,9 @@
 
 "use strict";
 
+const $ = require('jquery');
+const chrome = require('sinon-chrome');
+
 describe("background.js", function() {
   let sandbox;
   const theServerURL = "https://view.aleks.bg";

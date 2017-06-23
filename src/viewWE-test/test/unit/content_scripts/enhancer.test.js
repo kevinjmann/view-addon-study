@@ -6,6 +6,9 @@
 
 "use strict";
 
+const $ = require('jquery');
+const chrome = require('sinon-chrome');
+
 describe("enhancer.js", function() {
   let sandbox;
   let jsonDataNouns;

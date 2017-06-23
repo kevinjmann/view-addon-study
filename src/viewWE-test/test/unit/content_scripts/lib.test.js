@@ -6,6 +6,8 @@
 
 "use strict";
 
+const $ = require('jquery');
+
 describe("lib.js", function() {
   let sandbox;
 

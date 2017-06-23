@@ -6,6 +6,8 @@
 
 "use strict";
 
+const $ = require('jquery');
+
 describe("selector.js", function() {
   let sandbox;
 
