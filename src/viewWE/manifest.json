@@ -65,9 +65,6 @@
 
   "web_accessible_resources": [
     "icons/view-128.png",
-    "icons/loading.gif",
-    "topics/articles.json",
-    "topics/determiners.json",
-    "topics/nouns.json"
+    "icons/loading.gif"
   ]
 }

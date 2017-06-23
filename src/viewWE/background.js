@@ -6,7 +6,11 @@ const $ = require('jquery');
 const background = {
   currentTabId: -1,
   clickCounter: 0,
-  topics: {},
+  topics: {
+    articles: require('./topics/articles.json'),
+    determiners: require('./topics/determiners.json'),
+    nouns: require('./topics/nouns.json')
+  },
   /**
    * Set all default values to storage.
    * This is only toggleed once after the add-on was installed.
@@ -55,62 +59,6 @@ const background = {
    */
   noResponse: function() {
     // this is intentional
-  },
-
-  /**
-   * The topics are being loaded and set for the first time.
-   * When they are set, proceed to toggle the toolbar.
-   * Create notification otherwise.
-   */
-  setTopics: function() {
-
-    background.initTopics();
-
-    background.getAndSetTopicURLs();
-
-    $.when(
-      $.getJSON(background.topics.articles.url, function(data) {
-        background.topics.articles = data;
-      }),
-      $.getJSON(background.topics.determiners.url, function(data) {
-        background.topics.determiners = data;
-      }),
-      $.getJSON(background.topics.nouns.url, function(data) {
-        background.topics.nouns = data;
-      })
-    )
-    .done(function() {
-      background.proceedToSetAndToggleToolbar();
-    })
-    .fail(function() {
-      background.createBasicNotification(
-        "topics-not-loaded-notification",
-        "Topics not loaded!",
-        "There was a problem while loading the topics!"
-      );
-    });
-  },
-
-  /**
-   * Initiate topics object, so that it can be filled.
-   */
-  initTopics: function() {
-    background.topics.articles = {};
-
-    background.topics.determiners = {};
-
-    background.topics.nouns = {};
-  },
-
-  /**
-   * Get the URLs of all topic json objects and set them.
-   */
-  getAndSetTopicURLs: function() {
-    background.topics.articles.url = chrome.runtime.getURL("topics/articles.json");
-
-    background.topics.determiners.url = chrome.runtime.getURL("topics/determiners.json");
-
-    background.topics.nouns.url = chrome.runtime.getURL("topics/nouns.json");
   },
 
   /**
@@ -657,7 +605,7 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 
   if (background.clickCounter === 1) {
     background.setDefaults();
-    background.setTopics();
+    background.proceedToSetAndToggleToolbar();
   }
   else {
     background.requestToToggleOrAddToolbar();
