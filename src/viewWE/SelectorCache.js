@@ -13,7 +13,7 @@ import $ from 'jquery';
  * cache.get(selector, true) if the selected element should be reset
  * @constructor initialized with: new Selector_Cache()
  */
-export default class Selector_Cache {
+export default class SelectorCache {
   constructor() {
     this.collection = {};
   }
