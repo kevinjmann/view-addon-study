@@ -6,7 +6,7 @@
 
 "use strict";
 
-const $ = require('jquery');
+import $ from 'jquery';
 
 describe("cloze.js", function() {
   let sandbox;

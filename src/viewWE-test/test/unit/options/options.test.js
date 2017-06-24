@@ -6,9 +6,9 @@
 
 "use strict";
 
-const $ = require('jquery');
-const viewOptions = require('./../../../../viewWE/options/options.js');
-const Selector_Cache = require('./../../../../viewWE/SelectorCache.js');
+import $ from 'jquery';
+import {viewOptions} from './../../../../viewWE/options/options.js';
+import SelectorCache from './../../../../viewWE/SelectorCache.js';
 
 describe("options.js", function() {
   let sandbox;
@@ -20,7 +20,7 @@ describe("options.js", function() {
 
   afterEach(function() {
     sandbox.restore();
-    viewOptions.$cache = new Selector_Cache();
+    viewOptions.$cache = new SelectorCache();
     chrome.storage.local.set.reset();
     chrome.storage.local.get.reset();
     fixture.cleanup();

@@ -6,8 +6,8 @@
 
 "use strict";
 
-const $ = require('jquery');
-const chrome = require('sinon-chrome');
+import $ from 'jquery';
+import chrome from 'sinon-chrome';
 
 describe("background.js", function() {
   let sandbox;
