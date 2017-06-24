@@ -628,3 +628,5 @@ function observeUserId(changeInfo) {
 }
 
 chrome.cookies.onChanged.addListener(observeUserId);
+
+export {background, observeUserId}

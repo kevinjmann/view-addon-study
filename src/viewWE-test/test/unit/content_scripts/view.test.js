@@ -7,6 +7,7 @@
 "use strict";
 
 import chrome from 'sinon-chrome';
+import view from '../../../../viewWE/content_scripts/js/view.js';
 
 describe("view.js", function() {
   let sandbox;

@@ -6,8 +6,10 @@
 
 "use strict";
 
-const $ = require('jquery');
-const chrome = require('sinon-chrome');
+import $ from 'jquery';
+import chrome from 'sinon-chrome';
+import view from '../../../../../viewWE/content_scripts/js/view.js';
+import unitTest from '../../unit-test.js';
 
 describe("tracker.js", function() {
   let sandbox;

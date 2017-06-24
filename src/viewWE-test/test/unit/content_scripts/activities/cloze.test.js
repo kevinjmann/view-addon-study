@@ -7,6 +7,9 @@
 "use strict";
 
 import $ from 'jquery';
+import chrome from 'sinon-chrome';
+import view from '../../../../../viewWE/content_scripts/js/view.js';
+import unitTest from '../../unit-test.js';
 
 describe("cloze.js", function() {
   let sandbox;

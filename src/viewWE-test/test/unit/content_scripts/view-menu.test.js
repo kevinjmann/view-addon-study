@@ -6,8 +6,9 @@
 
 "use strict";
 
-const $ = require('jquery');
-const chrome = require('sinon-chrome');
+import $ from 'jquery';
+import chrome from 'sinon-chrome';
+import view from '../../../../viewWE/content_scripts/js/view.js';
 
 describe("view-menu.js", function() {
   let sandbox;

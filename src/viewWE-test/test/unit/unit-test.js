@@ -48,7 +48,7 @@ const unitTest = {
       // properties not stored in local storage
       toolbarExists: false,
       originalContent: ""
-    })
+    });
   },
 
   /**
@@ -60,3 +60,5 @@ const unitTest = {
     view.setItems(items);
   }
 };
+
+export default unitTest;

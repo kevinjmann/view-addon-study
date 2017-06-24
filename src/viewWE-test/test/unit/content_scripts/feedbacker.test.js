@@ -6,7 +6,8 @@
 
 "use strict";
 
-const $ = require('jquery');
+import $ from 'jquery';
+import view from '../../../../viewWE/content_scripts/js/view.js';
 
 describe("feedbacker.js", function() {
   let sandbox;

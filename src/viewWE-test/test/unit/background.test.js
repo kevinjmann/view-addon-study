@@ -9,6 +9,8 @@
 import $ from 'jquery';
 import chrome from 'sinon-chrome';
 
+import {background} from '../../../viewWE/background.js';
+
 describe("background.js", function() {
   let sandbox;
   const theServerURL = "https://view.aleks.bg";
