@@ -6,7 +6,7 @@
 
 "use strict";
 
-const chrome = require('sinon-chrome');
+import chrome from 'sinon-chrome';
 
 describe("view.js", function() {
   let sandbox;

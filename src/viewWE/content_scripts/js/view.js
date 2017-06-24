@@ -67,4 +67,4 @@ view.cloze = require('./activities/cloze.js')(view);
 view.color = require('./activities/color.js');
 view.tracker = require('./activities/tracker.js')(view);
 
-module.exports = view;
+export default view;

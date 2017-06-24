@@ -1,5 +1,5 @@
-const $ = require('jquery');
-const view = require('./view.js');
+import $ from 'jquery';
+import view from './view.js';
 
 /**
  * Processes all messages received from background.js.
