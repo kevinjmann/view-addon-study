@@ -10,7 +10,7 @@ module.exports = function(config) {
 
     preprocessors: {
       // test files
-      'viewWE-test/**/*.test.js': ['webpack', 'sourcemap'],
+      'viewWE-test/**/*.test.js': ['webpack', 'babel', 'sourcemap'],
 
       // fixtures
       'viewWE-test/fixtures/*.html': ['html2js'],
