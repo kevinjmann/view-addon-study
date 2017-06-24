@@ -23,7 +23,7 @@ module.exports = function(config) {
 
     webpack: webpackConfig,
 
-    frameworks: ['chai', 'mocha', 'sinon', 'fixture'],
+    frameworks: ['chai', 'mocha', 'sinon', 'fixture', 'sinon-chrome'],
 
     browsers: ['Firefox', 'ChromiumHeadless'],
 
