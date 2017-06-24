@@ -17,6 +17,8 @@ module.exports = function(config) {
       'viewWE-test/fixtures/json/*.json': ['json_fixtures']
     },
 
+    reporters: ['progress'],
+
     jsonFixturesPreprocessor: {
       variableName: '__json__'
     },
