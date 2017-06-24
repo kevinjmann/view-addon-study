@@ -3,14 +3,14 @@ const webpackConfig = require('./webpack.config.js');
 module.exports = function(config) {
   config.set({
     files: [
-      'viewWE-test/**/*.test.js',
+      'viewWE-test/test/unit/**/*.test.js',
       'viewWE-test/fixtures/*.html',
       'viewWE-test/fixtures/json/*.json'
     ],
 
     preprocessors: {
       // test files
-      'viewWE-test/**/*.test.js': ['webpack', 'babel', 'sourcemap'],
+      'viewWE-test/test/unit/**/*.test.js': ['webpack', 'sourcemap'],
 
       // fixtures
       'viewWE-test/fixtures/*.html': ['html2js'],
