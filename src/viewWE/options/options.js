@@ -1,7 +1,6 @@
-const $ = require('jquery');
-const Selector_Cache = require('./../SelectorCache.js');
+import Selector_Cache from './../SelectorCache.js';
 
-const viewOptions = {
+export const viewOptions = {
   $cache: new Selector_Cache(),
 
   selectorStart: "#wertiview-",
@@ -280,8 +279,6 @@ const viewOptions = {
     viewOptions.$cache.get("#" + selectionId).prop("checked", true);
   }
 };
-
-module.exports = viewOptions;
 
 /**
  * Initialize the options when the document is ready.

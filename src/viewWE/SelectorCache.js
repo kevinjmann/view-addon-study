@@ -1,4 +1,4 @@
-const $ = require('jquery');
+import $ from 'jquery';
 
 /**
  * From: https://gist.github.com/jtsternberg/1e03f5fd5be8427170c5
@@ -13,16 +13,16 @@ const $ = require('jquery');
  * cache.get(selector, true) if the selected element should be reset
  * @constructor initialized with: new Selector_Cache()
  */
-module.exports = function () {
-  const collection = {};
-
-  function get_from_cache(selector, reset) {
-    if (undefined === collection[selector] || true === reset) {
-      collection[selector] = $(selector);
-    }
-
-    return collection[selector];
+export default class Selector_Cache {
+  constructor() {
+    this.collection = {};
   }
 
-  return {get: get_from_cache};
-};
+  get(selector, reset) {
+    if (undefined === this.collection[selector] || true === reset) {
+      this.collection[selector] = $(selector);
+    }
+
+    return this.collection[selector];
+  }
+}
