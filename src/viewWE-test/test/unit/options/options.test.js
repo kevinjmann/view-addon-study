@@ -7,7 +7,8 @@
 "use strict";
 
 const $ = require('jquery');
-const chrome = require('sinon-chrome');
+const viewOptions = require('./../../../../viewWE/options/options.js');
+const Selector_Cache = require('./../../../../viewWE/SelectorCache.js');
 
 describe("options.js", function() {
   let sandbox;
