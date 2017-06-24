@@ -7,7 +7,7 @@
 "use strict";
 
 import $ from 'jquery';
-import {viewOptions} from './../../../../viewWE/options/options.js';
+import viewOptions from './../../../../viewWE/options/options.js';
 import SelectorCache from './../../../../viewWE/SelectorCache.js';
 
 describe("options.js", function() {

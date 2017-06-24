@@ -1,6 +1,6 @@
 import SelectorCache from './../SelectorCache.js';
 
-export const viewOptions = {
+const viewOptions = {
   $cache: new SelectorCache(),
 
   selectorStart: "#wertiview-",
@@ -286,3 +286,5 @@ export const viewOptions = {
 viewOptions.$cache.get(document).ready(function() {
   viewOptions.init();
 });
+
+export default viewOptions;
