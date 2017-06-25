@@ -15,9 +15,15 @@ describe("background.js", function() {
   let sandbox;
   const theServerURL = "https://view.aleks.bg";
 
+  before(function() {
+    window.chrome = chrome;
+    chrome.browserAction.onClicked.addListener(background.clickCounter);
+    chrome.runtime.onMessage.addListener(background.processMessage);
+    chrome.cookies.onChanged.addListener(background.observeUserId);
+  });
+
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
-    window.chrome = chrome;
   });
 
   afterEach(function() {
