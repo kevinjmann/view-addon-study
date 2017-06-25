@@ -65,17 +65,6 @@ describe("options.js", function() {
     });
   });
 
-  describe("document ready", function() {
-    it("should call init() when the document is ready", function(done) {
-      const initSpy = sandbox.spy(viewOptions, "init");
-
-      $(document).ready(function() {
-        sinon.assert.calledOnce(initSpy);
-        done();
-      });
-    });
-  });
-
   describe("init", function() {
     it("should initialize all handlers and restore previous user options", function() {
       const initFixedNumberHandlerSpy = sandbox.spy(viewOptions, "initFixedNumberHandler");
