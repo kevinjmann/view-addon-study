@@ -1029,13 +1029,6 @@ describe("toolbar.js", function() {
       });
 
       describe("initLoadingImage", function() {
-        it("should get the correct url", function() {
-          view.toolbar.initLoadingImage();
-
-          sinon.assert.calledOnce(chrome.runtime.getURL);
-          sinon.assert.calledWithExactly(chrome.runtime.getURL, "icons/loading.gif");
-        });
-
         it("should find in the loading div an image", function() {
           view.toolbar.initLoadingImage();
 
