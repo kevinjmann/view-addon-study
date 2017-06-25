@@ -235,6 +235,11 @@ describe("background.js", function() {
         });
 
         describe("sendActivityDataAndGetEnhancementMarkup", function() {
+          beforeEach(function() {
+            const serverURL = "https://some.url";
+            chrome.storage.local.get.yields({"servletURL": serverURL});
+          });
+
           it("should process the message 'sendActivityDataAndGetEnhancementMarkup'", function() {
             const sendActivityDataAndGetEnhancementMarkupSpy =
             sandbox.spy(background, "sendActivityDataAndGetEnhancementMarkup");
@@ -277,7 +282,6 @@ describe("background.js", function() {
             sandbox.server.respondWith("POST", serverURL,
               [200, {"Content-Type": "text"}, serverData]);
 
-            chrome.storage.local.get.yields({"servletURL": serverURL});
             background.sendActivityDataAndGetEnhancementMarkup({request});
 
             sandbox.server.respond();
@@ -350,6 +354,11 @@ describe("background.js", function() {
         });
 
         describe("sendTaskDataAndGetTaskId", function() {
+          beforeEach(function() {
+            const serverTaskURL = "https://view.aleks.bg/act/task";
+            chrome.storage.local.get.yields({serverTaskURL: serverTaskURL});
+          });
+
           it("should process the message 'sendTaskDataAndGetTaskId'", function() {
             const sendTaskDataAndGetTaskIdSpy = sandbox.spy(background, "sendTaskDataAndGetTaskId");
 
@@ -383,7 +392,6 @@ describe("background.js", function() {
               taskData: taskData
             };
 
-            chrome.storage.local.get.yields({serverTaskURL: serverTaskURL});
             background.sendTaskDataAndGetTaskId({request});
 
             sinon.assert.calledOnce(ajaxPostSpy);
@@ -413,6 +421,7 @@ describe("background.js", function() {
 
             sandbox.server.respondWith("POST", serverTaskURL,
               [200, {"Content-Type": "application/json"}, JSON.stringify(serverData)]);
+
 
             background.sendTaskDataAndGetTaskId({request});
 
@@ -446,6 +455,7 @@ describe("background.js", function() {
 
             sandbox.server.respondWith("POST", serverTaskURL,
               [200, {"Content-Type": "application/json"}, ""]);
+
 
             background.sendTaskDataAndGetTaskId({request});
 
@@ -510,6 +520,11 @@ describe("background.js", function() {
         });
 
         describe("sendTrackingData", function() {
+          beforeEach(function() {
+            const serverTrackingURL = "https://view.aleks.bg/act/tracking";
+            chrome.storage.local.get.yields({serverTrackingURL: serverTrackingURL});
+          });
+
           it("should process the message 'sendTrackingData'", function() {
             const sendTrackingDataSpy = sandbox.spy(background, "sendTrackingData");
 
@@ -1151,6 +1166,10 @@ describe("background.js", function() {
     });
 
     describe("signOut", function() {
+      beforeEach(function() {
+        chrome.storage.local.set.yields();
+      });
+
       it("should reset user email, user id, user, token and task id", function() {
         background.signOut();
 
@@ -1183,6 +1202,10 @@ describe("background.js", function() {
     });
 
     describe("signIn", function() {
+      beforeEach(function() {
+        chrome.storage.local.set.yields();
+      });
+
       it("should set user email, user id, user and token", function() {
         const encodedUser = "user%20name";
         const userData = encodedUser + "/email/id/authtoken";
