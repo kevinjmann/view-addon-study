@@ -21,7 +21,8 @@ describe("toolbar.js", function() {
     sandbox = sinon.sandbox.create();
     sandbox.stub($.fn, "load").yields();
 
-    fixture.load("/viewWE-test/fixtures/toolbar.html");
+    const html = fixture.load("/viewWE-test/fixtures/toolbar.html");
+    $(html).appendTo('body');
 
     view.toolbar.activitySelectors = {};
     view.toolbar.$cache = new SelectorCache();
