@@ -10,6 +10,7 @@
     "build": "webpack",
     "bundle": "web-ext -s ./addon -a dist build",
     "clean": "rm -rf addon/*",
+    "debug:tests": "karma  start --browsers=Chromium --single-run=false",
     "lint": "npm-run-all lint:*",
     "lint:webext": "web-ext -s ./addon lint",
     "test": "npm-run-all test:*",
