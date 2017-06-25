@@ -588,45 +588,45 @@ const background = {
    */
   requestToSetAccountInfo: function() {
     chrome.tabs.sendMessage(background.currentTabId, {action: "setAccountInfo"});
+  },
+
+  /**
+   * Handle the browser action button.
+   * Initialize topics, if necessary, and toggleOrAdd the toolbar.
+   *
+   * @param {number} tab the tab the toolbar
+   * is located at
+   */
+  clickCounter: function(tab) {
+    background.clickCounter++;
+
+    background.currentTabId = tab.id;
+
+    if (background.clickCounter === 1) {
+      background.setDefaults();
+      background.proceedToSetAndToggleToolbar();
+    }
+    else {
+      background.requestToToggleOrAddToolbar();
+    }
+  },
+
+  /**
+   * Observe the user id cookie when it changes.
+   *
+   * @param {Object} changeInfo the object containing information
+   * whether the cookie was removed, the cookie itself and the
+   * reason for its change
+   */
+  observeUserId: function(changeInfo) {
+    if ("wertiview_userid" === changeInfo.cookie.name) {
+      background.processUserIdCookie(changeInfo);
+    }
   }
 };
 
-/**
- * Handle the browser action button.
- * Initialize topics, if necessary, and toggleOrAdd the toolbar.
- *
- * @param {number} tab the tab the toolbar
- * is located at
- */
-chrome.browserAction.onClicked.addListener(function(tab) {
-  background.clickCounter++;
-
-  background.currentTabId = tab.id;
-
-  if (background.clickCounter === 1) {
-    background.setDefaults();
-    background.proceedToSetAndToggleToolbar();
-  }
-  else {
-    background.requestToToggleOrAddToolbar();
-  }
-});
-
+chrome.browserAction.onClicked.addListener(background.clickCounter);
 chrome.runtime.onMessage.addListener(background.processMessage);
+chrome.cookies.onChanged.addListener(background.observeUserId);
 
-/**
- * Observe the user id cookie when it changes.
- *
- * @param {Object} changeInfo the object containing information
- * whether the cookie was removed, the cookie itself and the
- * reason for its change
- */
-function observeUserId(changeInfo) {
-  if ("wertiview_userid" === changeInfo.cookie.name) {
-    background.processUserIdCookie(changeInfo);
-  }
-}
-
-chrome.cookies.onChanged.addListener(observeUserId);
-
-export {background, observeUserId}
+export {background}
