@@ -6,6 +6,7 @@ module.exports = function(config) {
     files: [
       'viewWE-test/test/unit/**/*.test.js',
       'viewWE-test/fixtures/*.html',
+      'viewWE-test/fixtures/*.css',
       'viewWE-test/fixtures/json/*.json'
     ],
 
