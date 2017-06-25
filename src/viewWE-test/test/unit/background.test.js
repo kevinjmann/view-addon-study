@@ -96,16 +96,6 @@ describe("background.js", function() {
       });
     });
 
-    it("should set topics when the button is clicked the first time", function() {
-      const setTopicsSpy = sandbox.stub(background, "setTopics");
-
-      chrome.browserAction.onClicked.trigger({id: 5});
-
-      expect(background.clickCounter).to.equal(1);
-
-      sinon.assert.calledOnce(setTopicsSpy);
-    });
-
     it("should send a message to toggle or add the toolbar without setting topics otherwise", function() {
       const requestToToggleOrAddToolbarSpy =
         sandbox.spy(background, "requestToToggleOrAddToolbar");
@@ -116,103 +106,6 @@ describe("background.js", function() {
       expect(background.clickCounter).to.equal(2);
 
       sinon.assert.calledOnce(requestToToggleOrAddToolbarSpy);
-    });
-  });
-
-  describe("setTopics", function() {
-    it("should call initTopics() and getAndSetTopicURLs()", function(done) {
-      const initTopicsSpy = sandbox.spy(background, "initTopics");
-      const getAndSetTopicURLsSpy = sandbox.spy(background, "getAndSetTopicURLs");
-
-      background.setTopics();
-
-      setTimeout(function() { // wait for asynchronous code to finish
-        sinon.assert.calledOnce(initTopicsSpy);
-        sinon.assert.calledOnce(getAndSetTopicURLsSpy);
-        done();
-      }, 0);
-    });
-
-    it("should init all topics", function() {
-      expect(background.topics.articles).to.not.exist;
-      expect(background.topics.determiners).to.not.exist;
-      expect(background.topics.nouns).to.not.exist;
-
-      background.initTopics();
-
-      expect(Object.keys(background.topics).length).to.equal(3);
-
-      expect(background.topics.articles).to.exist;
-      expect(background.topics.determiners).to.exist;
-      expect(background.topics.nouns).to.exist;
-    });
-
-    it("should get and set all topic urls", function() {
-      background.initTopics();
-      background.getAndSetTopicURLs();
-
-      sinon.assert.callCount(chrome.runtime.getURL, 3);
-      sinon.assert.calledWithExactly(chrome.runtime.getURL.getCall(0), "topics/articles.json");
-      sinon.assert.calledWithExactly(chrome.runtime.getURL.getCall(1), "topics/determiners.json");
-      sinon.assert.calledWithExactly(chrome.runtime.getURL.getCall(2), "topics/nouns.json");
-    });
-
-    it("should call for all topic json objects, store activity data and proceed to set", function() {
-      const getJSONStub = sandbox.stub($, "getJSON");
-      const setAndToggleSpy = sandbox.spy(background, "proceedToSetAndToggleToolbar");
-
-      const jsonData = fixture.load("/viewWE-test/fixtures/json/articles.json");
-
-      getJSONStub.yields(jsonData); // make $.getJSON synchronous
-
-      background.setTopics();
-
-      sinon.assert.callCount(getJSONStub, 3);
-
-      expect(background.topics.articles).to.include(jsonData);
-
-      sinon.assert.calledOnce(setAndToggleSpy);
-
-      fixture.cleanup();
-    });
-
-    it("should proceed to set topics and call view.toolbar.toggleOrAddToolbar()", function() {
-      const jsonData = fixture.load("/viewWE-test/fixtures/json/articles.json");
-
-      chrome.storage.local.set.yields(); // make chrome.storage.local.set synchronous
-
-      background.initTopics();
-
-      // fill with fake data
-      background.topics.articles = jsonData;
-
-      background.currentTabId = 5;
-
-      background.proceedToSetAndToggleToolbar();
-
-      sinon.assert.calledOnce(chrome.storage.local.set);
-      sinon.assert.calledWithMatch(chrome.storage.local.set, {topics: background.topics});
-
-      sinon.assert.calledOnce(chrome.tabs.sendMessage);
-      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {action: "toggleOrAddToolbar"});
-
-      fixture.cleanup();
-    });
-
-    it("should fail to get the topic json objects", function(done) {
-      const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
-
-      const id = "topics-not-loaded-notification";
-      const title = "Topics not loaded!";
-      const message = "There was a problem while loading the topics!";
-
-      background.setTopics();
-
-      setTimeout(function() { // wait for asynchronous code to finish
-        sinon.assert.calledOnce(createBasicNotificationSpy);
-        sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
-        done();
-      }, 0);
     });
   });
 
