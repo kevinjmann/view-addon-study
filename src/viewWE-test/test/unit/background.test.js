@@ -17,6 +17,7 @@ describe("background.js", function() {
 
   beforeEach(function() {
     sandbox = sinon.sandbox.create();
+    window.chrome = chrome;
   });
 
   afterEach(function() {
