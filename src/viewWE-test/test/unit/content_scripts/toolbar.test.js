@@ -12,6 +12,8 @@ import view from '../../../../viewWE/content_scripts/js/view.js';
 import unitTest from '../unit-test.js';
 import SelectorCache from '../../../../viewWE/SelectorCache.js';
 
+window.chrome = chrome;
+
 describe("toolbar.js", function() {
   let sandbox;
 
@@ -165,9 +167,6 @@ describe("toolbar.js", function() {
       sandbox.stub(view.statisticsMenu, "add");
 
       view.toolbar.add();
-
-      sinon.assert.calledOnce(chrome.runtime.getURL);
-      sinon.assert.calledWithExactly(chrome.runtime.getURL, "content_scripts/html/toolbar.html");
     });
 
     it("should call init()", function() {
