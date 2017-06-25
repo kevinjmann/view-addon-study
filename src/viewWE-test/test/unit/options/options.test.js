@@ -363,7 +363,7 @@ describe("options.js", function() {
 
         sandbox.clock.tick(5000);
 
-        expect($(viewOptions.selectorStart + "options-saved").attr("style")).to.contain("opacity: 1");
+        expect(parseFloat($(viewOptions.selectorStart + "options-saved").css("opacity"))).to.be.closeTo(1, 0.1);
       });
     });
     describe("restoreUserOptions", function() {
