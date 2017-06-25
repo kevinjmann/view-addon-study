@@ -6,14 +6,16 @@
 
 "use strict";
 
-import chrome from 'sinon-chrome';
+import chrome from 'sinon-chrome/extensions';
 import view from '../../../../viewWE/content_scripts/js/view.js';
 
 describe("view.js", function() {
   let sandbox;
 
   beforeEach(function() {
+    window.chrome = chrome;
     sandbox = sinon.sandbox.create();
+    chrome.storage.onChanged.addListener(view.setStorageChange);
   });
 
   afterEach(function() {
@@ -61,10 +63,6 @@ describe("view.js", function() {
   });
 
   describe("setStorageChange", function() {
-    it("should register one listener for chrome.storage.onChanged", function() {
-      sinon.assert.calledOnce(chrome.storage.onChanged.addListener);
-    });
-
     it("should set the given changes to view on change", function() {
       const item1 = {
         oldValue: "old1",
