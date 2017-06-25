@@ -2,6 +2,9 @@
  * This class contains utility functions frequently used
  * in unit tests for convenience purposes.
  */
+
+import view from '../../../viewWE/content_scripts/js/view.js';
+
 const testServerURL = "https://view.aleks.bg";
 
 const unitTest = {
