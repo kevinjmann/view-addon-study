@@ -37,10 +37,6 @@ describe("background.js", function() {
   });
 
   describe("browserAction", function() {
-    it("should register one listener for browserAction onClicked", function() {
-      sinon.assert.calledOnce(chrome.browserAction.onClicked.addListener);
-    });
-
     it("should call setDefaults() when the button is clicked the first time", function() {
       const setDefaultsSpy = sandbox.spy(background, "setDefaults");
 
