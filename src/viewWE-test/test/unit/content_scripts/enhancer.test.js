@@ -10,6 +10,7 @@ import $ from 'jquery';
 import chrome from 'sinon-chrome';
 import view from '../../../../viewWE/content_scripts/js/view.js';
 import unitTest from '../unit-test.js';
+import SelectorCache from '../../../../viewWE/SelectorCache.js';
 
 describe("enhancer.js", function() {
   let sandbox;
@@ -36,7 +37,7 @@ describe("enhancer.js", function() {
 
     unitTest.setViewDefaults();
 
-    view.toolbar.$cache = new Selector_Cache();
+    view.toolbar.$cache = new SelectorCache();
 
     const $OriginalContent = $NoMarkup.children();
     view.originalContent = $OriginalContent.clone(true);

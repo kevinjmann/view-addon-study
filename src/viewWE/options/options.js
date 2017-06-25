@@ -1,4 +1,4 @@
-import SelectorCache from './../SelectorCache.js';
+import SelectorCache from '../SelectorCache.js';
 
 const viewOptions = {
   $cache: new SelectorCache(),

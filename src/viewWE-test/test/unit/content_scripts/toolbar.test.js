@@ -10,6 +10,7 @@ import $ from 'jquery';
 import chrome from 'sinon-chrome';
 import view from '../../../../viewWE/content_scripts/js/view.js';
 import unitTest from '../unit-test.js';
+import SelectorCache from '../../../../viewWE/SelectorCache.js';
 
 describe("toolbar.js", function() {
   let sandbox;
@@ -23,7 +24,7 @@ describe("toolbar.js", function() {
     fixture.load("/viewWE-test/fixtures/toolbar.html");
 
     view.toolbar.activitySelectors = {};
-    view.toolbar.$cache = new Selector_Cache();
+    view.toolbar.$cache = new SelectorCache();
 
     const jsonDataNouns = fixture.load("/viewWE-test/fixtures/json/nouns.json", true);
     const jsonDataArticles = fixture.load("/viewWE-test/fixtures/json/articles.json", true);
@@ -48,7 +49,7 @@ describe("toolbar.js", function() {
   const toolbarStart = "#wertiview-toolbar-";
   const globalServerURL = "https://view.aleks.bg";
 
-  describe("Selector_Cache", function() {
+  describe("SelectorCache", function() {
     it("should get the wanted jquery selector", function() {
       const selectorSpy = sandbox.spy(view.toolbar.$cache, "get");
       const getElementByIdSpy = sandbox.spy(document, "getElementById");
