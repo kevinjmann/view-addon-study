@@ -45,6 +45,7 @@ describe("background.js", function() {
   describe("browserAction", function() {
     it("should call setDefaults() when the button is clicked the first time", function() {
       const setDefaultsSpy = sandbox.spy(background, "setDefaults");
+      background.clickCounter = 0;
 
       chrome.browserAction.onClicked.trigger({id: 5});
 
