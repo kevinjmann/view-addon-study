@@ -26,8 +26,8 @@ describe("toolbar.js", function() {
     view.toolbar.activitySelectors = {};
     view.toolbar.$cache = new SelectorCache();
 
-    const jsonDataNouns = fixture.load("/viewWE-test/fixtures/json/nouns.json", true);
-    const jsonDataArticles = fixture.load("/viewWE-test/fixtures/json/articles.json", true);
+    const jsonDataNouns = fixture.load("viewWE-test/fixtures/json/nouns.json", true);
+    const jsonDataArticles = fixture.load("viewWE-test/fixtures/json/articles.json", true);
 
     view.topics = {
       nouns: jsonDataNouns,
