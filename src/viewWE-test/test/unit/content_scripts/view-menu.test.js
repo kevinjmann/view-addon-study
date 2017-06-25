@@ -17,6 +17,7 @@ describe("view-menu.js", function() {
     sandbox = sinon.sandbox.create();
     fixture.load("/viewWE-test/fixtures/view-menu.html");
     sandbox.stub($.fn, "load").yields();
+    window.chrome = chrome;
   });
 
   afterEach(function() {
@@ -48,9 +49,6 @@ describe("view-menu.js", function() {
       const initSpy = sandbox.spy(view.VIEWmenu, "init");
 
       view.VIEWmenu.add();
-
-      sinon.assert.calledOnce(chrome.runtime.getURL);
-      sinon.assert.calledWithExactly(chrome.runtime.getURL, "content_scripts/html/view-menu.html");
 
       sinon.assert.calledOnce(initSpy);
 
