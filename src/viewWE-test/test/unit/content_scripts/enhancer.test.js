@@ -29,7 +29,7 @@ describe("enhancer.js", function() {
     fixture.load("/viewWE-test/fixtures/debug-sentence-markup.html", true);
     fixture.load("/viewWE-test/fixtures/ru-nouns-mc-and-cloze.html", true);
 
-    jsonDataNouns = fixture.load("/viewWE-test/fixtures/json/nouns.json", true);
+    jsonDataNouns = fixture.load("viewWE-test/fixtures/json/nouns.json", true);
 
     $("#wertiview-content").html($NoMarkup.html());
 
