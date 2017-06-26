@@ -20,6 +20,7 @@ describe("activityHelper.js", function() {
     unitTest.setViewDefaults();
     view.language = "ru";
     view.selector.select("Sg");
+    window.chrome = chrome;
   });
 
   afterEach(function() {
