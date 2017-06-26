@@ -36,6 +36,7 @@ describe("toolbar.js", function() {
       nouns: jsonDataNouns,
       articles: jsonDataArticles
     };
+    window.chrome = chrome;
   });
 
   afterEach(function() {
