@@ -19,6 +19,7 @@ describe("tracker.js", function() {
     fixture.load("/viewWE-test/fixtures/ru-nouns-mc-and-cloze.html");
     unitTest.setViewDefaults();
     view.userid = "some-id";
+    window.chrome = chrome;
   });
 
   afterEach(function() {
