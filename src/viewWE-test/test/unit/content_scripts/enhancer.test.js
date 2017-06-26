@@ -41,6 +41,7 @@ describe("enhancer.js", function() {
 
     const $OriginalContent = $NoMarkup.children();
     view.originalContent = $OriginalContent.clone(true);
+    window.chrome = chrome;
   });
 
   afterEach(function() {
