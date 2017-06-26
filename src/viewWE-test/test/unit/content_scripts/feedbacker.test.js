@@ -151,7 +151,7 @@ describe("feedbacker.js", function() {
           my: "left bottom",
           at: "left top",
           of: "#wertiview-toolbar-container"
-        })
+        });
       });
 
       it("should decide where to place the dialog, decision top", function() {
@@ -165,7 +165,7 @@ describe("feedbacker.js", function() {
           my: "left top",
           at: "left top",
           of: window
-        })
+        });
       });
     });
 
