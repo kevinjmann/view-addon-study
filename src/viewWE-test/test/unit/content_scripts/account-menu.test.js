@@ -45,13 +45,6 @@ describe("account-menu.js", function() {
   });
 
   describe("add", function() {
-    it("should get the url for the account menu", function() {
-      view.accountMenu.add();
-
-      sinon.assert.calledOnce(chrome.runtime.getURL);
-      sinon.assert.calledWithExactly(chrome.runtime.getURL, "content_scripts/html/account-menu.html");
-    });
-
     it("should call init()", function() {
       const initSpy = sandbox.spy(view.accountMenu, "init");
 
