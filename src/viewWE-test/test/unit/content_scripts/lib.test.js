@@ -350,7 +350,7 @@ describe("lib.js", function() {
       ];
 
       // make randomness predictable
-      sinon.stub(Math, "random", function(){
+      sinon.stub(Math, "random").callsFake(function(){
         return 0.5;
       });
 

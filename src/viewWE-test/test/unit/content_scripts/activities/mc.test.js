@@ -151,7 +151,7 @@ describe("mc.js", function() {
           const fillOptionsSpy = sandbox.spy(view.mc, "fillOptions");
 
           // make randomness predictable
-          sinon.stub(Math, "random", function(){
+          sinon.stub(Math, "random").callsFake(function(){
             return 0.5;
           });
 
