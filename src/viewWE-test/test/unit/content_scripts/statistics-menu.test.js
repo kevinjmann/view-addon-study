@@ -93,13 +93,6 @@ describe("statistics-menu.js", function() {
   });
 
   describe("add", function() {
-    it("should get the url for the statistics menu", function() {
-      view.statisticsMenu.add();
-
-      sinon.assert.calledOnce(chrome.runtime.getURL);
-      sinon.assert.calledWithExactly(chrome.runtime.getURL, "content_scripts/html/statistics-menu.html");
-    });
-
     it("should call init()", function() {
       const initSpy = sandbox.spy(view.statisticsMenu, "init");
 
