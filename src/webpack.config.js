@@ -39,7 +39,13 @@ module.exports = {
     CssTextPlugin,
     HtmlTextPlugin
   ],
+  resolve: {
+    alias: {
+      sinon: path.resolve(__dirname, 'node_modules/sinon/pkg/sinon.js') // require dist version instead
+    }
+  },
   module: {
+    noParse: [ /node_modules\/sinon$/ ],
     rules: [
       {
         test: /\.js$/,
