@@ -66,6 +66,7 @@ describe("statistics-menu.js", function() {
     fixture.load("/viewWE-test/fixtures/statistics-menu.html");
     sandbox.stub($.fn, "load").yields();
     unitTest.setViewDefaults();
+    window.chrome = chrome;
   });
 
   afterEach(function() {
