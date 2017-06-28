@@ -110,7 +110,8 @@ describe("statistics-menu.js", function() {
       sinon.assert.calledOnce(selectorSpy);
       sinon.assert.calledWithExactly(selectorSpy, "body");
 
-      sinon.assert.calledOnce(appendSpy);
+      // once for statisticsMenuContent, and once to append container to body
+      sinon.assert.calledTwice(appendSpy);
     });
 
     describe("init", function() {
