@@ -171,6 +171,8 @@ describe("feedbacker.js", function() {
 
     it("should call lib.dialogSetup($Dialog, settings)", function() {
       const dialogSetupSpy = sandbox.spy(view.lib, "dialogSetup");
+      const enhancementId = "VIEW-N-Msc-Inan-Sg-Nom-5";
+      $("#" + enhancementId).offset({ top: 10, left: 0 });
 
       const settings = {
         title: "Feedback",
