@@ -147,13 +147,19 @@ describe("mc.js", function() {
           expect(shuffleListSpy.firstCall.args[0]).to.have.members(distractors);
         });
 
-        it("should call fillOptions(distractors, answer, capType)", function() {
-          const fillOptionsSpy = sandbox.spy(view.mc, "fillOptions");
-
+        before(function() {
           // make randomness predictable
           sinon.stub(Math, "random").callsFake(function(){
             return 0.5;
           });
+        });
+
+        after(function() {
+          Math.random.restore();
+        });
+
+        it("should call fillOptions(distractors, answer, capType)", function() {
+          const fillOptionsSpy = sandbox.spy(view.mc, "fillOptions");
 
           const $hit = $("[data-type='hit']").first();
           const distractors = ["усвоению", "усвоение", "усвоения", "усвоении", "усвоением"];
