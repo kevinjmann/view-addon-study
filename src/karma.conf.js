@@ -4,7 +4,7 @@ webpackConfig.devtool = 'inline-source-map';
 module.exports = function(config) {
   config.set({
     files: [
-      'viewWE-test/test/unit/**/*.test.js',
+      'viewWE-test/karma.entry.js',
       'viewWE-test/fixtures/*.html',
       'viewWE-test/fixtures/*.css',
       'viewWE-test/fixtures/json/*.json'
@@ -12,7 +12,7 @@ module.exports = function(config) {
 
     preprocessors: {
       // test files
-      'viewWE-test/test/unit/**/*.test.js': ['webpack', 'sourcemap'],
+      'viewWE-test/karma.entry.js': ['webpack', 'sourcemap'],
 
       // fixtures
       'viewWE-test/fixtures/*.html': ['html2js'],
