@@ -19,7 +19,7 @@ module.exports = function(config) {
 
     preprocessors: {
       // test files
-      'viewWE-test/karma.entry.js': ['webpack', 'sourcemap', 'coverage'],
+      'viewWE-test/karma.entry.js': ['webpack', 'sourcemap'],
 
       // fixtures
       'viewWE-test/fixtures/*.html': ['html2js'],
