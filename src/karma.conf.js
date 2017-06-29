@@ -1,5 +1,12 @@
+const path = require('path');
 const webpackConfig = require('./webpack.config.js');
 webpackConfig.devtool = 'inline-source-map';
+webpackConfig.module.rules.unshift({
+  enforce: 'post',
+  test: /\.js$/,
+  loader: 'istanbul-instrumenter-loader',
+  exclude: /(node_modules|viewWE-test)/
+});
 
 module.exports = function(config) {
   config.set({
@@ -19,17 +26,13 @@ module.exports = function(config) {
       'viewWE-test/fixtures/json/*.json': ['json_fixtures']
     },
 
-    coverageReporter: {
-      instrumenterOptions: {
-        istanbul: { noCompact: true }
-      },
-      reporters: [
-        { type: 'html', dir: 'viewWE-test/coverage/' },
-        { type: 'text-summary' }
-      ]
+    coverageIstanbulReporter: {
+      reports: ['html', 'text-summary', 'lcov'],
+      fixWebpackSourcePaths: true,
+      dir: path.join(__dirname, 'viewWE-test/coverage')
     },
 
-    reporters: ['progress', 'coverage'],
+    reporters: ['progress', 'coverage-istanbul'],
 
     jsonFixturesPreprocessor: {
       variableName: '__json__'
