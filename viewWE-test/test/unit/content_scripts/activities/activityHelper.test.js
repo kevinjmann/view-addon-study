@@ -731,9 +731,11 @@ describe("activityHelper.js", function() {
 
             expect($Element.is(":focus")).to.be.false;
 
+            const focusSpy = sandbox.spy($.fn, "focus");
+
             view.activityHelper.scrollToCenter($Element);
 
-            expect($Element.is(":focus")).to.be.true;
+            sinon.assert.calledOnce(focusSpy);
           });
 
           it("should scroll to the center of the viewport", function() {
