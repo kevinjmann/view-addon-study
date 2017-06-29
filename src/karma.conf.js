@@ -12,14 +12,24 @@ module.exports = function(config) {
 
     preprocessors: {
       // test files
-      'viewWE-test/karma.entry.js': ['webpack', 'sourcemap'],
+      'viewWE-test/karma.entry.js': ['webpack', 'sourcemap', 'coverage'],
 
       // fixtures
       'viewWE-test/fixtures/*.html': ['html2js'],
       'viewWE-test/fixtures/json/*.json': ['json_fixtures']
     },
 
-    reporters: ['progress'],
+    coverageReporter: {
+      instrumenterOptions: {
+        istanbul: { noCompact: true }
+      },
+      reporters: [
+        { type: 'html', dir: 'viewWE-test/coverage/' },
+        { type: 'text-summary' }
+      ]
+    },
+
+    reporters: ['progress', 'coverage'],
 
     jsonFixturesPreprocessor: {
       variableName: '__json__'
