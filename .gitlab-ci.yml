@@ -16,17 +16,18 @@ npm:
   tags:
     - node
 
-karma:
-  stage: test
-  script:
-    - npm run test
-  tags:
-    - node
-    - chromium-headless
+# karma:
+#   stage: test
+#   script:
+#     - npm run test
+#   tags:
+#     - node
+#     - chromium-headless
 
 webpack:
   stage: build
   script:
+    - ls -R node_modules
     - npm run build
 #  only:
 #    - master
