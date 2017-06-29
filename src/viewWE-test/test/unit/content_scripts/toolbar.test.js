@@ -48,6 +48,7 @@ describe("toolbar.js", function() {
     $("*").off();
     fixture.cleanup();
     $("#wertiview-toolbar-container").remove();
+    $("#wertiview-toolbar").remove();
   });
 
   const toolbarStart = "#wertiview-toolbar-";
