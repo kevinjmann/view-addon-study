@@ -12,7 +12,9 @@ before_script:
 
 npm:
   stage: setup
-  script: npm install
+  script:
+    - npm install
+    - ls -R /cache
   tags:
     - node
 
@@ -27,6 +29,7 @@ npm:
 webpack:
   stage: build
   script:
+    - ls -R /cache
     - ls -R node_modules
     - npm run build
 #  only:
