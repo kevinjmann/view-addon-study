@@ -16,7 +16,8 @@ npm:
     - npm install
   tags:
     - node
-  artifacts:
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
     paths:
       - node_modules
 
@@ -38,11 +39,20 @@ webpack:
   artifacts:
     paths:
       - addon
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    paths:
+      - node_modules
 
 webext:
   stage: dist
   script:
-    - ls -R addon
+    - ls -R node_modules
     - npm run dist
+    - ls -R addon
+  cache:
+    key: "$CI_COMMIT_REF_NAME"
+    paths:
+      - node_modules
 #  only:
 #    - master
