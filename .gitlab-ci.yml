@@ -6,17 +6,19 @@ stages:
   - build
   - dist
 
-before_script:
-  - mkdir -p /cache/node_modules
-  - ln -s /cache/node_modules ${CI_PROJECT_DIR}/node_modules
+# before_script:
+#   - mkdir -p /cache/node_modules
+#   - ln -s /cache/node_modules ${CI_PROJECT_DIR}/node_modules
 
 npm:
   stage: setup
   script:
     - npm install
-    - ls -R /cache
   tags:
     - node
+  artifacts:
+    paths:
+      - node_modules
 
 # karma:
 #   stage: test
@@ -29,7 +31,6 @@ npm:
 webpack:
   stage: build
   script:
-    - ls -R /cache
     - ls -R node_modules
     - npm run build
 #  only:
@@ -41,7 +42,7 @@ webpack:
 webext:
   stage: dist
   script:
-    - ls addon
+    - ls -R addon
     - npm run dist
 #  only:
 #    - master
