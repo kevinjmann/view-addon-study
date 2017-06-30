@@ -48,7 +48,7 @@ webext:
   stage: dist
   script:
     - ls -R node_modules
-    - npm run dist
+    - npm run bundle
     - ls -R addon
   cache:
     key: "$CI_COMMIT_REF_NAME"
