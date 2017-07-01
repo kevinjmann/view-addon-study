@@ -11,6 +11,7 @@ stages:
 #   - ln -s /cache/node_modules ${CI_PROJECT_DIR}/node_modules
 
 cache:
+  untracked: true
   key: "$CI_JOB_NAME"
   paths:
     - node_modules
