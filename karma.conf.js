@@ -64,7 +64,7 @@ module.exports = function(config) {
      * and a text-summary report in the end
      */
     coverageIstanbulReporter: {
-      reports: ['html', 'text-summary'],
+      reports: ['html', 'text'],
       fixWebpackSourcePaths: true,
       dir: path.join(__dirname, 'viewWE-test/coverage')
     },
