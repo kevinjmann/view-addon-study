@@ -71,6 +71,13 @@ module.exports = function(config) {
 
     reporters: ['mocha', 'coverage-istanbul'],
 
+    mochaReporter: {
+      /**
+       * Mocha will report the full suite on first run, and less next time
+       */
+      output: 'autowatch'
+    },
+
     /**
      * Make json fixtures available with window.__json__
      */
