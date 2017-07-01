@@ -87,9 +87,9 @@ module.exports = function(config) {
 
     /**
      * We use ChromiumHeadless for fast testing. The tests can also be run in
-     * Firefox (or Chromium, if you include it below) for debugging.
+     * Firefox or Chromium for debugging.
      */
-    browsers: ['Firefox', 'ChromiumHeadless'],
+    browsers: ['Firefox', 'Chromium', 'ChromiumHeadless'],
 
     webpackMiddleware: {
       /**
