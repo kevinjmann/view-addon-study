@@ -69,7 +69,7 @@ module.exports = function(config) {
       dir: path.join(__dirname, 'viewWE-test/coverage')
     },
 
-    reporters: ['progress', 'coverage-istanbul'],
+    reporters: ['mocha', 'coverage-istanbul'],
 
     /**
      * Make json fixtures available with window.__json__
