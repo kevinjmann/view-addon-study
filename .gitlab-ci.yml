@@ -10,7 +10,7 @@ npm:
   stage: setup
   script:
     - mkdir -p /cache/node_modules
-    - ln -s /cache/node_modules ${CI_PROJECT_DIR}/node_modules
+    - ln -s /cache/node_modules ${CI_PROJECT_DIR}
     - npm install
   tags:
     - node
@@ -29,7 +29,7 @@ webpack:
   stage: build
   script:
     - mkdir -p /cache/node_modules
-    - ln -s /cache/node_modules ${CI_PROJECT_DIR}/node_modules
+    - ln -s /cache/node_modules ${CI_PROJECT_DIR}
     - ls -R node_modules
     - npm run build
   artifacts:
@@ -42,7 +42,7 @@ webext:
   stage: dist
   script:
     - mkdir -p /cache/node_modules
-    - ln -s /cache/node_modules ${CI_PROJECT_DIR}/node_modules
+    - ln -s /cache/node_modules ${CI_PROJECT_DIR}
     - ls -R node_modules
     - npm run bundle
     - ls -R addon
