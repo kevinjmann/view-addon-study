@@ -1,6 +1,7 @@
 .idea
 /dist
 /addon
+/node_modules
 view-webextension.iml
 *.zip
 *.log
