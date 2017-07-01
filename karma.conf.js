@@ -61,7 +61,7 @@ module.exports = function(config) {
 
     /**
      * Generate HTML coverage reports in viewWE-test/coverage,
-     * and a text-summary report in the end
+     * and a text report in the end
      */
     coverageIstanbulReporter: {
       reports: ['html', 'text'],
