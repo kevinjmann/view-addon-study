@@ -30,7 +30,6 @@ karma:
 webpack:
   stage: build
   script:
-    - ls -R node_modules
     - npm run build
   artifacts:
     expire_in: 1 hour
@@ -44,11 +43,13 @@ webpack:
 webext:
   stage: dist
   script:
-    - ls -R node_modules
     - npm run bundle
-    - ls -R addon
-    - ls -R dist
+    - mkdir dist/view-addon && cd dist/view-addon && unzip ../*zip
   tags:
     - node
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist/view-addon
 #  only:
 #    - master
