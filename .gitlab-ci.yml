@@ -8,6 +8,7 @@ stages:
 
 cache:
   untracked: true
+  key: "$CI_COMMIT_REF_NAME"
   paths:
     - "./node-modules"
 
@@ -32,6 +33,7 @@ webpack:
     - ls -R node_modules
     - npm run build
   artifacts:
+    expire_in: 1 hour
     paths:
       - addon
   tags:
