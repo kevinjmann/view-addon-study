@@ -7,6 +7,7 @@ stages:
   - dist
 
 cache:
+  untracked: true
   paths:
     - "./node-modules"
 
