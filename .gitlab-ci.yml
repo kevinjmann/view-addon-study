@@ -44,12 +44,15 @@ webext:
   stage: dist
   script:
     - npm run bundle
-    - mkdir dist/view-addon && cd dist/view-addon && unzip ../*zip
+    - mkdir /tmp/addon && cp dist/*zip /tmp/addon
+    - rm -rf *
+    - unzip /tmp/addon/*zip
   tags:
     - node
   artifacts:
     expire_in: 1 week
+    name: "view-addon-$CI_JOB_NAME"
     paths:
-      - dist/view-addon
+      - ./
 #  only:
 #    - master
