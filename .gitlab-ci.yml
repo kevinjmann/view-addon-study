@@ -6,11 +6,13 @@ stages:
   - build
   - dist
 
+cache:
+  path:
+    - "./node-modules"
+
 npm:
   stage: setup
   script:
-    - mkdir -p /cache/node_modules
-    - ln -s /cache/node_modules ${CI_PROJECT_DIR}
     - npm install
   tags:
     - node
@@ -28,23 +30,23 @@ npm:
 webpack:
   stage: build
   script:
-    - mkdir -p /cache/node_modules
-    - ln -s /cache/node_modules ${CI_PROJECT_DIR}
     - ls -R node_modules
     - npm run build
   artifacts:
     paths:
       - addon
+  tags:
+    - node
 #  only:
 #    - master
 
 webext:
   stage: dist
   script:
-    - mkdir -p /cache/node_modules
-    - ln -s /cache/node_modules ${CI_PROJECT_DIR}
     - ls -R node_modules
     - npm run bundle
     - ls -R addon
+  tags:
+    - node
 #  only:
 #    - master
