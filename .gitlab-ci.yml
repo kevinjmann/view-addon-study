@@ -37,8 +37,8 @@ webpack:
       - addon
   tags:
     - node
-#  only:
-#    - master
+  only:
+    - master
 
 webext:
   stage: dist
@@ -54,5 +54,5 @@ webext:
     name: "view-addon-$CI_JOB_NAME"
     paths:
       - ./
-#  only:
-#    - master
+  only:
+    - master
