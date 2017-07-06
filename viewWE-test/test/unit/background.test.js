@@ -55,7 +55,6 @@ describe("background.js", function() {
         serverTrackingURL: theServerURL + "/act/tracking",
         authenticator: theServerURL + "/authenticator.html",
         ajaxTimeout: 60000,
-        topics: {},
         userEmail: "",
         userid: "",
 
