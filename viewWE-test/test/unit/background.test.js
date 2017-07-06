@@ -17,7 +17,6 @@ describe("background.js", function() {
 
   before(function() {
     window.chrome = chrome;
-    chrome.browserAction.onClicked.addListener(background.clickCounter);
     chrome.runtime.onMessage.addListener(background.processMessage);
     chrome.cookies.onChanged.addListener(background.observeUserId);
   });
@@ -85,13 +84,12 @@ describe("background.js", function() {
     });
 
     it("should send a message to toggle or add the toolbar without setting topics otherwise", function() {
+      chrome.browserAction.onClicked.addListener(background.clickButton);
+
       const requestToToggleOrAddToolbarSpy =
-        sandbox.spy(background, "requestToToggleOrAddToolbar");
+        sandbox.spy(background, "toggleToolbar");
 
       chrome.browserAction.onClicked.trigger({id: 5});
-      chrome.browserAction.onClicked.trigger({id: 5});
-
-      expect(background.clickCounter).to.equal(2);
 
       sinon.assert.calledOnce(requestToToggleOrAddToolbarSpy);
     });
