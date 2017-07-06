@@ -7,8 +7,8 @@ import view from './view.js';
  */
 function processMessage(request) {
   switch (request.action) {
-    case "toggleOrAddToolbar":
-      view.toolbar.toggleOrAdd();
+    case "toggleToolbar":
+      view.toolbar.toggleToolbar();
       break;
     case "setAccountInfo":
       view.accountMenu.setAccountInfo();

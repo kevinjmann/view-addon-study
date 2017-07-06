@@ -5,12 +5,6 @@ const $ = require('jquery');
 
 const background = {
   currentTabId: -1,
-  clickCounter: 0,
-  topics: {
-    articles: require('./topics/articles.json'),
-    determiners: require('./topics/determiners.json'),
-    nouns: require('./topics/nouns.json')
-  },
   /**
    * Set all default values to storage.
    * This is only toggleed once after the add-on was installed.
@@ -24,7 +18,6 @@ const background = {
       serverTrackingURL: theServerURL + "/act/tracking",
       authenticator: theServerURL + "/authenticator.html",
       ajaxTimeout: 60000,
-      topics: {},
       userEmail: "",
       userid: "",
 
@@ -59,21 +52,6 @@ const background = {
    */
   noResponse: function() {
     // this is intentional
-  },
-
-  /**
-   * Proceed to set the topics and request to toggleOrAdd the toolbar.
-   */
-  proceedToSetAndToggleToolbar: function() {
-    chrome.storage.local.set({topics: background.topics}, background.requestToToggleOrAddToolbar);
-  },
-
-  /**
-   * Send a request to the content script to call
-   * view.toolbar.toggleOrAddToolbar().
-   */
-  requestToToggleOrAddToolbar: function() {
-    chrome.tabs.sendMessage(background.currentTabId, {action: "toggleOrAddToolbar"});
   },
 
   /**
@@ -597,18 +575,16 @@ const background = {
    * @param {number} tab the tab the toolbar
    * is located at
    */
-  clickCounter: function(tab) {
-    background.clickCounter++;
-
+  clickButton: function(tab) {
     background.currentTabId = tab.id;
+    background.toggleToolbar(tab.id);
+  },
 
-    if (background.clickCounter === 1) {
-      background.setDefaults();
-      background.proceedToSetAndToggleToolbar();
-    }
-    else {
-      background.requestToToggleOrAddToolbar();
-    }
+  /**
+   * Send the message to toggle the toolbar
+   */
+  toggleToolbar(tabId) {
+    chrome.tabs.sendMessage(tabId, {action: "toggleToolbar"});
   },
 
   /**
@@ -622,11 +598,32 @@ const background = {
     if ("wertiview_userid" === changeInfo.cookie.name) {
       background.processUserIdCookie(changeInfo);
     }
+  },
+
+  /**
+   * Install the addon:
+   *
+   * - load topics into storage
+   * - set defaults
+   *
+   * @param {Object} details Details for the update event. See
+   *  https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/runtime/onInstalled
+   */
+  install: function(details) {
+    background.setDefaults();
+    chrome.storage.local.set({
+      topics: {
+        articles: require('./topics/articles.json'),
+        determiners: require('./topics/determiners.json'),
+        nouns: require('./topics/nouns.json')
+      }
+    });
   }
 };
 
-chrome.browserAction.onClicked.addListener(background.clickCounter);
+chrome.browserAction.onClicked.addListener(background.clickButton);
 chrome.runtime.onMessage.addListener(background.processMessage);
 chrome.cookies.onChanged.addListener(background.observeUserId);
+chrome.runtime.onInstalled.addListener(background.install);
 
 export {background}

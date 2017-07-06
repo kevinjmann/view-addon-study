@@ -36,10 +36,9 @@ module.exports = function(view) {
     },
 
     /**
-     * Toggle the toolbar directly if it already exists,
-     * set storage items and add it otherwise.
+     * Toggle the toolbar, set storage items if necessary
      */
-    toggleOrAdd: function() {
+    toggleToolbar: function() {
       if (view.toolbarExists) {
         view.toolbar.toggle();
       } else {
