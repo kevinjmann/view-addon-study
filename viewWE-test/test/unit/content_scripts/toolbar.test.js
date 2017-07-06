@@ -1437,13 +1437,13 @@ describe("toolbar.js", function() {
     });
   });
 
-  describe("toggleOrAdd", function() {
+  describe("toggleToolbar", function() {
     it("should call toggle(), as the toolbar already exists", function() {
       const toggleStub = sandbox.stub(view.toolbar, "toggle");
 
       view.toolbarExists = true;
 
-      view.toolbar.toggleOrAdd();
+      view.toolbar.toggleToolbar();
 
       sinon.assert.calledOnce(toggleStub);
     });
@@ -1475,7 +1475,7 @@ describe("toolbar.js", function() {
 
       view.toolbarExists = false;
 
-      view.toolbar.toggleOrAdd();
+      view.toolbar.toggleToolbar();
 
       sinon.assert.calledOnce(setStorageItemsAndAddToolbarStub);
     });
