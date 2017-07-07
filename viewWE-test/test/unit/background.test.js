@@ -42,6 +42,23 @@ describe("background.js", function() {
   });
 
   describe("browserAction", function() {
+    it("Should call setDefaults if no serverURL exists", () => {
+      const setDefaults = sandbox.spy(background, "setDefaults");
+      sandbox.spy(background, "toggleToolbar");
+
+      chrome.storage.local.get.yields({});
+      background.clickButton({id: 1});
+      sinon.assert.calledOnce(setDefaults);
+    });
+
+    it("Should not call setDefaults if serverURL exists", () => {
+      const setDefaults = sandbox.spy(background, "setDefaults");
+      chrome.storage.local.get.yields({"serverURL": "foo"});
+      background.clickButton({id: 1});
+
+      sinon.assert.notCalled(setDefaults);
+    });
+
     it("should only set defaults where previous configuration didn't exist", () => {
       // local.storage.get returns "foobar" for serverURL
       chrome.storage.local.get.yields({serverTrackingURL: "foobar"});
