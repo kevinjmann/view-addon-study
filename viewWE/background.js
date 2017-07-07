@@ -10,14 +10,24 @@ const background = {
    * This is only toggleed once after the add-on was installed.
    */
   setDefaults: function() {
+    // Static options
     chrome.storage.local.set({
+      topics: {
+        articles: require('./topics/articles.json'),
+        determiners: require('./topics/determiners.json'),
+        nouns: require('./topics/nouns.json')
+      },
+      ajaxTimeout: 60000
+    });
+
+    // User-mutable options
+    const defaults = {
       // General options
       serverURL: theServerURL,
       servletURL: theServerURL + "/view",
       serverTaskURL: theServerURL + "/act/task",
       serverTrackingURL: theServerURL + "/act/tracking",
       authenticator: theServerURL + "/authenticator.html",
-      ajaxTimeout: 60000,
       userEmail: "",
       userid: "",
 
@@ -27,7 +37,6 @@ const background = {
       taskId: "",
       timestamp: "",
       numberOfExercises: 0,
-
       // user options
       fixedOrPercentage: 0,
       fixedNumberOfExercises: 25,
@@ -44,7 +53,17 @@ const background = {
       topic: "unselected",
       filter: "no-filter",
       activity: "unselected"
-    });
+    };
+
+    // We retrieve the existing settings from storage, then generate a new
+    // settings object by overwriting the defaults with the existing settings
+    chrome.storage.local.get(
+      Object.keys(defaults),
+      existingSettings => {
+        const newSettings = Object.assign({}, defaults, existingSettings);
+        chrome.storage.local.set(newSettings);
+      }
+    );
   },
 
   /**
@@ -616,14 +635,9 @@ const background = {
    *  https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/runtime/onInstalled
    */
   install: function(details) {
-    background.setDefaults();
-    chrome.storage.local.set({
-      topics: {
-        articles: require('./topics/articles.json'),
-        determiners: require('./topics/determiners.json'),
-        nouns: require('./topics/nouns.json')
-      }
-    });
+    if (details.reason === "install" || details.reason === "update") {
+      background.setDefaults();
+    }
   }
 };
 

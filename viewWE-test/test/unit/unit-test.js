@@ -20,7 +20,6 @@ const unitTest = {
       serverTrackingURL: testServerURL + "/act/tracking",
       authenticator: testServerURL + "/authenticator.html",
       ajaxTimeout: 60000,
-      topics: {},
       userEmail: "",
       userid: "",
 

@@ -41,6 +41,26 @@ describe("background.js", function() {
     background.topics = {};
   });
 
+  describe("installation", () => {
+    it("Should call setDefaults on install", () => {
+      const install = sandbox.stub(background, "setDefaults");
+      background.install({reason: "install"});
+      sinon.assert.calledOnce(install);
+    });
+
+    it("Should call setDefaults on update", () => {
+      const install = sandbox.stub(background, "setDefaults");
+      background.install({reason: "update"});
+      sinon.assert.calledOnce(install);
+    });
+
+    it("Does not call setDefaults on other events", () => {
+      const install = sandbox.stub(background, "setDefaults");
+      background.install({reason: "foo"});
+      sinon.assert.notCalled(install);
+    });
+  });
+
   describe("browserAction", function() {
     it("Should call setDefaults if no serverURL exists", () => {
       const setDefaults = sandbox.spy(background, "setDefaults");
@@ -61,29 +81,28 @@ describe("background.js", function() {
 
     it("should only set defaults where previous configuration didn't exist", () => {
       // local.storage.get returns "foobar" for serverURL
-      chrome.storage.local.get.yields({serverTrackingURL: "foobar"});
+      chrome.storage.local.get.yields({
+        serverURL: "foobar"
+      });
 
       background.setDefaults();
 
       // make sure that local.storage.set is called with "foobar" in serverURL
-      sinon.assert.calledWith(
-        chrome.storage.local.set,
-        sinon.match({serverURL: "foobar"})
-      );
+      sinon.assert.calledWithMatch(chrome.storage.local.set, {serverURL: "foobar"});
     });
 
-    it("should set the defaults to the storage", function() {
+    it("should set the defaults to the storage when no previous config existed", function() {
+      chrome.storage.local.get.yields({});
       background.setDefaults();
 
       sinon.assert.calledOnce(chrome.storage.local.set);
-      sinon.assert.calledWith(chrome.storage.local.set, {
+      sinon.assert.calledWithMatch(chrome.storage.local.set, {
         // General options
         serverURL: theServerURL,
         servletURL: theServerURL + "/view",
         serverTaskURL: theServerURL + "/act/task",
         serverTrackingURL: theServerURL + "/act/tracking",
         authenticator: theServerURL + "/authenticator.html",
-        ajaxTimeout: 60000,
         userEmail: "",
         userid: "",
 
@@ -115,13 +134,12 @@ describe("background.js", function() {
 
     it("should send a message to toggle or add the toolbar without setting topics otherwise", function() {
       chrome.browserAction.onClicked.addListener(background.clickButton);
-
-      const requestToToggleOrAddToolbarSpy =
-        sandbox.spy(background, "toggleToolbar");
+      chrome.storage.local.get.yields({serverURL: "foo"});
+      const toggleToolbar = sandbox.spy(background, "toggleToolbar");
 
       chrome.browserAction.onClicked.trigger({id: 5});
 
-      sinon.assert.calledOnce(requestToToggleOrAddToolbarSpy);
+      sinon.assert.calledOnce(toggleToolbar);
     });
   });
 
