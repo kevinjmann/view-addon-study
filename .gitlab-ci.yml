@@ -1,0 +1,59 @@
+image: adimit/docker-node-chromium:latest
+
+stages:
+  - setup
+  - test
+  - build
+  - dist
+
+cache:
+  untracked: true
+  key: "$CI_COMMIT_REF_NAME"
+  paths:
+    - "./node-modules"
+
+npm:
+  stage: setup
+  script:
+    - npm install
+  tags:
+    - node
+
+karma:
+  stage: test
+  script:
+    - npm run test
+  tags:
+    - node
+    - chromium-headless
+
+webpack:
+  stage: build
+  script:
+    - npm run build
+  artifacts:
+    expire_in: 1 hour
+    paths:
+      - addon
+  tags:
+    - node
+  only:
+    - master
+
+webext:
+  stage: dist
+  script:
+    - npm run bundle
+    - mkdir /tmp/addon && cp dist/*zip /tmp/addon
+    - rm -rf *
+    - unzip /tmp/addon/*zip
+    - find -name '*.map' -exec 'rm' '-f' '{}' ';'
+  tags:
+    - node
+  artifacts:
+    expire_in: 1 week
+    name: "view-addon-$CI_JOB_NAME"
+    paths:
+      - ./
+  only:
+    - master
