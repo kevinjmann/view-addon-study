@@ -576,8 +576,14 @@ const background = {
    * is located at
    */
   clickButton: function(tab) {
-    background.currentTabId = tab.id;
-    background.toggleToolbar(tab.id);
+    chrome.storage.local.get("serverURL", storage => {
+      if (!storage.serverURL) {
+        background.setDefaults();
+      }
+
+      background.currentTabId = tab.id;
+      background.toggleToolbar(tab.id);
+    });
   },
 
   /**
