@@ -48,6 +48,7 @@ webext:
     - rm -rf *
     - unzip /tmp/addon/*zip
     - find -name '*.map' -exec 'rm' '-f' '{}' ';'
+    - rm -rf .git*
   tags:
     - node
   artifacts:
