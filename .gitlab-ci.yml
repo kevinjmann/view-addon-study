@@ -47,6 +47,7 @@ webext:
     - mkdir /tmp/addon && cp dist/*zip /tmp/addon
     - rm -rf *
     - unzip /tmp/addon/*zip
+    - find -name '*.map' -exec 'rm' '-f' '{}' ';'
   tags:
     - node
   artifacts:
