@@ -42,6 +42,19 @@ describe("background.js", function() {
   });
 
   describe("browserAction", function() {
+    it("should only set defaults where previous configuration didn't exist", () => {
+      // local.storage.get returns "foobar" for serverURL
+      chrome.storage.local.get.yields({serverTrackingURL: "foobar"});
+
+      background.setDefaults();
+
+      // make sure that local.storage.set is called with "foobar" in serverURL
+      sinon.assert.calledWith(
+        chrome.storage.local.set,
+        sinon.match({serverURL: "foobar"})
+      );
+    });
+
     it("should set the defaults to the storage", function() {
       background.setDefaults();
 
