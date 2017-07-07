@@ -95,7 +95,6 @@ describe("background.js", function() {
       chrome.storage.local.get.yields({});
       background.setDefaults();
 
-      sinon.assert.calledOnce(chrome.storage.local.set);
       sinon.assert.calledWithMatch(chrome.storage.local.set, {
         // General options
         serverURL: theServerURL,
