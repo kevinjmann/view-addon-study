@@ -90,7 +90,9 @@ This projects contains the folders `viewWE` and `viewWE-test` and can both be fo
 
 ## Sources
 
-The sources are in `/viewWE`, and are compiled with webpack. You can use ES2015 syntax, as the sources are transpiled with [babel](http://babeljs.io). To build the sources, use npm:
+The sources are in `/viewWE`, and are compiled with [webpack](https://webpack.github.io/).
+You can use ES2015 syntax, as the sources are transpiled with [babel](http://babeljs.io).
+To build the sources, use npm:
 
 ```
 npm run install # install all dependencies
@@ -105,14 +107,80 @@ If you are developing the addon itself, it's best to use the watch task, which r
 npm run watch:build
 ```
 
-Even better is to use the automatic watch on the test suite that will run the entire test suit on every write, so you can make sure your changes are compatible. Please write tests for all new and changed functionality:
+You can also start an automatic watch task on the test suite that will run it on every write, so you can make sure your changes don't break existing code.
 
 ```
 npm run watch:test
 ```
+
+Please write tests for all new and changed functionality. See also the section on [Tests].
+You can run both the watch and the build tasks in parallel, by starting them from different shells.
 
 To bundle the addon for distribution, use the bundle task:
 
 ```
 npm run bundle
 ```
+
+## Tests
+
+The unit tests are based
+on [Mocha](http://mochajs.org/), [Sinon](http://sinonjs.org/)
+and [Chai](http://chaijs.com/).
+
+They are run using [Karma](https://karma-runner.github.io), which also provides
+for code coverage, using [Istanbul](https://istanbul.js.org/).
+
+Test modules are compiled with webpack.
+
+WebExtensions are automatically stubbed by the
+[sinon-chrome](https://github.com/acvetkov/sinon-chrome) package.
+
+The test files live in the `viewWE-test/test/unit` directory.
+To run them once, use
+
+```
+npm run test
+```
+
+(You will need to have run `npm install` before.)
+If you intend on editing the code or tests, it is usually better to use the watch task:
+
+```
+npm run watch:test
+```
+
+### Coverage
+
+Coverage reports are generated at the end of each test run on a per-file basis.
+They are also generated in HTML form in `viewWE-test/coverage`
+
+### Fixtures
+
+We use [karma-fixture](https://github.com/billtrik/karma-fixture)
+together with [karma-html2js-preprocessor](https://github.com/karma-runner/karma-html2js-preprocessor)
+for html files and [karma-json-fixtures-preprocessor](https://github.com/dmitriiabramov/karma-json-fixtures-preprocessor)
+for json files.
+
+JSON fixtures can be loaded like this:
+
+```javascript
+it("plays with the json fixture", function(){
+  const json = fixture.load("viewWE-test/fixtures/json/fixture.json");
+});
+```
+
+HTML fixtures:
+
+```javascript
+it("plays with the html fixture", function(){
+  const html = fixture.load("/viewWE-test/fixtures/ru-nouns-mc-and-cloze.html");
+});
+```
+
+Fixtures are *not* loaded into the DOM automatically.
+*WARNING:* There is a quirk in the fixtures loading process: json fixtures need to have no
+initial slash in the path, but HTML fixtures do.
+
+You could also use `require` and a full relative (to the test file itself) path
+to load the json or html as a string during compilation.
