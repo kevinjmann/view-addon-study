@@ -548,29 +548,26 @@ const background = {
    * - auth token
    */
   signIn: function(userData) {
-    const account = userData.split("/");
-    const user = decodeURI(account[0]);
-    const userEmail = account[1];
-    const userid = account[2];
-    const authtoken = account[3];
+    const account = JSON.parse(decodeURIComponent(userData));
 
     chrome.storage.local.set({
-      userEmail: userEmail,
-      userid: userid,
-      user: user,
-      token: authtoken
+      userEmail: account.user.email,
+      userid: account.user.uid,
+      user: account.user.name,
+      token: account.user.token,
+      firebase: account.firebase
     }, function() {
-      background.requestToSignIn(user);
+      background.requestToSignIn(account);
     });
   },
 
   /**
    * Send a request to the content script to call view.toolbar.signIn().
    */
-  requestToSignIn: function(user) {
+  requestToSignIn: function(account) {
     chrome.tabs.sendMessage(background.currentTabId, {
       action: "signIn",
-      user: user
+      user: account.user.name
     });
   },
 
