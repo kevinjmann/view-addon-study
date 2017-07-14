@@ -1261,6 +1261,15 @@ describe("background.js", function() {
         chrome.storage.local.set.yields();
       });
 
+      it("should notify the user if the cookie was not parsed", () => {
+        const badString = "%";
+        const createBasicNotification = sandbox.stub(background, "createBasicNotification");
+
+        background.signIn(badString);
+
+        sinon.assert.calledOnce(createBasicNotification);
+      });
+
       it("should set user email, user id, user and token", function() {
         const expected = {
           firebase: cookieData.firebase,

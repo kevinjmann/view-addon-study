@@ -553,7 +553,11 @@ const background = {
     try {
       account = JSON.parse(decodeURIComponent(userData));
     } catch(e) {
-      console.log("Couldn't parse cookie!", userData);
+      background.createBasicNotification(
+        "failed-to-parse-cookie",
+        "Internal error: failed to parse cookie. Maybe the server format changed." +
+        " Please try updating the addon."
+      );
       return;
     }
 
