@@ -1245,52 +1245,58 @@ describe("background.js", function() {
     });
 
     describe("signIn", function() {
+      const cookieData = {
+        user: {
+          name: "A name",
+          email: "email@example.com",
+          uid: "The user id",
+          token: "The user token"
+        },
+        firebase: "Firebase data"
+      };
+
+      const cookieString = encodeURIComponent(JSON.stringify(cookieData));
+
       beforeEach(function() {
         chrome.storage.local.set.yields();
       });
 
       it("should set user email, user id, user and token", function() {
-        const encodedUser = "user%20name";
-        const userData = encodedUser + "/email/id/authtoken";
-        const userEmail = "email";
-        const userid = "id";
-        const user = "user name";
-        const token = "authtoken";
+        const expected = {
+          firebase: cookieData.firebase,
+          token: cookieData.user.token,
+          user: cookieData.user.name,
+          userEmail: cookieData.user.email,
+          userid: cookieData.user.uid
+        };
 
-        background.signIn(userData);
+        const requestToSignInSpy = sandbox.spy(background, "requestToSignIn");
+
+        background.signIn(cookieString);
 
         sinon.assert.calledOnce(chrome.storage.local.set);
-        sinon.assert.calledWith(chrome.storage.local.set, {
-          userEmail: userEmail,
-          userid: userid,
-          user: user,
-          token: token
-        });
+        sinon.assert.calledWith(chrome.storage.local.set, expected);
+
+        sinon.assert.calledOnce(requestToSignInSpy);
+        sinon.assert.calledWithExactly(requestToSignInSpy, cookieData);
       });
 
       it("should call requestToSignIn()", function() {
-        const requestToSignInSpy = sandbox.spy(background, "requestToSignIn");
 
-        const user = "user name";
+        background.signIn(cookieString);
 
-        background.signIn(user + "/email/id/authtoken");
-
-        sinon.assert.calledOnce(requestToSignInSpy);
-        sinon.assert.calledWithExactly(requestToSignInSpy, user);
 
       });
 
       it("should send the message to view.accountMenu.signIn()", function() {
         background.currentTabId = 5;
 
-        const user = "user name";
-
-        background.requestToSignIn(user);
+        background.requestToSignIn(cookieData);
 
         sinon.assert.calledOnce(chrome.tabs.sendMessage);
         sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
           action: "signIn",
-          user: user
+          user: cookieData.user.name
         });
       });
     });
