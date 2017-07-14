@@ -548,7 +548,14 @@ const background = {
    * - auth token
    */
   signIn: function(userData) {
-    const account = JSON.parse(decodeURIComponent(userData));
+    var account;
+
+    try {
+      account = JSON.parse(decodeURIComponent(userData));
+    } catch(e) {
+      console.log("Couldn't parse cookie!", userData);
+      return;
+    }
 
     chrome.storage.local.set({
       userEmail: account.user.email,
