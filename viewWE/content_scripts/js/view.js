@@ -28,6 +28,13 @@ const view = {
   },
 
   /**
+   * Get the user token
+   */
+  getToken: function() {
+    return view.token;
+  },
+
+  /**
    * Set all changes from the storage to view.
    *
    * @param {object} changes the changes made to the storage

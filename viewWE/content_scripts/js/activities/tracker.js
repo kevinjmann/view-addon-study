@@ -17,7 +17,7 @@ module.exports = function(view) {
       if (view.userid) {
         const trackingData = {};
 
-        trackingData["token"] = view.token;
+        trackingData["token"] = view.getToken();
         trackingData["task-id"] = view.taskId;
         trackingData["enhancement-id"] = $EnhancementElement.attr("id");
         trackingData["submission"] = submission;

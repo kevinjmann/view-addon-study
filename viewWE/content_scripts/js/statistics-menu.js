@@ -42,7 +42,7 @@ module.exports = function(view) {
         action: "getAllTasks",
         ajaxTimeout: view.ajaxTimeout,
         serverTaskURL: view.serverTaskURL,
-        queryParam: "?token=" + view.token
+        queryParam: "?token=" + view.getToken()
       });
     },
 
@@ -64,7 +64,7 @@ module.exports = function(view) {
         action: "getTask",
         ajaxTimeout: view.ajaxTimeout,
         serverTrackingURL: view.serverTrackingURL,
-        queryParam: "?token=" + view.token + "&taskId=" + taskId
+        queryParam: "?token=" + view.getToken() + "&taskId=" + taskId
       });
     },
 

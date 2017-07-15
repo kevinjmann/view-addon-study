@@ -149,7 +149,7 @@ module.exports = function(view) {
      */
     createTaskData: function() {
       return {
-        token: view.token,
+        token: view.getToken(),
         url: view.url,
         title: view.title,
         language: view.language,
