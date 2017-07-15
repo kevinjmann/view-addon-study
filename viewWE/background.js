@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import FirebaseAdapter from './firebaseAdapter.js';
 
 const theServerURL = "https://view.aleks.bg";
 /** @namespace */
@@ -562,6 +562,9 @@ const background = {
       );
       return;
     }
+
+    const firebase = new FirebaseAdapter();
+    firebase.initialize(account.firebase);
 
     chrome.storage.local.set({
       userEmail: account.user.email,

@@ -8,6 +8,7 @@
 
 import $ from 'jquery';
 import chrome from 'sinon-chrome';
+import FirebaseAdapter from '../../../viewWE/firebaseAdapter.js';
 
 import {background} from '../../../viewWE/background.js';
 
@@ -1258,6 +1259,7 @@ describe("background.js", function() {
 
       beforeEach(function() {
         chrome.storage.local.set.yields();
+        sandbox.stub(FirebaseAdapter, "initialize");
       });
 
       it("should notify the user if the cookie was not parsed", () => {
