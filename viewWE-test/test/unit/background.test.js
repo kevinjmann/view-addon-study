@@ -1251,8 +1251,7 @@ describe("background.js", function() {
           email: "email@example.com",
           uid: "The user id",
           token: "The user token"
-        },
-        firebase: "Firebase data"
+        }
       };
 
       const cookieString = encodeURIComponent(JSON.stringify(cookieData));
@@ -1272,7 +1271,6 @@ describe("background.js", function() {
 
       it("should set user email, user id, user and token", function() {
         const expected = {
-          firebase: cookieData.firebase,
           token: cookieData.user.token,
           user: cookieData.user.name,
           userEmail: cookieData.user.email,

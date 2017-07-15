@@ -1,3 +1,5 @@
+import firebase from 'firebase';
+
 const theServerURL = "https://view.aleks.bg";
 /** @namespace */
 
@@ -565,8 +567,7 @@ const background = {
       userEmail: account.user.email,
       userid: account.user.uid,
       user: account.user.name,
-      token: account.user.token,
-      firebase: account.firebase
+      token: account.user.token
     }, function() {
       background.requestToSignIn(account);
     });
