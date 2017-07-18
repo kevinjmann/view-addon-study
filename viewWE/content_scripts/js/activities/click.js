@@ -15,6 +15,8 @@ module.exports = function(view) {
       $Enhancements.on("click", view.click.handler);
     },
 
+    initialize: function() { /* no op */ },
+
     /**
      * Turn correctly clicked hits green and incorrect ones red.
      */

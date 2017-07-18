@@ -11,6 +11,10 @@ module.exports = function(view) {
       $(".viewinput").on("keyup", view.cloze.handler);
     },
 
+    initialize: function() {
+      view.blur.add();
+    },
+
     /**
      * Create an exercise for the enhancement element.
      *

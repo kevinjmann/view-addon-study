@@ -66,6 +66,10 @@ describe("enhancer.js", function() {
   });
 
   describe("enhance", function() {
+    beforeEach(() => {
+      view.activity = "color";
+    });
+
     it("should call restoreToOriginal()", function() {
       const restoreToOriginalSpy = sandbox.spy(view.enhancer, "restoreToOriginal");
 
