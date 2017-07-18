@@ -19,7 +19,8 @@ const background = {
         articles: require('./topics/articles.json'),
         determiners: require('./topics/determiners.json'),
         nouns: require('./topics/nouns.json'),
-        adjectives: require('./topics/adjectives.json')
+        adjectives: require('./topics/adjectives.json'),
+        agreement: require('./topics/agreement.json')
       },
       ajaxTimeout: 60000
     });
