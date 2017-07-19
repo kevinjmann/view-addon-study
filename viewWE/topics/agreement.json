@@ -1,6 +1,12 @@
 {
   "de": {
     "activities": {
+      "color": {
+        "instruction": {
+          "title": "Color",
+          "text": "Spot different cases"
+        }
+      },
       "mc": {
         "instruction": {
           "title": "Multiple Choice",
