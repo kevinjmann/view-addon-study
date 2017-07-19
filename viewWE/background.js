@@ -84,7 +84,8 @@ const background = {
       id, {
         "type": "basic",
         "title": title,
-        "message": message
+        "message": message,
+        "iconUrl": require('./icons/view-96.png')
       });
   },
 
