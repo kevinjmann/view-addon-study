@@ -463,6 +463,13 @@ const background = {
               "in a few minutes."
             );
             break;
+          case 404:
+            background.createBasicNotification(
+                "error-404-notification",
+                "Error 404",
+                "The server seems to have vanished. Please notify the server administrator"
+            );
+            break;
           case 494:
             // enhancement was stopped on client's request
             break;
