@@ -38,6 +38,8 @@ module.exports = {
       path.resolve(source_path, "content_scripts/js/messageHandler.js")
     ].concat(
       glob.sync(path.resolve(source_path, "content_scripts/css/**/*.css"))
+    ).concat(
+      glob.sync(path.resolve(source_path, "content_scripts/css/**/*.scss"))
     )
   },
   devtool: 'source-map',

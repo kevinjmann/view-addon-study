@@ -1,0 +1,21 @@
+viewenhancement {
+    &.colorize-style-agreement {
+        font-weight: bold;
+
+        &[data-morph-case="Nom"] {
+            color: #F00;
+        }
+
+        &[data-morph-case="Gen"] {
+            color: #F0F;
+        }
+
+        &[data-morph-case="Dat"] {
+            color: #00F;
+        }
+
+        &[data-morph-case="Acc"] {
+            color: #0F0;
+        }
+    }
+}
