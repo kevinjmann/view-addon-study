@@ -474,7 +474,7 @@ const background = {
             background.createBasicNotification(
                 "error-400-notification",
                 "Error 400",
-                "The addon sent a bad request to the server. Please ensure you have the latest" +
+                "The addon sent a bad request to the server. Please ensure you have the latest " +
                 "version of the addon and try again. If the problem persists, please file a bug."
             );
             break;
