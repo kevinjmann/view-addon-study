@@ -1260,6 +1260,7 @@ describe("background.js", function() {
       beforeEach(function() {
         chrome.storage.local.set.yields();
         sandbox.stub(FirebaseAdapter, "initialize");
+        sandbox.stub(FirebaseAdapter, "getUser");
       });
 
       it("should notify the user if the cookie was not parsed", () => {

@@ -13,7 +13,11 @@ export default class FirebaseAdapter {
     }
   }
 
-  getNewToken() {
+  getNewToken(oldToken) {
+    return oldToken;
+  }
 
+  getUser(token) {
+    return firebase.auth().signInWithCustomToken(token);
   }
 }

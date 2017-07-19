@@ -1,3 +1,5 @@
+import FirebaseAdapter from '../../firebaseAdapter.js';
+
 const view = {
   url: document.baseURI,
   title: document.title,
@@ -31,7 +33,10 @@ const view = {
    * Get the user token
    */
   getToken: function() {
-    return view.token;
+    const firebase = new FirebaseAdapter();
+
+    const oldToken = view.token;
+    return firebase.getNewToken(oldToken);
   },
 
   /**

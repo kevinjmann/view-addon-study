@@ -565,6 +565,8 @@ const background = {
 
     const firebase = new FirebaseAdapter();
     firebase.initialize(account.firebase);
+    const userPromise = firebase.getUser(account.user.token);
+    userPromise.then(user => console.log(user));
 
     chrome.storage.local.set({
       userEmail: account.user.email,
@@ -573,6 +575,28 @@ const background = {
       token: account.user.token
     }, function() {
       background.requestToSignIn(account);
+    });
+  },
+
+  getCustomToken: function() {
+    return new Promise((resolve, reject) => {
+      chrome.local.storage.get(
+        "servletURL",
+        data => {
+          const request = new XMLHttpRequest();
+          request.open("POST", data.servletURL);
+          request.onreadystatechange = () => {
+            if (request.readyState === 4) {
+              const tokenData = JSON.parse(request.responseText);
+              resolve(tokenData.token);
+            } else {
+              reject(Error(request.statusText + " " + request.responseText));
+            }
+          };
+          request.onerror = () => reject(Error("Network error."));
+          request.send();
+        }
+      );
     });
   },
 
