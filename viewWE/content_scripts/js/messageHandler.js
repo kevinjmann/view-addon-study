@@ -14,7 +14,7 @@ function processMessage(request) {
       view.accountMenu.setAccountInfo();
       break;
     case "initialInteractionState":
-      view.enhancer.initialInteractionState();
+      view.toolbar.initialInteractionState();
       break;
     case "addEnhancementMarkup":
       view.enhancer.addEnhancementMarkup(request.data);
