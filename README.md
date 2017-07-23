@@ -122,6 +122,23 @@ To bundle the addon for distribution, use the bundle task:
 npm run bundle
 ```
 
+## Tests
+
+The VIEW add-on has two types of tests: unit tests and functional tests.
+
+Unit tests are supposed to test only small units of the code like one function.
+
+The functional tests are testing the actual functionality of the add-on
+like whether the add-on button click is working as expected. Usually you 
+would do this kind of testing manually. The more functional tests you have
+the less manual testing is required.
+
+You can run all tests via:
+
+```
+  $ npm run test
+```
+
 ## Unit Tests
 
 The unit tests are based
@@ -164,7 +181,7 @@ for json files.
 
 JSON fixtures can be loaded like this:
 
-```javascript
+```
 it("plays with the json fixture", function(){
   const json = fixture.load("viewWE-test/fixtures/json/fixture.json");
 });
@@ -172,7 +189,7 @@ it("plays with the json fixture", function(){
 
 HTML fixtures:
 
-```javascript
+```
 it("plays with the html fixture", function(){
   const html = fixture.load("/viewWE-test/fixtures/ru-nouns-mc-and-cloze.html");
 });
@@ -200,7 +217,7 @@ project used Python).
 
 Useful API: [Javascript API for webdriver](https://seleniumhq.github.io/selenium/docs/api/javascript/module/selenium-webdriver/firefox/index.html)
 
-The functional tests can be run on their own by:
+The functional tests can be run via:
 
 ```
   $ npm run test:func
@@ -225,7 +242,7 @@ FYI:
 
 "view_mozilla_org" refers to 
 
-```json
+```
 "applications": {
     "gecko": {
       "id": "view@mozilla.org"
