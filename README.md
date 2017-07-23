@@ -122,7 +122,7 @@ To bundle the addon for distribution, use the bundle task:
 npm run bundle
 ```
 
-## Tests
+## Unit Tests
 
 The unit tests are based
 on [Mocha](http://mochajs.org/), [Sinon](http://sinonjs.org/)
@@ -140,7 +140,7 @@ The test files live in the `viewWE-test/test/unit` directory.
 To run them once, use
 
 ```
-npm run test
+npm run test:unit
 ```
 
 (You will need to have run `npm install` before.)
@@ -185,7 +185,59 @@ initial slash in the path, but HTML fixtures do.
 You could also use `require` and a full relative (to the test file itself) path
 to load the json or html as a string during compilation.
 
-# Linting
+## Functional Tests
+
+The functional tests in this repository are run via
+[Selenium](http://www.seleniumhq.org/) and
+[Geckodriver](https://github.com/mozilla/geckodriver).
+
+Selenium is being driven via the node/javascript language, although python may
+also work well (the
+[Loop](https://github.com/mozilla/loop/blob/master/docs/Developing.md#functional-tests)
+project used Python).
+
+[Mocha](https://mochajs.org/) is used as the test framework.
+
+Useful API: [Javascript API for webdriver](https://seleniumhq.github.io/selenium/docs/api/javascript/module/selenium-webdriver/firefox/index.html)
+
+The functional tests can be run on their own by:
+
+```
+  $ npm run test:func
+```
+
+### Name and version changes of the add-on
+
+For the tests to run successfully keep the name and version of the add-on in check:
+
+In ./package.json update:
+
+XPI_NAME=dist/view-1.1.0.zip
+
+In ./viewWE-test/test/functional/utils.js update:
+
+By.id("view_mozilla_org-browser-action")
+
+In this example the name is "view" and the version is "1.1.0" which is in
+synch with ./viewWE/manifest.json
+
+FYI:
+
+"view_mozilla_org" refers to 
+
+```json
+"applications": {
+    "gecko": {
+      "id": "view@mozilla.org"
+    }
+  }
+```
+
+in ./viewWE/manifest.json
+
+"browser-action" is the add-on button.
+
+## Linting
 
 [Linting](http://en.wikipedia.org/wiki/Lint_(software)) is important part of
 code development that provides static analysis and helps to find bugs in code.
@@ -197,7 +249,7 @@ coding stage, rather than only finding out at review time.
 
 It is recommended for any new project to have linting set up from the start.
 
-# ESLint - Javascript Linting
+## ESLint - Javascript Linting
 
 This repository has [ESLint](http://eslint.org) for providing javascript
 analysis. It is a highly flexible tool especially as it is pluggable, so more
