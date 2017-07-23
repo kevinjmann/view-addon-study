@@ -184,3 +184,21 @@ initial slash in the path, but HTML fixtures do.
 
 You could also use `require` and a full relative (to the test file itself) path
 to load the json or html as a string during compilation.
+
+# Linting
+
+[Linting](http://en.wikipedia.org/wiki/Lint_(software)) is important part of
+code development that provides static analysis and helps to find bugs in code.
+Integrating it with editors makes it more efficient, as problems can be solved
+as you write the code, rather than in a cycle later on.
+
+It also helps to developers to adhere to various style guidelines during the
+coding stage, rather than only finding out at review time.
+
+It is recommended for any new project to have linting set up from the start.
+
+# ESLint - Javascript Linting
+
+This repository has [ESLint](http://eslint.org) for providing javascript
+analysis. It is a highly flexible tool especially as it is pluggable, so more
+rules can be added easily.
