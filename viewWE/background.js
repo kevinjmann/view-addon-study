@@ -67,13 +67,6 @@ const background = {
   },
 
   /**
-   * A function that is supposed to be a placeholder for a response callback.
-   */
-  noResponse: function() {
-    // this is intentional
-  },
-
-  /**
    * Create a basic notification containing an id, the
    * "basic" type a title and a message.
    *
@@ -244,7 +237,7 @@ const background = {
    * @param {number} taskId the task id from the server
    */
   setTaskId: function(taskId) {
-    chrome.storage.local.set({taskId: taskId}, background.noResponse);
+    chrome.storage.local.set({taskId: taskId});
   },
 
   /**

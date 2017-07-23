@@ -61,7 +61,7 @@ describe("background.js", function() {
     });
   });
 
-  describe("browserAction", function() {
+  describe("clickButton", function() {
     it("Should call setDefaults if no serverURL exists", () => {
       const setDefaults = sandbox.spy(background, "setDefaults");
       sandbox.spy(background, "toggleToolbar");
@@ -79,64 +79,74 @@ describe("background.js", function() {
       sinon.assert.notCalled(setDefaults);
     });
 
-    it("should only set defaults where previous configuration didn't exist", () => {
-      // local.storage.get returns "foobar" for serverURL
-      chrome.storage.local.get.yields({
-        serverURL: "foobar"
+    describe("setDefaults", function() {
+      it("should set static options", () => {
+        background.setDefaults();
+
+        sinon.assert.calledWithMatch(chrome.storage.local.set, {
+          topics: {}, // TODO: Find out how to test if all topics are set
+          ajaxTimeout: 60000
+        });
       });
 
-      background.setDefaults();
+      it("should only set defaults where previous configuration didn't exist", () => {
+        // local.storage.get returns "foobar" for serverURL
+        chrome.storage.local.get.yields({
+          serverURL: "foobar"
+        });
 
-      // make sure that local.storage.set is called with "foobar" in serverURL
-      sinon.assert.calledWithMatch(chrome.storage.local.set, {serverURL: "foobar"});
-    });
+        background.setDefaults();
 
-    it("should set the defaults to the storage when no previous config existed", function() {
-      chrome.storage.local.get.yields({});
-      background.setDefaults();
+        // make sure that local.storage.set is called with "foobar" in serverURL
+        sinon.assert.calledWithMatch(chrome.storage.local.set, {serverURL: "foobar"});
+      });
 
-      sinon.assert.calledWithMatch(chrome.storage.local.set, {
-        // General options
-        serverURL: theServerURL,
-        servletURL: theServerURL + "/view",
-        serverTaskURL: theServerURL + "/act/task",
-        serverTrackingURL: theServerURL + "/act/tracking",
-        authenticator: theServerURL + "/authenticator.html",
-        userEmail: "",
-        userid: "",
+      it("should set the defaults to the storage when no previous config existed", function() {
+        chrome.storage.local.get.yields({});
+        background.setDefaults();
 
-        // task data
-        user: "",
-        token: "",
-        taskId: "",
-        timestamp: "",
-        numberOfExercises: 0,
+        sinon.assert.calledWithMatch(chrome.storage.local.set, {
+          // General options
+          serverURL: theServerURL,
+          servletURL: theServerURL + "/view",
+          serverTaskURL: theServerURL + "/act/task",
+          serverTrackingURL: theServerURL + "/act/tracking",
+          authenticator: theServerURL + "/authenticator.html",
+          userEmail: "",
+          userid: "",
 
-        // user options
-        fixedOrPercentage: 0,
-        fixedNumberOfExercises: 25,
-        percentageOfExercises: 100,
-        choiceMode: 0,
-        firstOffset: 0,
-        intervalSize: 1,
-        showInst: false,
-        debugSentenceMarkup: false,
+          // task data
+          user: "",
+          token: "",
+          taskId: "",
+          timestamp: "",
+          numberOfExercises: 0,
 
-        // enabled, language, topic and activity selections
-        enabled: false, // should the page be enhanced right away?
-        language: "unselected",
-        topic: "unselected",
-        filter: "no-filter",
-        activity: "unselected"
+          // user options
+          fixedOrPercentage: 0,
+          fixedNumberOfExercises: 25,
+          percentageOfExercises: 100,
+          choiceMode: 0,
+          firstOffset: 0,
+          intervalSize: 1,
+          showInst: false,
+          debugSentenceMarkup: false,
+
+          // enabled, language, topic and activity selections
+          enabled: false, // should the page be enhanced right away?
+          language: "unselected",
+          topic: "unselected",
+          filter: "no-filter",
+          activity: "unselected"
+        });
       });
     });
 
     it("should send a message to toggle or add the toolbar without setting topics otherwise", function() {
-      chrome.browserAction.onClicked.addListener(background.clickButton);
       chrome.storage.local.get.yields({serverURL: "foo"});
       const toggleToolbar = sandbox.spy(background, "toggleToolbar");
 
-      chrome.browserAction.onClicked.trigger({id: 5});
+      background.clickButton({id: 1});
 
       sinon.assert.calledOnce(toggleToolbar);
     });
