@@ -7,13 +7,6 @@ require('jquery-ui/themes/base/dialog.css');
 module.exports = function(view) {
   return {
     /**
-     * A function that is supposed to be a placeholder for a response callback.
-     */
-    noResponse: function() {
-      // This is intentional
-    },
-
-    /**
      * Close the dropdown menu and remove the instant feedback dialog,
      * if the user clicks outside of it.
      */

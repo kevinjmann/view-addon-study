@@ -40,16 +40,6 @@ describe("lib.js", function() {
     $(".element").show();
   });
 
-  describe("noResponse", function() {
-    it("should return nothing", function() {
-      const noResponseSpy = sandbox.spy(view.lib, "noResponse");
-
-      view.lib.noResponse();
-
-      expect(noResponseSpy.firstCall.returnValue).to.be.undefined;
-    });
-  });
-
   describe("initOnWindowClick", function() {
     it("should initialize on window click handler", function() {
       const selectorSpy = sandbox.spy($.fn, "init");

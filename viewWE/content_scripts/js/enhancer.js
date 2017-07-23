@@ -96,7 +96,7 @@ module.exports = function(view) {
         action: "sendActivityDataAndGetEnhancementMarkup",
         activityData: activityData,
         ajaxTimeout: view.ajaxTimeout
-      }, view.lib.noResponse);
+      });
     },
 
     /**
