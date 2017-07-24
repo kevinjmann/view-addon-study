@@ -341,12 +341,11 @@ describe("options.js", function() {
         const delaySpy = sandbox.spy($.fn, "delay");
         sandbox.useFakeTimers();
 
-        //expect($(viewOptions.selectorStart + "options-saved").css("display")).to.equal("none");
+        $(viewOptions.selectorStart + "options-saved").hide();
 
         viewOptions.showSavedMessage();
 
-        //expect($(viewOptions.selectorStart + "options-saved").css("display")).to.equal("block");
-        //expect($(viewOptions.selectorStart + "options-saved").attr("style")).to.not.contain("opacity: 1");
+        expect($(viewOptions.selectorStart + "options-saved").css("display")).to.equal("block");
 
         sinon.assert.calledOnce(delaySpy);
         sinon.assert.calledWithExactly(delaySpy, 5000);

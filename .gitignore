@@ -3,7 +3,4 @@
 /addon
 /node_modules
 view-webextension.iml
-*.zip
-*.log
-*~
 /viewWE-test/coverage

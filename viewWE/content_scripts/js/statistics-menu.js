@@ -43,7 +43,7 @@ module.exports = function(view) {
         ajaxTimeout: view.ajaxTimeout,
         serverTaskURL: view.serverTaskURL,
         queryParam: "?token=" + view.token
-      }, view.lib.noResponse());
+      });
     },
 
     /**
@@ -65,7 +65,7 @@ module.exports = function(view) {
         ajaxTimeout: view.ajaxTimeout,
         serverTrackingURL: view.serverTrackingURL,
         queryParam: "?token=" + view.token + "&taskId=" + taskId
-      }, view.lib.noResponse());
+      });
     },
 
     /**

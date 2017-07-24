@@ -139,7 +139,7 @@ module.exports = function(view) {
         action: "sendTaskDataAndGetTaskId",
         taskData: taskData,
         serverTaskURL: view.serverTaskURL
-      }, view.lib.noResponse);
+      });
     },
 
     /**

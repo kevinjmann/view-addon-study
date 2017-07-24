@@ -12,8 +12,6 @@ import view from '../../../../viewWE/content_scripts/js/view.js';
 import unitTest from '../unit-test.js';
 import SelectorCache from '../../../../viewWE/SelectorCache.js';
 
-window.chrome = chrome;
-
 describe("toolbar.js", function() {
   let sandbox;
 
@@ -53,45 +51,6 @@ describe("toolbar.js", function() {
 
   const toolbarStart = "#wertiview-toolbar-";
   const globalServerURL = "https://view.aleks.bg";
-
-  describe("SelectorCache", function() {
-    it("should get the wanted jquery selector", function() {
-      const selectorSpy = sandbox.spy(view.toolbar.$cache, "get");
-      const getElementByIdSpy = sandbox.spy(document, "getElementById");
-      const someSelector = "#someSelector";
-
-      $("body").append("<div id='someSelector'>some text</div>");
-
-      const $CachedObject = view.toolbar.$cache.get(someSelector);
-      view.toolbar.$cache.get(someSelector);
-
-      // even though we selected "someSelector" twice...
-      sinon.assert.calledTwice(selectorSpy);
-      sinon.assert.calledWithExactly(selectorSpy, someSelector);
-
-      // ... in the background we selected it only once and retrieved it
-      // from the $cache in the second call
-      sinon.assert.calledOnce(getElementByIdSpy);
-      sinon.assert.calledWithExactly(getElementByIdSpy, someSelector.substr(1));
-
-      getElementByIdSpy.reset();
-
-      $(someSelector);
-      $(someSelector);
-
-      // in contrast jquery selects it every time, without reusing
-      // previous selections
-      sinon.assert.calledTwice(getElementByIdSpy);
-
-      // the $CachedObject is actually equal to the jquery object counterpart
-      expect($CachedObject).to.deep.equal($(someSelector));
-
-      // we can also use the $CachedObject in the same way we do use jquery objects
-      expect($CachedObject.text()).to.equal("some text");
-
-      $(someSelector).remove();
-    });
-  });
 
   describe("jquery selectors", function() {
     it("should be able to find all required jquery selectors in the toolbar", function() {

@@ -54,7 +54,6 @@ view.enhancer = require('./enhancer.js')(view);
 view.feedbacker = require('./feedbacker.js')(view);
 view.lib = require('./lib.js')(view);
 view.notification = require('./notification.js')(view);
-view.sidebar = require('./sidebar.js')(view);
 view.statisticsMenu = require('./statistics-menu.js')(view);
 view.toolbar = require('./toolbar.js')(view);
 view.VIEWmenu = require('./view-menu.js')(view);
