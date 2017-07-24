@@ -300,18 +300,6 @@
     font-weight: bold;
 }
 
-/* Russian Singular Nouns */
-.colorize-style-nouns-singular {
-    color: #FF8200;
-    font-weight: bold;
-}
-
-/* Russian Plural Nouns */
-.colorize-style-nouns-plural {
-    color: #FF8200;
-    font-weight: bold;
-}
-
 /* Russian Participles */
 .colorize-style-participles {
     color: #FF8200;
@@ -360,20 +348,8 @@
     font-weight: bold;
 }
 
-/* Russian Masculine Adjectives */
-.colorize-style-adjective-masculine {
-    color: #FF8200;
-    font-weight: bold;
-}
-
-/* Russian Feminine Adjectives */
-.colorize-style-adjective-feminine {
-    color: #FF8200;
-    font-weight: bold;
-}
-
-/* Russian Neutral Adjectives */
-.colorize-style-adjective-neutral {
+/* Russian Adjectives */
+.colorize-style-adjectives {
     color: #FF8200;
     font-weight: bold;
 }
