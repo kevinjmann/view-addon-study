@@ -15,7 +15,8 @@ const background = {
       topics: {
         articles: require('./topics/articles.json'),
         determiners: require('./topics/determiners.json'),
-        nouns: require('./topics/nouns.json')
+        nouns: require('./topics/nouns.json'),
+        adjectives: require('./topics/adjectives.json')
       },
       ajaxTimeout: 60000
     });
