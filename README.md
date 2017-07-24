@@ -271,3 +271,82 @@ It is recommended for any new project to have linting set up from the start.
 This repository has [ESLint](http://eslint.org) for providing javascript
 analysis. It is a highly flexible tool especially as it is pluggable, so more
 rules can be added easily.
+
+
+## How to add new topics
+
+We will show how to extend the add-on with a new topic using Russian Adjectives
+as new topic and Russian Nouns as template.
+
+### Add the new topic option to the toolbar
+
+Go to `viewWE/content_scripts/html/toolbar.html` and make a copy of 
+
+`<option id="wertiview-toolbar-topic-nouns" value="nouns">Nouns</option>`
+
+that can be found in the selection menu with the id 
+`wertiview-toolbar-topic-menu-ru` containing all Russian topics.
+
+Change `nouns` to `adjectives`. 
+
+Important: Make sure this name is the same used on server-side.
+
+### Add the new topic json file
+
+Go to `viewWE/topics/` and make a copy of `nouns.json` and rename it to 
+`adjectives.json` in accordance to the name given in the toolbar option.
+
+Change all occurrences of `noun` to `adjectives` inside the instruction texts.
+
+If your topic contains filters then they need to be changed as well, 
+otherwise it can be removed. An example for a topic without filters would be
+`articles.json`. 
+
+A filter is used when a topic can capture multiple subcategories, 
+like e.g. Feminine Adjectives. Which categories are to be used as filter are 
+determined by the server-side code. You can see all filters for Adjectives in 
+
+`app/src/main/java/werti/uima/enhancer/Vislcg3RusAdjectiveEnhancer.java`
+
+inside the `filterPattern`, namely `Fem|Msc|Neu|MFN`.
+
+Filters appear as a selection menu in the toolbar, containing each filter as 
+select option.
+
+Now we are ready to make the changes to the filters:
+
+The first filter is `all` and can be kept as is. It pools all subcategories
+together, this means nothing gets filtered.
+
+The next filters correspond to the ones seen in the `filterPattern`.
+
+We will take the `singular` filter as template for the `feminine` filter.
+Before you start you should remove the `plural` filter.
+
+First change the filter name `singular` to `feminine`. There are no restrictions
+which name you choose, but it should make clear what filter it is.
+
+Change `Sg` in the `id` and `val` to `Fem`, just like in the `filterPattern`.
+Change `Singular` to `Feminine` or another name you want to display in the menu.
+
+Repeat the same steps for all other filters in the `filterPattern`.
+
+### Load the new topic json file
+
+In order to use the new topic we just created, it is necessary to load it
+into the add-on.
+
+Go to `viewWE/background.js` and make a copy of 
+`nouns: require('./topics/nouns.json')`.
+
+Change `nouns` into `adjectives` in accordance to the json file name.
+
+### Define the css style for the color activity
+
+The color activity adds a class that consists of `colorize-style-` + topic 
+to each target. You need to define how those targets should look like.
+
+In our example we will let them look like Russian Noun targets.
+
+Go to `viewWE/content_scripts/css/view.css` and make a copy of the css entry
+`.colorize-style-nouns`. Change `nouns` to `adjectives`.
