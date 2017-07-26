@@ -45,8 +45,9 @@ describe("container.js", function() {
   });
 
   describe("add", function() {
-    it("should call clone(true)", function() {
-      const cloneSpy = sandbox.spy($.fn, "clone");
+    it("should call view.lib.getAndUpdateOriginalContent()", function() {
+      const getAndUpdateOriginalContentStub =
+        sandbox.stub(view.lib, "getAndUpdateOriginalContent");
       const fixtureInnerHTML = $("#ru-no-markup-body").html();
       const $FixtureBody = $("<div>");
 
@@ -56,29 +57,7 @@ describe("container.js", function() {
 
       view.container.add($FixtureBody);
 
-      sinon.assert.calledTwice(cloneSpy);
-      sinon.assert.calledWithExactly(cloneSpy, true);
-    });
-
-    it("should store the body content into view.originalContent", function() {
-      const fixtureInnerHTML = $("#ru-no-markup-body").html();
-      const $FixtureBody = $("<div>");
-
-      $FixtureBody.html(fixtureInnerHTML);
-
-      $("body").append($FixtureBody);
-
-      view.container.add($FixtureBody);
-
-      const $ContentChildren = $("#wertiview-content").children();
-
-      expect($ContentChildren.length).to.equal(3);
-      expect($ContentChildren.get(0).outerHTML)
-      .to.equal(view.originalContent.get(0).outerHTML);
-      expect($ContentChildren.get(1).outerHTML)
-      .to.equal(view.originalContent.get(1).outerHTML);
-      expect($ContentChildren.get(2).outerHTML)
-      .to.equal(view.originalContent.get(2).outerHTML);
+      sinon.assert.calledOnce(getAndUpdateOriginalContentStub);
 
       $FixtureBody.remove();
     });
