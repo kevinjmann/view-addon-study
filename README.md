@@ -95,7 +95,7 @@ You can use ES2015 syntax, as the sources are transpiled with [babel](http://bab
 To build the sources, use npm:
 
 ```
-npm run install # install all dependencies
+npm install # install all dependencies
 npm run build
 ```
 
