@@ -115,6 +115,7 @@ const background = {
       "Unhandled Message!",
       "There was no handler for message: " + JSON.stringify(request) + "!"
     );
+    return undefined;
   },
 
   /**
