@@ -585,7 +585,7 @@ const background = {
         console.error(e);
         background.createBasicNotification(
           "failed-login",
-          "Failed to log you in: " + e + ". More info may be available in the console."
+          "Failed to log you in: " + e.message + ". More info may be available in the console."
         );
       });
   },
