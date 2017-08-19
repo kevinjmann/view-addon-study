@@ -383,25 +383,24 @@ describe("activityHelper.js", function() {
           view.timestamp = timestamp;
           view.numberOfExercises = numberOfExercises;
 
-          const returnedTaskData = view.activityHelper.createTaskData();
-
-          expect(returnedTaskData).to.eql({
-            token,
-            url,
-            title,
-            language,
-            topic,
-            filter,
-            activity,
-            timestamp,
-            "number-of-exercises": numberOfExercises
-          });
+          return view.activityHelper.createTaskData().then(
+            returnedTaskData => expect(returnedTaskData).to.eql({
+                token,
+                url,
+                title,
+                language,
+                topic,
+                filter,
+                activity,
+                timestamp,
+                "number-of-exercises": numberOfExercises
+              })
+          );
         });
 
-        it("should send a request to get the task id from the server", function() {
-          const taskData = view.activityHelper.createTaskData();
-
-          view.activityHelper.requestToSendTaskDataAndGetTaskId();
+        it("should send a request to get the task id from the server", async () => {
+          const taskData = await view.activityHelper.createTaskData();
+          await view.activityHelper.requestToSendTaskDataAndGetTaskId();
 
           sinon.assert.calledOnce(chrome.runtime.sendMessage);
           sinon.assert.calledWith(chrome.runtime.sendMessage, {
