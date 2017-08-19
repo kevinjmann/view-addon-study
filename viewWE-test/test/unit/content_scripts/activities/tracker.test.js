@@ -10,6 +10,9 @@ import $ from 'jquery';
 import chrome from 'sinon-chrome';
 import view from '../../../../../viewWE/content_scripts/js/view.js';
 import unitTest from '../../unit-test.js';
+import chaiAsPromised from 'chai-as-promised';
+
+chai.use(chaiAsPromised);
 
 describe("tracker.js", function() {
   let sandbox;
@@ -61,9 +64,7 @@ describe("tracker.js", function() {
         submission,
         isCorrect,
         usedSolution
-      ).then(() => {
-        sinon.assert.notCalled(detectCapitalizationSpy);
-      });
+      ).should.be.rejected;
     });
 
     it("should call extractRawSentenceWithMarkedElement(enhancementSelector)", function() {
