@@ -58,9 +58,7 @@ describe("ViewServer", () => {
 
     return customTokenPromise.then(
       () => sinon.assert.fail("Should not have been resolved"),
-      (error) => {
-        console.log(error.message);
-      }
+      (error) => {}
     );
   });
 
@@ -76,7 +74,6 @@ describe("ViewServer", () => {
       () => sinon.assert.fail("Should not have been resolved"),
       (error) => {
         expect(error.message).to.contain(400);
-        console.log(error.message);
       }
     );
   });
