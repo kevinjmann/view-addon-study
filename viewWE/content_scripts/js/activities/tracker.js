@@ -18,21 +18,21 @@ module.exports = function(view) {
     trackData: function($EnhancementElement, submission, isCorrect, usedSolution) {
       if (view.userid) {
         return view.getToken().then(token => {
-            const trackingData = {};
-            trackingData["task-id"] = view.taskId;
-            trackingData["token"] = token;
-            trackingData["enhancement-id"] = $EnhancementElement.attr("id");
-            trackingData["submission"] = submission;
-            trackingData["sentence"] = view.tracker.extractRawSentenceWithMarkedElement($EnhancementElement);
-            trackingData["is-correct"] = isCorrect;
+          const trackingData = {};
+          trackingData["task-id"] = view.taskId;
+          trackingData["token"] = token;
+          trackingData["enhancement-id"] = $EnhancementElement.attr("id");
+          trackingData["submission"] = submission;
+          trackingData["sentence"] = view.tracker.extractRawSentenceWithMarkedElement($EnhancementElement);
+          trackingData["is-correct"] = isCorrect;
 
-            const capType = view.lib.detectCapitalization($EnhancementElement.data("original-text"));
-            trackingData["correct-answer"] = view.activityHelper.getCorrectAnswer($EnhancementElement, capType);
-            trackingData["used-solution"] = usedSolution;
+          const capType = view.lib.detectCapitalization($EnhancementElement.data("original-text"));
+          trackingData["correct-answer"] = view.activityHelper.getCorrectAnswer($EnhancementElement, capType);
+          trackingData["used-solution"] = usedSolution;
 
-            trackingData["timestamp"] = view.timestamp;
+          trackingData["timestamp"] = view.timestamp;
 
-            return trackingData;
+          return trackingData;
         }).then(
           trackingData => view.tracker.requestToSendTrackingData(trackingData)
         );
