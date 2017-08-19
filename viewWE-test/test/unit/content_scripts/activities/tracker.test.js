@@ -73,16 +73,19 @@ describe("tracker.js", function() {
       const isCorrect = false;
       const usedSolution = false;
 
-      view.tracker.trackData(
+      return view.tracker.trackData(
         $EnhancementElement,
         submission,
         isCorrect,
         usedSolution
-      );
-
-      sinon.assert.calledOnce(extractRawSentenceWithMarkedElementSpy);
-      sinon.assert.calledWithExactly(extractRawSentenceWithMarkedElementSpy,
-        $EnhancementElement
+      ).then(
+        () =>  {
+          sinon.assert.calledOnce(extractRawSentenceWithMarkedElementSpy);
+          sinon.assert.calledWithExactly(
+            extractRawSentenceWithMarkedElementSpy,
+            $EnhancementElement
+          );
+        }
       );
     });
 

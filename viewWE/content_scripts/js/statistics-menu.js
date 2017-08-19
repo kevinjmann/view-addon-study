@@ -38,7 +38,7 @@ module.exports = function(view) {
      * Send a request to the background script to get all tasks.
      */
     requestToGetAllTasks: function() {
-      view.getToken().then(
+      return view.getToken().then(
         token => chrome.runtime.sendMessage({
           action: "getAllTasks",
           ajaxTimeout: view.ajaxTimeout,
@@ -62,7 +62,7 @@ module.exports = function(view) {
      * given task id.
      */
     requestToGetTask: function(taskId) {
-      view.getToken().then(
+      return view.getToken().then(
         token => chrome.runtime.sendMessage({
           action: "getTask",
           ajaxTimeout: view.ajaxTimeout,
