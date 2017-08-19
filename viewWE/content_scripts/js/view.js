@@ -32,10 +32,10 @@ const view = {
   /**
    * Get the user token
    */
-  getToken: function() {
+  getToken: async function() {
     const firebase = new FirebaseAdapter();
-
     const oldToken = view.token;
+
     return firebase.getNewToken(oldToken);
   },
 

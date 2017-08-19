@@ -12,26 +12,33 @@ module.exports = function(view) {
      * @param {boolean} isCorrect true if the answer is correct,
      * false otherwise
      * @param usedSolution true if a hint was used, false otherwise
+     *
+     * @return {Promise} Promise to call requestToSendTrackingData if view.userid exists, empty promise otherwise.
      */
     trackData: function($EnhancementElement, submission, isCorrect, usedSolution) {
       if (view.userid) {
-        const trackingData = {};
+        return view.getToken().then(token => {
+            const trackingData = {};
+            trackingData["task-id"] = view.taskId;
+            trackingData["token"] = token;
+            trackingData["enhancement-id"] = $EnhancementElement.attr("id");
+            trackingData["submission"] = submission;
+            trackingData["sentence"] = view.tracker.extractRawSentenceWithMarkedElement($EnhancementElement);
+            trackingData["is-correct"] = isCorrect;
 
-        trackingData["token"] = view.getToken();
-        trackingData["task-id"] = view.taskId;
-        trackingData["enhancement-id"] = $EnhancementElement.attr("id");
-        trackingData["submission"] = submission;
-        trackingData["sentence"] = view.tracker.extractRawSentenceWithMarkedElement($EnhancementElement);
-        trackingData["is-correct"] = isCorrect;
+            const capType = view.lib.detectCapitalization($EnhancementElement.data("original-text"));
+            trackingData["correct-answer"] = view.activityHelper.getCorrectAnswer($EnhancementElement, capType);
+            trackingData["used-solution"] = usedSolution;
 
-        const capType = view.lib.detectCapitalization($EnhancementElement.data("original-text"));
-        trackingData["correct-answer"] = view.activityHelper.getCorrectAnswer($EnhancementElement, capType);
-        trackingData["used-solution"] = usedSolution;
+            trackingData["timestamp"] = view.timestamp;
 
-        trackingData["timestamp"] = view.timestamp;
-
-        view.tracker.requestToSendTrackingData(trackingData);
+            return trackingData;
+        }).then(
+          trackingData => view.tracker.requestToSendTrackingData(trackingData)
+        );
       }
+
+      return Promise((resolve, reject) => reject(new Error("No userid, can't track.")));
     },
 
     /**

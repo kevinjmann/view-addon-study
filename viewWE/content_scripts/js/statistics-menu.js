@@ -38,12 +38,14 @@ module.exports = function(view) {
      * Send a request to the background script to get all tasks.
      */
     requestToGetAllTasks: function() {
-      chrome.runtime.sendMessage({
-        action: "getAllTasks",
-        ajaxTimeout: view.ajaxTimeout,
-        serverTaskURL: view.serverTaskURL,
-        queryParam: "?token=" + view.getToken()
-      });
+      view.getToken().then(
+        token => chrome.runtime.sendMessage({
+          action: "getAllTasks",
+          ajaxTimeout: view.ajaxTimeout,
+          serverTaskURL: view.serverTaskURL,
+          queryParam: "?token=" + token
+        })
+      );
     },
 
     /**
@@ -60,12 +62,14 @@ module.exports = function(view) {
      * given task id.
      */
     requestToGetTask: function(taskId) {
-      chrome.runtime.sendMessage({
-        action: "getTask",
-        ajaxTimeout: view.ajaxTimeout,
-        serverTrackingURL: view.serverTrackingURL,
-        queryParam: "?token=" + view.getToken() + "&taskId=" + taskId
-      });
+      view.getToken().then(
+        token => chrome.runtime.sendMessage({
+          action: "getTask",
+          ajaxTimeout: view.ajaxTimeout,
+          serverTrackingURL: view.serverTrackingURL,
+          queryParam: "?token=" + token + "&taskId=" + taskId
+        })
+      );
     },
 
     /**
