@@ -115,15 +115,15 @@ describe("tracker.js", function() {
 
       const detectCapitalizationSpy = sandbox.spy(view.lib, "detectCapitalization");
 
-      view.tracker.trackData(
+      return view.tracker.trackData(
         $EnhancementElement,
         submission,
         isCorrect,
         usedSolution
-      );
-
-      sinon.assert.calledOnce(detectCapitalizationSpy);
-      sinon.assert.calledWithExactly(detectCapitalizationSpy, $EnhancementElement.data("original-text"));
+      ).then(() => {
+        sinon.assert.calledOnce(detectCapitalizationSpy);
+        sinon.assert.calledWithExactly(detectCapitalizationSpy, $EnhancementElement.data("original-text"));
+      });
     });
 
     it("should call getCorrectAnswer($EnhancementElement, capType)", function() {
@@ -135,15 +135,15 @@ describe("tracker.js", function() {
       const usedSolution = false;
       const capType = 2;
 
-      view.tracker.trackData(
+      return view.tracker.trackData(
         $EnhancementElement,
         submission,
         isCorrect,
         usedSolution
-      );
-
-      sinon.assert.calledOnce(getCorrectAnswerSpy);
-      sinon.assert.calledWithExactly(getCorrectAnswerSpy, $EnhancementElement, capType);
+      ).then(() => {
+        sinon.assert.calledOnce(getCorrectAnswerSpy);
+        sinon.assert.calledWithExactly(getCorrectAnswerSpy, $EnhancementElement, capType);
+      });
     });
 
     it("should call requestToSendTrackingData(trackingData), 'mc' activity", function() {
@@ -178,15 +178,15 @@ describe("tracker.js", function() {
       view.taskId = taskId;
       view.timestamp = timestamp;
 
-      view.tracker.trackData(
+      return view.tracker.trackData(
         $EnhancementElement,
         submission,
         isCorrect,
         usedSolution
-      );
+      ).then(() => {
+        sinon.assert.calledWithExactly(requestToSendTrackingDataSpy, trackingData);
+      });
 
-      sinon.assert.calledOnce(requestToSendTrackingDataSpy);
-      sinon.assert.calledWithExactly(requestToSendTrackingDataSpy, trackingData);
     });
 
     it("should call requestToSendTrackingData(trackingData), 'click' activity", function() {
@@ -220,15 +220,15 @@ describe("tracker.js", function() {
       view.taskId = taskId;
       view.timestamp = timestamp;
 
-      view.tracker.trackData(
+      return view.tracker.trackData(
         $EnhancementElement,
         submission,
         isCorrect,
         usedSolution
-      );
-
-      sinon.assert.calledOnce(requestToSendTrackingDataSpy);
-      sinon.assert.calledWithExactly(requestToSendTrackingDataSpy, trackingData);
+      ).then(() => {
+        sinon.assert.calledOnce(requestToSendTrackingDataSpy);
+        sinon.assert.calledWithExactly(requestToSendTrackingDataSpy, trackingData);
+      });
     });
 
     it("should send a request to send tracking data to the server", function() {
