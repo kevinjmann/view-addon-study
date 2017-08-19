@@ -1242,7 +1242,6 @@ describe("background.js", function() {
 
         background.requestToSignOut();
 
-        sinon.assert.calledOnce(chrome.tabs.sendMessage);
         sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {action: "signOut"});
       });
     });
