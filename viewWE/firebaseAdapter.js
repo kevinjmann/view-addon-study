@@ -1,27 +1,41 @@
 import firebase from 'firebase';
-import view from './content_scripts/js/view.js';
+import view from './content_scripts/js/view';
+import Storage from './Storage';
 
 export default class FirebaseAdapter {
-  constructor(firebaseData) {
-    this.initialize(firebaseData);
-  }
+  static firebaseApp = undefined;
+  static user = undefined;
 
-  initialize(firebaseData) {
-    try {
-      firebase.initializeApp(firebaseData);
-    } catch (error) {
-      // We don't propagate the duplicate app exception, and silently ignore it.
-      if (!(error.name === "FirebaseError" && error.code === "app/duplicate app")) {
-        view.notification.add("Firebase error: " + error.message);
+  static initialise(firebaseData) {
+    if (this.firebaseApp === undefined) {
+      try {
+        this.firebaseApp = firebase.initializeApp(firebaseData);
+      } catch (error) {
+        // We don't propagate the duplicate app exception, and silently ignore it.
+        if (!(error.name === "FirebaseError" && error.code === "app/duplicate app")) {
+          view.notification.add("Firebase error: " + error.message);
+        }
       }
     }
   }
 
-  getNewToken(oldToken) {
-    return oldToken;
+  static async getToken() {
+    const storage = new Storage();
+
+    if (this.firebaseApp === undefined) {
+      const firebaseData = await storage.get('firebaseData');
+      this.initialise(firebaseData.firebaseData);
+    }
+
+    if (this.user === undefined) {
+      const customToken = await storage.get('customToken');
+      this.user = await this.getUser(customToken.customToken);
+    }
+
+    return this.user.getIdToken();
   }
 
-  getUser(token) {
+  static async getUser(token) {
     return firebase.auth().signInWithCustomToken(token);
   }
 }
