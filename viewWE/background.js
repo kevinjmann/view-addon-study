@@ -1,4 +1,3 @@
-import FirebaseAdapter from './firebaseAdapter';
 import ViewServer from './ViewServer';
 import Storage from './Storage';
 
