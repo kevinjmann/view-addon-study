@@ -576,7 +576,7 @@ const background = {
         user: account.user.name,
         token: account.user.token,
         customToken: response.token,
-        firebase: account.firebase
+        firebaseData: account.firebase
       }))
       .then(() => background.requestToSignIn(account))
       .catch(e => {

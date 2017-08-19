@@ -1298,7 +1298,7 @@ describe("background.js", function() {
         ).then(() => {
           sinon.assert.calledWith(storageSet, sinon.match({
             customToken: theToken,
-            firebase: cookieData.firebase
+            firebaseData: cookieData.firebase
           }));
           sinon.assert.calledOnce(requestToSignIn);
         });
