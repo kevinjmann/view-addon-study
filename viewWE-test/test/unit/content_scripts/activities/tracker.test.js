@@ -54,14 +54,16 @@ describe("tracker.js", function() {
 
       view.userid = "";
 
-      view.tracker.trackData(
+      sandbox.stub(view, "getToken").resolves("A token");
+
+      return view.tracker.trackData(
         $EnhancementElement,
         submission,
         isCorrect,
         usedSolution
-      );
-
-      sinon.assert.notCalled(detectCapitalizationSpy);
+      ).then(() => {
+        sinon.assert.notCalled(detectCapitalizationSpy);
+      });
     });
 
     it("should call extractRawSentenceWithMarkedElement(enhancementSelector)", function() {
