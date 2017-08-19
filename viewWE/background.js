@@ -568,9 +568,7 @@ const background = {
 
     const storage = new Storage();
     return storage.get('serverURL')
-      .then(data => {
-        return new ViewServer(data.serverURL);
-      })
+      .then(data => new ViewServer(data.serverURL))
       .then(server => server.getCustomToken(account.user.token))
       .then(response => storage.set({
         userEmail: account.user.email,
