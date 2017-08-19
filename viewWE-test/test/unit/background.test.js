@@ -8,9 +8,11 @@
 
 import $ from 'jquery';
 import chrome from 'sinon-chrome';
-import FirebaseAdapter from '../../../viewWE/firebaseAdapter.js';
+import FirebaseAdapter from '../../../viewWE/firebaseAdapter';
+import ViewServer from '../../../viewWE/ViewServer';
+import Storage from '../../../viewWE/Storage';
 
-import {background} from '../../../viewWE/background.js';
+import {background} from '../../../viewWE/background';
 
 describe("background.js", function() {
   let sandbox;
@@ -1252,7 +1254,8 @@ describe("background.js", function() {
           email: "email@example.com",
           uid: "The user id",
           token: "The user token"
-        }
+        },
+        firebase: "tehfirebasedatas"
       };
 
       const cookieString = encodeURIComponent(JSON.stringify(cookieData));
@@ -1268,7 +1271,6 @@ describe("background.js", function() {
         const createBasicNotification = sandbox.stub(background, "createBasicNotification");
 
         background.signIn(badString);
-
         sinon.assert.calledOnce(createBasicNotification);
       });
 
@@ -1280,22 +1282,28 @@ describe("background.js", function() {
           userid: cookieData.user.uid
         };
 
-        const requestToSignInSpy = sandbox.spy(background, "requestToSignIn");
+        const theToken = "theAlmightyToken";
+        const storageGet = sandbox.stub(Storage.prototype, "get")
+              .resolves({ serverURL: 'https://example.com' });
+        const storageSet = sandbox.stub(Storage.prototype, "set")
+              .resolves();
+        const serverGetCustomToken = sandbox.stub(ViewServer.prototype, "getCustomToken")
+              .resolves({ token: theToken });
+        const requestToSignIn = sandbox.stub(background, "requestToSignIn");
 
-        background.signIn(cookieString);
+        const backgroundPromise = background.signIn(
+          encodeURIComponent(
+            JSON.stringify(cookieData)
+          )
+        ).then(() => {
+          sinon.assert.calledWith(storageSet, sinon.match({
+            customToken: theToken,
+            firebase: cookieData.firebase
+          }));
+          sinon.assert.calledOnce(requestToSignIn);
+        });
 
-        sinon.assert.calledOnce(chrome.storage.local.set);
-        sinon.assert.calledWith(chrome.storage.local.set, expected);
-
-        sinon.assert.calledOnce(requestToSignInSpy);
-        sinon.assert.calledWithExactly(requestToSignInSpy, cookieData);
-      });
-
-      it("should call requestToSignIn()", function() {
-
-        background.signIn(cookieString);
-
-
+        return backgroundPromise;
       });
 
       it("should send the message to view.accountMenu.signIn()", function() {

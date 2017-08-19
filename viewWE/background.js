@@ -1,4 +1,6 @@
-import FirebaseAdapter from './firebaseAdapter.js';
+import FirebaseAdapter from './firebaseAdapter';
+import ViewServer from './ViewServer';
+import Storage from './Storage';
 
 const theServerURL = "https://view.aleks.bg";
 /** @namespace */
@@ -561,44 +563,31 @@ const background = {
         "Internal error: failed to parse cookie. Maybe the server format changed." +
         " Please try updating the addon."
       );
-      return;
+      return null;
     }
 
-    const firebase = new FirebaseAdapter();
-    firebase.initialize(account.firebase);
-    const userPromise = firebase.getUser(account.user.token);
-    userPromise.then(user => console.log(user));
-
-    chrome.storage.local.set({
-      userEmail: account.user.email,
-      userid: account.user.uid,
-      user: account.user.name,
-      token: account.user.token
-    }, function() {
-      background.requestToSignIn(account);
-    });
-  },
-
-  getCustomToken: function() {
-    return new Promise((resolve, reject) => {
-      chrome.local.storage.get(
-        "servletURL",
-        data => {
-          const request = new XMLHttpRequest();
-          request.open("POST", data.servletURL);
-          request.onreadystatechange = () => {
-            if (request.readyState === 4) {
-              const tokenData = JSON.parse(request.responseText);
-              resolve(tokenData.token);
-            } else {
-              reject(Error(request.statusText + " " + request.responseText));
-            }
-          };
-          request.onerror = () => reject(Error("Network error."));
-          request.send();
-        }
-      );
-    });
+    const storage = new Storage();
+    return storage.get('serverURL')
+      .then(data => {
+        return new ViewServer(data.serverURL);
+      })
+      .then(server => server.getCustomToken(account.user.token))
+      .then(response => storage.set({
+        userEmail: account.user.email,
+        userid: account.user.uid,
+        user: account.user.name,
+        token: account.user.token,
+        customToken: response.token,
+        firebase: account.firebase
+      }))
+      .then(() => background.requestToSignIn(account))
+      .catch(e => {
+        console.error(e);
+        background.createBasicNotification(
+          "failed-login",
+          "Failed to log you in: " + e + ". More info may be available in the console."
+        );
+      });
   },
 
   /**
