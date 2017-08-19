@@ -79,7 +79,7 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: ['es2015'],
-            plugins: ['transform-runtime', 'transform-object-rest-spread']
+            plugins: ['transform-runtime', 'transform-object-rest-spread', 'transform-class-properties']
           }
         }
       },
