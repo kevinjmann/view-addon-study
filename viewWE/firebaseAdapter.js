@@ -3,6 +3,10 @@ import view from './content_scripts/js/view.js';
 
 export default class FirebaseAdapter {
   constructor(firebaseData) {
+    this.initialize(firebaseData);
+  }
+
+  initialize(firebaseData) {
     try {
       firebase.initializeApp(firebaseData);
     } catch (error) {
