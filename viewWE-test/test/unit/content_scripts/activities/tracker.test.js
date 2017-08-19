@@ -78,15 +78,13 @@ describe("tracker.js", function() {
         submission,
         isCorrect,
         usedSolution
-      ).then(
-        () =>  {
+      ).then(() =>  {
           sinon.assert.calledOnce(extractRawSentenceWithMarkedElementSpy);
           sinon.assert.calledWithExactly(
             extractRawSentenceWithMarkedElementSpy,
             $EnhancementElement
           );
-        }
-      );
+      });
     });
 
     it("should return the raw sentence with marked element", function() {
