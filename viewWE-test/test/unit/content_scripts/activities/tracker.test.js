@@ -98,7 +98,7 @@ describe("tracker.js", function() {
 
       expect(extractRawSentenceWithMarkedElementSpy.firstCall.returnValue)
       .to.equal("Усвое́ние языка процесс обучения человека языку, исследуемый " +
-        "<viewenhancement>лингвистами</viewenhancement>.")
+                "<viewenhancement>лингвистами</viewenhancement>.");
     });
 
     it("should call detectCapitalization(word)", function() {
