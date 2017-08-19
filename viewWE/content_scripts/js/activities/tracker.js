@@ -38,7 +38,7 @@ module.exports = function(view) {
         );
       }
 
-      return Promise((resolve, reject) => reject(new Error("No userid, can't track.")));
+      return new Promise((resolve, reject) => reject(new Error("No userid, can't track.")));
     },
 
     /**
