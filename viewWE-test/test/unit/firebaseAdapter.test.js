@@ -15,7 +15,9 @@ describe("FirebaseAdapter", () => {
 
   it("Displays a notification when firebase throws an error", () => {
     addNotification = sandbox.stub(view.notification, "add");
-    new FirebaseAdapter({foo: "bar"});
+    sandbox.stub(firebase, "initializeApp").throws(new Error("foobar"));
+    FirebaseAdapter.firebaseApp = undefined;
+    FirebaseAdapter.initialise({foo: "bar"});
     sinon.assert.calledOnce(addNotification);
   });
 
