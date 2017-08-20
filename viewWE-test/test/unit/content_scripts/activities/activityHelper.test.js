@@ -383,6 +383,8 @@ describe("activityHelper.js", function() {
           view.timestamp = timestamp;
           view.numberOfExercises = numberOfExercises;
 
+          sandbox.stub(view, "getToken").resolves(token);
+
           return view.activityHelper.createTaskData().then(
             returnedTaskData => expect(returnedTaskData).to.eql({
                 token,
@@ -399,6 +401,7 @@ describe("activityHelper.js", function() {
         });
 
         it("should send a request to get the task id from the server", async () => {
+          sandbox.stub(view, "getToken").resolves("a token");
           const taskData = await view.activityHelper.createTaskData();
           await view.activityHelper.requestToSendTaskDataAndGetTaskId();
 

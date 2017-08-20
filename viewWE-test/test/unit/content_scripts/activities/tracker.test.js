@@ -68,6 +68,7 @@ describe("tracker.js", function() {
     });
 
     it("should call extractRawSentenceWithMarkedElement(enhancementSelector)", function() {
+      sandbox.stub(view, "getToken").resolves("a token");
       const extractRawSentenceWithMarkedElementSpy = sandbox.spy(
         view.tracker, "extractRawSentenceWithMarkedElement");
 
@@ -106,6 +107,7 @@ describe("tracker.js", function() {
     });
 
     it("should call detectCapitalization(word)", function() {
+      sandbox.stub(view, "getToken").resolves("a token");
       const $EnhancementElement = $("[data-type='hit']").first();
       const submission = "Усвоением";
       const isCorrect = false;
@@ -127,6 +129,7 @@ describe("tracker.js", function() {
     });
 
     it("should call getCorrectAnswer($EnhancementElement, capType)", function() {
+      sandbox.stub(view, "getToken").resolves("a token");
       const getCorrectAnswerSpy = sandbox.spy(view.activityHelper, "getCorrectAnswer");
 
       const $EnhancementElement = $("[data-type='hit']").first();
@@ -152,6 +155,7 @@ describe("tracker.js", function() {
       const $EnhancementElement = $("[data-type='hit']").first();
 
       const token = "some token";
+      sandbox.stub(view, "getToken").resolves(token);
       const taskId = "fake-task-id";
       const enhancementId = $EnhancementElement.attr("id");
       const submission = "Усвоением";
@@ -194,6 +198,7 @@ describe("tracker.js", function() {
 
       const $EnhancementElement = $("[data-type='hit']").first();
       const token = "some token";
+      sandbox.stub(view, "getToken").resolves(token);
       const taskId = "fake-task-id";
       const enhancementId = $EnhancementElement.attr("id");
       const submission = "Усвоением";

@@ -157,7 +157,7 @@ describe("statistics-menu.js", function() {
         it("should send a request to get all tasks", function() {
           const token = "token";
 
-          view.token = token;
+          sandbox.stub(view, "getToken").resolves(token);
 
           return view.statisticsMenu.requestToGetAllTasks()
             .then(() => {
@@ -216,7 +216,7 @@ describe("statistics-menu.js", function() {
         it("should send a request to get the given task", function() {
           const token = "token";
 
-          view.token = token;
+          sandbox.stub(view, "getToken").resolves(token);
 
           const taskId = 3;
 
