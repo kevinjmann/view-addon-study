@@ -19,7 +19,8 @@ const background = {
         articles: require('./topics/articles.json'),
         determiners: require('./topics/determiners.json'),
         nouns: require('./topics/nouns.json'),
-        adjectives: require('./topics/adjectives.json')
+        adjectives: require('./topics/adjectives.json'),
+        agreement: require('./topics/agreement.json')
       },
       ajaxTimeout: 60000
     });
@@ -83,7 +84,8 @@ const background = {
       id, {
         "type": "basic",
         "title": title,
-        "message": message
+        "message": message,
+        "iconUrl": require('./icons/view-96.png')
       });
   },
 
@@ -459,6 +461,28 @@ const background = {
               "Error 493!",
               "The server is too busy right now. Please try again " +
               "in a few minutes."
+            );
+            break;
+          case 404:
+            background.createBasicNotification(
+                "error-404-notification",
+                "Error 404",
+                "The server seems to have vanished. Please notify the server administrator."
+            );
+            break;
+          case 400:
+            background.createBasicNotification(
+                "error-400-notification",
+                "Error 400",
+                "The addon sent a bad request to the server. Please ensure you have the latest " +
+                "version of the addon and try again. If the problem persists, please file a bug."
+            );
+            break;
+          case 403:
+            background.createBasicNotification(
+                "error-403-notification",
+                "Error 403",
+                "You do not have permission to do this, or your authentication data is invalid."
             );
             break;
           case 494:

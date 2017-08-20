@@ -11,6 +11,8 @@ module.exports = function(view) {
       $(".viewinput").on("change", view.activityHelper.inputHandler);
     },
 
+    initialize: function() { /* do nothing */ },
+
     /**
      * Create an exercise for the enhancement element.
      *

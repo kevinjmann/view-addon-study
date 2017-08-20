@@ -168,11 +168,12 @@ describe("background.js", function() {
       );
 
       sinon.assert.calledOnce(chrome.notifications.create);
-      sinon.assert.calledWithExactly(chrome.notifications.create,
+      sinon.assert.calledWith(chrome.notifications.create,
         id, {
           "type": "basic",
           "title": title,
-          "message": message
+          "message": message,
+          "iconUrl": require('../../../viewWE/icons/view-96.png')
         }
       );
     });

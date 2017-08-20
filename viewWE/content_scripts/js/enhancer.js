@@ -12,9 +12,7 @@ module.exports = function(view) {
     enhance: function() {
       view.enhancer.restoreToOriginal();
 
-      if ("cloze" === view.activity) {
-        view.blur.add();
-      }
+      view[view.activity].initialize();
 
       if (view.showInst) {
         view.enhancer.constructInstruction();

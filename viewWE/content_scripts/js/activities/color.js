@@ -8,5 +8,7 @@ module.exports = {
    */
   run: function(topic) {
     $("viewenhancement.selected").addClass("colorize-style-" + topic);
-  }
+  },
+
+  initialize: function() { /* no op */ }
 };
