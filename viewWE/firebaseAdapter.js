@@ -6,9 +6,11 @@ export default class FirebaseAdapter {
   static firebaseApp = undefined;
   static user = undefined;
 
-  static initialise(firebaseData) {
+  static async initialise() {
     if (this.firebaseApp === undefined) {
       try {
+        const storage = new Storage();
+        const firebaseData = await storage.get('firebaseData');
         this.firebaseApp = firebase.initializeApp(firebaseData);
       } catch (error) {
         // We don't propagate the duplicate app exception, and silently ignore it.
@@ -20,22 +22,18 @@ export default class FirebaseAdapter {
   }
 
   static async getToken() {
-    const storage = new Storage();
+    this.initialise();
+    const user = this.getUser();
 
-    if (this.firebaseApp === undefined) {
-      const firebaseData = await storage.get('firebaseData');
-      this.initialise(firebaseData.firebaseData);
-    }
-
-    if (this.user === undefined) {
-      const customToken = await storage.get('customToken');
-      this.user = await this.getUser(customToken.customToken);
-    }
-
-    return this.user.getIdToken();
+    return user.getIdToken();
   }
 
-  static async getUser(token) {
-    return firebase.auth().signInWithCustomToken(token);
+  static async getUser() {
+    const storage = new Storage();
+    if (this.user === undefined) {
+      const customToken = await storage.get('customToken');
+      this.user = await firebase.auth().signInWithCustomToken(customToken);
+    }
+    return this.user;
   }
 }
