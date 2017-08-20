@@ -22,7 +22,7 @@ npm:
 karma:
   stage: test
   script:
-    - npm install
+    - npm install babel-plugin-transform-object-rest-spread
     - npm run test:unit
   tags:
     - node
