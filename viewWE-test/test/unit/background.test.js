@@ -8,8 +8,11 @@
 
 import $ from 'jquery';
 import chrome from 'sinon-chrome';
+import FirebaseAdapter from '../../../viewWE/firebaseAdapter';
+import ViewServer from '../../../viewWE/ViewServer';
+import Storage from '../../../viewWE/Storage';
 
-import {background} from '../../../viewWE/background.js';
+import {background} from '../../../viewWE/background';
 
 describe("background.js", function() {
   let sandbox;
@@ -506,59 +509,6 @@ describe("background.js", function() {
 
             sinon.assert.calledOnce(ajaxErrorSpy);
             expect(ajaxErrorSpy.firstCall.args[1]).to.equal("no-task-data");
-          });
-
-          it("should fail to send task data, and call signOut()", function() {
-            const signOutSpy = sandbox.spy(background, "signOut");
-
-            const serverTaskURL = "https://view.aleks.bg/act/task";
-
-            const request = {
-              action: "sendTaskDataAndGetTaskId",
-              serverTaskURL: serverTaskURL,
-              taskData: "some task data"
-            };
-
-            sandbox.useFakeServer();
-
-            sandbox.server.respondWith("POST", serverTaskURL,
-              [404, {}, ""]);
-
-            background.sendTaskDataAndGetTaskId({request});
-
-            sandbox.server.respond();
-
-            sinon.assert.calledOnce(signOutSpy);
-          });
-
-          it("should fail to send task data, and create a 'auth-token-expired' notification", function() {
-            const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
-
-            const serverTaskURL = "https://view.aleks.bg/act/task";
-
-            const request = {
-              action: "sendTaskDataAndGetTaskId",
-              serverTaskURL: serverTaskURL,
-              taskData: "some task data"
-            };
-
-            sandbox.useFakeServer();
-
-            sandbox.server.respondWith("POST", serverTaskURL,
-              [404, {}, ""]);
-
-            background.sendTaskDataAndGetTaskId({request});
-
-            sandbox.server.respond();
-
-            sinon.assert.calledOnce(createBasicNotificationSpy);
-            sinon.assert.calledWithExactly(createBasicNotificationSpy,
-              "auth-token-expired",
-              "The auth token expired!",
-              "The token for user authentication expired, " +
-              "you will be signed out automatically. " +
-              "Please sign in again!"
-            );
           });
         });
 
@@ -1239,58 +1189,78 @@ describe("background.js", function() {
 
         background.requestToSignOut();
 
-        sinon.assert.calledOnce(chrome.tabs.sendMessage);
         sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {action: "signOut"});
       });
     });
 
     describe("signIn", function() {
+      const cookieData = {
+        user: {
+          name: "A name",
+          email: "email@example.com",
+          uid: "The user id",
+          token: "The user token"
+        },
+        firebase: "tehfirebasedatas"
+      };
+
+      const cookieString = encodeURIComponent(JSON.stringify(cookieData));
+
       beforeEach(function() {
         chrome.storage.local.set.yields();
+        sandbox.stub(FirebaseAdapter, "initialize");
+        sandbox.stub(FirebaseAdapter, "getUser");
+      });
+
+      it("should notify the user if the cookie was not parsed", () => {
+        const badString = "%";
+        const createBasicNotification = sandbox.stub(background, "createBasicNotification");
+
+        background.signIn(badString);
+        sinon.assert.calledOnce(createBasicNotification);
       });
 
       it("should set user email, user id, user and token", function() {
-        const encodedUser = "user%20name";
-        const userData = encodedUser + "/email/id/authtoken";
-        const userEmail = "email";
-        const userid = "id";
-        const user = "user name";
-        const token = "authtoken";
+        const expected = {
+          token: cookieData.user.token,
+          user: cookieData.user.name,
+          userEmail: cookieData.user.email,
+          userid: cookieData.user.uid
+        };
 
-        background.signIn(userData);
+        const theToken = "theAlmightyToken";
+        const storageGet = sandbox.stub(Storage.prototype, "get")
+              .resolves({ serverURL: 'https://example.com' });
+        const storageSet = sandbox.stub(Storage.prototype, "set")
+              .resolves();
+        const serverGetCustomToken = sandbox.stub(ViewServer.prototype, "getCustomToken")
+              .resolves({ token: theToken });
+        const requestToSignIn = sandbox.stub(background, "requestToSignIn");
 
-        sinon.assert.calledOnce(chrome.storage.local.set);
-        sinon.assert.calledWith(chrome.storage.local.set, {
-          userEmail: userEmail,
-          userid: userid,
-          user: user,
-          token: token
+        const backgroundPromise = background.signIn(
+          encodeURIComponent(
+            JSON.stringify(cookieData)
+          )
+        ).then(() => {
+          sinon.assert.calledWith(storageSet, sinon.match({
+            customToken: theToken,
+            firebaseData: cookieData.firebase
+          }));
+          sinon.assert.calledOnce(requestToSignIn);
         });
-      });
 
-      it("should call requestToSignIn()", function() {
-        const requestToSignInSpy = sandbox.spy(background, "requestToSignIn");
-
-        const user = "user name";
-
-        background.signIn(user + "/email/id/authtoken");
-
-        sinon.assert.calledOnce(requestToSignInSpy);
-        sinon.assert.calledWithExactly(requestToSignInSpy, user);
-
+        return backgroundPromise;
       });
 
       it("should send the message to view.accountMenu.signIn()", function() {
         background.currentTabId = 5;
 
-        const user = "user name";
-
-        background.requestToSignIn(user);
+        background.requestToSignIn(cookieData);
 
         sinon.assert.calledOnce(chrome.tabs.sendMessage);
         sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
           action: "signIn",
-          user: user
+          user: cookieData.user.name
         });
       });
     });

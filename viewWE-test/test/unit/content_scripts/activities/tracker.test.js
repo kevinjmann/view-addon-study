@@ -10,6 +10,9 @@ import $ from 'jquery';
 import chrome from 'sinon-chrome';
 import view from '../../../../../viewWE/content_scripts/js/view.js';
 import unitTest from '../../unit-test.js';
+import chaiAsPromised from 'chai-as-promised';
+
+chai.use(chaiAsPromised);
 
 describe("tracker.js", function() {
   let sandbox;
@@ -54,17 +57,18 @@ describe("tracker.js", function() {
 
       view.userid = "";
 
-      view.tracker.trackData(
+      sandbox.stub(view, "getToken").resolves("A token");
+
+      return view.tracker.trackData(
         $EnhancementElement,
         submission,
         isCorrect,
         usedSolution
-      );
-
-      sinon.assert.notCalled(detectCapitalizationSpy);
+      ).should.be.rejected;
     });
 
     it("should call extractRawSentenceWithMarkedElement(enhancementSelector)", function() {
+      sandbox.stub(view, "getToken").resolves("a token");
       const extractRawSentenceWithMarkedElementSpy = sandbox.spy(
         view.tracker, "extractRawSentenceWithMarkedElement");
 
@@ -73,17 +77,18 @@ describe("tracker.js", function() {
       const isCorrect = false;
       const usedSolution = false;
 
-      view.tracker.trackData(
+      return view.tracker.trackData(
         $EnhancementElement,
         submission,
         isCorrect,
         usedSolution
-      );
-
-      sinon.assert.calledOnce(extractRawSentenceWithMarkedElementSpy);
-      sinon.assert.calledWithExactly(extractRawSentenceWithMarkedElementSpy,
-        $EnhancementElement
-      );
+      ).then(() =>  {
+          sinon.assert.calledOnce(extractRawSentenceWithMarkedElementSpy);
+          sinon.assert.calledWithExactly(
+            extractRawSentenceWithMarkedElementSpy,
+            $EnhancementElement
+          );
+      });
     });
 
     it("should return the raw sentence with marked element", function() {
@@ -98,10 +103,11 @@ describe("tracker.js", function() {
 
       expect(extractRawSentenceWithMarkedElementSpy.firstCall.returnValue)
       .to.equal("Усвое́ние языка процесс обучения человека языку, исследуемый " +
-        "<viewenhancement>лингвистами</viewenhancement>.")
+                "<viewenhancement>лингвистами</viewenhancement>.");
     });
 
     it("should call detectCapitalization(word)", function() {
+      sandbox.stub(view, "getToken").resolves("a token");
       const $EnhancementElement = $("[data-type='hit']").first();
       const submission = "Усвоением";
       const isCorrect = false;
@@ -111,18 +117,19 @@ describe("tracker.js", function() {
 
       const detectCapitalizationSpy = sandbox.spy(view.lib, "detectCapitalization");
 
-      view.tracker.trackData(
+      return view.tracker.trackData(
         $EnhancementElement,
         submission,
         isCorrect,
         usedSolution
-      );
-
-      sinon.assert.calledOnce(detectCapitalizationSpy);
-      sinon.assert.calledWithExactly(detectCapitalizationSpy, $EnhancementElement.data("original-text"));
+      ).then(() => {
+        sinon.assert.calledOnce(detectCapitalizationSpy);
+        sinon.assert.calledWithExactly(detectCapitalizationSpy, $EnhancementElement.data("original-text"));
+      });
     });
 
     it("should call getCorrectAnswer($EnhancementElement, capType)", function() {
+      sandbox.stub(view, "getToken").resolves("a token");
       const getCorrectAnswerSpy = sandbox.spy(view.activityHelper, "getCorrectAnswer");
 
       const $EnhancementElement = $("[data-type='hit']").first();
@@ -131,15 +138,15 @@ describe("tracker.js", function() {
       const usedSolution = false;
       const capType = 2;
 
-      view.tracker.trackData(
+      return view.tracker.trackData(
         $EnhancementElement,
         submission,
         isCorrect,
         usedSolution
-      );
-
-      sinon.assert.calledOnce(getCorrectAnswerSpy);
-      sinon.assert.calledWithExactly(getCorrectAnswerSpy, $EnhancementElement, capType);
+      ).then(() => {
+        sinon.assert.calledOnce(getCorrectAnswerSpy);
+        sinon.assert.calledWithExactly(getCorrectAnswerSpy, $EnhancementElement, capType);
+      });
     });
 
     it("should call requestToSendTrackingData(trackingData), 'mc' activity", function() {
@@ -148,6 +155,7 @@ describe("tracker.js", function() {
       const $EnhancementElement = $("[data-type='hit']").first();
 
       const token = "some token";
+      sandbox.stub(view, "getToken").resolves(token);
       const taskId = "fake-task-id";
       const enhancementId = $EnhancementElement.attr("id");
       const submission = "Усвоением";
@@ -174,15 +182,15 @@ describe("tracker.js", function() {
       view.taskId = taskId;
       view.timestamp = timestamp;
 
-      view.tracker.trackData(
+      return view.tracker.trackData(
         $EnhancementElement,
         submission,
         isCorrect,
         usedSolution
-      );
+      ).then(() => {
+        sinon.assert.calledWithExactly(requestToSendTrackingDataSpy, trackingData);
+      });
 
-      sinon.assert.calledOnce(requestToSendTrackingDataSpy);
-      sinon.assert.calledWithExactly(requestToSendTrackingDataSpy, trackingData);
     });
 
     it("should call requestToSendTrackingData(trackingData), 'click' activity", function() {
@@ -190,6 +198,7 @@ describe("tracker.js", function() {
 
       const $EnhancementElement = $("[data-type='hit']").first();
       const token = "some token";
+      sandbox.stub(view, "getToken").resolves(token);
       const taskId = "fake-task-id";
       const enhancementId = $EnhancementElement.attr("id");
       const submission = "Усвоением";
@@ -216,15 +225,15 @@ describe("tracker.js", function() {
       view.taskId = taskId;
       view.timestamp = timestamp;
 
-      view.tracker.trackData(
+      return view.tracker.trackData(
         $EnhancementElement,
         submission,
         isCorrect,
         usedSolution
-      );
-
-      sinon.assert.calledOnce(requestToSendTrackingDataSpy);
-      sinon.assert.calledWithExactly(requestToSendTrackingDataSpy, trackingData);
+      ).then(() => {
+        sinon.assert.calledOnce(requestToSendTrackingDataSpy);
+        sinon.assert.calledWithExactly(requestToSendTrackingDataSpy, trackingData);
+      });
     });
 
     it("should send a request to send tracking data to the server", function() {

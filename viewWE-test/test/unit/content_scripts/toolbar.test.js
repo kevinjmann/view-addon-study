@@ -992,8 +992,6 @@ describe("toolbar.js", function() {
         it("should find in the loading div an image", function() {
           view.toolbar.initLoadingImage();
 
-          console.log(window.location.href);
-
           expect($(view.toolbar.selectorStart + "loading").find("img").length)
           .to.be.above(0);
         });

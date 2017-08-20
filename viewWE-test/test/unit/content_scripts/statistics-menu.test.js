@@ -157,17 +157,17 @@ describe("statistics-menu.js", function() {
         it("should send a request to get all tasks", function() {
           const token = "token";
 
-          view.token = token;
+          sandbox.stub(view, "getToken").resolves(token);
 
-          view.statisticsMenu.requestToGetAllTasks();
-
-          sinon.assert.calledOnce(chrome.runtime.sendMessage);
-          sinon.assert.calledWith(chrome.runtime.sendMessage, {
-            action: "getAllTasks",
-            ajaxTimeout: 60000,
-            serverTaskURL: "https://view.aleks.bg/act/task",
-            queryParam: "?token=" + token
-          });
+          return view.statisticsMenu.requestToGetAllTasks()
+            .then(() => {
+              sinon.assert.calledWith(chrome.runtime.sendMessage, {
+                action: "getAllTasks",
+                ajaxTimeout: 60000,
+                serverTaskURL: "https://view.aleks.bg/act/task",
+                queryParam: "?token=" + token
+              });
+            });
         });
       });
 
@@ -216,19 +216,19 @@ describe("statistics-menu.js", function() {
         it("should send a request to get the given task", function() {
           const token = "token";
 
-          view.token = token;
+          sandbox.stub(view, "getToken").resolves(token);
 
           const taskId = 3;
 
-          view.statisticsMenu.requestToGetTask(taskId);
-
-          sinon.assert.calledOnce(chrome.runtime.sendMessage);
-          sinon.assert.calledWith(chrome.runtime.sendMessage, {
-            action: "getTask",
-            ajaxTimeout: 60000,
-            serverTrackingURL: "https://view.aleks.bg/act/tracking",
-            queryParam: "?token=" + token + "&taskId=" + taskId
-          });
+          return view.statisticsMenu.requestToGetTask(taskId)
+            .then(() => {
+              sinon.assert.calledWith(chrome.runtime.sendMessage, {
+                action: "getTask",
+                ajaxTimeout: 60000,
+                serverTrackingURL: "https://view.aleks.bg/act/tracking",
+                queryParam: "?token=" + token + "&taskId=" + taskId
+              });
+            });
         });
       });
     });

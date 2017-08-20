@@ -133,13 +133,15 @@ module.exports = function(view) {
      * and get the task id.
      */
     requestToSendTaskDataAndGetTaskId: function() {
-      const taskData = view.activityHelper.createTaskData();
-
-      chrome.runtime.sendMessage({
-        action: "sendTaskDataAndGetTaskId",
-        taskData: taskData,
-        serverTaskURL: view.serverTaskURL
-      });
+      return view.activityHelper.createTaskData().then(
+        taskData => {
+          chrome.runtime.sendMessage({
+            action: "sendTaskDataAndGetTaskId",
+            taskData: taskData,
+            serverTaskURL: view.serverTaskURL
+          });
+        }
+      );
     },
 
     /**
@@ -147,9 +149,9 @@ module.exports = function(view) {
      *
      * @returns {object} the data of the latest task
      */
-    createTaskData: function() {
+    createTaskData: async function() {
       return {
-        token: view.token,
+        token: await view.getToken(),
         url: view.url,
         title: view.title,
         language: view.language,

@@ -1,3 +1,6 @@
+import ViewServer from './ViewServer';
+import Storage from './Storage';
+
 const theServerURL = "https://view.aleks.bg";
 /** @namespace */
 
@@ -113,6 +116,7 @@ const background = {
       "Unhandled Message!",
       "There was no handler for message: " + JSON.stringify(request) + "!"
     );
+    return undefined;
   },
 
   /**
@@ -217,16 +221,8 @@ const background = {
           } else {
             background.ajaxError(xhr, "no-task-data");
           }
-        })
-        .fail(function() {
-          background.signOut();
-          background.createBasicNotification(
-            "auth-token-expired",
-            "The auth token expired!",
-            "The token for user authentication expired, " +
-            "you will be signed out automatically. " +
-            "Please sign in again!"
-          );
+        }).fail((xhr, textStatus) => {
+          background.ajaxError(xhr, textStatus);
         });
       }
     );
@@ -548,29 +544,48 @@ const background = {
    * - auth token
    */
   signIn: function(userData) {
-    const account = userData.split("/");
-    const user = decodeURI(account[0]);
-    const userEmail = account[1];
-    const userid = account[2];
-    const authtoken = account[3];
+    var account;
 
-    chrome.storage.local.set({
-      userEmail: userEmail,
-      userid: userid,
-      user: user,
-      token: authtoken
-    }, function() {
-      background.requestToSignIn(user);
-    });
+    try {
+      account = JSON.parse(decodeURIComponent(userData));
+    } catch(e) {
+      background.createBasicNotification(
+        "failed-to-parse-cookie",
+        "Internal error: failed to parse cookie. Maybe the server format changed." +
+        " Please try updating the addon."
+      );
+      return null;
+    }
+
+    const storage = new Storage();
+    return storage.get('serverURL')
+      .then(data => new ViewServer(data.serverURL))
+      .then(server => server.getCustomToken(account.user.token))
+      .then(response => storage.set({
+        userEmail: account.user.email,
+        userid: account.user.uid,
+        user: account.user.name,
+        token: account.user.token,
+        customToken: response.token,
+        firebaseData: account.firebase
+      }))
+      .then(() => background.requestToSignIn(account))
+      .catch(e => {
+        console.error(e);
+        background.createBasicNotification(
+          "failed-login",
+          "Failed to log you in: " + e.message + ". More info may be available in the console."
+        );
+      });
   },
 
   /**
    * Send a request to the content script to call view.toolbar.signIn().
    */
-  requestToSignIn: function(user) {
+  requestToSignIn: function(account) {
     chrome.tabs.sendMessage(background.currentTabId, {
       action: "signIn",
-      user: user
+      user: account.user.name
     });
   },
 

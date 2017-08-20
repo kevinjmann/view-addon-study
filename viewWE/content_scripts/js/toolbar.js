@@ -544,7 +544,7 @@ module.exports = function(view) {
       const user = view.user;
 
       if(!user){
-        view.toolbar.signOut()
+        view.toolbar.signOut();
       }
       else{
         view.toolbar.signIn(user);

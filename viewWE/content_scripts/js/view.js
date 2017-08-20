@@ -1,3 +1,5 @@
+import FirebaseAdapter from '../../firebaseAdapter.js';
+
 const view = {
   url: document.baseURI,
   title: document.title,
@@ -25,6 +27,13 @@ const view = {
     for (const item of allItems) {
       view[item] = items[item];
     }
+  },
+
+  /**
+   * Get the user token
+   */
+  getToken: async function() {
+    return FirebaseAdapter.getToken();
   },
 
   /**
