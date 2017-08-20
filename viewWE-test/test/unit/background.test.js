@@ -510,59 +510,6 @@ describe("background.js", function() {
             sinon.assert.calledOnce(ajaxErrorSpy);
             expect(ajaxErrorSpy.firstCall.args[1]).to.equal("no-task-data");
           });
-
-          it("should fail to send task data, and call signOut()", function() {
-            const signOutSpy = sandbox.spy(background, "signOut");
-
-            const serverTaskURL = "https://view.aleks.bg/act/task";
-
-            const request = {
-              action: "sendTaskDataAndGetTaskId",
-              serverTaskURL: serverTaskURL,
-              taskData: "some task data"
-            };
-
-            sandbox.useFakeServer();
-
-            sandbox.server.respondWith("POST", serverTaskURL,
-              [404, {}, ""]);
-
-            background.sendTaskDataAndGetTaskId({request});
-
-            sandbox.server.respond();
-
-            sinon.assert.calledOnce(signOutSpy);
-          });
-
-          it("should fail to send task data, and create a 'auth-token-expired' notification", function() {
-            const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
-
-            const serverTaskURL = "https://view.aleks.bg/act/task";
-
-            const request = {
-              action: "sendTaskDataAndGetTaskId",
-              serverTaskURL: serverTaskURL,
-              taskData: "some task data"
-            };
-
-            sandbox.useFakeServer();
-
-            sandbox.server.respondWith("POST", serverTaskURL,
-              [404, {}, ""]);
-
-            background.sendTaskDataAndGetTaskId({request});
-
-            sandbox.server.respond();
-
-            sinon.assert.calledOnce(createBasicNotificationSpy);
-            sinon.assert.calledWithExactly(createBasicNotificationSpy,
-              "auth-token-expired",
-              "The auth token expired!",
-              "The token for user authentication expired, " +
-              "you will be signed out automatically. " +
-              "Please sign in again!"
-            );
-          });
         });
 
         describe("sendTrackingData", function() {
