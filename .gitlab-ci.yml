@@ -22,6 +22,7 @@ npm:
 karma:
   stage: test
   script:
+    - npm install
     - npm run test:unit
   tags:
     - node
