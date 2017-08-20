@@ -64,7 +64,7 @@ describe("tracker.js", function() {
         submission,
         isCorrect,
         usedSolution
-      ).should.be.rejected;
+      ).should.be.empty;
     });
 
     it("should call extractRawSentenceWithMarkedElement(enhancementSelector)", function() {
