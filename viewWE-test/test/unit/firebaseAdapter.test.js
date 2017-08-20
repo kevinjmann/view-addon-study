@@ -42,8 +42,8 @@ describe("FirebaseAdapter", () => {
 
   it("Retrieves the user if its not defined", async () => {
     const token = "a token";
-    sandbox.stub(Storage.prototype, "get").resolves(token);
-    const auth = { "signInWithCustomToken": async token => token + " custom"};
+    sandbox.stub(Storage.prototype, "get").resolves({ customToken: token });
+    const auth = { "signInWithCustomToken": async token => token + " custom" };
     sandbox.stub(firebase, "auth").returns(auth);
 
     FirebaseAdapter.user = undefined;
