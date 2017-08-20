@@ -22,7 +22,6 @@ npm:
 karma:
   stage: test
   script:
-    - npm install babel-plugin-transform-object-rest-spread babel-plugin-transform-class-properties babel-plugin-transform-runtime
     - npm run test:unit
   tags:
     - node
