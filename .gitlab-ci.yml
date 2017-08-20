@@ -16,12 +16,14 @@ npm:
   stage: setup
   script:
     - npm install
+    - ls node_modules
   tags:
     - node
 
 karma:
   stage: test
   script:
+    - ls node_modules
     - npm run test:unit
   tags:
     - node
