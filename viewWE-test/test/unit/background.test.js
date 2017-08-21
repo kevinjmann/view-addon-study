@@ -983,6 +983,47 @@ describe("background.js", function() {
           sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
         });
 
+        it("should create the 'error-400-notification'", function() {
+          const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
+
+          const id = "error-400-notification";
+          const title = "Error 400!";
+          const message = "The addon sent a bad request to the server. " +
+            "Please ensure you have the latest version of the addon and try" +
+            " again. If the problem persists, please file a bug.";
+
+          background.ajaxError({status: 400}, "error");
+
+          sinon.assert.calledOnce(createBasicNotificationSpy);
+          sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
+        });
+
+        it("should create the 'error-403-notification'", function() {
+          const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
+
+          const id = "error-403-notification";
+          const title = "Error 403!";
+          const message = "You do not have permission to do this, or your authentication data is invalid.";
+
+          background.ajaxError({status: 403}, "error");
+
+          sinon.assert.calledOnce(createBasicNotificationSpy);
+          sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
+        });
+
+        it("should create the 'error-404-notification'", function() {
+          const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
+
+          const id = "error-404-notification";
+          const title = "Error 404!";
+          const message = "The server seems to have vanished. Please notify the server administrator.";
+
+          background.ajaxError({status: 404}, "error");
+
+          sinon.assert.calledOnce(createBasicNotificationSpy);
+          sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
+        });
+
         it("should create the 'error-490-notification'", function() {
           const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
 
@@ -1114,6 +1155,23 @@ describe("background.js", function() {
         sinon.assert.calledOnce(signOutSpy);
       });
 
+      it("should call requestToSetAccountInfo() as the cookie got removed", function() {
+        const requestToSetAccountInfoSpy = sandbox.spy(background, "requestToSetAccountInfo");
+
+        background.processUserIdCookie({removed: true});
+
+        sinon.assert.calledOnce(requestToSetAccountInfoSpy);
+      });
+
+      it("should send the message to call view.accountMenu.setAccountInfo()", function() {
+        background.currentTabId = 5;
+
+        background.requestToSetAccountInfo();
+
+        sinon.assert.calledOnce(chrome.tabs.sendMessage);
+        sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {action: "setAccountInfo"});
+      });
+
       it("should sign in the user as the cookie has a value", function() {
         const signInSpy = sandbox.spy(background, "signIn");
 
@@ -1130,23 +1188,6 @@ describe("background.js", function() {
 
         sinon.assert.calledOnce(signInSpy);
         sinon.assert.calledWithExactly(signInSpy, cookieInfo.value);
-      });
-
-      it("should call requestToSetAccountInfo() in any case", function() {
-        const requestToSetAccountInfoSpy = sandbox.spy(background, "requestToSetAccountInfo");
-
-        const cookieInfo = {
-          name: "wertiview_userid",
-          value: "name/email/id"
-        };
-
-        const cookieChangeInfo = {
-          cookie: cookieInfo
-        };
-
-        background.processUserIdCookie(cookieChangeInfo);
-
-        sinon.assert.calledOnce(requestToSetAccountInfoSpy);
       });
 
       it("should send the message to call view.accountMenu.setAccountInfo()", function() {
@@ -1215,42 +1256,40 @@ describe("background.js", function() {
 
       it("should notify the user if the cookie was not parsed", () => {
         const badString = "%";
-        const createBasicNotification = sandbox.stub(background, "createBasicNotification");
+        const createBasicNotificationStub = sandbox.stub(background, "createBasicNotification");
+
+        const id = "failed-to-parse-cookie";
+        const title = "Cookie parse error!";
+        const message = "Internal error: failed to parse cookie. " +
+          "Maybe the server format changed." +
+          " Please try updating the addon.";
 
         background.signIn(badString);
-        sinon.assert.calledOnce(createBasicNotification);
+        sinon.assert.calledOnce(createBasicNotificationStub);
+        sinon.assert.calledWithExactly(createBasicNotificationStub, id, title, message);
       });
 
       it("should set user email, user id, user and token", function() {
-        const expected = {
-          token: cookieData.user.token,
-          user: cookieData.user.name,
-          userEmail: cookieData.user.email,
-          userid: cookieData.user.uid
-        };
-
         const theToken = "theAlmightyToken";
-        const storageGet = sandbox.stub(Storage.prototype, "get")
+        sandbox.stub(Storage.prototype, "get")
               .resolves({ serverURL: 'https://example.com' });
         const storageSet = sandbox.stub(Storage.prototype, "set")
               .resolves();
-        const serverGetCustomToken = sandbox.stub(ViewServer.prototype, "getCustomToken")
+        sandbox.stub(ViewServer.prototype, "getCustomToken")
               .resolves({ token: theToken });
         const requestToSignIn = sandbox.stub(background, "requestToSignIn");
 
-        const backgroundPromise = background.signIn(
-          encodeURIComponent(
-            JSON.stringify(cookieData)
-          )
-        ).then(() => {
+        return background.signIn(cookieString)
+        .then(() => {
           sinon.assert.calledWith(storageSet, sinon.match({
             customToken: theToken,
             firebaseData: cookieData.firebase
           }));
           sinon.assert.calledOnce(requestToSignIn);
+          sinon.assert.calledWithExactly(requestToSignIn,
+            JSON.parse(decodeURIComponent(cookieString))
+          );
         });
-
-        return backgroundPromise;
       });
 
       it("should send the message to view.accountMenu.signIn()", function() {
@@ -1262,6 +1301,52 @@ describe("background.js", function() {
         sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
           action: "signIn",
           user: cookieData.user.name
+        });
+      });
+
+      it("should call requestToSetAccountInfo()", function() {
+        const theToken = "theAlmightyToken";
+        sandbox.stub(Storage.prototype, "get")
+        .resolves({ serverURL: 'https://example.com' });
+        sandbox.stub(Storage.prototype, "set")
+        .resolves();
+        sandbox.stub(ViewServer.prototype, "getCustomToken")
+        .resolves({ token: theToken });
+        sandbox.stub(background, "requestToSignIn")
+        .resolves();
+        const requestToSetAccountInfoSpy = sandbox.spy(background, "requestToSetAccountInfo");
+
+        return background.signIn(cookieString)
+        .then(() => sinon.assert.calledOnce(requestToSetAccountInfoSpy));
+      });
+
+      // TODO FIX: test for the catch case does not work yet
+
+      it("should notify the user that the login failed", function() {
+        const errorMessage = {
+          message: "We can't log you in, sorry!"
+        };
+
+        sandbox.stub(Storage.prototype, "get")
+        .rejects(errorMessage);
+
+        const createBasicNotificationStub = sandbox.stub(background, "createBasicNotification");
+
+        const id = "failed-login";
+        const title = "Login error!";
+        const message = "Failed to log you in: " + errorMessage.message + ". " +
+          "More info may be available in the consol.";
+        // TODO: Should fail, Remove intentional error in message (consol -> console)
+
+        return background.signIn(cookieString)
+        .catch(e => {
+          console.log("MY ERROR: " + e);
+          sinon.assert.calledOnce(createBasicNotificationStub);
+          sinon.assert.calledWithExactly(createBasicNotificationStub,
+            id,
+            title,
+            message
+          );
         });
       });
     });
