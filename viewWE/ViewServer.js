@@ -7,7 +7,7 @@
  *
  * @return {Promise} Promise containing parsed JSON response
  */
-var _postJson = function(url, object) {
+const _postJson = function(url, object) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open("POST", url);

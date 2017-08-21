@@ -7,12 +7,12 @@ module.exports = {
    */
   add: function() {
     if ($("wertiview-blur").length == 0) {
-      var $overlay = $("<div>");
+      const $overlay = $("<div>");
       $overlay.attr("id", "wertiview-blur");
 
       $("body").append($overlay);
 
-      var $loadingimg = $("<img>");
+      const $loadingimg = $("<img>");
       $loadingimg.attr("id", "wertiview-blur-loading");
       $loadingimg.attr("src", require("../../icons/loading.gif"));
       $loadingimg.attr("width", "32");

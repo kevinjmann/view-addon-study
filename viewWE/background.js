@@ -429,6 +429,28 @@ const background = {
         break;
       case "error":
         switch (xhr.status) {
+          case 400:
+            background.createBasicNotification(
+              "error-400-notification",
+              "Error 400!",
+              "The addon sent a bad request to the server. Please ensure you have the latest " +
+              "version of the addon and try again. If the problem persists, please file a bug."
+            );
+            break;
+          case 403:
+            background.createBasicNotification(
+              "error-403-notification",
+              "Error 403!",
+              "You do not have permission to do this, or your authentication data is invalid."
+            );
+            break;
+          case 404:
+            background.createBasicNotification(
+              "error-404-notification",
+              "Error 404!",
+              "The server seems to have vanished. Please notify the server administrator."
+            );
+            break;
           case 490:
             background.createBasicNotification(
               "error-490-notification",
@@ -461,28 +483,6 @@ const background = {
               "Error 493!",
               "The server is too busy right now. Please try again " +
               "in a few minutes."
-            );
-            break;
-          case 404:
-            background.createBasicNotification(
-                "error-404-notification",
-                "Error 404",
-                "The server seems to have vanished. Please notify the server administrator."
-            );
-            break;
-          case 400:
-            background.createBasicNotification(
-                "error-400-notification",
-                "Error 400",
-                "The addon sent a bad request to the server. Please ensure you have the latest " +
-                "version of the addon and try again. If the problem persists, please file a bug."
-            );
-            break;
-          case 403:
-            background.createBasicNotification(
-                "error-403-notification",
-                "Error 403",
-                "You do not have permission to do this, or your authentication data is invalid."
             );
             break;
           case 494:
@@ -529,11 +529,11 @@ const background = {
   processUserIdCookie: function(changeInfo) {
     if (changeInfo.removed) {
       background.signOut();
+      background.requestToSetAccountInfo();
     }
     else if (changeInfo.cookie.value) {
       background.signIn(changeInfo.cookie.value);
     }
-    background.requestToSetAccountInfo();
   },
 
   /**
@@ -568,13 +568,14 @@ const background = {
    * - auth token
    */
   signIn: function(userData) {
-    var account;
+    let account;
 
     try {
       account = JSON.parse(decodeURIComponent(userData));
     } catch(e) {
       background.createBasicNotification(
         "failed-to-parse-cookie",
+        "Cookie parse error!",
         "Internal error: failed to parse cookie. Maybe the server format changed." +
         " Please try updating the addon."
       );
@@ -594,11 +595,14 @@ const background = {
         firebaseData: account.firebase
       }))
       .then(() => background.requestToSignIn(account))
+      .then(() => background.requestToSetAccountInfo())
       .catch(e => {
         console.error(e);
         background.createBasicNotification(
           "failed-login",
-          "Failed to log you in: " + e.message + ". More info may be available in the console."
+          "Login error!",
+          "Failed to log you in: " + e.message + ". " +
+          "More info may be available in the console."
         );
       });
   },
