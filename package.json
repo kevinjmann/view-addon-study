@@ -10,6 +10,7 @@
     "build": "webpack",
     "bundle": "web-ext -s ./addon -a dist build --overwrite-dest",
     "clean": "rm -rf addon/*",
+    "debug": "npm run watch:build & npm run test:firefox",
     "lint": "npm-run-all lint:*",
     "lint:webext": "web-ext -s ./addon lint",
     "test": "npm-run-all test:*",
