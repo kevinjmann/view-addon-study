@@ -11,17 +11,11 @@ module.exports = function(view) {
     add: function($Element) {
       const $Container = $("<div id='wertiview-container'>");
 
-      let $Content = $("<div id='wertiview-content'>");
+      $Element.children().wrapAll("<div id='wertiview-content'>");
 
-      const $OriginalContent = $Element.children();
+      const originalContent = view.lib.getAndUpdateOriginalContent();
 
-      view.originalContent = $OriginalContent.clone(true);
-
-      $OriginalContent.wrapAll($Content);
-
-      $Content = $("#wertiview-content");
-
-      $Container.append($Content);
+      $Container.append(originalContent);
 
       $Element.append($Container);
     },

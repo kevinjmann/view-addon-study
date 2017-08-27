@@ -1,4 +1,5 @@
 const $ = require('jquery');
+const morph = require('nanomorph');
 
 module.exports = function(view) {
   return {
@@ -31,7 +32,9 @@ module.exports = function(view) {
      */
     restoreToOriginal: function() {
       if($("viewenhancement").length){
-        $("#wertiview-content").html(view.originalContent);
+        const originalContent = view.lib.createContentElement(view.originalContent);
+
+        morph(document.getElementById("wertiview-content"), originalContent);
 
         view.toolbar.hideRestoreButton();
 
@@ -110,7 +113,11 @@ module.exports = function(view) {
       else{
         view.toolbar.hideAbortButton();
 
-        $("#wertiview-content").html(enhancementMarkup);
+        const originalContent = view.lib.getAndUpdateOriginalContent();
+
+        const newContent = view.lib.createContentElement(enhancementMarkup);
+
+        morph(originalContent, newContent);
 
         view.selector.select(view.filter);
         view.enhancer.runActivity();

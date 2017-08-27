@@ -39,8 +39,7 @@ describe("enhancer.js", function() {
 
     view.toolbar.$cache = new SelectorCache();
 
-    const $OriginalContent = $NoMarkup.children();
-    view.originalContent = $OriginalContent.clone(true);
+    view.originalContent = $NoMarkup.html();
     window.chrome = chrome;
   });
 
@@ -79,15 +78,23 @@ describe("enhancer.js", function() {
     });
 
     describe("restoreToOriginal", function() {
+      it("should call view.lib.createContentElement(view.originalContent)", function() {
+        const createContentElementSpy = sandbox.spy(view.lib, "createContentElement");
+
+        view.enhancer.restoreToOriginal();
+
+        sinon.assert.calledOnce(createContentElementSpy);
+        sinon.assert.calledWithExactly(createContentElementSpy,
+          view.originalContent
+        );
+      });
+
       it("should restore the wertiview-content div to the original state", function() {
         $("#wertiview-content").html($("p"));
 
         view.enhancer.restoreToOriginal();
 
-        const $ContentChildren = $("#wertiview-content").children();
-
-        expect($ContentChildren.get(0)).to.equal(view.originalContent.get(0));
-        expect($ContentChildren.get(1)).to.equal(view.originalContent.get(1));
+        expect($("#wertiview-content").html()).to.equal(view.originalContent);
       });
 
       it("should not call view.notification.remove(), as there is no markup", function() {
@@ -316,6 +323,25 @@ describe("enhancer.js", function() {
       view.enhancer.addEnhancementMarkup($("p").html());
 
       sinon.assert.called(toolbarHideAbortButtonSpy);
+    });
+
+    it("should call view.lib.getAndUpdateOriginalContent()", function() {
+      const getAndUpdateOriginalContentStub = sandbox.spy(view.lib, "getAndUpdateOriginalContent");
+
+      view.enhancer.addEnhancementMarkup($("p").html());
+
+      sinon.assert.calledOnce(getAndUpdateOriginalContentStub);
+    });
+
+    it("should call view.lib.createContentElement(enhancementMarkup)", function() {
+      const createContentElementStub = sandbox.spy(view.lib, "createContentElement");
+
+      const enhancementMarkup = $("p").html();
+
+      view.enhancer.addEnhancementMarkup(enhancementMarkup);
+
+      sinon.assert.calledOnce(createContentElementStub);
+      sinon.assert.calledWithExactly(createContentElementStub, enhancementMarkup);
     });
 
     it("should have the enhancement markup in the expected location", function() {

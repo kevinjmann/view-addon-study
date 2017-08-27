@@ -216,6 +216,36 @@ module.exports = function(view) {
      */
     moveDialog: function($Dialog, position) {
       $Dialog.dialog("option", "position", position);
+    },
+
+    /**
+     * Get and update the current original content.
+     *
+     * @returns {Element} the original content element
+     */
+    getAndUpdateOriginalContent: function() {
+      const originalContent = document.getElementById("wertiview-content");
+
+      view.originalContent = originalContent.innerHTML;
+
+      return originalContent;
+    },
+
+    /**
+     * Create a content element with the given innerHTML.
+     *
+     * @param {string} innerHTML the html content of the element
+     *
+     * @returns {Element} the new content element
+     */
+    createContentElement: function(innerHTML) {
+      const contentElement = document.createElement("div");
+
+      contentElement.id = "wertiview-content";
+
+      contentElement.innerHTML = innerHTML;
+
+      return contentElement;
     }
   };
 };

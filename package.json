@@ -77,7 +77,8 @@
   "dependencies": {
     "firebase": "^4.1.2",
     "jquery": "^3.1.1",
-    "jquery-ui": "^1.12.1"
+    "jquery-ui": "^1.12.1",
+    "nanomorph": "^5.1.2"
   },
   "engines": {
     "firefox": ">=48.0a1"

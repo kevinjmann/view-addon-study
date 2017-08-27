@@ -546,4 +546,41 @@ describe("lib.js", function() {
       );
     });
   });
+
+  describe("getAndUpdateOriginalContent", function() {
+    it("should store the innerHTML of the content div into" +
+      " view.originalContent", function() {
+      const $Content = $("<div id='wertiview-content'>");
+
+      $Content.html("<span>some content</span>");
+
+      $("body").append($Content);
+
+      const originalContent = view.lib.getAndUpdateOriginalContent();
+
+      expect(originalContent.innerHTML).to.equal(view.originalContent);
+
+      $Content.remove();
+    });
+  });
+
+  describe("createContentElement", function() {
+    const contentInnerHTML = "<div>some content</div>";
+
+    const contentElement = view.lib.createContentElement(contentInnerHTML);
+
+    it("should be a div element", function() {
+      expect(contentElement.nodeName).to.equal("DIV");
+    });
+
+    it("should be an element with the expected id", function() {
+      expect(contentElement.id).to.equal("wertiview-content");
+    });
+
+    it("should be an element with the same innerHTML passed as parameter", function() {
+      expect(contentElement.innerHTML).to.equal(contentInnerHTML);
+    });
+
+    $(contentElement).remove();
+  });
 });
