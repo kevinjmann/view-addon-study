@@ -1320,32 +1320,24 @@ describe("background.js", function() {
         .then(() => sinon.assert.calledOnce(requestToSetAccountInfoSpy));
       });
 
-      // TODO FIX: test for the catch case does not work yet
-
       it("should notify the user that the login failed", function() {
         const errorMessage = {
           message: "We can't log you in, sorry!"
         };
 
-        sandbox.stub(Storage.prototype, "get")
-        .rejects(errorMessage);
+        sandbox.stub(Storage.prototype, "get").rejects(errorMessage);
 
         const createBasicNotificationStub = sandbox.stub(background, "createBasicNotification");
 
         const id = "failed-login";
-        const title = "Login error!";
-        const message = "Failed to log you in: " + errorMessage.message + ". " +
-          "More info may be available in the consol.";
-        // TODO: Should fail, Remove intentional error in message (consol -> console)
 
-        return background.signIn(cookieString)
-        .catch(e => {
-          console.log("MY ERROR: " + e);
+        return background.signIn(cookieString).then(e => {
           sinon.assert.calledOnce(createBasicNotificationStub);
-          sinon.assert.calledWithExactly(createBasicNotificationStub,
+          sinon.assert.calledWithExactly(
+            createBasicNotificationStub,
             id,
-            title,
-            message
+            sinon.match.string,
+            sinon.match(errorMessage.message)
           );
         });
       });
