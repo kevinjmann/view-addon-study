@@ -15,6 +15,7 @@
     "test": "npm-run-all test:*",
     "test:unit": "karma start --browsers ChromiumHeadless --single-run=true",
     "test:func": "export FIREFOX_BINARY=${FIREFOX_BINARY:-firefox} && npm run bundle && XPI_NAME=dist/view-1.1.0.zip mocha ./viewWE-test/test/functional/",
+    "test:firefox": "web-ext -s ./addon run --verbose",
     "watch:build": "webpack  --progress --colors --watch",
     "watch:test": "karma  start --browsers ChromiumHeadless --single-run=false",
     "watch:debug": "karma start --browsers Chromium --single-run=false"
