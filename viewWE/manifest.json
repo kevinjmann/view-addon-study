@@ -53,8 +53,6 @@
     "page": "options/options.html"
   },
 
-  "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
-
   "permissions": [
     "tabs",
     "storage",
@@ -62,6 +60,7 @@
     "cookies",
     "*://sifnos.sfs.uni-tuebingen.de/*",
     "https://view.aleks.bg/*",
-    "*://*.localhost/*"
+    "*://*.localhost/*",
+    "https://www.googleapis.com/*"
   ]
 }
