@@ -122,6 +122,24 @@ To bundle the addon for distribution, use the bundle task:
 npm run bundle
 ```
 
+## Trying out the addon
+
+The npm task `start` launches a clean instance of Firefox (if it is
+installed on your system) with the addon already loaded. The console output of
+the task will contain error messages and warnings from all sources, including
+web pages and other Firefox components. You can check the file the warning or
+error originates from, to see if it's relevant for VIEW.
+
+Recompilation happens on file change (`watch:build` is executed in the
+background) and Firefox reloads the addon, too.
+
+(When you close the Firefox instance, NPM might complain that error happened.
+You can ignore that.)
+
+```
+npm run start
+```
+
 ## Tests
 
 The VIEW add-on has two types of tests: unit tests and functional tests.
