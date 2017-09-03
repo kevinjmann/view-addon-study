@@ -122,6 +122,11 @@ To bundle the addon for distribution, use the bundle task:
 npm run bundle
 ```
 
+### Installing new packages
+
+Please run `npm shrinkwrap` and check `npm-shrinkwrap.json` into git after
+installing new (versions of) packages.
+
 ## Trying out the addon
 
 The npm task `start` launches a clean instance of Firefox (if it is
