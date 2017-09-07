@@ -2,6 +2,14 @@ const $ = require('jquery');
 
 module.exports = function(view) {
   return {
+
+    /**
+     * Add a blur overlay before enhancement.
+     */
+    initialize: function() {
+      view.blur.add();
+    },
+
     /**
      * Run the cloze activity.
      */
@@ -9,10 +17,6 @@ module.exports = function(view) {
       view.activityHelper.exerciseHandler(view.cloze.createExercise);
 
       $(".viewinput").on("keyup", view.cloze.handler);
-    },
-
-    initialize: function() {
-      view.blur.add();
     },
 
     /**
