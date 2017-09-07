@@ -61,7 +61,7 @@ describe("toolbar.js", function() {
       // the expectations below don't need to be tested in other tests again
       // the selectors below can be freely used in the tests without problems
 
-      expect($("#wertiview-VIEW-menu-btn").length).to.be.above(0);
+      expect($("#wertiview-VIEW-menu").length).to.be.above(0);
 
       expect($(toolbarStart + "enabled").length).to.be.above(0);
       expect($(toolbarStart + "disabled").length).to.be.above(0);
@@ -141,7 +141,7 @@ describe("toolbar.js", function() {
 
     describe("init", function() {
       it("should set the topics, initialize toolbar events and restore prior selections", function() {
-        const initViewMenuBtnStub = sandbox.stub(view.toolbar, "initViewMenuBtn");
+        const initViewMenuBtnStub = sandbox.stub(view.toolbar, "initViewMenu");
         const initAutoEnhanceStub = sandbox.stub(view.toolbar, "initAutoEnhance");
         const initLanguageMenuStub = sandbox.stub(view.toolbar, "initLanguageMenu");
         const initTopicMenuStub = sandbox.stub(view.toolbar, "initTopicMenu");
@@ -174,15 +174,15 @@ describe("toolbar.js", function() {
         sinon.assert.calledOnce(toggleStub);
       });
 
-      describe("initViewMenuBtn", function() {
+      describe("initViewMenu", function() {
         it("should initialize the VIEW menu handler", function() {
           const selectorSpy = sandbox.spy(view.toolbar.$cache, "get");
           const eventSpy = sandbox.spy($.fn, "on");
 
-          view.toolbar.initViewMenuBtn();
+          view.toolbar.initViewMenu();
 
           sinon.assert.calledOnce(selectorSpy);
-          sinon.assert.calledWithExactly(selectorSpy, "#wertiview-VIEW-menu-btn");
+          sinon.assert.calledWithExactly(selectorSpy, "#wertiview-VIEW-menu");
 
           sinon.assert.calledOnce(eventSpy);
           sinon.assert.calledWith(eventSpy, "click");
@@ -191,9 +191,9 @@ describe("toolbar.js", function() {
         it("should call view.VIEWmenu.toggle on click", function() {
           const toggleStub = sandbox.stub(view.VIEWmenu, "toggle");
 
-          view.toolbar.initViewMenuBtn();
+          view.toolbar.initViewMenu();
 
-          $("#wertiview-VIEW-menu-btn").trigger("click");
+          $("#wertiview-VIEW-menu").trigger("click");
 
           sinon.assert.calledOnce(toggleStub);
         });

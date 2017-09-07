@@ -15,7 +15,7 @@ module.exports = function(view) {
       $(window).on("click", function(event) {
         const $Target = $(event.target);
 
-        if(!$Target.closest("#wertiview-VIEW-menu-btn").length){
+        if(!$Target.closest("#wertiview-VIEW-menu").length){
           view.VIEWmenu.hide();
         }
         if(!$Target.closest(view.toolbar.selectorStart + "account-menu-button").length){

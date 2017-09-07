@@ -59,7 +59,7 @@ module.exports = function(view) {
      * Initialization of the toolbar and active event handlers on the toolbar.
      */
     init: function() {
-      view.toolbar.initViewMenuBtn();
+      view.toolbar.initViewMenu();
 
       view.toolbar.initAutoEnhance();
 
@@ -93,8 +93,8 @@ module.exports = function(view) {
     /**
      * Init the view menu handler.
      */
-    initViewMenuBtn: function() {
-      view.toolbar.$cache.get("#wertiview-VIEW-menu-btn").on(
+    initViewMenu: function() {
+      view.toolbar.$cache.get("#wertiview-VIEW-menu").on(
         "click",
         view.VIEWmenu.toggle
       );
@@ -328,9 +328,9 @@ module.exports = function(view) {
     initFilterAndActivityMenu: function() {
       view.toolbar.$cache.get(
         view.toolbar.selectorStart + "filter-menu, " +
-          view.toolbar.selectorStart + "activity-menu").on("change",
-                                                           view.toolbar.toggleEnhanceButton
-                                                          );
+        view.toolbar.selectorStart + "activity-menu").on("change",
+        view.toolbar.toggleEnhanceButton
+      );
     },
 
     /**

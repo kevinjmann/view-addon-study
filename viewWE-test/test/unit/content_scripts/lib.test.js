@@ -66,7 +66,7 @@ describe("lib.js", function() {
 
     it("should not call VIEWmenu.hide() on click, because the target was the view menu button", function() {
       const viewMenuHideSpy = sandbox.spy(view.VIEWmenu, "hide");
-      const viewMenuButtonId = "wertiview-VIEW-menu-btn";
+      const viewMenuButtonId = "wertiview-VIEW-menu";
 
       $("body").append("<div>").attr("id", viewMenuButtonId);
 
