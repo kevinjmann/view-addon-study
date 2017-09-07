@@ -12,18 +12,15 @@ module.exports = {
 
       $("body").append($overlay);
 
-      const $loadingimg = $("<img>");
-      $loadingimg.attr("id", "wertiview-blur-loading");
-      $loadingimg.attr("src", require("../../icons/loading.gif"));
-      $loadingimg.attr("width", "32");
-      $loadingimg.attr("height", "32");
+      const $LoadingDiv = $("<div>");
+      $LoadingDiv.attr("id", "wertiview-blur-loading");
 
-      $("body").append($loadingimg);
-      $loadingimg.css({
-        "top": $overlay.height() / 2 - 16,
-        "left": $overlay.width() / 2 - 16
+      $("body").append($LoadingDiv);
+      $LoadingDiv.css({
+        "top": $overlay.height() / 2 - 100,
+        "left": $overlay.width() / 2 - 100
       });
-      $loadingimg.show();
+      $LoadingDiv.show();
     }
   },
 
