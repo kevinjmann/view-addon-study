@@ -4,6 +4,29 @@
     overflow: auto;
 }
 
+#wertiview-VIEW-menu {
+    float: left;
+}
+
+#wertiview-VIEW-menu:hover {
+    background-color: #f1f1f1
+}
+
+#wertiview-VIEW-menu-bar-box {
+    margin: 2px;
+}
+
+#wertiview-VIEW-menu-bar-box div{
+    width: 35px;
+    height: 4px;
+    background-color: black;
+}
+
+#wertiview-VIEW-menu-bar-2,
+#wertiview-VIEW-menu-bar-3  {
+    margin-top: 6px;
+}
+
 .wertiview-toolbar-menu {
     padding: 4px;
     font-size: 16px;
@@ -33,10 +56,6 @@
 #wertiview-toolbar-enhance-button:disabled {
     opacity: 0.5;
     cursor: initial;
-}
-
-.wertiview-toolbar-dropdown {
-    float: left;
 }
 
 #wertiview-toolbar-filter-no-filter {
