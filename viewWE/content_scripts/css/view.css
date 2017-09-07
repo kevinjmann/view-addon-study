@@ -30,12 +30,15 @@
     z-index: 9998;
 }
 
-/* the loading image style on the overlay of the blurred page*/
 #wertiview-blur-loading {
-    z-index: 9999;
-    opacity: 1;
-    display: none;
+    border: 50px solid #f3f3f3; /* Light grey */
+    border-top: 50px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    animation: spin 2s linear infinite;
     position: fixed;
+    z-index: 9999;
 }
 
 /* Show and hide signs for assistive reading */
