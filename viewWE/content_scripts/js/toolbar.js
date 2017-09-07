@@ -79,8 +79,6 @@ module.exports = function(view) {
 
       view.toolbar.initRestoreBtn();
 
-      view.toolbar.initLoadingImage();
-
       view.toolbar.initSignInBtn();
 
       view.toolbar.initAccountMenuBtn();
@@ -434,15 +432,6 @@ module.exports = function(view) {
         "click",
         view.enhancer.restoreToOriginal
       );
-    },
-
-    /**
-     * Init the loading image.
-     */
-    initLoadingImage: function() {
-      const loadingGif = require('../../icons/loading.gif');
-      const $LoadingImg = $("<img>").attr("src", loadingGif);
-      view.toolbar.$cache.get(view.toolbar.selectorStart + "loading").append($LoadingImg);
     },
 
     /**

@@ -1,14 +1,17 @@
 #wertiview-toolbar {
     background: #d6d8db;
     padding: 6px;
+    overflow: auto;
 }
 
 .wertiview-toolbar-menu {
-    padding: 5px;
+    padding: 4px;
     font-size: 16px;
     border: none;
     cursor: pointer;
     background: white;
+    float: left;
+    margin-left: 5px;
 }
 
 .wertiview-toolbar-btn {
@@ -18,6 +21,8 @@
     font-size: 16px;
     border: none;
     cursor: pointer;
+    float: left;
+    margin-left: 5px;
 }
 
 .wertiview-toolbar-btn:hover:not(:disabled),
@@ -31,8 +36,7 @@
 }
 
 .wertiview-toolbar-dropdown {
-    position: relative;
-    display: inline-block;
+    float: left;
 }
 
 #wertiview-toolbar-filter-no-filter {
@@ -48,11 +52,19 @@
 }
 
 #wertiview-toolbar-loading {
-    display: inline;
+    border: 5px solid #f3f3f3; /* Light grey */
+    border-top: 5px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    animation: spin 2s linear infinite;
+    float: left;
+    margin-left: 5px;
 }
 
-#wertiview-toolbar-loading img{
-    width: 18px;
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 #wertiview-toolbar-account-sign-in-button,

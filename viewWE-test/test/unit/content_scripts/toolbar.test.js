@@ -150,7 +150,6 @@ describe("toolbar.js", function() {
         const initEnhanceBtnStub = sandbox.stub(view.toolbar, "initEnhanceBtn");
         const initAbortBtnStub = sandbox.stub(view.toolbar, "initAbortBtn");
         const initRestoreBtnStub = sandbox.stub(view.toolbar, "initRestoreBtn");
-        const initLoadingImageStub = sandbox.stub(view.toolbar, "initLoadingImage");
         const initSignInBtnStub = sandbox.stub(view.toolbar, "initSignInBtn");
         const initAccountMenuBtnStub = sandbox.stub(view.toolbar, "initAccountMenuBtn");
         const initToggleToolbarStub = sandbox.stub(view.toolbar, "initToggleToolbarBtn");
@@ -168,7 +167,6 @@ describe("toolbar.js", function() {
         sinon.assert.calledOnce(initEnhanceBtnStub);
         sinon.assert.calledOnce(initAbortBtnStub);
         sinon.assert.calledOnce(initRestoreBtnStub);
-        sinon.assert.calledOnce(initLoadingImageStub);
         sinon.assert.calledOnce(initSignInBtnStub);
         sinon.assert.calledOnce(initAccountMenuBtnStub);
         sinon.assert.calledOnce(initToggleToolbarStub);
@@ -985,15 +983,6 @@ describe("toolbar.js", function() {
           $(toolbarStart + "restore-button").trigger("click");
 
           sinon.assert.calledOnce(restoreToOriginalStub);
-        });
-      });
-
-      describe("initLoadingImage", function() {
-        it("should find in the loading div an image", function() {
-          view.toolbar.initLoadingImage();
-
-          expect($(view.toolbar.selectorStart + "loading").find("img").length)
-          .to.be.above(0);
         });
       });
 
