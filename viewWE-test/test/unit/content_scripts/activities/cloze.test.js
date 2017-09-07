@@ -43,6 +43,16 @@ describe("cloze.js", function() {
     });
   });
 
+  describe("initialize", function() {
+    it("should call blur.add()", function() {
+      const blurAddStub = sandbox.stub(view.blur, "add");
+
+      view.cloze.initialize();
+
+      sinon.assert.calledOnce(blurAddStub);
+    });
+  });
+
   describe("run", function() {
     it("should call exerciseHandler(createExercise)", function() {
       const exerciseHandlerSpy = sandbox.spy(view.activityHelper, "exerciseHandler");
