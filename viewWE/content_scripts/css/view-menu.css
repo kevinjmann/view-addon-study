@@ -1,6 +1,6 @@
 /* Dropdown Content (Hidden by Default) */
 .view-dropdown-content {
-    bottom: 45px;
+    bottom: 43px;
     z-index: 9999999999;
     display: none;
     position: fixed;
