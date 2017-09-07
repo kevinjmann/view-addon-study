@@ -21,7 +21,7 @@ module.exports = function(view) {
       const position = view.feedbacker.decideDialogPosition(performanceData["enhancement-id"]);
 
       const settings = {
-        title: "Feedback",
+        title: "Feedback (try " + performanceData["number-of-tries"] + ")",
         width: "auto",
         height: "auto",
         maxHeight: $(window).height() * 0.40,
@@ -41,6 +41,7 @@ module.exports = function(view) {
 
     /**
      * Add performance and feedback data to the given dialog.
+     * Add the assessment text of the first feedback hint.
      *
      * @param {Object} $Dialog the dialog the task data is added to
      * @param {Object} performanceData the performance data to add
@@ -48,12 +49,15 @@ module.exports = function(view) {
      */
     addSubmissionResponseData: function($Dialog, performanceData, feedbackData) {
       const enhancementId = performanceData["enhancement-id"];
-      const infoArray = ["Number of tries: " + performanceData["number-of-tries"]];
 
-      infoArray.push("Assessment: " + view.assessment[feedbackData["assessment"]]);
-      infoArray.push("Message: " + feedbackData["message"]);
+      const $FeedbackMessage = $("<div>");
+      $FeedbackMessage.attr("id", enhancementId + "-message");
+      $FeedbackMessage.html(feedbackData["message"]);
 
-      $Dialog.append(view.lib.createList(enhancementId + "-info", infoArray));
+      $FeedbackMessage.find("#feedback-hint-btn-1")
+      .text(view.assessment[feedbackData["assessment"]]);
+
+      $Dialog.append($FeedbackMessage);
     },
 
     /**
@@ -63,8 +67,8 @@ module.exports = function(view) {
      * the center of the window
      * - dialog is at the top otherwise
      *
-     * @param enhancementId the id of the enhancement element
-     * @returns {object} the position of the dialog
+     * @param {number} enhancementId the id of the enhancement element
+     * @returns {Object} the position of the dialog
      */
     decideDialogPosition: function(enhancementId) {
       const elementYPosition = $("#" + enhancementId).offset().top;
@@ -91,23 +95,28 @@ module.exports = function(view) {
     /**
      * Initialize the click handler for the feedback rule button.
      *
-     * @param position the position of the feedback dialog
+     * @param {number} position the position of the feedback dialog
      */
     initFeedbackRuleBtn: function(position) {
       $("#feedback-rule-btn").on("click", function() {
-        view.feedbacker.toggleFeedbackRule(position);
+        view.feedbacker.toggleFeedbackRule($(this), position);
       });
     },
 
     /**
+     * Toggle the active class on the feedback rule button.
      * Toggle the feedback rule.
      * Scroll to the start of the shown rule.
-     * Reposition the feedback dialog, because the height and width likely changed.
+     * Reposition the feedback dialog, because the height and width likely
+     * changed.
      *
-     * @param position the position of the feedback dialog
+     * @param {Object} $Element the feedback rule button element
+     * @param {number} position the position of the feedback dialog
      */
-    toggleFeedbackRule: function(position) {
+    toggleFeedbackRule: function($Element, position) {
       const $Dialog = $("#view-feedback-dialog");
+
+      $Element.toggleClass("active");
 
       view.lib.toggleAndScrollToElement($("#feedback-rule"), $Dialog);
 
@@ -117,24 +126,28 @@ module.exports = function(view) {
     /**
      * Initialize the click handler for the feedback hint button.
      *
-     * @param position the position of the feedback dialog
+     * @param {number} position the position of the feedback dialog
      */
     initFeedbackHintBtn: function(position) {
       $(".feedback-hint-btn").on("click", function() {
-        view.feedbacker.toggleHintAndShowNextHintBtn($(this).data("feedback-level"), position);
+        view.feedbacker.toggleHintAndShowNextHintBtn($(this), position);
       });
     },
 
     /**
+     * Toggle the active class on the feedback hint button.
      * Toggle the feedback hint and show the next feedback hint button.
      * Scroll to the start of the shown hint.
      * Reposition the feedback dialog, because the height and width likely changed.
      *
-     * @param feedbackLevel the level of the feedback
-     * @param position the position of the feedback dialog
+     * @param {Object} $Element the feedback hint button element
+     * @param {number} position the position of the feedback dialog
      */
-    toggleHintAndShowNextHintBtn: function(feedbackLevel, position) {
+    toggleHintAndShowNextHintBtn: function($Element, position) {
       const $Dialog = $("#view-feedback-dialog");
+      const feedbackLevel = $Element.data("feedback-level");
+
+      $Element.toggleClass("active");
 
       $("#feedback-hint-btn-" + (feedbackLevel+1)).show();
 

@@ -95,17 +95,6 @@ describe("container.js", function() {
   });
 
   describe("adjustMargin", function() {
-    it("should add the class 'margin-at-bottom', as the class isn't present", function() {
-      const $Container = $("<div>");
-      $Container.attr("id", "wertiview-container");
-
-      $("body").append($Container);
-
-      view.container.adjustMargin();
-
-      expect($Container.hasClass("margin-at-bottom")).to.be.true;
-    });
-
     it("should call restoreToOriginal(), because the class 'margin-at-bottom'" +
       " is present", function() {
       const restoreToOriginalSpy = sandbox.spy(view.enhancer, "restoreToOriginal");
@@ -121,18 +110,17 @@ describe("container.js", function() {
       sinon.assert.calledOnce(restoreToOriginalSpy);
     });
 
-    it("should remove the class 'margin-at-bottom', because it is present", function() {
-      const marginClass = "margin-at-bottom";
-
+    it("should toggle the class 'margin-at-bottom' in any case", function() {
       const $Container = $("<div>");
       $Container.attr("id", "wertiview-container");
-      $Container.addClass(marginClass);
 
       $("body").append($Container);
 
+      $Container.removeClass("margin-at-bottom");
+
       view.container.adjustMargin();
 
-      expect($Container.hasClass(marginClass)).to.be.false;
+      expect($Container.hasClass("margin-at-bottom")).to.be.true;
     });
   });
 });

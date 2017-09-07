@@ -23,7 +23,7 @@ describe("feedbacker.js", function() {
 
   const feedbackData = {
     "assessment": "WRONG_SPELLING_UNSTRESSED_O",
-    "message": $("#feedback-message").html()
+    "message": ""
   };
 
   const submissionResponseData = {
@@ -33,6 +33,8 @@ describe("feedbacker.js", function() {
 
   before(function() {
     fixture.load("/viewWE-test/fixtures/unstressed-o-feedback.html");
+
+    feedbackData["message"] = $("#feedback-message").html();
 
     $("body").append("<viewenhancement id='" + performanceData["enhancement-id"] + "'>" +
       "процесс</viewenhancement>");
@@ -95,26 +97,7 @@ describe("feedbacker.js", function() {
     });
 
     describe("addSubmissionResponseData", function() {
-      it("should call lib.createList(id, items) to create the info list", function() {
-        const createListSpy = sandbox.spy(view.lib, "createList");
-
-        const $Dialog = $("<div>");
-        $Dialog.attr("id", "view-feedback-dialog");
-
-        view.feedbacker.addSubmissionResponseData($Dialog, performanceData, feedbackData);
-
-        sinon.assert.calledOnce(createListSpy);
-        sinon.assert.calledWithExactly(createListSpy,
-          performanceData["enhancement-id"] + "-info",
-          [
-            "Number of tries: " + performanceData["number-of-tries"],
-            "Assessment: Spelling error in unstressed 'o' position",
-            "Message: " + feedbackData["message"]
-          ]
-        );
-      });
-
-      it("should find the info list inside the feedback dialog", function() {
+      it("should find the feedback message inside the feedback dialog", function() {
         const $Dialog = $("<div>");
         $Dialog.attr("id", "view-feedback-dialog");
 
@@ -122,8 +105,20 @@ describe("feedbacker.js", function() {
 
         $("body").append($Dialog);
 
-        expect($("#view-feedback-dialog").find("#" + performanceData["enhancement-id"] + "-info").length)
+        expect($("#view-feedback-dialog").find("#" + performanceData["enhancement-id"] + "-message").length)
         .to.be.above(0);
+      });
+
+      it("should find the first feedback hint with the assessment as text", function() {
+        const $Dialog = $("<div>");
+        $Dialog.attr("id", "view-feedback-dialog");
+
+        view.feedbacker.addSubmissionResponseData($Dialog, performanceData, feedbackData);
+
+        $("body").append($Dialog);
+
+        expect($("#view-feedback-dialog").find("#feedback-hint-btn-1").text())
+        .to.equal(view.assessment[feedbackData["assessment"]]);
       });
     });
 
@@ -175,7 +170,7 @@ describe("feedbacker.js", function() {
       $("#" + enhancementId).offset({ top: 10, left: 0 });
 
       const settings = {
-        title: "Feedback",
+        title: "Feedback (try 1)",
         width: "auto",
         height: "auto",
         maxHeight: $(window).height() * 0.40,
@@ -257,55 +252,76 @@ describe("feedbacker.js", function() {
 
       view.feedbacker.initFeedbackRuleBtn(position);
 
-      $("#feedback-rule-btn").trigger("click");
+      const $FeedbackRuleBtn = $("#feedback-rule-btn");
+
+      $FeedbackRuleBtn.trigger("click");
 
       sinon.assert.calledOnce(toggleFeedbackRuleSpy);
-      sinon.assert.calledWithExactly(toggleFeedbackRuleSpy, position);
+      sinon.assert.calledWithExactly(toggleFeedbackRuleSpy,
+        $FeedbackRuleBtn,
+        position
+      );
     });
 
     describe("toggleFeedbackRule", function() {
-      it("should call view.lib.toggleAndScrollToElement($Element, $Dialog)", function() {
+      beforeEach(function() {
         const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
 
         $("body").append($Dialog);
 
         view.lib.dialogSetup($Dialog, {});
+      });
 
+      it("should toggle the active class on the feedback rule btn", function() {
+        $("#feedback-rule-btn").removeClass("active");
+
+        view.feedbacker.toggleFeedbackRule(
+          $("#feedback-rule-btn"),
+          {
+            my: "left top",
+            at: "left top",
+            of: window
+          }
+        );
+
+        expect($("#feedback-rule-btn").hasClass("active")).to.be.true;
+      });
+
+      it("should call view.lib.toggleAndScrollToElement($Element, $Dialog)", function() {
         const toggleAndScrollToElementSpy = sandbox.spy(view.lib, "toggleAndScrollToElement");
 
-        view.feedbacker.toggleFeedbackRule({
-          my: "left top",
-          at: "left top",
-          of: window
-        });
+        view.feedbacker.toggleFeedbackRule(
+          $("#feedback-rule-btn"),
+          {
+            my: "left top",
+            at: "left top",
+            of: window
+          }
+        );
 
         sinon.assert.calledOnce(toggleAndScrollToElementSpy);
         sinon.assert.calledWithExactly(toggleAndScrollToElementSpy,
           $("#feedback-rule"),
-          $Dialog
+          $("#view-feedback-dialog")
         );
       });
 
       it("should call view.lib.moveDialog($Dialog, position)", function() {
-        const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
-
-        $("body").append($Dialog);
-
-        view.lib.dialogSetup($Dialog, {});
-
         const moveDialogSpy = sandbox.spy(view.lib, "moveDialog");
-
         const position = {
           my: "left top",
           at: "left top",
           of: window
         };
 
-        view.feedbacker.toggleFeedbackRule(position);
+        view.feedbacker.toggleFeedbackRule(
+          $("#feedback-rule-btn"),
+          position
+        );
 
         sinon.assert.calledOnce(moveDialogSpy);
         sinon.assert.calledWithExactly(moveDialogSpy,
-          $Dialog,
+          $("#view-feedback-dialog"),
           position
         );
       });
@@ -356,23 +372,42 @@ describe("feedbacker.js", function() {
 
       view.feedbacker.initFeedbackHintBtn(position);
 
-      $("#feedback-hint-btn-1").trigger("click");
+      const $FeedbackHintBtn = $("#feedback-hint-btn-1");
+
+      $FeedbackHintBtn.trigger("click");
 
       sinon.assert.calledOnce(toggleHintAndShowNextHintBtnSpy);
       sinon.assert.calledWithExactly(toggleHintAndShowNextHintBtnSpy,
-        1,
+        $FeedbackHintBtn,
         position
       );
     });
 
     describe("toggleHintAndShowNextHintBtn", function() {
-      it("should show the next feedback hint button", function() {
+      beforeEach(function() {
         const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
 
         $("body").append($Dialog);
 
         view.lib.dialogSetup($Dialog, {});
+      });
 
+      it("should toggle the active class on the feedback hint btn", function() {
+        $("#feedback-hint-btn-1").removeClass("active");
+
+        view.feedbacker.toggleHintAndShowNextHintBtn(
+          $("#feedback-hint-btn-1"),
+          {
+            my: "left top",
+            at: "left top",
+            of: window
+          }
+        );
+
+        expect($("#feedback-hint-btn-1").hasClass("active")).to.be.true;
+      });
+
+      it("should show the next feedback hint button", function() {
         $("#feedback-hint-btn-2").hide();
 
         const position = {
@@ -381,18 +416,12 @@ describe("feedbacker.js", function() {
           of: window
         };
 
-        view.feedbacker.toggleHintAndShowNextHintBtn(1, position);
+        view.feedbacker.toggleHintAndShowNextHintBtn($("#feedback-hint-btn-1"), position);
 
         expect($("#feedback-hint-btn-2").css("display")).to.equal("inline-block");
       });
 
       it("should call view.lib.toggleAndScrollToElement($Element, $Dialog)", function() {
-        const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
-
-        $("body").append($Dialog);
-
-        view.lib.dialogSetup($Dialog, {});
-
         const toggleAndScrollToElementSpy = sandbox.spy(view.lib, "toggleAndScrollToElement");
 
         const feedbackLevel = 1;
@@ -402,22 +431,16 @@ describe("feedbacker.js", function() {
           of: window
         };
 
-        view.feedbacker.toggleHintAndShowNextHintBtn(feedbackLevel, position);
+        view.feedbacker.toggleHintAndShowNextHintBtn($("#feedback-hint-btn-" + feedbackLevel), position);
 
         sinon.assert.calledOnce(toggleAndScrollToElementSpy);
         sinon.assert.calledWithExactly(toggleAndScrollToElementSpy,
           $("#feedback-hint-" + feedbackLevel),
-          $Dialog
+          $("#view-feedback-dialog")
         );
       });
 
       it("should call view.lib.moveDialog($Dialog, position)", function() {
-        const $Dialog = $("<div>").attr("id", "view-feedback-dialog");
-
-        $("body").append($Dialog);
-
-        view.lib.dialogSetup($Dialog, {});
-
         const moveDialogSpy = sandbox.spy(view.lib, "moveDialog");
 
         const feedbackLevel = 1;
@@ -427,11 +450,11 @@ describe("feedbacker.js", function() {
           of: window
         };
 
-        view.feedbacker.toggleHintAndShowNextHintBtn(feedbackLevel, position);
+        view.feedbacker.toggleHintAndShowNextHintBtn($("#feedback-hint-btn-" + feedbackLevel), position);
 
         sinon.assert.calledOnce(moveDialogSpy);
         sinon.assert.calledWithExactly(moveDialogSpy,
-          $Dialog,
+          $("#view-feedback-dialog"),
           position
         );
       });

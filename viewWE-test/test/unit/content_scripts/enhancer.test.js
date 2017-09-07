@@ -139,14 +139,38 @@ describe("enhancer.js", function() {
       });
     });
 
-    it("should call blur.add(), as the activity is 'cloze'", function() {
-      const addSpy = sandbox.spy(view.blur, "add");
+    it("should be able to call initialize for all activities", function() {
+      const initializeColorSpy = sandbox.spy(view.color, "initialize");
+      const initializeClickSpy = sandbox.spy(view.click, "initialize");
+      const initializeMcSpy = sandbox.spy(view.mc, "initialize");
+      const initializeClozeSpy = sandbox.spy(view.cloze, "initialize");
+
+      view.activity = "color";
+
+      view.enhancer.enhance();
+
+      sinon.assert.calledOnce(initializeColorSpy);
+
+
+      view.activity = "click";
+
+      view.enhancer.enhance();
+
+      sinon.assert.calledOnce(initializeClickSpy);
+
+
+      view.activity = "mc";
+
+      view.enhancer.enhance();
+
+      sinon.assert.calledOnce(initializeMcSpy);
+
 
       view.activity = "cloze";
 
       view.enhancer.enhance();
 
-      sinon.assert.calledOnce(addSpy);
+      sinon.assert.calledOnce(initializeClozeSpy);
     });
 
     it("should call constructInstruction(), as showInst is enabled", function() {
