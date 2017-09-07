@@ -115,13 +115,3 @@ limitations under the License.
 </blockquote>
 
 </div>
-
-# Lib info
-
-The resources located in `viewWE/lib` are the following:<br>
-
-jquery-3.1.1.min.js:<br>
-Download from https://jquery.com/download/ 
-
-jquery-ui.min.js, jquery-ui.min.css:<br>
-Version: 1.12.1, stable, Download from http://jqueryui.com/
