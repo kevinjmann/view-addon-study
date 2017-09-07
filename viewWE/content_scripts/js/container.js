@@ -31,11 +31,9 @@ module.exports = function(view) {
 
       if ($Container.hasClass(marginClass)) {
         view.enhancer.restoreToOriginal();
-        $Container.removeClass(marginClass);
       }
-      else {
-        $Container.addClass(marginClass);
-      }
+
+      $Container.toggleClass(marginClass);
     }
   };
 };
