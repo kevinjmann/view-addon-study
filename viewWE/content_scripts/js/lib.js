@@ -1,5 +1,6 @@
 const $ = require('jquery');
 require('jquery-ui/ui/widgets/dialog');
+require('jquery-ui/themes/base/button.css');
 require('jquery-ui/themes/base/core.css');
 require('jquery-ui/themes/base/theme.css');
 require('jquery-ui/themes/base/dialog.css');
