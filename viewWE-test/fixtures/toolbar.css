@@ -62,16 +62,59 @@
     display: none;
 }
 
+/* The switch - the box around the slider */
 #wertiview-toolbar-enabled {
-    background-color: #ff7f2a;
+    position: relative;
+    width: 60px;
+    height: 30px;
+    float:left;
+    margin-left: 5px;
 }
 
-#wertiview-toolbar-disabled {
-    background-color: red;
+/* Hide default HTML checkbox */
+#wertiview-toolbar-enabled-checkbox {
+    display:none;
+}
+
+/* The slider */
+#wertiview-toolbar-enabled-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+#wertiview-toolbar-enabled-slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 4px;
+    bottom: 4px;
+    background-color: black;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+#wertiview-toolbar-enabled-checkbox:checked + #wertiview-toolbar-enabled-slider {
+    background-color: #4CAF50;
+}
+
+#wertiview-toolbar-enabled-checkbox:focus + #wertiview-toolbar-enabled-slider {
+    box-shadow: 0 0 2px #4CAF50;
+}
+
+#wertiview-toolbar-enabled-checkbox:checked + #wertiview-toolbar-enabled-slider:before {
+    transform: translateX(26px);
 }
 
 #wertiview-toolbar-loading {
-    border: 5px solid #f3f3f3; /* Light grey */
+    border: 5px solid #f3f3f3;
     border-top: 5px solid #4CAF50;
     border-radius: 50%;
     width: 18px;
