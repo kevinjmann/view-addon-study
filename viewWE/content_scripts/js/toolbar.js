@@ -101,54 +101,22 @@ module.exports = function(view) {
     },
 
     /**
-     * Init the handler for the auto enhance enabled/disabled buttons.
-     * A click on the enabled button will hide it and show the disabled button
-     * and vice versa.
+     * Init the handler for auto enhance.
      */
     initAutoEnhance: function() {
-      view.toolbar.$cache.get(view.toolbar.selectorStart + "enabled").on(
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "enabled-checkbox").on(
         "click",
-        view.toolbar.turnOffAutoEnhanceAndSet
-      );
-
-      view.toolbar.$cache.get(view.toolbar.selectorStart + "disabled").on(
-        "click",
-        view.toolbar.turnOnAutoEnhanceAndSet
+        view.toolbar.setAutoEnhance
       );
     },
 
     /**
-     * Turn off auto enhance and set enabled to "false".
+     * Set auto enhance to property of "checked".
      */
-    turnOffAutoEnhanceAndSet: function() {
-      view.toolbar.turnOffAutoEnhance();
-      chrome.storage.local.set({enabled: false});
-    },
-
-    /**
-     * Turn off auto enhance by hiding the enabled button
-     * and showing the disabled button.
-     */
-    turnOffAutoEnhance: function() {
-      view.toolbar.$cache.get(view.toolbar.selectorStart + "enabled").hide();
-      view.toolbar.$cache.get(view.toolbar.selectorStart + "disabled").show();
-    },
-
-    /**
-     * Turn on auto enhance and set enabled to "true".
-     */
-    turnOnAutoEnhanceAndSet: function() {
-      view.toolbar.turnOnAutoEnhance();
-      chrome.storage.local.set({enabled: true});
-    },
-
-    /**
-     * Turn on auto enhance by hiding the disabled button
-     * and showing the enabled button.
-     */
-    turnOnAutoEnhance: function() {
-      view.toolbar.$cache.get(view.toolbar.selectorStart + "disabled").hide();
-      view.toolbar.$cache.get(view.toolbar.selectorStart + "enabled").show();
+    setAutoEnhance: function() {
+      chrome.storage.local.set({
+        enabled: view.toolbar.$cache.get(view.toolbar.selectorStart + "enabled-checkbox").prop("checked")
+      });
     },
 
     /**
@@ -541,18 +509,21 @@ module.exports = function(view) {
     },
 
     /**
-     * Restore enabled/disabled auto-enhance selection.
+     * Restore the auto-enhance selection.
      * If auto-enhance is enabled, set selections and prepare to enhance.
      */
     restoreAutoEnhance: function() {
       if(view.enabled){
-        view.toolbar.turnOnAutoEnhance();
-
         view.toolbar.setSelectionsPrepareAndEnhance();
       }
-      else{
-        view.toolbar.turnOffAutoEnhance();
-      }
+      view.toolbar.restoreAutoEnhanceCheckbox();
+    },
+
+    /**
+     * Restore the auto enhance checkbox.
+     */
+    restoreAutoEnhanceCheckbox: function() {
+      view.toolbar.$cache.get(view.toolbar.selectorStart + "enabled-checkbox").prop("checked", view.enabled);
     },
 
     /**

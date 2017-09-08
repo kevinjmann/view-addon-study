@@ -63,13 +63,13 @@ describe("toolbar.js", function() {
 
       expect($("#wertiview-VIEW-menu").length).to.be.above(0);
 
-      expect($(toolbarStart + "enabled").length).to.be.above(0);
-      expect($(toolbarStart + "disabled").length).to.be.above(0);
+      expect($(toolbarStart + "enabled-checkbox").length).to.be.above(0);
 
       expect($(toolbarStart + "language-menu").length).to.be.above(0);
       expect($(toolbarStart + "language-unselected").val()).to.equal("unselected");
       expect($(toolbarStart + "language-unselected").next().text()).to.equal("──────────");
       expect($(toolbarStart + "language-en").val()).to.equal("en");
+      expect($(toolbarStart + "language-de").val()).to.equal("de");
       expect($(toolbarStart + "language-ru").val()).to.equal("ru");
 
       expect($(toolbarStart + "topic-menu-unselected").length).to.be.above(0);
@@ -81,10 +81,17 @@ describe("toolbar.js", function() {
       expect($(toolbarStart + "topic-articles").val()).to.equal("articles");
       expect($(toolbarStart + "topic-determiners-en").val()).to.equal("determiners");
 
+      expect($(toolbarStart + "topic-menu-de").length).to.be.above(0);
+      expect($(toolbarStart + "topic-unselected-de").val()).to.equal("unselected-de");
+      expect($(toolbarStart + "topic-unselected-de").next().text()).to.equal("──────────");
+      expect($(toolbarStart + "topic-determiners-de").val()).to.equal("determiners");
+      expect($(toolbarStart + "topic-agreement-de").val()).to.equal("agreement");
+
       expect($(toolbarStart + "topic-menu-ru").length).to.be.above(0);
       expect($(toolbarStart + "topic-unselected-ru").val()).to.equal("unselected-ru");
       expect($(toolbarStart + "topic-unselected-ru").next().text()).to.equal("──────────");
       expect($(toolbarStart + "topic-nouns").val()).to.equal("nouns");
+      expect($(toolbarStart + "topic-adjectives").val()).to.equal("adjectives");
 
       expect($(toolbarStart + "filter-menu").length).to.be.above(0);
       expect($(toolbarStart + "filter-no-filter").val()).to.equal("no-filter");
@@ -206,74 +213,31 @@ describe("toolbar.js", function() {
 
           view.toolbar.initAutoEnhance();
 
-          sinon.assert.calledTwice(selectorSpy);
-          sinon.assert.calledWithExactly(selectorSpy.getCall(0), toolbarStart + "enabled");
-          sinon.assert.calledWithExactly(selectorSpy.getCall(1), toolbarStart + "disabled");
+          sinon.assert.calledOnce(selectorSpy);
+          sinon.assert.calledWithExactly(selectorSpy.getCall(0), toolbarStart + "enabled-checkbox");
 
-          sinon.assert.calledTwice(eventSpy);
-          sinon.assert.alwaysCalledWith(eventSpy, "click");
+          sinon.assert.calledOnce(eventSpy);
+          sinon.assert.calledWith(eventSpy, "click");
         });
 
-        describe("turnOffAutoEnhanceAndSet", function() {
-          it("should call turnOffAutoEnhanceAndSet() on click", function() {
-            const turnOffAutoEnhanceAndSetStub = sandbox.stub(view.toolbar, "turnOffAutoEnhanceAndSet");
+        describe("setAutoEnhance", function() {
+          it("should call setAutoEnhance() on click", function() {
+            const setAutoEnhanceStub = sandbox.stub(view.toolbar, "setAutoEnhance");
 
             view.toolbar.initAutoEnhance();
 
-            $(toolbarStart + "enabled").trigger("click");
+            $(toolbarStart + "enabled-checkbox").trigger("click");
 
-            sinon.assert.calledOnce(turnOffAutoEnhanceAndSetStub);
+            sinon.assert.calledOnce(setAutoEnhanceStub);
           });
 
-          it("should call turn off auto enhance and set enabled to \"false\"", function() {
-            const turnOffAutoEnhanceStub = sandbox.stub(view.toolbar, "turnOffAutoEnhance");
+          it("should set enabled to the property of 'checked'", function() {
+            $(toolbarStart + "enabled-checkbox").prop("checked", true);
 
-            view.toolbar.turnOffAutoEnhanceAndSet();
-
-            sinon.assert.calledOnce(turnOffAutoEnhanceStub);
-
-            sinon.assert.calledOnce(chrome.storage.local.set);
-            sinon.assert.calledWithExactly(chrome.storage.local.set, {enabled: false});
-          });
-
-          it("should turn off auto enhance", function() {
-            $(toolbarStart + "enabled").show();
-            $(toolbarStart + "disabled").hide();
-
-            view.toolbar.turnOffAutoEnhance();
-
-            expect($(toolbarStart + "enabled").is(":hidden")).to.be.true;
-            expect($(toolbarStart + "disabled").is(":visible")).to.be.true;
-          });
-        });
-
-        describe("turnOnAutoEnhanceAndSet", function() {
-          it("should call turnOnAutoEnhanceAndSet() on click", function() {
-            const turnOnAutoEnhanceAndSetStub = sandbox.stub(view.toolbar, "turnOnAutoEnhanceAndSet");
-
-            view.toolbar.initAutoEnhance();
-
-            view.toolbar.$cache.get(toolbarStart + "disabled").trigger("click");
-
-            sinon.assert.calledOnce(turnOnAutoEnhanceAndSetStub);
-          });
-
-          it("should call turn on auto enhance and set enabled to \"true\"", function() {
-            const turnOnAutoEnhanceStub = sandbox.stub(view.toolbar, "turnOnAutoEnhance");
-
-            view.toolbar.turnOnAutoEnhanceAndSet();
-
-            sinon.assert.calledOnce(turnOnAutoEnhanceStub);
+            view.toolbar.setAutoEnhance();
 
             sinon.assert.calledOnce(chrome.storage.local.set);
             sinon.assert.calledWithExactly(chrome.storage.local.set, {enabled: true});
-          });
-
-          it("should turn on auto enhance", function() {
-            view.toolbar.turnOnAutoEnhance();
-
-            expect($(toolbarStart + "disabled").is(":hidden")).to.be.true;
-            expect($(toolbarStart + "enabled").is(":visible")).to.be.true;
           });
         });
       });
@@ -1296,29 +1260,24 @@ describe("toolbar.js", function() {
         });
 
         describe("restoreAutoEnhance", function() {
-          it("should call turnOnAutoEnhance() and call setSelectionsPrepareAndEnhance() as auto-enhance is enabled", function() {
-            const turnOnAutoEnhanceStub = sandbox.stub(view.toolbar, "turnOnAutoEnhance");
+          it("should call call setSelectionsPrepareAndEnhance() as auto-enhance is enabled", function() {
             const setSelectionsAndPrepareToEnhanceStub = sandbox.stub(view.toolbar, "setSelectionsPrepareAndEnhance");
 
             view.enabled = true;
 
-            view.toolbar.initEnhanceBtn();
-
             view.toolbar.restoreAutoEnhance();
-
-            sinon.assert.calledOnce(turnOnAutoEnhanceStub);
 
             sinon.assert.calledOnce(setSelectionsAndPrepareToEnhanceStub);
           });
 
-          it("should call turnOffAutoEnhance() as auto-enhance is disabled", function() {
-            const turnOffAutoEnhanceStub = sandbox.stub(view.toolbar, "turnOffAutoEnhance");
+          it("should restore the auto enhance checkbox state in any case", function() {
+            $(toolbarStart + "enabled-checkbox").prop("checked", false);
 
-            view.enabled = false;
+            view.enabled = true;
 
-            view.toolbar.restoreAutoEnhance();
+            view.toolbar.restoreAutoEnhanceCheckbox();
 
-            sinon.assert.calledOnce(turnOffAutoEnhanceStub);
+            expect($(toolbarStart + "enabled-checkbox").prop("checked")).to.be.true;
           });
         });
       });
