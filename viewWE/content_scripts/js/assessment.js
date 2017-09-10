@@ -11,5 +11,8 @@ module.exports = {
   WRONG_NUMBER_AND_CASE: "Word form error in number and case",
   WRONG_SPELLING: "Spelling error",
   WRONG_SPELLING_UNSTRESSED_O: "Spelling error in unstressed 'o' position",
-  WRONG_SPELLING_UNSTRESSED_E: "Spelling error in unstressed 'e' position"
+  WRONG_SPELLING_UNSTRESSED_E: "Spelling error in unstressed 'e' position",
+  NO_PALATALIZATION: "No soft-indicating letter after soft consonant",
+  EXTRA_FLEETING_VOWEL: "Redundant fleeting vowel in the stem",
+  MISSING_FLEETING_VOWEL: "Missing fleeting vowel in the stem"
 };
