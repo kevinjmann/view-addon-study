@@ -64,6 +64,8 @@ describe("toolbar.js", function() {
       expect($("#wertiview-VIEW-menu").length).to.be.above(0);
 
       expect($(toolbarStart + "enabled-checkbox").length).to.be.above(0);
+      expect($(toolbarStart + "enabled").attr("title"))
+      .to.equal("auto-enhance");
 
       expect($(toolbarStart + "language-menu").length).to.be.above(0);
       expect($(toolbarStart + "language-unselected").val()).to.equal("unselected");
