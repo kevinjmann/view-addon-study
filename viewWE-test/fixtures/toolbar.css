@@ -13,18 +13,18 @@
 }
 
 #wertiview-VIEW-menu-bar-box {
-    margin: 2px;
+    margin: 6px;
 }
 
 #wertiview-VIEW-menu-bar-box div{
-    width: 35px;
-    height: 4px;
+    width: 25px;
+    height: 3px;
     background-color: black;
 }
 
 #wertiview-VIEW-menu-bar-2,
 #wertiview-VIEW-menu-bar-3  {
-    margin-top: 6px;
+    margin-top: 4px;
 }
 
 .wertiview-toolbar-menu {
@@ -64,9 +64,10 @@
 
 /* The switch - the box around the slider */
 #wertiview-toolbar-enabled {
+    margin-top: 3px;
     position: relative;
-    width: 60px;
-    height: 30px;
+    width: 50px;
+    height: 24px;
     float:left;
     margin-left: 5px;
 }
@@ -92,8 +93,8 @@
 #wertiview-toolbar-enabled-slider:before {
     position: absolute;
     content: "";
-    height: 22px;
-    width: 22px;
+    height: 18px;
+    width: 18px;
     left: 4px;
     bottom: 4px;
     background-color: black;
@@ -110,7 +111,7 @@
 }
 
 #wertiview-toolbar-enabled-checkbox:checked + #wertiview-toolbar-enabled-slider:before {
-    transform: translateX(26px);
+    transform: translateX(24px);
 }
 
 #wertiview-toolbar-loading {
