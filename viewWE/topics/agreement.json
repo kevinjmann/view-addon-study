@@ -1,4 +1,5 @@
 {
+  "title": "Agreement",
   "de": {
     "activities": {
       "color": {
@@ -19,6 +20,71 @@
           "text": "Fill in the blanks with the <font color='green'><b>correct</b></font> form. If you guessed <span class='click-style-incorrect'>wrong</span> or you find it too difficult you can get help by clicking on <span class='view-style-hint'>?</span>."
         }
       }
-    }
+    },
+    "selections": [
+      {
+        "title": "Gender",
+        "data": "morph-gender",
+        "selectionItems": [
+          {
+            "title": "neuter",
+            "match": "Neut",
+            "checked": true
+          },
+          {
+            "title": "feminine",
+            "match": "Fem",
+            "checked": true
+          },
+          {
+            "title": "masculine",
+            "match": "Masc",
+            "checked": true
+          }
+        ]
+      },
+      {
+        "title": "Number",
+        "data": "morph-number",
+        "selectionItems": [
+          {
+            "title": "singular",
+            "match": "Sing",
+            "checked": true
+          },
+          {
+            "title": "plural",
+            "match": "Plur",
+            "checked": true
+          }
+        ]
+      },
+      {
+        "title": "Case",
+        "data": "morph-case",
+        "selectionItems": [
+          {
+            "title": "Accusative",
+            "match": "Acc",
+            "checked": true
+          },
+          {
+            "title": "Genitive",
+            "match": "Gen",
+            "checked": true
+          },
+          {
+            "title": "Nominative",
+            "match": "Nom",
+            "checked": false
+          },
+          {
+            "title": "Dative",
+            "match": "Dat",
+            "checked": true
+          }
+        ]
+      }
+    ]
   }
 }
