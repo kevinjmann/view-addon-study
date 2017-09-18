@@ -5,14 +5,12 @@ const renderSelectionItem = (base, item, selectionIndex, itemIndex) => {
   const checked = item.checked ? 'checked' : '';
 
   // title
-  const labelHtml = `<label for="${id}">${item.title}<label>`;
   const label = document.createElement('label');
-  label.innerHTML = labelHtml;
+  label.innerHTML = `<label for="${id}">${item.title}<label>`;
 
   // input
-  const inputHtml = `<input type="checkbox" id="${id} ${checked} />`;
   const input = document.createElement('input');
-  input.innerHTML = inputHtml;
+  input.innerHTML = `<input type="checkbox" id="${id} ${checked} />`;
 
   // event, use base.selections
   input.onchange = () => {
@@ -26,35 +24,25 @@ const renderSelectionItem = (base, item, selectionIndex, itemIndex) => {
 const renderSelection = (base, selection, selectionIndex) => {
   // container for items
   const container = document.createElement('div');
-  container.classList.add('selection-container');
-
-  // title
-  const title = document.createElement('h2');
-  title.textContent = selection.title;
-  container.append(title);
+  container.innerHTML = `<div class="selection-container"><h2>${selection.title}</h2></div>`;
 
   const selectionItems = selection.selectionItems.map(
     (selectionItem, index) => renderSelectionItem(base, selectionItem, selectionIndex, index)
   );
-
-  // add to container
   container.append(selectionItems);
 
   return container;
 };
 
 const renderSelections = (base, selections) => {
-  console.log('rendering', base, selections);
   // container
   const container = document.createElement('div');
-  container.id = 'selections-container';
-
-  const heading = document.createElement('h1');
-  heading.textContent = 'Selections';
-  container.append(heading);
+  container.innerHTML = `<div id="selections-container"><h1>Selections</h1></div>`;
 
   // add selections to container
-  const selections = selections.map((selection, index) => renderSelection(base, selection, index));
+  const selections = selections.map(
+    (selection, index) => renderSelection(base, selection, index)
+  );
   container.append(selections);
 
   return container;
