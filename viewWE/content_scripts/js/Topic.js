@@ -22,8 +22,7 @@ export default class Topic {
 
   selectActivity(activity) {
     if (!this.spec[activity]) {
-      view.notification.add(`The activity ${activity} is unavailable for ${this.spec.title}.`);
-      return;
+      throw new Error(`The activity ${activity} is unavailable for ${this.spec.title}.`);
     }
 
     this.enhancer = new Enhancer(activity, this.spec[activity]);
@@ -36,8 +35,7 @@ export default class Topic {
 
   runActivity() {
     if (this.enhancer === null) {
-      view.notification.add('Please select an enhancement type first.');
-      return;
+      throw new Error('Please select an enhancement type first.');
     }
 
     const enhancer = this.enhancer;
