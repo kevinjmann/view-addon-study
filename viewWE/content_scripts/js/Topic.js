@@ -1,6 +1,7 @@
 import view from '../view';
 import Enhancer from './Enhancer';
 import Selections from './Selections';
+import fireEvent from './Events';
 
 const addSelectionPickerToToolbar = (selectionPicker) => {
   const enhance = document.querySelector('#wertiview-toolbar-enhance-button');
@@ -11,6 +12,7 @@ const addSelectionPickerToToolbar = (selectionPicker) => {
 export default class Topic {
   constructor(spec, language) {
     this.spec = spec[language];
+    this.readyHandlers = [];
 
     this.selections = new Selections(this.spec.selections);
     addSelectionPickerToToolbar(this.selections.render());
@@ -25,6 +27,11 @@ export default class Topic {
     }
 
     this.enhancer = new Enhancer(activity, this.spec[activity]);
+    fireEvent(this.readyHandlers, this.enhancer);
+  }
+
+  onTopicReady(f) {
+    this.readyHandlers.push(f);
   }
 
   runActivity() {
