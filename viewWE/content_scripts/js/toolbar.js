@@ -233,7 +233,7 @@ module.exports = function(view) {
           view.topics[topic][language]) {
         const topicSpec = view.topics[topic];
         if (topicSpec.version === 2) {
-          view.toolbar.initializeV2Topic(topics, language);
+          view.toolbar.initializeV2Topic(topicSpec, language);
         } else {
           view.toolbar.enableAndShowActivities(language, topic);
         }
