@@ -58,12 +58,12 @@ export default class Selections {
     return renderSelections(this, this.selections);
   }
 
-  getStatus() {
+  getSelections() {
     return this.selections;
   }
 
   onUpdate() {
-    const status = this.getStatus();
+    const status = this.getSelections();
     fireEvent(this.onUpdateHandlers, status);
   }
 }
