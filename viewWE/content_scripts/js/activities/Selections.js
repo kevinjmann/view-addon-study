@@ -6,11 +6,16 @@ const renderSelectionItem = (base, item, selectionIndex, itemIndex) => {
 
   // title
   const label = document.createElement('label');
-  label.innerHTML = `<label for="${id}">${item.title}<label>`;
+  label.setAttribute('for', id);
+  label.textContent = item.title;
 
   // input
   const input = document.createElement('input');
-  input.innerHTML = `<input type="checkbox" id="${id} ${checked} />`;
+  input.setAttribute('type', 'checkbox');
+  input.setAttribute('id', id);
+  if (checked) {
+    input.setAttribute('checked', true);
+  }
 
   // event, use base.selections
   input.onchange = () => {
@@ -24,12 +29,13 @@ const renderSelectionItem = (base, item, selectionIndex, itemIndex) => {
 const renderSelection = (base, selection, selectionIndex) => {
   // container for items
   const container = document.createElement('div');
-  container.innerHTML = `<div class="selection-container"><h2>${selection.title}</h2></div>`;
+  container.classList.add('selectionContainer');
+  container.innerHTML = `<h2>${selection.title}</h2>`;
 
   const selectionItems = selection.selectionItems.map(
     (selectionItem, index) => renderSelectionItem(base, selectionItem, selectionIndex, index)
   );
-  container.append(selectionItems);
+  selectionItems.map(selectionItem => container.append(selectionItem));
 
   return container;
 };
@@ -37,13 +43,14 @@ const renderSelection = (base, selection, selectionIndex) => {
 const renderSelections = (base, selections) => {
   // container
   const container = document.createElement('div');
-  container.innerHTML = `<div id="selections-container"><h1>Selections</h1></div>`;
+  container.setAttribute('id', 'selections-container');
+  container.innerHTML = `<h1>Selections</h1>`;
 
   // add selections to container
   const renderedSelections = selections.map(
     (selection, index) => renderSelection(base, selection, index)
   );
-  container.append(renderedSelections);
+  renderedSelections.map(renderedSelection => container.append(renderedSelection));
 
   return container;
 };
