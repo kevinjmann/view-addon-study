@@ -1,6 +1,8 @@
 const $ = require('jquery');
 const toolbarHTML = require('../html/toolbar.html');
-import SelectorCache from '../../SelectorCache.js';
+import SelectorCache from '../../SelectorCache';
+import Topic from './Topic';
+import ActivityPicker from './ActivityPicker';
 
 module.exports = function(view) {
   return {
@@ -228,11 +230,41 @@ module.exports = function(view) {
         language !== unselected &&
           !topic.startsWith(unselected) &&
           view.topics[topic] &&
-          view.topics[topic][language]){
-        view.toolbar.enableAndShowActivities(language, topic);
+          view.topics[topic][language]) {
+        if (topic.version === 2) {
+          view.toolbar.initializeV2Topic(topic, language);
+        } else {
+          view.toolbar.enableAndShowActivities(language, topic);
+        }
       }
 
       view.toolbar.toggleEnhanceButton();
+    },
+
+    initializeV2Topic: function(topic, language) {
+      const topicView = new Topic(topic, language);
+      const enhanceButton = document.querySelector('#wertiview-toolbar-enhance-button');
+      const activityPicker = new ActivityPicker(topic[language].activities);
+
+      topicView.onTopicReady(() => {
+        enhanceButton.setAttribute('disabled', false);
+      });
+
+      activityPicker.onActivitySelected((activity) => {
+        try {
+          topicView.selectActivity(activity);
+        } catch (e) {
+          view.notifications.add(e.getMessage());
+        }
+      });
+
+      enhanceButton.onclick = () => {
+        try {
+          topicView.runActivity();
+        } catch (e) {
+          view.notifications.add(e.getMessage());
+        }
+      };
     },
 
     /**
