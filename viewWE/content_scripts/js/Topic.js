@@ -4,9 +4,8 @@ import Selections from './activities/Selections';
 import fireEvent from './Events';
 
 const addSelectionPickerToToolbar = (selectionPicker) => {
-  const enhance = document.querySelector('#wertiview-toolbar-enhance-button');
-  const toolbar = document.querySelector('#wertiview-toolbar');
-  toolbar.insertBefore(selectionPicker, enhance);
+  selectionPicker.setAttribute('style', 'position: fixed; top: 0px; background: white; border: 1px solid black');
+  document.querySelector('body').append(selectionPicker);
 };
 
 export default class Topic {
