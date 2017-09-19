@@ -8,7 +8,7 @@ const addSelectionPickerToToolbar = (selectionPicker) => {
   toolbar.insertBefore(selectionPicker, enhance);
 };
 
-export default class Activity {
+export default class Topic {
   constructor(spec, language) {
     this.spec = spec[language];
 
