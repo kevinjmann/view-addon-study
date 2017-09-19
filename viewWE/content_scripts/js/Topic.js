@@ -18,13 +18,13 @@ export default class Topic {
     this.enhancer = null;
   }
 
-  selectEnhancement(enhancement) {
-    if (!this.spec[enhancement]) {
-      view.notification.add(`The enhancement ${enhancement} is unavailable for ${this.spec.title}.`);
+  selectActivity(activity) {
+    if (!this.spec[activity]) {
+      view.notification.add(`The activity ${activity} is unavailable for ${this.spec.title}.`);
       return;
     }
 
-    this.enhancer = new Enhancer(enhancement, this.spec[enhancement]);
+    this.enhancer = new Enhancer(activity, this.spec[activity]);
   }
 
   runActivity() {
