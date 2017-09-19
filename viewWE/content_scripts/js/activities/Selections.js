@@ -40,10 +40,10 @@ const renderSelections = (base, selections) => {
   container.innerHTML = `<div id="selections-container"><h1>Selections</h1></div>`;
 
   // add selections to container
-  const selections = selections.map(
+  const renderedSelections = selections.map(
     (selection, index) => renderSelection(base, selection, index)
   );
-  container.append(selections);
+  container.append(renderedSelections);
 
   return container;
 };

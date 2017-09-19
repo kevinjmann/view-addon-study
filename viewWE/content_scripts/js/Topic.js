@@ -1,6 +1,6 @@
-import view from '../view';
-import Enhancer from './Enhancer';
-import Selections from './Selections';
+import view from './view';
+import Enhancer from './activities/Enhancer';
+import Selections from './activities/Selections';
 import fireEvent from './Events';
 
 const addSelectionPickerToToolbar = (selectionPicker) => {
