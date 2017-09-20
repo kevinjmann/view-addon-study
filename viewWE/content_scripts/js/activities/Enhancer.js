@@ -1,5 +1,5 @@
 export default class Enhancer {
-  construct(enhancementName) {
+  constructor(enhancementName) {
     console.log('creating enhancement for', enhancementName);
   }
 
