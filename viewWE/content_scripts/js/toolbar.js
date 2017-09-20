@@ -231,6 +231,7 @@ module.exports = function(view) {
           !topic.startsWith(unselected) &&
           view.topics[topic] &&
           view.topics[topic][language]) {
+        view.toolbar.destroyV2Topic();
         const topicSpec = view.topics[topic];
         if (topicSpec.version === 2) {
           view.toolbar.initializeV2Topic(topicSpec, language);
@@ -240,6 +241,13 @@ module.exports = function(view) {
       }
 
       view.toolbar.toggleEnhanceButton();
+    },
+
+    destroyV2Topic: function() {
+      const selectionsContainer = document.querySelector('#selections-container');
+      if (selectionsContainer) {
+        selectionsContainer.remove();
+      }
     },
 
     initializeV2Topic: function(topic, language) {
