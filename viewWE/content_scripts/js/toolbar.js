@@ -260,6 +260,9 @@ module.exports = function(view) {
         enhanceButton.setAttribute('disabled', false);
       });
 
+      const toolbar = document.querySelector('#wertiview-toolbar');
+      toolbar.insertBefore(activityPicker.render(), enhanceButton);
+
       activityPicker.onActivitySelected((activity) => {
         try {
           topicView.selectActivity(activity);
