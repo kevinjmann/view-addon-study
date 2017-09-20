@@ -46,9 +46,14 @@ export default class ActivityPicker {
   render() {
     // render options and register fireEvent on this.listeners for onchange
     const select = renderSelect(getActivityList(this.activities));
+    const listeners = this.listeners;
+    select.onchange = () => {
+      fireEvent(listeners, select.value);
+    };
 
     // remove old activity selector
     document.querySelector('#wertiview-toolbar-activity-menu').classList.add('hidden');
+    return select;
   }
 
   // reinstate old activity selector
