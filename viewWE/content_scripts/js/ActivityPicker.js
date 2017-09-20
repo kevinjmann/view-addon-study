@@ -14,7 +14,10 @@ const getActivityList = function(activities) {
 };
 
 const renderOption = ({ title, value }) => {
-
+  const option = document.createElement('option');
+  option.setAttribute('value', value);
+  option.textContent = title;
+  return option;
 };
 
 const renderSelect = (activityList) => {
