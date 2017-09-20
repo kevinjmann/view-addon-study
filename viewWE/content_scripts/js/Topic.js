@@ -9,6 +9,7 @@ const addSelectionPickerToToolbar = (selectionPicker) => {
 
 export default class Topic {
   constructor(spec, language) {
+    this.title = spec.title;
     this.spec = spec[language];
     this.readyHandlers = [];
 
@@ -19,8 +20,8 @@ export default class Topic {
   }
 
   selectActivity(activity) {
-    if (!this.spec[activity]) {
-      throw new Error(`The activity ${activity} is unavailable for ${this.spec.title}.`);
+    if (!this.spec.activities[activity]) {
+      throw new Error(`The activity ${activity} is unavailable for ${this.title}.`);
     }
 
     this.enhancer = new Enhancer(activity, this.spec[activity]);
