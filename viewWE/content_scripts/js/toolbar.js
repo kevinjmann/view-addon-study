@@ -248,6 +248,7 @@ module.exports = function(view) {
       if (selectionsContainer) {
         selectionsContainer.remove();
       }
+      document.querySelector('#wertiview-toolbar-activity-menu').classList.remove('hidden');
     },
 
     initializeV2Topic: function(topic, language) {
