@@ -34,7 +34,7 @@ const renderSelect = (activityList) => {
 };
 
 export default class ActivityPicker {
-  construct(activities) {
+  constructor(activities) {
     this.listeners = [];
     this.activities = activities;
     this.oldSelector = document.querySelector('#wertiview-toolbar-activity-menu');
