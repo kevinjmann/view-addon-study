@@ -264,7 +264,7 @@ module.exports = function(view) {
         try {
           topicView.selectActivity(activity);
         } catch (e) {
-          view.notifications.add(e.getMessage());
+          view.notification.add(e.message);
         }
       });
 
@@ -272,7 +272,7 @@ module.exports = function(view) {
         try {
           topicView.runActivity();
         } catch (e) {
-          view.notifications.add(e.getMessage());
+          view.notification.add(e.message);
         }
       };
     },
