@@ -37,7 +37,6 @@ export default class ActivityPicker {
   constructor(activities) {
     this.listeners = [];
     this.activities = activities;
-    this.oldSelector = document.querySelector('#wertiview-toolbar-activity-menu');
   }
 
   onActivitySelected(f) {
@@ -49,13 +48,12 @@ export default class ActivityPicker {
     const select = renderSelect(getActivityList(this.activities));
 
     // remove old activity selector
-    this.oldSelector.classList.add('hidden');
+    document.querySelector('#wertiview-toolbar-activity-menu').classList.add('hidden');
   }
 
   // reinstate old activity selector
   destroy() {
     document.querySelector('activityV2-picker').remove();
     this.listeners = [];
-    this.oldSelector.classList.remove('hidden');
   }
 }
