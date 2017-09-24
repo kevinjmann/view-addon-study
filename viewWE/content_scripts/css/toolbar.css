@@ -39,14 +39,25 @@
     margin-top: 4px;
 }
 
+/* Select Box Styles: bavotasan.com Method (with special adaptations by ericrasch.com) */
+/* Source: http://bavotasan.com/2011/style-select-box-using-only-css/ */
 .wertiview-toolbar-menu {
-    padding: 4px;
-    font-size: 16px;
+    height: 29px;
+    overflow: hidden;
+    width: 180px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
     border: none;
     cursor: pointer;
-    background: white;
+    padding: 4px;
     float: left;
-    margin-left: 5px;
+    margin: 0 0 0 5px;
+    font-size: 16px;
+    font-family: sans-serif;
+}
+
+.wertiview-toolbar-menu.slate {
+    background: white url(../../icons/select_menu_arrow_32.png) no-repeat right center;
 }
 
 .wertiview-toolbar-btn {
@@ -57,7 +68,10 @@
     border: none;
     cursor: pointer;
     float: left;
-    margin-left: 5px;
+    margin: 0 0 0 5px;
+    height: 29px;
+    font-family: sans-serif;
+    line-height: normal;
 }
 
 .wertiview-toolbar-btn:hover:not(:disabled),
