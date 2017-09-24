@@ -61,6 +61,8 @@ describe("toolbar.js", function() {
       // the expectations below don't need to be tested in other tests again
       // the selectors below can be freely used in the tests without problems
 
+      expect($(toolbarStart + "toggle-button").length).to.be.above(0);
+
       expect($("#wertiview-VIEW-menu").length).to.be.above(0);
 
       expect($(toolbarStart + "enabled-checkbox").length).to.be.above(0);
@@ -118,8 +120,6 @@ describe("toolbar.js", function() {
       expect($(toolbarStart + "restore-button").length).to.be.above(0);
       expect($(toolbarStart + "abort-button").length).to.be.above(0);
       expect($(toolbarStart + "loading").length).to.be.above(0);
-
-      expect($(toolbarStart + "toggle-button").length).to.be.above(0);
 
       expect($(toolbarStart + "account-sign-in-button").length).to.be.above(0);
       expect($(toolbarStart + "account-menu-button").length).to.be.above(0);
