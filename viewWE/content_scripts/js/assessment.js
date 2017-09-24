@@ -6,6 +6,8 @@ module.exports = {
   NO_DIAGNOSIS: "Unknown error",
   WRONG_LEMMA: "Word choice error in lemma",
   WRONG_POS: "Word choice error in part-of-speech",
+  WRONG_CLICK: "Word choice error in click",
+  WRONG_CLICK_BASIC: "Word choice error in click",
   WRONG_NUMBER: "Word form error in number",
   WRONG_CASE: "Word form error in case",
   WRONG_NUMBER_AND_CASE: "Word form error in number and case",
