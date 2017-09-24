@@ -11,7 +11,7 @@ module.exports = function(view) {
     add: function($Element) {
       const $Container = $("<div id='wertiview-container'>");
 
-      $Element.children().wrapAll("<div id='wertiview-content'>");
+      $Element.contents().wrapAll("<div id='wertiview-content'>");
 
       const originalContent = view.lib.getAndUpdateOriginalContent();
 
