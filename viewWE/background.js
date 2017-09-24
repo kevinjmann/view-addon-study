@@ -7,7 +7,24 @@ const theServerURL = "https://view.aleks.bg";
 const $ = require('jquery');
 
 const background = {
+  tabs: [],
   currentTabId: -1,
+
+  /**
+   * Install the addon:
+   *
+   * - load topics into storage
+   * - set defaults
+   *
+   * @param {Object} details Details for the update event. See
+   *  https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/runtime/onInstalled
+   */
+  install: function(details) {
+    if (details.reason === "install" || details.reason === "update") {
+      background.setDefaults();
+    }
+  },
+
   /**
    * Set all default values to storage.
    * This is only toggleed once after the add-on was installed.
@@ -72,21 +89,65 @@ const background = {
   },
 
   /**
-   * Create a basic notification containing an id, the
-   * "basic" type a title and a message.
+   * When the tab starts loading, the url is set or tab finished loading
+   * this event will be fired.
    *
-   * @param {string} id the id
-   * @param {string} title the title
-   * @param {string} message the message
+   * If the latter event occurs the toolbar will be toggled when the user
+   * wanted to open the toolbar before the tab was loaded.
+   *
+   * @param tabId {number} the current tab id
+   * @param changeInfo {object} the info about the change
    */
-  createBasicNotification: function(id, title, message) {
-    chrome.notifications.create(
-      id, {
-        "type": "basic",
-        "title": title,
-        "message": message,
-        "iconUrl": require('./icons/view-96.png')
-      });
+  onUpdatedTab: function(tabId, changeInfo) {
+    if(background.tabs[tabId].isWaiting && changeInfo.status === "complete"){
+      background.toggleToolbar(tabId);
+    }
+  },
+
+  /**
+   * Handle the browser action button.
+   * Set defaults, if necessary.
+   * Toggle the toolbar when the tab is ready, otherwise wait.
+   *
+   * @param {object} tab the current tab info
+   */
+  clickButton: function(tab) {
+    chrome.storage.local.get("serverURL", storage => {
+      if (!storage.serverURL) {
+        background.setDefaults();
+      }
+
+      const tabId = tab.id;
+
+      background.currentTabId = tabId;
+
+      if(tab.status === "complete"){
+        background.toggleToolbar(tabId);
+      }
+      else{
+        background.tabs[tabId] = {isWaiting: true};
+        background.addBlur(tabId, "The page is still loading...");
+      }
+    });
+  },
+
+  /**
+   * Stop waiting for the tab to load and
+   * send the message to toggle the toolbar.
+   */
+  toggleToolbar(tabId) {
+    background.tabs[tabId] = {isWaiting: false};
+    chrome.tabs.sendMessage(tabId, {action: "toggleToolbar"});
+  },
+
+  /**
+   * Send the message to blur the page.
+   */
+  addBlur(tabId, html) {
+    chrome.tabs.sendMessage(tabId, {
+      action: "addBlur",
+      html: html
+    });
   },
 
   /**
@@ -508,6 +569,24 @@ const background = {
   },
 
   /**
+   * Create a basic notification containing an id, the
+   * "basic" type a title and a message.
+   *
+   * @param {string} id the id
+   * @param {string} title the title
+   * @param {string} message the message
+   */
+  createBasicNotification: function(id, title, message) {
+    chrome.notifications.create(
+      id, {
+        "type": "basic",
+        "title": title,
+        "message": message,
+        "iconUrl": require('./icons/view-96.png')
+      });
+  },
+
+  /**
    * Create an unknown error notification when no judgement can be made.
    */
   createUnknownErrorNotification: function() {
@@ -516,6 +595,19 @@ const background = {
       "Unknown error!",
       "The VIEW server encountered an unknown error."
     );
+  },
+
+  /**
+   * Observe the user id cookie when it changes.
+   *
+   * @param {Object} changeInfo the object containing information
+   * whether the cookie was removed, the cookie itself and the
+   * reason for its change
+   */
+  observeUserId: function(changeInfo) {
+    if ("wertiview_userid" === changeInfo.cookie.name) {
+      background.processUserIdCookie(changeInfo);
+    }
   },
 
   /**
@@ -583,7 +675,7 @@ const background = {
     }
 
     const storage = new Storage();
-    return storage.get('serverURL')
+    return storage.get("serverURL")
       .then(data => new ViewServer(data.serverURL))
       .then(server => server.getCustomToken(account.user.token))
       .then(response => storage.set({
@@ -618,69 +710,18 @@ const background = {
   },
 
   /**
-   * Send a request to the content script to call view.accountMenu.setAccountInfo().
+   * Send a request to the content script to call
+   * view.accountMenu.setAccountInfo().
    */
   requestToSetAccountInfo: function() {
     chrome.tabs.sendMessage(background.currentTabId, {action: "setAccountInfo"});
-  },
-
-  /**
-   * Handle the browser action button.
-   * Initialize topics, if necessary, and toggleOrAdd the toolbar.
-   *
-   * @param {number} tab the tab the toolbar
-   * is located at
-   */
-  clickButton: function(tab) {
-    chrome.storage.local.get("serverURL", storage => {
-      if (!storage.serverURL) {
-        background.setDefaults();
-      }
-
-      background.currentTabId = tab.id;
-      background.toggleToolbar(tab.id);
-    });
-  },
-
-  /**
-   * Send the message to toggle the toolbar
-   */
-  toggleToolbar(tabId) {
-    chrome.tabs.sendMessage(tabId, {action: "toggleToolbar"});
-  },
-
-  /**
-   * Observe the user id cookie when it changes.
-   *
-   * @param {Object} changeInfo the object containing information
-   * whether the cookie was removed, the cookie itself and the
-   * reason for its change
-   */
-  observeUserId: function(changeInfo) {
-    if ("wertiview_userid" === changeInfo.cookie.name) {
-      background.processUserIdCookie(changeInfo);
-    }
-  },
-
-  /**
-   * Install the addon:
-   *
-   * - load topics into storage
-   * - set defaults
-   *
-   * @param {Object} details Details for the update event. See
-   *  https://developer.mozilla.org/en-US/Add-ons/WebExtensions/API/runtime/onInstalled
-   */
-  install: function(details) {
-    if (details.reason === "install" || details.reason === "update") {
-      background.setDefaults();
-    }
   }
 };
 
+chrome.runtime.onInstalled.addListener(background.install);
+chrome.tabs.onUpdated.addListener(background.onUpdatedTab);
 chrome.browserAction.onClicked.addListener(background.clickButton);
 chrome.runtime.onMessage.addListener(background.processMessage);
 chrome.cookies.onChanged.addListener(background.observeUserId);
-chrome.runtime.onInstalled.addListener(background.install);
 
 export {background}
