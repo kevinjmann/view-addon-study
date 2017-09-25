@@ -41,7 +41,6 @@ module.exports = function(config) {
     files: [
       'viewWE-test/karma.entry.js',
       'viewWE-test/fixtures/*.html',
-      'viewWE-test/fixtures/*.css',
       'viewWE-test/fixtures/json/*.json'
     ],
 

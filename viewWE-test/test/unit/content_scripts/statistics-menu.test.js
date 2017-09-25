@@ -260,7 +260,7 @@ describe("statistics-menu.js", function() {
 
           view.statisticsMenu.verifyLatestTask();
 
-          expect($(view.statisticsMenu.selectorStart + "latest-task").css("display")).to.equal("block");
+          expect($(view.statisticsMenu.selectorStart + "latest-task").is(":visible")).to.be.true;
         });
       });
 

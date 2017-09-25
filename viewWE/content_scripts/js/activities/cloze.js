@@ -7,7 +7,7 @@ module.exports = function(view) {
      * Add a blur overlay before enhancement.
      */
     initialize: function() {
-      view.blur.add();
+      view.blur.add("Preparing page for cloze activity...");
     },
 
     /**
