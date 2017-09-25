@@ -20,8 +20,6 @@ describe("background.js", function() {
 
   before(function() {
     window.chrome = chrome;
-    chrome.runtime.onMessage.addListener(background.processMessage);
-    chrome.cookies.onChanged.addListener(background.observeUserId);
   });
 
   beforeEach(function() {
@@ -40,34 +38,115 @@ describe("background.js", function() {
     chrome.tabs.create.reset();
     chrome.runtime.openOptionsPage.reset();
     background.currentTabId = -1;
-    background.clickCounter = 0;
-    background.topics = {};
+    background.tabs = [];
   });
 
   describe("installation", () => {
     it("Should call setDefaults on install", () => {
-      const install = sandbox.stub(background, "setDefaults");
+      const setDefaults = sandbox.stub(background, "setDefaults");
       background.install({reason: "install"});
-      sinon.assert.calledOnce(install);
+      sinon.assert.calledOnce(setDefaults);
     });
 
     it("Should call setDefaults on update", () => {
-      const install = sandbox.stub(background, "setDefaults");
+      const setDefaults = sandbox.stub(background, "setDefaults");
       background.install({reason: "update"});
-      sinon.assert.calledOnce(install);
+      sinon.assert.calledOnce(setDefaults);
     });
 
     it("Does not call setDefaults on other events", () => {
-      const install = sandbox.stub(background, "setDefaults");
+      const setDefaults = sandbox.stub(background, "setDefaults");
       background.install({reason: "foo"});
-      sinon.assert.notCalled(install);
+      sinon.assert.notCalled(setDefaults);
+    });
+  });
+
+  describe("onUpdatedTab", () => {
+    it("Should call toggleToolbar(tabId) when 'isWaiting' is true and the" +
+      " status is 'complete'", () => {
+      const toggleToolbar = sandbox.stub(background, "toggleToolbar");
+
+      const tabId = 1;
+
+      background.tabs[tabId] = {isWaiting: true};
+
+      background.onUpdatedTab(
+        tabId,
+        {status: "complete"}
+      );
+
+      sinon.assert.calledOnce(toggleToolbar);
+      sinon.assert.calledWithExactly(toggleToolbar, tabId);
+    });
+
+    it("Should not call toggleToolbar(tabId) when 'isWaiting' is false and" +
+      " the status is 'complete'", () => {
+      const toggleToolbar = sandbox.stub(background, "toggleToolbar");
+
+      const tabId = 1;
+
+      background.tabs[tabId] = {isWaiting: false};
+
+      background.onUpdatedTab(
+        tabId,
+        {status: "complete"}
+      );
+
+      sinon.assert.notCalled(toggleToolbar);
+    });
+
+    it("Should not call toggleToolbar(tabId) when 'isWaiting' is undefined" +
+      " and the status is 'complete'", () => {
+      const toggleToolbar = sandbox.stub(background, "toggleToolbar");
+
+      const tabId = 1;
+
+      background.tabs[tabId] = {};
+
+      background.onUpdatedTab(
+        tabId,
+        {status: "complete"}
+      );
+
+      sinon.assert.notCalled(toggleToolbar);
+    });
+
+    it("Should not call toggleToolbar(tabId) when 'isWaiting' is true and the" +
+      " status is 'loading'", () => {
+      const toggleToolbar = sandbox.stub(background, "toggleToolbar");
+
+      const tabId = 1;
+
+      background.tabs[tabId] = {isWaiting: true};
+
+      background.onUpdatedTab(
+        tabId,
+        {status: "loading"}
+      );
+
+      sinon.assert.notCalled(toggleToolbar);
+    });
+
+    it("Should not call toggleToolbar(tabId) when 'isWaiting' is true and the" +
+      " status is undefined", () => {
+      const toggleToolbar = sandbox.stub(background, "toggleToolbar");
+
+      const tabId = 1;
+
+      background.tabs[tabId] = {isWaiting: true};
+
+      background.onUpdatedTab(
+        tabId,
+        {}
+      );
+
+      sinon.assert.notCalled(toggleToolbar);
     });
   });
 
   describe("clickButton", function() {
     it("Should call setDefaults if no serverURL exists", () => {
-      const setDefaults = sandbox.spy(background, "setDefaults");
-      sandbox.spy(background, "toggleToolbar");
+      const setDefaults = sandbox.stub(background, "setDefaults");
 
       chrome.storage.local.get.yields({});
       background.clickButton({id: 1});
@@ -75,7 +154,7 @@ describe("background.js", function() {
     });
 
     it("Should not call setDefaults if serverURL exists", () => {
-      const setDefaults = sandbox.spy(background, "setDefaults");
+      const setDefaults = sandbox.stub(background, "setDefaults");
       chrome.storage.local.get.yields({"serverURL": "foo"});
       background.clickButton({id: 1});
 
@@ -145,17 +224,137 @@ describe("background.js", function() {
       });
     });
 
-    it("should send a message to toggle or add the toolbar without setting topics otherwise", function() {
+    it("should call toggleToolbar(tabId) when the tab status is" +
+      " 'complete'", function() {
       chrome.storage.local.get.yields({serverURL: "foo"});
-      const toggleToolbar = sandbox.spy(background, "toggleToolbar");
+      const toggleToolbar = sandbox.stub(background, "toggleToolbar");
 
-      background.clickButton({id: 1});
+      const tabId = 1;
+
+      background.clickButton({
+        id: tabId,
+        status: "complete"
+      });
 
       sinon.assert.calledOnce(toggleToolbar);
+      sinon.assert.calledWithExactly(toggleToolbar, tabId);
+    });
+
+    it("should send a message to toggle the toolbar", function() {
+      chrome.storage.local.get.yields({serverURL: "foo"});
+
+      background.toggleToolbar(5);
+
+      sinon.assert.calledOnce(chrome.tabs.sendMessage);
+      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {action: "toggleToolbar"});
+    });
+
+    it("should set 'isWaiting' to true if tab status is 'loading'", function() {
+      chrome.storage.local.get.yields({serverURL: "foo"});
+
+      const tabId = 1;
+
+      background.clickButton({
+        id: tabId,
+        status: "loading"
+      });
+
+      expect(background.tabs[tabId].isWaiting).to.be.true;
+    });
+
+    it("should call addBlur(html) if tab status is 'loading'", function() {
+      chrome.storage.local.get.yields({serverURL: "foo"});
+      const addBlur = sandbox.stub(background, "addBlur");
+
+      const tabId = 1;
+
+      background.clickButton({
+        id: tabId,
+        status: "loading"
+      });
+
+      sinon.assert.calledOnce(addBlur);
+      sinon.assert.calledWithExactly(addBlur,
+        tabId,
+        "The page is still loading..."
+      );
+    });
+
+    it("should send a message to add blur", function() {
+      chrome.storage.local.get.yields({serverURL: "foo"});
+
+      const html = "some html";
+
+      background.addBlur(5, html);
+
+      sinon.assert.calledOnce(chrome.tabs.sendMessage);
+      sinon.assert.calledWithExactly(chrome.tabs.sendMessage, 5, {
+        action: "addBlur",
+        html
+      });
     });
   });
 
-  describe("createBasicNotification", function() {
+  describe("processMessage", function() {
+    it("should process the message 'openOptionsPage'", function() {
+      const openOptionsPageSpy = sandbox.spy(background, "openOptionsPage");
+
+      const request = {action: "openOptionsPage"};
+      const sender = {tab: {id: 5}};
+      const sendResponse = sandbox.spy();
+      const parameters = {
+        request,
+        sender,
+        sendResponse
+      };
+
+      background.processMessage(request, sender, sendResponse);
+
+      sinon.assert.calledOnce(openOptionsPageSpy);
+      sinon.assert.calledWithExactly(openOptionsPageSpy, parameters);
+
+      sinon.assert.calledOnce(chrome.runtime.openOptionsPage);
+    });
+
+    it("should process the message 'openHelpPage'", function() {
+      const openHelpPageSpy = sandbox.spy(background, "openHelpPage");
+
+      const request = {action: "openHelpPage"};
+      const sender = {tab: {id: 5}};
+      const sendResponse = sandbox.spy();
+      const parameters = {
+        request,
+        sender,
+        sendResponse
+      };
+
+      background.processMessage(request, sender, sendResponse);
+
+      sinon.assert.calledOnce(openHelpPageSpy);
+      sinon.assert.calledWithExactly(openHelpPageSpy, parameters);
+
+      sinon.assert.calledOnce(chrome.tabs.create);
+      sinon.assert.calledWithExactly(chrome.tabs.create,
+        {url: "http://sifnos.sfs.uni-tuebingen.de/VIEW/index.jsp?content=activities"});
+    });
+
+    it("should create the 'unhandled-message-notification', because 'action' function does not exist", function() {
+      const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
+
+      const request = {action: "some unhandled message"};
+      const sender = {tab: {id: 5}};
+      const sendResponse = sandbox.spy();
+
+      const id = "unhandled-message-notification";
+      const title = "Unhandled Message!";
+      const message = "There was no handler for message: " + JSON.stringify(request) + "!";
+
+      background.processMessage(request, sender, sendResponse);
+
+      sinon.assert.calledOnce(createBasicNotificationSpy);
+      sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
+    });
+
     it("should create a basic notification", function() {
       const id = "some-unique-id";
       const title = "some title shown in notice header";
@@ -177,71 +376,6 @@ describe("background.js", function() {
         }
       );
     });
-  });
-
-  describe("processMessage", function() {
-    it("should register one listener for runtime onMessage", function() {
-      sinon.assert.calledOnce(chrome.runtime.onMessage.addListener);
-    });
-
-    it("should process the message 'openOptionsPage'", function() {
-      const openOptionsPageSpy = sandbox.spy(background, "openOptionsPage");
-
-      const request = {action: "openOptionsPage"};
-      const sender = {tab: {id: 5}};
-      const sendResponse = sandbox.spy();
-      const parameters = {
-        request,
-        sender,
-        sendResponse
-      };
-
-      chrome.runtime.onMessage.trigger(request, sender, sendResponse);
-
-      sinon.assert.calledOnce(openOptionsPageSpy);
-      sinon.assert.calledWithExactly(openOptionsPageSpy, parameters);
-
-      sinon.assert.calledOnce(chrome.runtime.openOptionsPage);
-    });
-
-    it("should process the message 'openHelpPage'", function() {
-      const openHelpPageSpy = sandbox.spy(background, "openHelpPage");
-
-      const request = {action: "openHelpPage"};
-      const sender = {tab: {id: 5}};
-      const sendResponse = sandbox.spy();
-      const parameters = {
-        request,
-        sender,
-        sendResponse
-      };
-
-      chrome.runtime.onMessage.trigger(request, sender, sendResponse);
-
-      sinon.assert.calledOnce(openHelpPageSpy);
-      sinon.assert.calledWithExactly(openHelpPageSpy, parameters);
-
-      sinon.assert.calledOnce(chrome.tabs.create);
-      sinon.assert.calledWithExactly(chrome.tabs.create,
-        {url: "http://sifnos.sfs.uni-tuebingen.de/VIEW/index.jsp?content=activities"});
-    });
-
-    it("should create the 'unhandled-message-notification', because 'action' function does not exist", function() {
-      const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
-
-      const request = {action: "some unhandled message"};
-      const sender = {tab: {id: 5}};
-      const sendResponse = sandbox.spy();
-
-      const id = "unhandled-message-notification";
-      const title = "Unhandled Message!";
-      const message = "There was no handler for message: " + JSON.stringify(request) + "!";
-
-      chrome.runtime.onMessage.trigger(request, sender, sendResponse);
-
-      sinon.assert.calledOnce(createBasicNotificationSpy);
-      sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
-    });
 
     it("should create the 'unhandled-message-notification', because the 'action' parameter is missing", function() {
       const createBasicNotificationSpy = sandbox.spy(background, "createBasicNotification");
@@ -254,7 +388,7 @@ describe("background.js", function() {
       const title = "Unhandled Message!";
       const message = "There was no handler for message: " + JSON.stringify(request) + "!";
 
-      chrome.runtime.onMessage.trigger(request, sender, sendResponse);
+      background.processMessage(request, sender, sendResponse);
 
       sinon.assert.calledOnce(createBasicNotificationSpy);
       sinon.assert.calledWithExactly(createBasicNotificationSpy, id, title, message);
@@ -305,7 +439,7 @@ describe("background.js", function() {
               sendResponse
             };
 
-            chrome.runtime.onMessage.trigger(request, sender, sendResponse);
+            background.processMessage(request, sender, sendResponse);
 
             sinon.assert.calledOnce(sendActivityDataAndGetEnhancementMarkupSpy);
             sinon.assert.calledWithExactly(sendActivityDataAndGetEnhancementMarkupSpy, parameters);
@@ -422,7 +556,7 @@ describe("background.js", function() {
               sendResponse
             };
 
-            chrome.runtime.onMessage.trigger(request, sender, sendResponse);
+            background.processMessage(request, sender, sendResponse);
 
             sinon.assert.calledOnce(sendTaskDataAndGetTaskIdSpy);
             sinon.assert.calledWithExactly(sendTaskDataAndGetTaskIdSpy, parameters);
@@ -535,7 +669,7 @@ describe("background.js", function() {
               sendResponse
             };
 
-            chrome.runtime.onMessage.trigger(request, sender, sendResponse);
+            background.processMessage(request, sender, sendResponse);
 
             sinon.assert.calledOnce(sendTrackingDataSpy);
             sinon.assert.calledWithExactly(sendTrackingDataSpy, parameters);
@@ -666,7 +800,7 @@ describe("background.js", function() {
               sendResponse
             };
 
-            chrome.runtime.onMessage.trigger(request, sender, sendResponse);
+            background.processMessage(request, sender, sendResponse);
 
             sinon.assert.calledOnce(getAllTasksSpy);
             sinon.assert.calledWithExactly(getAllTasksSpy, parameters);
@@ -790,7 +924,7 @@ describe("background.js", function() {
               sendResponse
             };
 
-            chrome.runtime.onMessage.trigger(request, sender, sendResponse);
+            background.processMessage(request, sender, sendResponse);
 
             sinon.assert.calledOnce(getTaskSpy);
             sinon.assert.calledWithExactly(getTaskSpy, parameters);
@@ -1120,17 +1254,13 @@ describe("background.js", function() {
     });
   });
 
-  describe("cookies", function() {
-    it("should register one listener for cookies onChanged", function() {
-      sinon.assert.calledOnce(chrome.cookies.onChanged.addListener);
-    });
-
+  describe("observeUserId", function() {
     it("should register a change event on the correct cookie", function() {
       const processUserIdCookieSpy = sandbox.spy(background, "processUserIdCookie");
 
       const cookieChangeInfo = {cookie: {name: "wertiview_userid"}};
 
-      chrome.cookies.onChanged.trigger(cookieChangeInfo);
+      background.observeUserId(cookieChangeInfo);
 
       sinon.assert.calledOnce(processUserIdCookieSpy);
       sinon.assert.calledWithExactly(processUserIdCookieSpy, cookieChangeInfo);
@@ -1141,7 +1271,7 @@ describe("background.js", function() {
 
       const cookieChangeInfo = {cookie: {name: "unknown_cookie"}};
 
-      chrome.cookies.onChanged.trigger(cookieChangeInfo);
+      background.observeUserId(cookieChangeInfo);
 
       sinon.assert.notCalled(processUserIdCookieSpy);
     });
