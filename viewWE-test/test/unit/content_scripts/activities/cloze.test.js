@@ -44,12 +44,13 @@ describe("cloze.js", function() {
   });
 
   describe("initialize", function() {
-    it("should call blur.add()", function() {
+    it("should call blur.add(html)", function() {
       const blurAddStub = sandbox.stub(view.blur, "add");
 
       view.cloze.initialize();
 
       sinon.assert.calledOnce(blurAddStub);
+      sinon.assert.calledWithExactly(blurAddStub, "Preparing page for cloze activity...");
     });
   });
 
