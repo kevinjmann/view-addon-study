@@ -164,6 +164,7 @@ describe("toolbar.js", function() {
         const initToggleToolbarStub = sandbox.stub(view.toolbar, "initToggleToolbarBtn");
         const restoreSelectionsStub = sandbox.stub(view.toolbar, "restoreSelections");
         const toggleStub = sandbox.stub(view.toolbar, "toggle");
+        const blurRemove = sandbox.stub(view.blur, "remove");
 
         view.toolbar.init();
 
@@ -181,6 +182,7 @@ describe("toolbar.js", function() {
         sinon.assert.calledOnce(initToggleToolbarStub);
         sinon.assert.calledOnce(restoreSelectionsStub);
         sinon.assert.calledOnce(toggleStub);
+        sinon.assert.calledOnce(blurRemove);
       });
 
       describe("initViewMenu", function() {

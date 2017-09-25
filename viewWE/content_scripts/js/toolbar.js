@@ -88,6 +88,8 @@ module.exports = function(view) {
       view.toolbar.restoreSelections();
 
       view.toolbar.toggle();
+
+      view.blur.remove();
     },
 
     /**
