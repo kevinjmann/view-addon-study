@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import view from './view.js';
 
 /**
@@ -9,6 +8,9 @@ function processMessage(request) {
   switch (request.action) {
     case "toggleToolbar":
       view.toolbar.toggleToolbar();
+      break;
+    case "addBlur":
+      view.blur.add(request.html);
       break;
     case "setAccountInfo":
       view.accountMenu.setAccountInfo();
