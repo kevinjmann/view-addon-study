@@ -9,7 +9,12 @@ module.exports = {
     if ($("#wertiview-blur").length === 0) {
       const $overlay = $("<div>");
       $overlay.attr("id", "wertiview-blur");
-      $overlay.html(html);
+
+      const $Html = $("<span>");
+      $Html.attr("id", "wertiview-blur-html");
+      $Html.html(html);
+
+      $overlay.html($Html);
 
       const $LoadingDiv = $("<div>");
       $LoadingDiv.attr("id", "wertiview-blur-loading");
