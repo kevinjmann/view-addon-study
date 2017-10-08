@@ -28,6 +28,8 @@ export default class Toolbar {
         fireEvent(handlers.onSelectTopic, { language, topic: topicSelect.value });
       });
     });
+
+    return this;
   }
 
   onSelectLanguage(f) {

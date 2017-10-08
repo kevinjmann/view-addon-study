@@ -34,10 +34,10 @@ const renderSelect = (activityList) => {
 };
 
 export default class ActivityPicker {
-  constructor(activities) {
+  constructor(activities, beforeElement) {
     this.listeners = [];
     this.activities = activities;
-    this.activityPicker = null;
+    this.beforeElement = beforeElement;
   }
 
   onActivitySelected(f) {
@@ -45,26 +45,12 @@ export default class ActivityPicker {
   }
 
   render() {
-    // render options and register fireEvent on this.listeners for onchange
     const select = renderSelect(getActivityList(this.activities));
     const listeners = this.listeners;
-    select.onchange = () => {
+    select.addEventListener('change', () => {
       fireEvent(listeners, select.value);
-    };
+    });
 
-    // remove old activity selector
-    document.querySelector('#wertiview-toolbar-activity-menu').classList.add('hidden');
-    this.activityPicker = select;
     return select;
-  }
-
-  // reinstate old activity selector
-  destroy() {
-    console.log('destroying');
-    if (this.activityPicker) {
-      this.activityPicker.parentNode.removeChild(this.activityPicker);
-    }
-    document.querySelector('#wertiview-toolbar-activity-menu').classList.remove('hidden');
-    this.listeners = [];
   }
 }
