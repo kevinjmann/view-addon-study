@@ -44,6 +44,10 @@ export default class Topic {
     this.selections.onUpdate(newSelections => enhancer.update(newSelections));
   }
 
+  selectTopic({ language, topic }) {
+    console.log(`${topic}/${language}`);
+  }
+
   show() {
     
   }
@@ -80,10 +84,6 @@ export default class Topic {
       } catch (e) {
         view.notification.add(e.message);
       }
-    };
-
-    topicSelect.onchange = () => {
-      activityPicker.destroy();
     };
   }
 }

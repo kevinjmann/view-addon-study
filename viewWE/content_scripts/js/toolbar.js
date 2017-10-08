@@ -2,6 +2,7 @@ const $ = require('jquery');
 const toolbarHTML = require('../html/toolbar.html');
 import SelectorCache from '../../SelectorCache';
 import Topic from './V2/Topic';
+import V2Toolbar from './V2/Toolbar.js';
 
 module.exports = function(view) {
   return {
@@ -100,12 +101,16 @@ module.exports = function(view) {
      * that are V2, and start them.
      */
     initializeV2Topics: function() {
+      const toolbar = new V2Toolbar();
+      toolbar.start();
+
       Object.keys(view.topics).forEach((topicName) => {
         const topic = view.topics[topicName];
         if (topic.version && topic.version === 2) {
           Object.keys(topic.languages).forEach((language) => {
             const topicView = new Topic(topic.title, topic.languages[language], language);
             topicView.start();
+            toolbar.onSelectTopic(data => topicView.selectTopic(data));
           });
         }
       });
