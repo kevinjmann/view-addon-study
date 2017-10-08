@@ -2,6 +2,7 @@ import view from './view';
 import Enhancer from './activities/Enhancer';
 import Selections from './activities/Selections';
 import fireEvent from './Events';
+import ActivityPicker from './ActivityPicker';
 
 const addSelectionPickerToToolbar = (selectionPicker) => {
   document.querySelector('body').append(selectionPicker);
@@ -9,6 +10,7 @@ const addSelectionPickerToToolbar = (selectionPicker) => {
 
 export default class Topic {
   constructor(spec, language) {
+    this.language = language;
     this.title = spec.title;
     this.spec = spec[language];
     this.readyHandlers = [];
@@ -39,6 +41,41 @@ export default class Topic {
 
     const enhancer = this.enhancer;
     enhancer.enhance(this.selections.getSelections());
-    this.selections.onUpdate((newSelections) => enhancer.update(newSelections));
+    this.selections.onUpdate(newSelections => enhancer.update(newSelections));
+  }
+
+  start() {
+    const toolbar = document.getElementById('wertiview-toolbar');
+    const enhanceButton = document.getElementById('wertiview-toolbar-enhance-button');
+    const topicSelect = document.getElementById(`wertiview-toolbar-topic-menu-${this.language}`);
+
+    const activityPicker = new ActivityPicker(this.spec.activities);
+
+    this.onTopicReady(() => {
+      enhanceButton.setAttribute('disabled', false);
+    });
+
+    toolbar.insertBefore(activityPicker.render(), enhanceButton);
+
+    const topicView = this;
+    activityPicker.onActivitySelected((activity) => {
+      try {
+        topicView.selectActivity(activity);
+      } catch (e) {
+        view.notification.add(e.message);
+      }
+    });
+
+    enhanceButton.onclick = () => {
+      try {
+        topicView.runActivity();
+      } catch (e) {
+        view.notification.add(e.message);
+      }
+    };
+
+    topicSelect.onchange = () => {
+      activityPicker.destroy();
+    };
   }
 }

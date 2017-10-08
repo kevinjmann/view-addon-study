@@ -37,6 +37,7 @@ export default class ActivityPicker {
   constructor(activities) {
     this.listeners = [];
     this.activities = activities;
+    this.activityPicker = null;
   }
 
   onActivitySelected(f) {
@@ -53,12 +54,17 @@ export default class ActivityPicker {
 
     // remove old activity selector
     document.querySelector('#wertiview-toolbar-activity-menu').classList.add('hidden');
+    this.activityPicker = select;
     return select;
   }
 
   // reinstate old activity selector
   destroy() {
-    document.querySelector('activityV2-picker').remove();
+    console.log('destroying');
+    if (this.activityPicker) {
+      this.activityPicker.parentNode.removeChild(this.activityPicker);
+    }
+    document.querySelector('#wertiview-toolbar-activity-menu').classList.remove('hidden');
     this.listeners = [];
   }
 }

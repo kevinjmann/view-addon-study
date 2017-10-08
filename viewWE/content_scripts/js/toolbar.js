@@ -2,7 +2,6 @@ const $ = require('jquery');
 const toolbarHTML = require('../html/toolbar.html');
 import SelectorCache from '../../SelectorCache';
 import Topic from './Topic';
-import ActivityPicker from './ActivityPicker';
 
 module.exports = function(view) {
   return {
@@ -231,7 +230,6 @@ module.exports = function(view) {
           !topic.startsWith(unselected) &&
           view.topics[topic] &&
           view.topics[topic][language]) {
-        view.toolbar.destroyV2Topic();
         const topicSpec = view.topics[topic];
         if (topicSpec.version === 2) {
           view.toolbar.initializeV2Topic(topicSpec, language);
@@ -243,41 +241,9 @@ module.exports = function(view) {
       view.toolbar.toggleEnhanceButton();
     },
 
-    destroyV2Topic: function() {
-      const selectionsContainer = document.querySelector('#selections-container');
-      if (selectionsContainer) {
-        selectionsContainer.remove();
-      }
-      document.querySelector('#wertiview-toolbar-activity-menu').classList.remove('hidden');
-    },
-
     initializeV2Topic: function(topic, language) {
       const topicView = new Topic(topic, language);
-      const enhanceButton = document.querySelector('#wertiview-toolbar-enhance-button');
-      const activityPicker = new ActivityPicker(topic[language].activities);
-
-      topicView.onTopicReady(() => {
-        enhanceButton.setAttribute('disabled', false);
-      });
-
-      const toolbar = document.querySelector('#wertiview-toolbar');
-      toolbar.insertBefore(activityPicker.render(), enhanceButton);
-
-      activityPicker.onActivitySelected((activity) => {
-        try {
-          topicView.selectActivity(activity);
-        } catch (e) {
-          view.notification.add(e.message);
-        }
-      });
-
-      enhanceButton.onclick = () => {
-        try {
-          topicView.runActivity();
-        } catch (e) {
-          view.notification.add(e.message);
-        }
-      };
+      topicView.start();
     },
 
     /**
