@@ -1,6 +1,6 @@
-import view from './view';
-import Enhancer from './activities/Enhancer';
-import Selections from './activities/Selections';
+import view from '../view';
+import Enhancer from './Activity/Enhancer';
+import Selections from './Activity/Selections';
 import fireEvent from './Events';
 import ActivityPicker from './ActivityPicker';
 
@@ -9,12 +9,12 @@ const addSelectionPickerToToolbar = (selectionPicker) => {
 };
 
 export default class Topic {
-  constructor(spec, language) {
+  constructor(title, spec, language) {
     this.language = language;
-    this.title = spec.title;
-    this.spec = spec[language];
-    this.readyHandlers = [];
+    this.title = spec;
+    this.spec = spec;
 
+    this.readyHandlers = [];
     this.selections = new Selections(this.spec.selections);
     addSelectionPickerToToolbar(this.selections.render());
 
@@ -42,6 +42,14 @@ export default class Topic {
     const enhancer = this.enhancer;
     enhancer.enhance(this.selections.getSelections());
     this.selections.onUpdate(newSelections => enhancer.update(newSelections));
+  }
+
+  show() {
+    
+  }
+
+  hide() {
+    
   }
 
   start() {
