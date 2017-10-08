@@ -91,6 +91,23 @@ module.exports = function(view) {
       view.toolbar.toggle();
 
       view.blur.remove();
+
+      view.toolbar.initializeV2Topics();
+    },
+
+    initializeV2Topics: function() {
+      // get all v2 topics & languages
+      Object.keys(view.topics).forEach((topicName) => {
+        const topic = view.topics[topicName];
+        if (topic.version && topic.version === 2) {
+          Object.keys(topic.languages).forEach((language) => {
+            const topicView = new Topic(topic.languages, language);
+          });
+        }
+      });
+      console.log(view.topics);
+      // const topicView = new Topic(topic, language);
+      // topicView.start();
     },
 
     /**
@@ -231,19 +248,12 @@ module.exports = function(view) {
           view.topics[topic] &&
           view.topics[topic][language]) {
         const topicSpec = view.topics[topic];
-        if (topicSpec.version === 2) {
-          view.toolbar.initializeV2Topic(topicSpec, language);
-        } else {
+        if (topicSpec.version !== 2) {
           view.toolbar.enableAndShowActivities(language, topic);
         }
       }
 
       view.toolbar.toggleEnhanceButton();
-    },
-
-    initializeV2Topic: function(topic, language) {
-      const topicView = new Topic(topic, language);
-      topicView.start();
     },
 
     /**
