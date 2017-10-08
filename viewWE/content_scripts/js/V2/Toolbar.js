@@ -18,15 +18,15 @@ export default class Toolbar {
 
     // register with all topic & language selects;
     const languageSelect = document.getElementById(`${idPrefix}-language-menu`);
-    languageSelect.onchange = () => {
+    languageSelect.addEventListener('change', () => {
       fireEvent(handlers.onSelectLanguage, languageSelect.value);
-    };
+    });
 
     [ 'de', 'en', 'ru' ].forEach(language => {
       const topicSelect = document.getElementById(`${idPrefix}-topic-menu-${language}`);
-      topicSelect.onchange = () => {
+      topicSelect.addEventListener('change', () => {
         fireEvent(handlers.onSelectTopic, { language, topic: topicSelect.value });
-      };
+      });
     });
   }
 
