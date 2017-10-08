@@ -68,7 +68,7 @@ export default class Topic {
     this.isShown = true;
     this.toolbar.insertBefore(this.activitySelect, this.enhanceButton);
     this.activityMenu.classList.add('hidden');
-    document.querySelector('body').append(this.selectionsWindow);
+    this.toolbar.append(this.selectionsWindow);
   }
 
   hide() {
