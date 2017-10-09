@@ -1,13 +1,12 @@
 /**
- * Call the server with a json body, expect a json body in return.
- * Private function, not exposed via ViewServer class.
+ * Call the server with a json body, expect a plain text body in return.
  *
  * @param {string} url The API endpoint to call
  * @param {Object} object The data which will be json-encoded.
  *
- * @return {Promise} Promise containing parsed JSON response
+ * @return {Promise} Promise containing plain response text
  */
-const _postJson = function(url, object) {
+const _postPlain = function(url, object) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open("POST", url);
@@ -15,8 +14,7 @@ const _postJson = function(url, object) {
     xhr.onload = () => {
       if (xhr.status === 200) {
         try {
-          const obj = JSON.parse(xhr.responseText);
-          resolve(obj);
+          resolve(xhr.responseText);
         } catch (e) {
           reject(e);
         }
@@ -27,6 +25,18 @@ const _postJson = function(url, object) {
     xhr.onerror = () => reject(Error("Network error. " + xhr.statusText));
     xhr.send(JSON.stringify(object));
   });
+};
+
+/**
+ * Call the server with a json body, expect a json body in return.
+ *
+ * @param {string} url The API endpoint to call
+ * @param {Object} object The data which will be json-encoded.
+ *
+ * @return {Promise} Promise containing parsed JSON response
+ */
+const _postJson = function(url, object) {
+  return _postPlain(url, object).then(result => JSON.stringify(result));
 };
 
 export default class ViewServer {
@@ -42,6 +52,10 @@ export default class ViewServer {
    * @return {Promise} Promise containing the custom token
    */
   async getCustomToken(token) {
-    return _postJson(this.url + "/user", { "token": token });
+    return _postJson(this.url + '/user', { token });
+  }
+
+  view({ topic, activity, url, language }) {
+    return _postPlain(this.url + '/view', { topic, activity, url, language });
   }
 }

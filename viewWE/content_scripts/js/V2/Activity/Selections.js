@@ -20,6 +20,7 @@ const renderSelectionItem = (base, item, selectionIndex, itemIndex) => {
   // event, use base.selections
   input.onchange = () => {
     base.selections[selectionIndex]['selectionItems'][itemIndex]['checked'] = input.checked;
+    fireEvent(base.onUpdateHandlers, base.selections);
   };
   label.prepend(input);
 
@@ -69,8 +70,7 @@ export default class Selections {
     return this.selections;
   }
 
-  onUpdate() {
-    const status = this.getSelections();
-    fireEvent(this.onUpdateHandlers, status);
+  onUpdate(f) {
+    this.onUpdateHandlers.push(f);
   }
 }

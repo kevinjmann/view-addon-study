@@ -107,7 +107,7 @@ module.exports = function(view) {
         const topic = view.topics[topicName];
         if (topic.version && topic.version === 2) {
           Object.keys(topic.languages).forEach((language) => {
-            const topicView = new Topic(topicName, topic.title, topic.languages[language], language);
+            const topicView = new Topic(topicName, topic.languages[language], language);
             toolbar.onSelectTopic(data => topicView.selectTopic(data));
           });
         }

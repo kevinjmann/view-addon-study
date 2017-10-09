@@ -38,14 +38,19 @@ export default class ActivityPicker {
     this.listeners = [];
     this.activities = activities;
     this.beforeElement = beforeElement;
+    this.select = renderSelect(getActivityList(this.activities));
   }
 
   onActivitySelected(f) {
     this.listeners.push(f);
   }
 
+  getActivity() {
+    return this.select.value;
+  }
+
   render() {
-    const select = renderSelect(getActivityList(this.activities));
+    const select = this.select;
     const listeners = this.listeners;
     select.addEventListener('change', () => {
       fireEvent(listeners, select.value);
