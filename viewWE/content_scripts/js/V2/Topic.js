@@ -11,12 +11,13 @@ export default class Topic {
     this.topicName = topicName;
     this.language = language;
 
-    this.markup = new Markup(server, {
+    const markup = new Markup(server, {
       language,
       topic: topicName,
       activity: "click",
       url: window.location.href,
     });
+    this.markup = markup;
 
     const selections = new Selections(spec.selections);
     const activityPicker = new ActivityPicker(spec.activities);
@@ -26,7 +27,7 @@ export default class Topic {
     );
 
     this.topicView = new TopicView(activityPicker, selections, {
-      onEnhance: () => enhancer.start(),
+      onEnhance: () => { markup.apply(); enhancer.start(); },
       onSelectionsChange: ({ selections, activity }) => enhancer.update(activity, selections),
     });
   }

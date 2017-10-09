@@ -1,15 +1,21 @@
 import morph from 'nanomorph';
 
+const createNode = (string) => {
+  const node = document.createElement('div');
+  node.innerHTML = string;
+  return node;
+}
+
 export default class Markup {
   constructor(server, data) {
     this.data = data;
     this.server = server;
     this.content = document.getElementById('wertiview-content');
-    this.original = this.content.innerHTML;
     this.markupPromise = null;
   }
 
   fetchMarkup() {
+    this.original = this.content.innerHTML;
     this.markupPromise = this.server.view({
       ...this.data,
       filter: 'no-filter',
@@ -17,13 +23,13 @@ export default class Markup {
     });
   }
 
-  async applyMarkup() {
+  async apply() {
     const markup = await this.markupPromise;
-    morph(this.content, markup);
+    this.content = morph(this.content, createNode(markup));
   }
 
   async restore() {
-    morph(this.content, this.original);
+    morph(this.content, createNode(this.original));
     this.original = null;
   }
 }
