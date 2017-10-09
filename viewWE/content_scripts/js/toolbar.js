@@ -107,7 +107,6 @@ module.exports = function(view) {
       const toolbar = new V2Toolbar().start();
       const { serverURL } = await browser.storage.local.get('serverURL');
       const server = new ViewServer(serverURL);
-      console.log(server);
 
       Object.keys(view.topics).forEach((topicName) => {
         const topic = view.topics[topicName];
