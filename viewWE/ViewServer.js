@@ -55,7 +55,7 @@ export default class ViewServer {
     return _postJson(this.url + '/user', { token });
   }
 
-  view({ topic, activity, url, language }) {
-    return _postPlain(this.url + '/view', { topic, activity, url, language });
+  view(data) {
+    return _postPlain(this.url + '/view', data);
   }
 }

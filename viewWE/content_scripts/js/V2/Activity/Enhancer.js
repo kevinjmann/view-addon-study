@@ -1,13 +1,16 @@
 export default class Enhancer {
-  constructor(enhancementName) {
-    console.log('creating enhancement for', enhancementName);
+  constructor(activity, selections) {
+    this.activity = activity;
+    this.selections = selections;
   }
 
-  enhance(selections) {
-    console.log('Enhancing with', selections);
+  start() {
+    console.log(`Enhancing ${this.activity} with`, this.selections);
   }
 
-  update(selections) {
-    console.log('updating enhancements with', selections);
+  update(activity, selections) {
+    this.activity = activity;
+    this.selections = selections;
+    this.start();
   }
 }

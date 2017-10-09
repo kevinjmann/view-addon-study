@@ -1,14 +1,20 @@
 import morph from 'nanomorph';
 
 export default class Markup {
-  constructor(server) {
+  constructor(server, data) {
+    this.data = data;
+    this.server = server;
     this.content = document.getElementById('wertiview-content');
     this.original = this.content.innerHTML;
     this.markupPromise = null;
   }
 
-  fetchMarkup(data) {
-    this.markupPromise = this.server.view(data);
+  fetchMarkup() {
+    this.markupPromise = this.server.view({
+      ...this.data,
+      filter: 'no-filter',
+      document: this.original,
+    });
   }
 
   async applyMarkup() {
