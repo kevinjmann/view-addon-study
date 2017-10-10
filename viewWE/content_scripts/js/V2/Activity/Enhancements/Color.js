@@ -1,9 +1,9 @@
 export default class Color {
-  constructor() {
-    
+  enhance(node) {
+    node.classList.add('colorize-style-agreement');
   }
 
-  enhance(sentence, token) {
-    
+  clear(node) {
+    node.classList.remove('colorize-style-agreement');
   }
 }

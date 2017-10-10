@@ -20,7 +20,7 @@ const renderSelectionItem = (base, item, selectionIndex, itemIndex) => {
   // event, use base.selections
   input.onchange = () => {
     base.selections[selectionIndex]['selectionItems'][itemIndex]['checked'] = input.checked;
-    fireEvent(base.onUpdateHandlers, base.selections);
+    fireEvent(base.onUpdateHandlers, base.getSelections());
   };
   label.prepend(input);
 
@@ -56,6 +56,25 @@ const renderSelections = (base, selections) => {
   return container;
 };
 
+const selectionItemsToConstraint = selectionItems => {
+  const admissible = new Set();
+  selectionItems.forEach(({ match, checked }) => {
+    if (checked) {
+      admissible.add(match);
+    }
+  });
+  return admissible;
+};
+
+const toConstraints = (selections) => {
+  const constraints = {};
+  selections.map(({ data, selectionItems }) => {
+    const admissibleValues = selectionItemsToConstraint(selectionItems);
+    constraints[`data-${data}`] = { match: admissibleValues };
+  });
+  return constraints;
+};
+
 export default class Selections {
   constructor(baseSelections) {
     this.selections = baseSelections;
@@ -67,7 +86,7 @@ export default class Selections {
   }
 
   getSelections() {
-    return this.selections;
+    return toConstraints(this.selections);
   }
 
   onUpdate(f) {

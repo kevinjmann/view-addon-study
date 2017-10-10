@@ -27,7 +27,7 @@ export default class Topic {
     );
 
     this.topicView = new TopicView(activityPicker, selections, {
-      onEnhance: () => { markup.apply(); enhancer.start(); },
+      onEnhance: async () => { await markup.apply(); enhancer.start(); },
       onSelectionsChange: ({ selections, activity }) => enhancer.update(activity, selections),
     });
   }
