@@ -1,9 +1,9 @@
 export default class Color {
   enhance(node) {
-    node.classList.add('colorize-style-agreement');
+    node.classList.add('view-colorize-style');
   }
 
   clear(node) {
-    node.classList.remove('colorize-style-agreement');
+    node.classList.remove('view-colorize-style',);
   }
 }
