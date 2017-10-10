@@ -1,4 +1,7 @@
 import Color from './Enhancements/Color';
+import Cloze from './Enhancements/Cloze';
+import MultipleChoice from './Enhancements/MultipleChoice';
+import Click from './Enhancements/Click';
 
 // FIXME: getEnhancements should return a generator
 
@@ -37,6 +40,9 @@ export default class Enhancer {
 
     this.enhancements = {
       'color': Color,
+      'click': Click,
+      'mc': MultipleChoice,
+      'cloze': Cloze,
     };
   }
 
