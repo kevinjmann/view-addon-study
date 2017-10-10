@@ -28,7 +28,8 @@ const getEnhancements = (selections) => {
 
 
 export default class Enhancer {
-  constructor(activity, selections) {
+  constructor(topic, activity, selections) {
+    this.topic = topic;
     this.activity = activity;
     this.selections = selections;
     this.enhancement = null;
@@ -43,7 +44,7 @@ export default class Enhancer {
     this.enhancement = new this.enhancements[this.activity]();
     this.nodes = getEnhancements(this.selections);
     for (const node of this.nodes) {
-      this.enhancement.enhance(node);
+      this.enhancement.enhance(node, this.activity, this.topic);
     }
   }
 

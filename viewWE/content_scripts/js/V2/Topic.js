@@ -23,7 +23,7 @@ export default class Topic {
     const activityPicker = new ActivityPicker(spec.activities);
 
     const enhancer = new Enhancer(
-      activityPicker.getActivity(), selections.getSelections(),
+      this.topicName, activityPicker.getActivity(), selections.getSelections(),
     );
 
     this.topicView = new TopicView(activityPicker, selections, {
