@@ -7,7 +7,12 @@ import Toolbar from './Toolbar';
 import ViewServer from '../../../ViewServer';
 import Topic from './Topic';
 import view from '../view';
+import Markup from './Markup';
 import * as Action from './Actions';
+import Selections from './Activity/Selections';
+import ActivityPicker from './ActivityPicker';
+import Enhancer from './Activity/Enhancer';
+import TopicView from './TopicView';
 
 const initialize = async chrome => {
   const store = createStore(
@@ -26,7 +31,30 @@ const initialize = async chrome => {
   store.subscribe(state => {
     const { language, topic } = store.getState();
     if (topic && view.topics[topic].version === 2) {
-      console.log('selected v2 topic');
+      const spec = view.topics[topic].languages[language];
+      const markup = new Markup(server, {
+        language,
+        topic,
+        activity: 'click',
+        url: window.location.href,
+      });
+
+      const selections = new Selections(spec.selections);
+      selections.onUpdate(
+        newSelections => store.dispatch(Action.changeSelections(newSelections))
+      );
+
+      const activityPicker = new ActivityPicker(spec.activities);
+      activityPicker.onActivitySelected(
+        activity => store.dispatch(Action.selectActivity(activity))
+      );
+
+      const topicView = new TopicView(activityPicker, selections);
+      topicView.show();
+
+      const enhancer = new Enhancer(
+        topic, activityPicker.getActivity()
+      );
     }
   });
 
@@ -35,7 +63,6 @@ const initialize = async chrome => {
     if (topic.version && topic.version === 2) {
       Object.keys(topic.languages).forEach((language) => {
         const topicView = new Topic(topicName, topic.languages[language], language, server, store.dispatch);
-        toolbar.onSelectTopic(data => topicView.selectTopic(data));
       });
     }
   });
