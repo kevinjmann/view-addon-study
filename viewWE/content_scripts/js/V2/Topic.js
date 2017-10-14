@@ -5,9 +5,10 @@ import TopicView from './TopicView';
 import * as Action from './Actions';
 
 export default class Topic {
-  constructor(dispatch, topics, getMarkup) {
+  constructor(store, topics, getMarkup) {
     this.showing = false;
-    this.dispatch = dispatch;
+    this.dispatch = store.dispatch;
+    this.store = store;
     this.topics = topics;
     this.getMarkup = getMarkup;
   }
@@ -41,6 +42,11 @@ export default class Topic {
         topic,
         language,
       };
+      const getState = this.store.getState;
+      this.store.subscribe(() => {
+        const { isFetching, enhanced } = this.store.getState().markup;
+        topicView.update(isFetching, !!enhanced);
+      });
 
       topicView.show();
       return this.getMarkup({ topic, language });
