@@ -12,13 +12,16 @@ export default class Topic {
   }
 
   selectTopic(language, topic) {
+    const dispatch = this.dispatch;
+
     if (this.showing && (language !== this.showing.language || topic !== this.showing.topic)) {
       this.showing.topicView.hide();
       this.showing = null;
+      dispatch(Action.cancelOutstandingRequests());
+      dispatch(Action.restoreMarkup());
     }
 
     if (!this.showing || this.showing.language !== language || this.showing.topic !== topic) {
-      const dispatch = this.dispatch;
       const spec = this.topics[topic].languages[language];
       const selections = new Selections(spec.selections);
       selections.onUpdate(
