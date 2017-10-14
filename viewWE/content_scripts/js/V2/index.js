@@ -41,7 +41,7 @@ const initialize = async chrome => {
   const enhancer = new Enhancer();
   store.subscribe(() => {
     const { markup, topic, activity, selections } = store.getState();
-    enhancer.update(markup.ready, topic, activity, selections);
+    enhancer.update(markup.ready, topic.isV2Topic, topic.name, activity, selections);
   });
 };
 

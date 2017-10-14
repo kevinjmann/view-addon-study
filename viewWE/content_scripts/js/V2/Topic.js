@@ -13,12 +13,16 @@ export default class Topic {
     this.getMarkup = getMarkup;
   }
 
+  isV2Topic(topic) {
+    return this.topics[topic].version === 2;
+  }
+
   selectTopic(language, topic) {
     if (this.showing && (language !== this.showing.language || topic !== this.showing.topic)) {
       this.hide();
     }
 
-    if (this.topics[topic].version === 2
+    if (this.isV2Topic(topic)
         && (!this.showing
             || this.showing.language !== language
             || this.showing.topic !== topic)) {

@@ -13,7 +13,7 @@ export const UPDATE_ENHANCEMENT = 'update enhancement';
 
 export const selectLanguage = language => ({ type: SELECT_LANGUAGE, language });
 export const selectTopic = viewModel => topic => (dispatch, getState) => {
-  dispatch({ type: SELECT_TOPIC, topic });
+  dispatch({ type: SELECT_TOPIC, topic, isV2Topic: viewModel.isV2Topic(topic) });
   const markup = viewModel.selectTopic(getState().language, topic);
   if (markup) {
     dispatch(fetchMarkup(markup));

@@ -33,9 +33,9 @@ const activity = (state = 'color', action) => {
   return state;
 };
 
-const topic = (state = null, action) => {
+const topic = (state = { name: null, isV2Topic: false }, action) => {
   if (action.type === Action.SELECT_TOPIC) {
-    return action.topic;
+    return { name: action.topic, isV2Topic: action.isV2Topic };
   }
 
   return state;

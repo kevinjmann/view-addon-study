@@ -66,8 +66,14 @@ export default class Enhancer {
       || this.selections !== selections;
   }
 
-  update(ready, topic, activity, selections) {
-    if (ready && (this.needsUpdate(topic, activity, selections))) {
+  update(ready, isV2Topic, topic, activity, selections) {
+    if (!ready || !isV2Topic) {
+      this.stop();
+      return;
+    }
+
+    if (ready && isV2Topic && (this.needsUpdate(topic, activity, selections))) {
+      console.log('updating', activity);
       this.stop();
       this.topic = topic;
       this.activity = activity;
