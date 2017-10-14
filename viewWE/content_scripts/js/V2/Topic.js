@@ -17,9 +17,8 @@ export default class Topic {
       this.showing = null;
     }
 
-    const dispatch = this.dispatch;
-
     if (!this.showing || this.showing.language !== language || this.showing.topic !== topic) {
+      const dispatch = this.dispatch;
       const spec = this.topics[topic].languages[language];
       const selections = new Selections(spec.selections);
       selections.onUpdate(
@@ -40,6 +39,7 @@ export default class Topic {
       };
 
       topicView.show();
+      dispatch(Action.enhance());
     }
   }
 
