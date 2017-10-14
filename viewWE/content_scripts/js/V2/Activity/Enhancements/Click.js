@@ -1,4 +1,4 @@
-export default class Click {
+export default class MultipleChoice {
   enhance(node) {
     node.classList.add('colorize-style-agreement');
   }

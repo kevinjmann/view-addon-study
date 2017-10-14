@@ -18,4 +18,19 @@ viewenhancement {
             color: #0F0;
         }
     }
+
+    &.view-cloze-correct {
+      color: white;
+      background-color: #0A0;
+    }
+
+
+    input {
+      width: 200px;
+
+      &.view-cloze-incorrect {
+        border-color: #D00;
+        border-width: 2px;
+      }
+    }
 }
