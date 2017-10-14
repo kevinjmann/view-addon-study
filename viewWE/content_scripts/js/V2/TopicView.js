@@ -25,7 +25,6 @@ export default class TopicView {
 
       this.activitySelect.parentNode.removeChild(this.activitySelect);
       this.selectionsWindow.parentNode.removeChild(this.selectionsWindow);
-      this.v2EnhanceButton.parentNode.removeChild(this.v2EnhanceButton);
     }
     this.shown = false;
   }

@@ -1,47 +1,50 @@
-import view from '../view';
-import Enhancer from './Activity/Enhancer';
 import Selections from './Activity/Selections';
-import fireEvent from './Events';
 import ActivityPicker from './ActivityPicker';
 import TopicView from './TopicView';
-import Markup from './Markup';
 
 import * as Action from './Actions';
 
 export default class Topic {
-  constructor(topicName, spec, language, server, store) {
-    this.topicName = topicName;
-    this.language = language;
-
-    const markup = new Markup(server, {
-      language,
-      topic: topicName,
-      activity: "click",
-      url: window.location.href,
-    });
-    this.markup = markup;
-
-    const selections = new Selections(spec.selections);
-    const activityPicker = new ActivityPicker(spec.activities);
-    const enhancer = new Enhancer(
-      this.topicName, activityPicker.getActivity()
-    );
-
-    selections.onUpdate(
-      newSelections => store.dispatch(Action.changeSelections(newSelections))
-    );
-
-    this.topicView = new TopicView(activityPicker, selections, {
-    });
+  constructor(dispatch, topics) {
+    this.showing = false;
+    this.dispatch = dispatch;
+    this.topics = topics;
   }
 
-  selectTopic({ language, topic }) {
-    if (this.topicName === topic && this.language === language) {
-      this.topicView.show();
-      this.markup.fetchMarkup();
-    } else {
-      this.topicView.hide();
-      this.markup.restore();
+  selectTopic(language, topic) {
+    if (this.showing && (language !== this.showing.language || topic !== this.showing.topic)) {
+      this.showing.topicView.hide();
+      this.showing = null;
+    }
+
+    if (!this.showing || this.showing.language !== language || this.showing.topic !== topic) {
+      const spec = this.topics[topic].languages[language];
+      const selections = new Selections(spec.selections);
+      selections.onUpdate(
+        newSelections => this.dispatch(Action.changeSelections(newSelections))
+      );
+      const activityPicker = new ActivityPicker(spec.activities);
+      activityPicker.onActivitySelected(
+        activity => this.dispatch(Action.selectActivity(activity))
+      );
+      const topicView = new TopicView(activityPicker, selections);
+
+      this.showing = {
+        selections,
+        activityPicker,
+        topicView,
+        topic,
+        language,
+      };
+
+      topicView.show();
+    }
+  }
+
+  hide() {
+    if (this.showing) {
+      this.showing.topicView.hide();
+      this.showing = false;
     }
   }
 }
