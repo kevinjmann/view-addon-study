@@ -62,6 +62,7 @@ const initialMarkupState = {
   enhanced: null,
   original: null,
   error: null,
+  ready: false,
 };
 
 const markup = (state = {}, action) => {
@@ -79,6 +80,7 @@ const markup = (state = {}, action) => {
       return {
         ...state,
         isFetching: false,
+        ready: true,
         enhanced: action.markup,
       };
     } else {
@@ -87,7 +89,8 @@ const markup = (state = {}, action) => {
   case(Action.REQUEST_MARKUP_FAILED):
     return {
       ...initialMarkupState,
-      error: action.error
+      error: action.error,
+      ready: false
     };
   case(Action.DESTROY_MARKUP):
     return initialMarkupState;

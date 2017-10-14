@@ -37,6 +37,12 @@ const initialize = async chrome => {
   const topicViewModel = new Topic(store, view.topics, getMarkup);
   toolbar.onSelectTopic(data => store.dispatch(Action.selectTopic(topicViewModel)(data)));
   toolbar.onSelectLanguage(data => store.dispatch(Action.selectLanguage(data)));
+
+  const enhancer = new Enhancer();
+  store.subscribe(() => {
+    const { markup, topic, activity, selections } = store.getState();
+    enhancer.update(markup.ready, topic, activity, selections);
+  });
 };
 
 export default initialize;

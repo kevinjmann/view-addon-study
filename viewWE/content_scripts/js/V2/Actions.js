@@ -30,7 +30,9 @@ export const restoreMarkup = markup => (dispatch, getState) => {
 };
 
 const requestMarkupFailed = error => ({ type: REQUEST_MARKUP_FAILED, error });
-const receiveMarkup = markup => ({ type: RECEIVE_MARKUP, markup });
+const receiveMarkup = markup => dispatch => {
+  dispatch({ type: RECEIVE_MARKUP, markup });
+};
 const requestMarkup = original => ({ type: REQUEST_MARKUP, original });
 const fetchMarkup = markup => (dispatch, getState) => {
   const original = markup.getOriginal();

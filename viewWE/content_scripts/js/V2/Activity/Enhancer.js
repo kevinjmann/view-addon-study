@@ -31,10 +31,7 @@ const getEnhancements = (selections) => {
 
 
 export default class Enhancer {
-  constructor(topic, activity, selections) {
-    this.topic = topic;
-    this.activity = activity;
-    this.selections = selections;
+  constructor() {
     this.enhancement = null;
     this.nodes = [];
 
@@ -62,10 +59,20 @@ export default class Enhancer {
     this.enhancement = null;
   }
 
-  update(activity, selections) {
-    this.stop();
-    this.activity = activity;
-    this.selections = selections;
-    this.start();
+  needsUpdate(topic, activity, selections) {
+    return this.nodes.length === 0
+      || this.topic !== topic
+      || this.activity !== activity
+      || this.selections !== selections;
+  }
+
+  update(ready, topic, activity, selections) {
+    if (ready && (this.needsUpdate(topic, activity, selections))) {
+      this.stop();
+      this.topic = topic;
+      this.activity = activity;
+      this.selections = selections;
+      this.start();
+    }
   }
 }
