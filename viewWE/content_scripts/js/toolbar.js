@@ -1,10 +1,7 @@
 const $ = require('jquery');
 const toolbarHTML = require('../html/toolbar.html');
 import SelectorCache from '../../SelectorCache';
-import Topic from './V2/Topic';
-import V2Toolbar from './V2/Toolbar';
-import ViewServer from '../../ViewServer';
-import Browser from '../../Browser';
+import initv2 from './V2';
 
 module.exports = function(view) {
   return {
@@ -95,28 +92,15 @@ module.exports = function(view) {
 
       view.blur.remove();
 
-      (async () => view.toolbar.initializeV2Topics())();
+      view.toolbar.initializeV2Topics();
     },
 
     /**
      * Initialise all V2 topics: go through the topic list, look at all topics
      * that are V2, and start them.
      */
-    initializeV2Topics: async function() {
-      const browser = new Browser(chrome);
-      const toolbar = new V2Toolbar().start();
-      const { serverURL } = await browser.storage.local.get('serverURL');
-      const server = new ViewServer(serverURL);
-
-      Object.keys(view.topics).forEach((topicName) => {
-        const topic = view.topics[topicName];
-        if (topic.version && topic.version === 2) {
-          Object.keys(topic.languages).forEach((language) => {
-            const topicView = new Topic(topicName, topic.languages[language], language, server);
-            toolbar.onSelectTopic(data => topicView.selectTopic(data));
-          });
-        }
-      });
+    initializeV2Topics: function() {
+      (async () => initv2(chrome))();
     },
 
     /**
