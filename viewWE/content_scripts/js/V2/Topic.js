@@ -39,7 +39,7 @@ export default class Topic {
       };
 
       topicView.show();
-      dispatch(Action.enhance());
+      dispatch(Action.enhance(topic, language));
     }
   }
 
