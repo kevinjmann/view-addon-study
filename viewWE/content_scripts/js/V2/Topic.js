@@ -17,15 +17,17 @@ export default class Topic {
       this.showing = null;
     }
 
+    const dispatch = this.dispatch;
+
     if (!this.showing || this.showing.language !== language || this.showing.topic !== topic) {
       const spec = this.topics[topic].languages[language];
       const selections = new Selections(spec.selections);
       selections.onUpdate(
-        newSelections => this.dispatch(Action.changeSelections(newSelections))
+        newSelections => dispatch(Action.changeSelections(newSelections))
       );
       const activityPicker = new ActivityPicker(spec.activities);
       activityPicker.onActivitySelected(
-        activity => this.dispatch(Action.selectActivity(activity))
+        activity => dispatch(Action.selectActivity(activity))
       );
       const topicView = new TopicView(activityPicker, selections);
 
