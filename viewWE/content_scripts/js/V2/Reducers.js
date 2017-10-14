@@ -27,10 +27,6 @@ const initialState = {
   markup: null,
 };
 
-export const main = (state, action) => {
-  if (typeof state === 'undefined') {
-    return initialState;
-  }
-
+export const main = (state = initialState, action) => {
   return state;
 };
