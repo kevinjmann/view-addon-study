@@ -5,25 +5,26 @@ import TopicView from './TopicView';
 import * as Action from './Actions';
 
 export default class Topic {
-  constructor(dispatch, topics) {
+  constructor(dispatch, topics, getMarkup) {
     this.showing = false;
     this.dispatch = dispatch;
     this.topics = topics;
+    this.getMarkup = getMarkup;
   }
 
   selectTopic(language, topic) {
-    const dispatch = this.dispatch;
-
     if (this.showing && (language !== this.showing.language || topic !== this.showing.topic)) {
-      this.showing.topicView.hide();
-      this.showing = null;
-      dispatch(Action.cancelOutstandingRequests());
-      dispatch(Action.restoreMarkup());
+      this.hide();
     }
 
-    if (!this.showing || this.showing.language !== language || this.showing.topic !== topic) {
+    if (this.topics[topic].version === 2
+        && (!this.showing
+            || this.showing.language !== language
+            || this.showing.topic !== topic)) {
+      const dispatch = this.dispatch;
       const spec = this.topics[topic].languages[language];
       const selections = new Selections(spec.selections);
+
       selections.onUpdate(
         newSelections => dispatch(Action.changeSelections(newSelections))
       );
@@ -42,13 +43,16 @@ export default class Topic {
       };
 
       topicView.show();
-      dispatch(Action.enhance(topic, language));
+      return this.getMarkup({ topic, language });
     }
+    return null;
   }
 
   hide() {
     if (this.showing) {
+      const { topic, language } = this;
       this.showing.topicView.hide();
+      this.dispatch(Action.restoreMarkup(this.getMarkup({ topic, language })));
       this.showing = false;
     }
   }

@@ -1,35 +1,49 @@
 import morph from 'nanomorph';
 
-const createNode = (string) => {
+function createNode(string, id) {
   const node = document.createElement('div');
+  node.setAttribute('id', id);
   node.innerHTML = string;
   return node;
+};
+
+function getContentElement() {
+  return document.getElementById('wertiview-content');
 }
 
 export default class Markup {
   constructor(server, data) {
     this.data = data;
     this.server = server;
-    this.content = document.getElementById('wertiview-content');
-    this.markupPromise = null;
   }
 
-  fetchMarkup() {
-    this.original = this.content.innerHTML;
-    this.markupPromise = this.server.view({
+  getOriginal() {
+    return getContentElement().innerHTML;
+  }
+
+  fetch(original) {
+    return this.server.view({
       ...this.data,
       filter: 'no-filter',
-      document: this.original,
+      document: original,
     });
   }
 
-  async apply() {
-    const markup = await this.markupPromise;
-    this.content = morph(this.content, createNode(markup));
+  apply(enhanced) {
+    morph(
+      document.getElementById('wertiview-content'),
+      createNode(enhanced, 'wertiview-enhanced-content'),
+    );
   }
 
-  async restore() {
-    morph(this.content, createNode(this.original));
-    this.original = null;
+  restore(original) {
+    morph(
+      document.getElementById('wertiview-enhanced-content'),
+      createNode(original, 'wertiview-content'),
+    );
+  }
+
+  error(error) {
+    console.error(error);
   }
 }

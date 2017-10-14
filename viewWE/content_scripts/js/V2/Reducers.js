@@ -57,9 +57,49 @@ const selections = (state = initialSelection, action) => {
   return state;
 };
 
+const initialMarkupState = {
+  isFetching: false,
+  enhanced: null,
+  original: null,
+  error: null,
+};
+
+const markup = (state = {}, action) => {
+  switch (action.type) {
+  case (Action.REQUEST_MARKUP):
+    console.log('request markup');
+    return {
+      ...state,
+      isFetching: true,
+      original: action.original,
+      error: null,
+    };
+  case(Action.RECEIVE_MARKUP):
+    if (state.isFetching) {
+      return {
+        ...state,
+        isFetching: false,
+        enhanced: action.markup,
+      };
+    } else {
+      return state;
+    }
+  case(Action.REQUEST_MARKUP_FAILED):
+    return {
+      ...initialMarkupState,
+      error: action.error
+    };
+  case(Action.DESTROY_MARKUP):
+    return initialMarkupState;
+  default:
+    return state;
+  }
+};
+
 export default combineReducers({
   selections,
   activity,
   topic,
   language,
+  markup,
 });
