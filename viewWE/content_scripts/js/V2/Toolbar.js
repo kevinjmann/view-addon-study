@@ -7,8 +7,6 @@ export default class Toolbar {
     this.handlers = {
       onSelectLanguage: [],
       onSelectTopic: [],
-      onEnhance: [],
-      onReadyToEnhance: [],
     };
   }
 
@@ -37,13 +35,5 @@ export default class Toolbar {
 
   onSelectTopic(f) {
     this.handlers.onSelectTopic.push(f);
-  }
-
-  onEnhance(f) {
-    this.handlers.onEnhance.push(f);
-  }
-
-  onReadyToEnhance(f) {
-    this.handlers.onReadyToEnhance.push(f);
   }
 }
