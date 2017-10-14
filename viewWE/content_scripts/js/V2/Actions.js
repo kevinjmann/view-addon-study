@@ -16,8 +16,14 @@ export const selectTopic = topic => ({ type: SELECT_TOPIC, topic });
 export const selectActivity = activity => ({ type: SELECT_ACTIVITY, activity });
 export const changeSelections = selections => ({ type: CHANGE_SELECTIONS, selections });
 export const enhance = (topic, language) => ({ type: ENHANCE, topic, language });
-export const sendRequest = ({ original, url }) => ({ type: SEND_REQUEST, original, url });
 export const receiveMarup = markup => ({ type: RECEIVE_MARKUP, markup });
 export const restoreMarkup = () => ({ type: RESTORE_MARKUP });
 export const updateEnhancement = nodes => ({ type: UPDATE_ENHANCEMENT, nodes });
 export const restoreEnhancement = () => ({ type: UPDATE_ENHANCEMENT });
+export const sendRequest = (original, url, topic, language) => ({
+  type: SEND_REQUEST,
+  original,
+  url,
+  topic,
+  language
+});
