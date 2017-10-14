@@ -23,6 +23,13 @@ const initialize = async chrome => {
   toolbar.onSelectTopic(data => store.dispatch(Action.selectTopic(data)));
   toolbar.onSelectLanguage(data => store.dispatch(Action.selectLanguage(data)));
 
+  store.subscribe(state => {
+    const { language, topic } = store.getState();
+    if (topic && view.topics[topic].version === 2) {
+      console.log('selected v2 topic');
+    }
+  });
+
   Object.keys(view.topics).forEach((topicName) => {
     const topic = view.topics[topicName];
     if (topic.version && topic.version === 2) {

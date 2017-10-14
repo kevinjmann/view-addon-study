@@ -1,5 +1,5 @@
 export default class TopicView {
-  constructor(activityPicker, selections, { onEnhance, onSelectionsChange }) {
+  constructor(activityPicker, selections, { onSelectionsChange }) {
     this.activityPicker = activityPicker;
     this.shown = false;
 
@@ -8,16 +8,6 @@ export default class TopicView {
     this.activityMenu = document.querySelector('#wertiview-toolbar-activity-menu');
     this.activitySelect = this.activityPicker.render();
     this.selectionsWindow = selections.render();
-
-    this.v2EnhanceButton = document.createElement('button');
-    this.v2EnhanceButton.classList.add('wertiview-toolbar-btn');
-    this.v2EnhanceButton.addEventListener('click', () => onEnhance());
-    this.v2EnhanceButton.textContent = 'Enhance';
-
-    selections.onUpdate(selections => onSelectionsChange({
-      selections,
-      activity: activityPicker.getActivity(),
-    }));
 
     activityPicker.onActivitySelected(activity => onSelectionsChange({
       selections: selections.getSelections(),

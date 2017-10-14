@@ -46,13 +46,4 @@ export default class Toolbar {
   onReadyToEnhance(f) {
     this.handlers.onReadyToEnhance.push(f);
   }
-
-  readyToEnhance() {
-    // fire readyToEnhance
-    // enable enhance button
-  }
-
-  disallowEnhancement() {
-    // disable enhance button
-  }
 }
