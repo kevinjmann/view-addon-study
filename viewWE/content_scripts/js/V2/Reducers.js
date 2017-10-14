@@ -25,17 +25,41 @@ const initialState = {
   markup: null,
 };
 
+const activity = (state = 'color', action) => {
+  if (action.type === Action.SELECT_ACTIVITY) {
+    return action.activity;
+  }
+
+  return state;
+};
+
+const topic = (state = null, action) => {
+  if (action.type === Action.SELECT_TOPIC) {
+    return action.topic;
+  }
+
+  return state;
+};
+
+const language = (state = null, action) => {
+  if (action.type === Action.SELECT_LANGUAGE) {
+    return action.language;
+  }
+
+  return state;
+};
+
 const initialSelection = toConstraints(agreement.languages.de.selections);
 const selections = (state = initialSelection, action) => {
-  console.log('selections', state, action);
-  switch (action.type) {
-    case Action.CHANGE_SELECTIONS:
-      return { ...toConstraints(action.selections) };
-    default:
-      return state;
+  if (action.type === Action.CHANGE_SELECTIONS) {
+    return { ...toConstraints(action.selections) };
   }
+  return state;
 };
 
 export default combineReducers({
   selections,
+  activity,
+  topic,
+  language,
 });

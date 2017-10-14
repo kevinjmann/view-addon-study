@@ -1,20 +1,27 @@
-import { createStore } from 'redux'
-import v2Reducer from './Reducers';
+import { createStore, applyMiddleware } from 'redux';
+import logger from 'redux-logger';
 
+import v2Reducer from './Reducers';
 import Browser from '../../../Browser';
 import Toolbar from './Toolbar';
 import ViewServer from '../../../ViewServer';
 import Topic from './Topic';
 import view from '../view';
+import * as Action from './Actions';
 
 const initialize = async chrome => {
-  const store = createStore(v2Reducer);
+  const store = createStore(
+    v2Reducer,
+    applyMiddleware(logger),
+  );
   console.log(store.getState());
 
   const browser = new Browser(chrome);
   const toolbar = new Toolbar().start();
   const { serverURL } = await browser.storage.local.get('serverURL');
   const server = new ViewServer(serverURL);
+  toolbar.onSelectTopic(data => store.dispatch(Action.selectTopic(data)));
+  toolbar.onSelectLanguage(data => store.dispatch(Action.selectLanguage(data)));
 
   Object.keys(view.topics).forEach((topicName) => {
     const topic = view.topics[topicName];

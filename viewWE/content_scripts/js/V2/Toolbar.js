@@ -3,7 +3,6 @@ import fireEvent from './Events';
 const idPrefix = 'wertiview-toolbar';
 
 export default class Toolbar {
-
   constructor() {
     this.handlers = {
       onSelectLanguage: [],
@@ -25,7 +24,7 @@ export default class Toolbar {
     [ 'de', 'en', 'ru' ].forEach(language => {
       const topicSelect = document.getElementById(`${idPrefix}-topic-menu-${language}`);
       topicSelect.addEventListener('change', () => {
-        fireEvent(handlers.onSelectTopic, { language, topic: topicSelect.value });
+        fireEvent(handlers.onSelectTopic, topicSelect.value);
       });
     });
 
