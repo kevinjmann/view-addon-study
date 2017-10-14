@@ -11,14 +11,13 @@
  */
 
 import agreement from '../../../topics/agreement.json';
+import * as Action from './Actions';
 
 const initialState = {
-  configuration: {
-    language: null,
-    topic: null,
-    actvitiy: 'click',
-    url: null,
-  },
+  language: null,
+  topic: null,
+  actvitiy: null,
+  url: null,
   topics: {
     agreement
   },
@@ -28,5 +27,14 @@ const initialState = {
 };
 
 export const main = (state = initialState, action) => {
-  return state;
+  switch (action.type) {
+    case Action.SELECT_LANGUAGE:
+      return { ...state, language: action.language };
+    case Action.SELECT_TOPIC:
+      return { ...state, topic: action.topic };
+    case Action.SELECT_ACTIVITY:
+      return { ...state, activity: action.activity };
+    default:
+      return state;
+    }
 };
