@@ -56,25 +56,6 @@ const renderSelections = (base, selections) => {
   return container;
 };
 
-const selectionItemsToConstraint = selectionItems => {
-  const admissible = new Set();
-  selectionItems.forEach(({ match, checked }) => {
-    if (checked) {
-      admissible.add(match);
-    }
-  });
-  return admissible;
-};
-
-const toConstraints = (selections) => {
-  const constraints = {};
-  selections.map(({ data, selectionItems }) => {
-    const admissibleValues = selectionItemsToConstraint(selectionItems);
-    constraints[`data-${data}`] = { match: admissibleValues };
-  });
-  return constraints;
-};
-
 export default class Selections {
   constructor(baseSelections) {
     this.selections = baseSelections;
@@ -86,7 +67,7 @@ export default class Selections {
   }
 
   getSelections() {
-    return toConstraints(this.selections);
+    return this.selections;
   }
 
   onUpdate(f) {

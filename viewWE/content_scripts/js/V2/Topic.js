@@ -6,8 +6,10 @@ import ActivityPicker from './ActivityPicker';
 import TopicView from './TopicView';
 import Markup from './Markup';
 
+import * as Action from './Actions';
+
 export default class Topic {
-  constructor(topicName, spec, language, server) {
+  constructor(topicName, spec, language, server, dispatch) {
     this.topicName = topicName;
     this.language = language;
 
@@ -26,9 +28,11 @@ export default class Topic {
       this.topicName, activityPicker.getActivity(), selections.getSelections(),
     );
 
+    selections.onUpdate(newSelections => dispatch(Action.changeSelections(newSelections)));
+
     this.topicView = new TopicView(activityPicker, selections, {
       onEnhance: async () => { await markup.apply(); enhancer.start(); },
-      onSelectionsChange: ({ selections, activity }) => enhancer.update(activity, selections),
+      onSelectionsChange: ({ selections, activity }) => undefined,
     });
   }
 

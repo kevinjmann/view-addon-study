@@ -10,31 +10,32 @@
  * Please keep to these rules *without exception*.
  */
 
+import { combineReducers } from 'redux';
 import agreement from '../../../topics/agreement.json';
 import * as Action from './Actions';
+import toConstraints from './Activity/SelectionsToConstraints';
 
 const initialState = {
   language: null,
   topic: null,
   actvitiy: null,
   url: null,
-  topics: {
-    agreement
-  },
   nodes: [],
   original: null,
   markup: null,
 };
 
-export const main = (state = initialState, action) => {
+const initialSelection = toConstraints(agreement.languages.de.selections);
+const selections = (state = initialSelection, action) => {
+  console.log('selections', state, action);
   switch (action.type) {
-    case Action.SELECT_LANGUAGE:
-      return { ...state, language: action.language };
-    case Action.SELECT_TOPIC:
-      return { ...state, topic: action.topic };
-    case Action.SELECT_ACTIVITY:
-      return { ...state, activity: action.activity };
+    case Action.CHANGE_SELECTIONS:
+      return { ...toConstraints(action.selections) };
     default:
       return state;
-    }
+  }
 };
+
+export default combineReducers({
+  selections,
+});
