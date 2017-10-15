@@ -33,7 +33,9 @@ export default class Topic {
       selections.onUpdate(
         newSelections => dispatch(Action.changeSelections(newSelections))
       );
-      const activityPicker = new ActivityPicker(spec.activities);
+      const getState = this.store.getState;
+      const { activity } = getState();
+      const activityPicker = new ActivityPicker(spec.activities, activity);
       activityPicker.onActivitySelected(
         activity => dispatch(Action.selectActivity(activity))
       );
@@ -46,7 +48,6 @@ export default class Topic {
         topic,
         language,
       };
-      const getState = this.store.getState;
       this.store.subscribe(() => {
         const { isFetching, enhanced } = this.store.getState().markup;
         topicView.update(isFetching, !!enhanced);

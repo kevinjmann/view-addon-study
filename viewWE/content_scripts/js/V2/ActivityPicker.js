@@ -34,11 +34,13 @@ const renderSelect = (activityList) => {
 };
 
 export default class ActivityPicker {
-  constructor(activities, beforeElement) {
+  constructor(activities, activity) {
     this.listeners = [];
     this.activities = activities;
-    this.beforeElement = beforeElement;
     this.select = renderSelect(getActivityList(this.activities));
+    if (activity) {
+      this.select.value = activity;
+    }
   }
 
   onActivitySelected(f) {
