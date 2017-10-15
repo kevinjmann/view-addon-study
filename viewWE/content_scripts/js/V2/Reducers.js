@@ -61,7 +61,6 @@ const initialMarkupState = {
   isFetching: false,
   enhanced: null,
   original: null,
-  error: null,
   ready: false,
 };
 
@@ -73,7 +72,6 @@ const markup = (state = {}, action) => {
       ...state,
       isFetching: true,
       original: action.original,
-      error: null,
     };
   case(Action.RECEIVE_MARKUP):
     if (state.isFetching) {
@@ -89,7 +87,7 @@ const markup = (state = {}, action) => {
   case(Action.REQUEST_MARKUP_FAILED):
     return {
       ...initialMarkupState,
-      error: action.error,
+      isFetching: false,
       ready: false
     };
   case(Action.DESTROY_MARKUP):
