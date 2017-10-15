@@ -112,23 +112,17 @@ const background = {
    * @param {object} tab the current tab info
    */
   clickButton: function(tab) {
-    chrome.storage.local.get("serverURL", storage => {
-      if (!storage.serverURL) {
-        background.setDefaults();
-      }
+    const tabId = tab.id;
 
-      const tabId = tab.id;
+    background.currentTabId = tabId;
 
-      background.currentTabId = tabId;
-
-      if(tab.status === "complete"){
-        background.toggleToolbar(tabId);
-      }
-      else{
-        background.tabs[tabId] = {isWaiting: true};
-        background.addBlur(tabId, "The page is still loading...");
-      }
-    });
+    if(tab.status === "complete"){
+      background.toggleToolbar(tabId);
+    }
+    else{
+      background.tabs[tabId] = {isWaiting: true};
+      background.addBlur(tabId, "The page is still loading...");
+    }
   },
 
   /**
