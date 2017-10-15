@@ -173,7 +173,7 @@ for code coverage, using [Istanbul](https://istanbul.js.org/).
 
 Test modules are compiled with webpack.
 
-WebExtensions are automatically stubbed by the
+WebExtensions functions are automatically stubbed by the
 [sinon-chrome](https://github.com/acvetkov/sinon-chrome) package.
 
 The test files live in the `viewWE-test/test/unit` directory.
@@ -329,7 +329,7 @@ A filter is used when a topic can capture multiple subcategories,
 like e.g. Feminine Adjectives. Which categories are to be used as filter are 
 determined by the server-side code. You can see all filters for Adjectives in 
 
-`app/src/main/java/werti/uima/enhancer/Vislcg3RusAdjectiveEnhancer.java`
+`app/src/main/java/werti/uima/enhancer/HFSTRusAdjectiveEnhancer.java`
 
 inside the `filterPattern`, namely `Fem|Msc|Neu|MFN`.
 
