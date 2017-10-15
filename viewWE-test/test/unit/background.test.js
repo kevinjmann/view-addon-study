@@ -48,6 +48,69 @@ describe("background.js", function() {
       sinon.assert.calledOnce(setDefaults);
     });
 
+    describe("setDefaults", function() {
+      it("should set static options", () => {
+        background.setDefaults();
+
+        sinon.assert.calledWithMatch(chrome.storage.local.set, {
+          topics: {}, // TODO: Find out how to test if all topics are set
+          ajaxTimeout: 60000
+        });
+      });
+
+      it("should only set defaults where previous configuration didn't exist", () => {
+        // local.storage.get returns "foobar" for serverURL
+        chrome.storage.local.get.yields({
+          serverURL: "foobar"
+        });
+
+        background.setDefaults();
+
+        // make sure that local.storage.set is called with "foobar" in serverURL
+        sinon.assert.calledWithMatch(chrome.storage.local.set, {serverURL: "foobar"});
+      });
+
+      it("should set the defaults to the storage when no previous config existed", function() {
+        chrome.storage.local.get.yields({});
+        background.setDefaults();
+
+        sinon.assert.calledWithMatch(chrome.storage.local.set, {
+          // General options
+          serverURL: theServerURL,
+          servletURL: theServerURL + "/view",
+          serverTaskURL: theServerURL + "/act/task",
+          serverTrackingURL: theServerURL + "/act/tracking",
+          authenticator: theServerURL + "/authenticator.html",
+          userEmail: "",
+          userid: "",
+
+          // task data
+          user: "",
+          token: "",
+          taskId: "",
+          timestamp: "",
+          numberOfExercises: 0,
+
+          // user options
+          fixedOrPercentage: 0,
+          fixedNumberOfExercises: 25,
+          percentageOfExercises: 100,
+          choiceMode: 0,
+          firstOffset: 0,
+          intervalSize: 1,
+          showInst: false,
+          debugSentenceMarkup: false,
+
+          // enabled, language, topic and activity selections
+          enabled: false, // should the page be enhanced right away?
+          language: "unselected",
+          topic: "unselected",
+          filter: "no-filter",
+          activity: "unselected"
+        });
+      });
+    });
+
     it("Should call setDefaults on update", () => {
       const setDefaults = sandbox.stub(background, "setDefaults");
       background.install({reason: "update"});
@@ -145,88 +208,8 @@ describe("background.js", function() {
   });
 
   describe("clickButton", function() {
-    it("Should call setDefaults if no serverURL exists", () => {
-      const setDefaults = sandbox.stub(background, "setDefaults");
-
-      chrome.storage.local.get.yields({});
-      background.clickButton({id: 1});
-      sinon.assert.calledOnce(setDefaults);
-    });
-
-    it("Should not call setDefaults if serverURL exists", () => {
-      const setDefaults = sandbox.stub(background, "setDefaults");
-      chrome.storage.local.get.yields({"serverURL": "foo"});
-      background.clickButton({id: 1});
-
-      sinon.assert.notCalled(setDefaults);
-    });
-
-    describe("setDefaults", function() {
-      it("should set static options", () => {
-        background.setDefaults();
-
-        sinon.assert.calledWithMatch(chrome.storage.local.set, {
-          topics: {}, // TODO: Find out how to test if all topics are set
-          ajaxTimeout: 60000
-        });
-      });
-
-      it("should only set defaults where previous configuration didn't exist", () => {
-        // local.storage.get returns "foobar" for serverURL
-        chrome.storage.local.get.yields({
-          serverURL: "foobar"
-        });
-
-        background.setDefaults();
-
-        // make sure that local.storage.set is called with "foobar" in serverURL
-        sinon.assert.calledWithMatch(chrome.storage.local.set, {serverURL: "foobar"});
-      });
-
-      it("should set the defaults to the storage when no previous config existed", function() {
-        chrome.storage.local.get.yields({});
-        background.setDefaults();
-
-        sinon.assert.calledWithMatch(chrome.storage.local.set, {
-          // General options
-          serverURL: theServerURL,
-          servletURL: theServerURL + "/view",
-          serverTaskURL: theServerURL + "/act/task",
-          serverTrackingURL: theServerURL + "/act/tracking",
-          authenticator: theServerURL + "/authenticator.html",
-          userEmail: "",
-          userid: "",
-
-          // task data
-          user: "",
-          token: "",
-          taskId: "",
-          timestamp: "",
-          numberOfExercises: 0,
-
-          // user options
-          fixedOrPercentage: 0,
-          fixedNumberOfExercises: 25,
-          percentageOfExercises: 100,
-          choiceMode: 0,
-          firstOffset: 0,
-          intervalSize: 1,
-          showInst: false,
-          debugSentenceMarkup: false,
-
-          // enabled, language, topic and activity selections
-          enabled: false, // should the page be enhanced right away?
-          language: "unselected",
-          topic: "unselected",
-          filter: "no-filter",
-          activity: "unselected"
-        });
-      });
-    });
-
     it("should call toggleToolbar(tabId) when the tab status is" +
       " 'complete'", function() {
-      chrome.storage.local.get.yields({serverURL: "foo"});
       const toggleToolbar = sandbox.stub(background, "toggleToolbar");
 
       const tabId = 1;
@@ -241,8 +224,6 @@ describe("background.js", function() {
     });
 
     it("should send a message to toggle the toolbar", function() {
-      chrome.storage.local.get.yields({serverURL: "foo"});
-
       background.toggleToolbar(5);
 
       sinon.assert.calledOnce(chrome.tabs.sendMessage);
@@ -250,8 +231,6 @@ describe("background.js", function() {
     });
 
     it("should set 'isWaiting' to true if tab status is 'loading'", function() {
-      chrome.storage.local.get.yields({serverURL: "foo"});
-
       const tabId = 1;
 
       background.clickButton({
@@ -263,7 +242,6 @@ describe("background.js", function() {
     });
 
     it("should call addBlur(html) if tab status is 'loading'", function() {
-      chrome.storage.local.get.yields({serverURL: "foo"});
       const addBlur = sandbox.stub(background, "addBlur");
 
       const tabId = 1;
@@ -281,8 +259,6 @@ describe("background.js", function() {
     });
 
     it("should send a message to add blur", function() {
-      chrome.storage.local.get.yields({serverURL: "foo"});
-
       const html = "some html";
 
       background.addBlur(5, html);
