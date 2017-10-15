@@ -10,6 +10,7 @@ export const RECEIVE_MARKUP = 'receive markup';
 export const RESTORE_MARKUP = 'restore markup';
 export const DESTROY_MARKUP = 'destroy markup';
 export const UPDATE_ENHANCEMENT = 'update enhancement';
+export const READY_FOR_ENHANCEMENT = 'ready for enhancement';
 
 export const selectLanguage = language => ({ type: SELECT_LANGUAGE, language });
 export const selectTopic = viewModel => topic => (dispatch, getState) => {
@@ -46,5 +47,5 @@ const fetchMarkup = markup => (dispatch, getState) => {
       markup.error(error);
       dispatch({ type: DESTROY_MARKUP });
     }
-  );
+  ).then(() => dispatch({ type: READY_FOR_ENHANCEMENT }));
 };
