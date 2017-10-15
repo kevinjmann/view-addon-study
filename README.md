@@ -173,7 +173,7 @@ for code coverage, using [Istanbul](https://istanbul.js.org/).
 
 Test modules are compiled with webpack.
 
-WebExtensions are automatically stubbed by the
+WebExtensions functions are automatically stubbed by the
 [sinon-chrome](https://github.com/acvetkov/sinon-chrome) package.
 
 The test files live in the `viewWE-test/test/unit` directory.
