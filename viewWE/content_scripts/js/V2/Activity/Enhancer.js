@@ -44,6 +44,12 @@ export default class Enhancer {
   }
 
   start() {
+    const anchors = document.querySelectorAll('a');
+    for (const anchor of anchors) {
+      const href = anchor.getAttribute('href');
+      anchor.removeAttribute('href');
+      anchor.setAttribute('data-view-href', href);
+    }
     this.enhancement = new this.enhancements[this.activity]();
     this.nodes = getEnhancements(this.selections);
     for (const node of this.nodes) {
@@ -52,6 +58,12 @@ export default class Enhancer {
   }
 
   stop() {
+    const anchors = document.querySelectorAll('a');
+    for (const anchor of anchors) {
+      const href = anchor.getAttribute('data-href');
+      anchor.setAttribute('href', href);
+      anchor.removeAttribute('data-view-href');
+    }
     for (const node of this.nodes) {
       this.enhancement.clear(node);
     }
