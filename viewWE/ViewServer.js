@@ -10,7 +10,7 @@ const _postPlain = function(url, object) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.open("POST", url);
-    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
     xhr.onload = () => {
       if (xhr.status === 200) {
         try {
