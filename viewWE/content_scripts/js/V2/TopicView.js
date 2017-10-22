@@ -32,11 +32,7 @@ export default class TopicView {
     this.shown = false;
   }
 
-  update(isFetching, enhanced) {
-    if (isFetching) {
-      this.indicator.textContent = 'fetching';
-    } else if (enhanced) {
-      this.indicator.textContent = 'ready';
-    }
+  update(currently) {
+    this.indicator.textContent = currently;
   }
 }

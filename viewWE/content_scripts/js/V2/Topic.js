@@ -49,8 +49,7 @@ export default class Topic {
         language,
       };
       this.store.subscribe(() => {
-        const { isFetching, enhanced } = this.store.getState().markup;
-        topicView.update(isFetching, !!enhanced);
+        topicView.update(this.store.getState().markup.currently);
       });
 
       topicView.show();

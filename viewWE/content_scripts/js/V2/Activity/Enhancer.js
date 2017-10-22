@@ -2,6 +2,8 @@ import Color from './Enhancements/Color';
 import Cloze from './Enhancements/Cloze';
 import MultipleChoice from './Enhancements/MultipleChoice';
 import Click from './Enhancements/Click';
+import Simple from './Enhancements/Simple';
+import * as Action from '../Actions';
 
 // FIXME: getHits should return a generator
 
@@ -30,9 +32,9 @@ const getHits = (selections) => {
   return nodes;
 };
 
-
 export default class Enhancer {
-  constructor() {
+  constructor(dispatch) {
+    this.dispatch = dispatch;
     this.enhancement = null;
     this.nodes = [];
 
@@ -57,6 +59,7 @@ export default class Enhancer {
       for (const node of this.nodes) {
         this.enhancement.enhance(node, this.activity, this.topic);
       }
+      resolve();
     });
   }
 
@@ -73,6 +76,7 @@ export default class Enhancer {
       }
       this.nodes = [];
       this.enhancement = null;
+      resolve();
     });
   }
 
@@ -83,18 +87,23 @@ export default class Enhancer {
       || this.selections !== selections;
   }
 
-  update(ready, isV2Topic, topic, activity, selections) {
-    if (!ready || !isV2Topic) {
-      (async () => await this.stop())();
+  async update(currently, isV2Topic, topic, activity, selections) {
+    if ((currently === 'ready' || currently === 'enhancing') && !isV2Topic) {
+      this.dispatch(Action.destroyMarkup());
+      await this.stop();
       return;
     }
 
-    if (ready && isV2Topic && (this.needsUpdate(topic, activity, selections))) {
-      this.stop();
+    console.log('update', currently, isV2Topic, this.needsUpdate(topic, activity, selections));
+    if ((currently === 'ready for enhancement' || currently === 'ready')
+        && isV2Topic && (this.needsUpdate(topic, activity, selections))) {
+      this.dispatch(Action.enhancing());
+      await this.stop();
       this.topic = topic;
       this.activity = activity;
       this.selections = selections;
-      (async () => await this.start())();
+      await this.start();
+      this.dispatch(Action.enhancementReady());
     }
   }
 }

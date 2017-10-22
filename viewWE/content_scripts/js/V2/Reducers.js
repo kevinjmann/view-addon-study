@@ -58,7 +58,7 @@ const selections = (state = initialSelection, action) => {
 };
 
 const initialMarkupState = {
-  isFetching: false,
+  currently: 'idle',
   enhanced: null,
   original: null,
   ready: false,
@@ -70,14 +70,14 @@ const markup = (state = {}, action) => {
     console.log('request markup');
     return {
       ...state,
-      isFetching: true,
+      currently: 'fetching',
       original: action.original,
     };
   case(Action.RECEIVE_MARKUP):
-    if (state.isFetching) {
+    if (state.currently === 'fetching') {
       return {
         ...state,
-        isFetching: false,
+        currently: 'received markup',
         ready: true,
         enhanced: action.markup,
       };
@@ -87,11 +87,31 @@ const markup = (state = {}, action) => {
   case(Action.REQUEST_MARKUP_FAILED):
     return {
       ...initialMarkupState,
-      isFetching: false,
+      currently: 'failed to receive markup',
       ready: false
     };
   case(Action.DESTROY_MARKUP):
+    return {
+      ...state,
+      currently: 'destroying',
+    };
+  case(Action.ENHANCING):
+    return {
+      ...state,
+      currently: 'enhancing',
+    };
+  case(Action.RESET):
     return initialMarkupState;
+  case(Action.READY_FOR_ENHANCEMENT):
+    return {
+      ...state,
+      currently: 'ready for enhancement',
+    };
+  case(Action.ENHANCEMENT_READY):
+    return {
+      ...state,
+      currently: 'ready',
+    };
   default:
     return state;
   }

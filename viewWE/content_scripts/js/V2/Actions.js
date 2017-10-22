@@ -11,6 +11,9 @@ export const RESTORE_MARKUP = 'restore markup';
 export const DESTROY_MARKUP = 'destroy markup';
 export const UPDATE_ENHANCEMENT = 'update enhancement';
 export const READY_FOR_ENHANCEMENT = 'ready for enhancement';
+export const ENHANCING = 'enhancing';
+export const ENHANCEMENT_READY = 'enhancement ready';
+export const RESET = 'reset';
 
 export const selectLanguage = language => ({ type: SELECT_LANGUAGE, language });
 export const selectTopic = viewModel => topic => (dispatch, getState) => {
@@ -24,10 +27,15 @@ export const selectActivity = activity => ({ type: SELECT_ACTIVITY, activity });
 export const changeSelections = selections => ({ type: CHANGE_SELECTIONS, selections });
 export const updateEnhancement = nodes => ({ type: UPDATE_ENHANCEMENT, nodes });
 
+export const enhancing = () => ({ type: ENHANCING });
+export const enhancementReady = () => ({ type: ENHANCEMENT_READY });
+
+export const reset = () => ({ type: RESET });
+export const destroyMarkup = () => ({type: DESTROY_MARKUP});
 export const enhance = markup => dispatch => dispatch(fetchMarkup(markup));
 export const restoreMarkup = markup => (dispatch, getState) => {
   markup.restore(getState().markup.original);
-  dispatch({ type: DESTROY_MARKUP });
+  dispatch(reset());
 };
 
 const requestMarkupFailed = error => ({ type: REQUEST_MARKUP_FAILED, error });
@@ -38,14 +46,15 @@ const fetchMarkup = markup => (dispatch, getState) => {
   dispatch(requestMarkup(original));
   markup.fetch(original).then(
     response => {
-      if (getState().markup.isFetching) {
+      if (getState().markup.currently === 'fetching') {
         dispatch(receiveMarkup(response));
         markup.apply(response);
+        dispatch({ type: READY_FOR_ENHANCEMENT });
       }
     } ,
     error => {
       markup.error(error);
       dispatch({ type: DESTROY_MARKUP });
     }
-  ).then(() => dispatch({ type: READY_FOR_ENHANCEMENT }));
+  );
 };

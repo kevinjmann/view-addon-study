@@ -20,7 +20,6 @@ const initialize = async chrome => {
       logger
     ),
   );
-  console.log(store.getState());
 
   const browser = new Browser(chrome);
   const toolbar = new Toolbar().start();
@@ -38,10 +37,10 @@ const initialize = async chrome => {
   toolbar.onSelectTopic(data => store.dispatch(Action.selectTopic(topicViewModel)(data)));
   toolbar.onSelectLanguage(data => store.dispatch(Action.selectLanguage(data)));
 
-  const enhancer = new Enhancer();
+  const enhancer = new Enhancer(store.dispatch);
   store.subscribe(() => {
     const { markup, topic, activity, selections } = store.getState();
-    enhancer.update(markup.ready, topic.isV2Topic, topic.name, activity, selections);
+    enhancer.update(markup.currently, topic.isV2Topic, topic.name, activity, selections);
   });
 };
 
