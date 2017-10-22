@@ -3,7 +3,7 @@ import Cloze from './Enhancements/Cloze';
 import MultipleChoice from './Enhancements/MultipleChoice';
 import Click from './Enhancements/Click';
 
-// FIXME: getEnhancements should return a generator
+// FIXME: getHits should return a generator
 
 const matchesSelections = (node, selections) => {
   const entries = Object.entries(selections);
@@ -16,7 +16,7 @@ const matchesSelections = (node, selections) => {
   return true;
 };
 
-const getEnhancements = (selections) => {
+const getHits = (selections) => {
   const attributes = Object.keys(selections);
   attributes.push('data-view-hit');
   const cssQuery = 'viewEnhancement' + attributes.map(attr => `[${attr}]`).join('');
@@ -45,31 +45,35 @@ export default class Enhancer {
   }
 
   start() {
-    const anchors = document.querySelectorAll('a');
-    for (const anchor of anchors) {
-      const href = anchor.getAttribute('href');
-      anchor.removeAttribute('href');
-      anchor.setAttribute('data-view-href', href);
-    }
-    this.enhancement = new this.enhancements[this.activity]();
-    this.nodes = getEnhancements(this.selections);
-    for (const node of this.nodes) {
-      this.enhancement.enhance(node, this.activity, this.topic);
-    }
+    return new Promise((resolve, reject) => {
+      const anchors = document.querySelectorAll('a');
+      for (const anchor of anchors) {
+        const href = anchor.getAttribute('href');
+        anchor.removeAttribute('href');
+        anchor.setAttribute('data-view-href', href);
+      }
+      this.enhancement = new this.enhancements[this.activity]();
+      this.nodes = getHits(this.selections);
+      for (const node of this.nodes) {
+        this.enhancement.enhance(node, this.activity, this.topic);
+      }
+    });
   }
 
   stop() {
-    const anchors = document.querySelectorAll('a');
-    for (const anchor of anchors) {
-      const href = anchor.getAttribute('data-href');
-      anchor.setAttribute('href', href);
-      anchor.removeAttribute('data-view-href');
-    }
-    for (const node of this.nodes) {
-      this.enhancement.clear(node);
-    }
-    this.nodes = [];
-    this.enhancement = null;
+    return new Promise((resolve, reject) => {
+      const anchors = document.querySelectorAll('a');
+      for (const anchor of anchors) {
+        const href = anchor.getAttribute('data-href');
+        anchor.setAttribute('href', href);
+        anchor.removeAttribute('data-view-href');
+      }
+      for (const node of this.nodes) {
+        this.enhancement.clear(node);
+      }
+      this.nodes = [];
+      this.enhancement = null;
+    });
   }
 
   needsUpdate(topic, activity, selections) {
@@ -81,17 +85,16 @@ export default class Enhancer {
 
   update(ready, isV2Topic, topic, activity, selections) {
     if (!ready || !isV2Topic) {
-      this.stop();
+      (async () => await this.stop())();
       return;
     }
 
     if (ready && isV2Topic && (this.needsUpdate(topic, activity, selections))) {
-      console.log('updating', activity);
       this.stop();
       this.topic = topic;
       this.activity = activity;
       this.selections = selections;
-      this.start();
+      (async () => await this.start())();
     }
   }
 }
