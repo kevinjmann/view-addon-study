@@ -18,8 +18,8 @@ const matchesSelections = (node, selections) => {
 
 const getEnhancements = (selections) => {
   const attributes = Object.keys(selections);
-  const cssQuery = attributes.map(attr => `[${attr}]`).join('');
   attributes.push('data-view-hit');
+  const cssQuery = 'viewEnhancement' + attributes.map(attr => `[${attr}]`).join('');
   const nodeList = document.querySelectorAll(cssQuery);
   const nodes = [];
   for (var node of nodeList) {
