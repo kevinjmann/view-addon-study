@@ -1,36 +1,36 @@
 viewenhancement {
-    &.view-colorize-style {
-        font-weight: bold;
+  &.view-colorize-style {
+    font-weight: bold;
 
-        &[data-morph-case="Nom"] {
-            color: #F00;
-        }
-
-        &[data-morph-case="Gen"] {
-            color: #F0F;
-        }
-
-        &[data-morph-case="Dat"] {
-            color: #00F;
-        }
-
-        &[data-morph-case="Acc"] {
-            color: #0F0;
-        }
+    &[data-morph-case="Nom"] {
+      color: #F00;
     }
 
-    &.view-cloze-correct {
-      color: white;
-      background-color: #0A0;
+    &[data-morph-case="Gen"] {
+      color: #F0F;
     }
 
-
-    input {
-      width: 200px;
-
-      &.view-cloze-incorrect {
-        border-color: #D00;
-        border-width: 2px;
-      }
+    &[data-morph-case="Dat"] {
+      color: #00F;
     }
+
+    &[data-morph-case="Acc"] {
+      color: #0F0;
+    }
+  }
+
+  &.view-cloze-correct {
+    color: white;
+    background-color: #0A0;
+  }
+
+
+  input {
+    width: 200px;
+
+    &.view-cloze-incorrect {
+      border-color: #D00;
+      border-width: 2px;
+    }
+  }
 }
