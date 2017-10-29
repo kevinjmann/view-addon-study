@@ -8,7 +8,7 @@ const createInput = () => {
 
 export default class Cloze {
   constructor() {
-    this.last = { setAttribute: () => undefined };
+    this.last = {};
   }
 
   enhance(node) {
@@ -18,24 +18,25 @@ export default class Cloze {
     const clearNode = () => this.clear(node);
 
     input.setAttribute('placeholder', node.getAttribute('data-lemma'));
-    this.last.setAttribute('data-view-next', input);
-    input.setAttribute('data-view-previous', this.last);
-    this.last = node;
+    this.last['data-view-next'] = input;
+    input['data-view-previous'] = this.last;
+    this.last = input;
     node.classList.add('wide');
 
     input.onchange = () => {
       const correctAnswer = node.getAttribute('data-original-text');
       if (correctAnswer === input.value) {
+        console.log('input', input);
         clearNode();
         node.classList.add('view-cloze-correct');
-        const next = input.getAttribute('data-view-next');
-        const previous = input.getAttribute('data-view-previous');
+        const next = input['data-view-next'];
+        const previous = input['data-view-previous'];
         if (next) {
           window.setTimeout(() => next.focus(), 500);
         }
         if (next && previous) {
-          next.setAttribute('data-view-previous', previous);
-          previous.setAttribute('data-view-next', next);
+          next['data-view-previous'] = previous;
+          previous['data-view-next'] = next;
         }
       } else {
         input.classList.add('view-cloze-incorrect');
