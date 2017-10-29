@@ -46,38 +46,32 @@ export default class Enhancer {
     };
   }
 
-  start() {
-    return new Promise((resolve, reject) => {
-      const anchors = document.querySelectorAll('a');
-      for (const anchor of anchors) {
-        const href = anchor.getAttribute('href');
-        anchor.removeAttribute('href');
-        anchor.setAttribute('data-view-href', href);
-      }
-      this.enhancement = new this.enhancements[this.activity]();
-      this.nodes = getHits(this.selections);
-      for (const node of this.nodes) {
-        this.enhancement.enhance(node, this.activity, this.topic);
-      }
-      resolve();
-    });
+  async start() {
+    const anchors = document.querySelectorAll('a');
+    for (const anchor of anchors) {
+      const href = anchor.getAttribute('href');
+      anchor.removeAttribute('href');
+      anchor.setAttribute('data-view-href', href);
+    }
+    this.enhancement = new this.enhancements[this.activity]();
+    this.nodes = getHits(this.selections);
+    for (const node of this.nodes) {
+      this.enhancement.enhance(node, this.activity, this.topic);
+    }
   }
 
-  stop() {
-    return new Promise((resolve, reject) => {
-      const anchors = document.querySelectorAll('a');
-      for (const anchor of anchors) {
-        const href = anchor.getAttribute('data-href');
-        anchor.setAttribute('href', href);
-        anchor.removeAttribute('data-view-href');
-      }
-      for (const node of this.nodes) {
-        this.enhancement.clear(node);
-      }
-      this.nodes = [];
-      this.enhancement = null;
-      resolve();
-    });
+  async stop() {
+    const anchors = document.querySelectorAll('a');
+    for (const anchor of anchors) {
+      const href = anchor.getAttribute('data-href');
+      anchor.setAttribute('href', href);
+      anchor.removeAttribute('data-view-href');
+    }
+    for (const node of this.nodes) {
+      this.enhancement.clear(node);
+    }
+    this.nodes = [];
+    this.enhancement = null;
   }
 
   needsUpdate(topic, activity, selections) {
