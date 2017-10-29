@@ -21,8 +21,8 @@ export default class Cloze {
     this.last.setAttribute('data-view-next', input);
     input.setAttribute('data-view-previous', this.last);
     this.last = node;
+    node.classList.add('wide');
 
-    const that = this;
     input.onchange = () => {
       const correctAnswer = node.getAttribute('data-original-text');
       if (correctAnswer === input.value) {
@@ -44,6 +44,7 @@ export default class Cloze {
   }
 
   clear(node) {
+    node.classList.remove('wide');
     node.innerHTML = '';
     node.textContent = node.getAttribute('data-original-text');
   }

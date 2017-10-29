@@ -1,4 +1,13 @@
 viewenhancement {
+  &.wide {
+    display: inline-block;
+    width: 12em;
+
+    input {
+      width: 100%;
+    }
+  }
+
   &.view-colorize-style {
     font-weight: bold;
 
