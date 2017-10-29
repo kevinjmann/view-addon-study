@@ -5,7 +5,23 @@ viewenhancement {
 
     input {
       width: 100%;
+
+      &:focus {
+        -webkit-box-shadow: 0px 0px 5px 0px rgba(227,138,20,1);
+        -moz-box-shadow: 0px 0px 5px 0px rgba(227,138,20,1);
+        box-shadow: 0px 0px 5px 0px rgba(227,138,20,1);
+      }
+
+      &.view-cloze-incorrect {
+        border-color: #D00;
+        border-width: 2px;
+      }
     }
+  }
+
+  &.view-cloze-correct {
+    color: white;
+    background-color: #0A0;
   }
 
   &.view-colorize-style {
@@ -25,21 +41,6 @@ viewenhancement {
 
     &[data-morph-case="Acc"] {
       color: #0F0;
-    }
-  }
-
-  &.view-cloze-correct {
-    color: white;
-    background-color: #0A0;
-  }
-
-
-  input {
-    width: 200px;
-
-    &.view-cloze-incorrect {
-      border-color: #D00;
-      border-width: 2px;
     }
   }
 }
