@@ -15,16 +15,6 @@ import agreement from '../../../topics/agreement.json';
 import * as Action from './Actions';
 import toConstraints from './Activity/SelectionsToConstraints';
 
-const initialState = {
-  language: null,
-  topic: null,
-  actvitiy: null,
-  url: null,
-  nodes: [],
-  original: null,
-  markup: null,
-};
-
 const activity = (state = 'color', action) => {
   if (action.type === Action.SELECT_ACTIVITY) {
     return action.activity;
