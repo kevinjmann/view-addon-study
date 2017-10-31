@@ -4,7 +4,7 @@ import logger from 'redux-logger';
 
 import v2Reducer from './Reducers';
 import Browser from '../../../Browser';
-import Toolbar from './Toolbar';
+import makeToolbarConfiguration from './Toolbar';
 import ViewServer from '../../../ViewServer';
 import Topic from './Topic';
 import view from '../view';
@@ -22,7 +22,7 @@ const initialize = async chrome => {
   );
 
   const browser = new Browser(chrome);
-  const toolbar = new Toolbar().start();
+  const toolbarConfiguration = makeToolbarConfiguration(view.topics);
   const { serverURL } = await browser.storage.local.get('serverURL');
   const server = new ViewServer(serverURL);
 
@@ -33,9 +33,10 @@ const initialize = async chrome => {
     url: window.location.href,
   });
 
-  const topicViewModel = new Topic(store, view.topics, getMarkup);
-  toolbar.onSelectTopic(data => store.dispatch(Action.selectTopic(topicViewModel)(data)));
-  toolbar.onSelectLanguage(data => store.dispatch(Action.selectLanguage(data)));
+  const topicViewModel = new Topic(
+    store,
+    toolbarConfiguration
+  );
 
   const enhancer = new Enhancer(store.dispatch);
   store.subscribe(() => {
@@ -45,3 +46,6 @@ const initialize = async chrome => {
 };
 
 export default initialize;
+
+// this.dispatch(Action.restoreMarkup(this.getMarkup({ topic, language })));
+// return getMarkup({ title, language });

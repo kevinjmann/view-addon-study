@@ -4,66 +4,37 @@ import TopicView from './TopicView';
 
 import * as Action from './Actions';
 
-export default class Topic {
-  constructor(store, topics, getMarkup) {
-    this.showing = false;
-    this.dispatch = store.dispatch;
-    this.store = store;
-    this.topics = topics;
-    this.getMarkup = getMarkup;
-  }
+export default (store, topicConfiguration) => {
+  const dispatch = store.dispatch;
 
-  isV2Topic(topic) {
-    return this.topics[topic].version === 2;
-  }
+  function startTopic({ title, activities, selections }, language) {
+    const { activity, markup: { currently } } = store.getState();
+    const activityPicker = new ActivityPicker(activities, activity);
+    const selectionsWindow = new Selections(activityPicker, selections);
 
-  selectTopic(language, topic) {
-    if (this.showing && (language !== this.showing.language || topic !== this.showing.topic)) {
-      this.hide();
-    }
+    activityPicker.onActivitySelected(
+      activity => dispatch(Action.selectActivity(activity))
+    );
+    selectionsWindow.onUpdate(
+      newSelections => dispatch(Action.changeSelections(newSelections))
+    );
+    selectionsWindow.onCloseButtonClick(
+      () => dispatch(Action.hideSelections())
+    );
 
-    if (this.isV2Topic(topic)
-        && (!this.showing
-            || this.showing.language !== language
-            || this.showing.topic !== topic)) {
-      const dispatch = this.dispatch;
-      const spec = this.topics[topic].languages[language];
-      const selections = new Selections(spec.selections);
+    const topicView = new TopicView(selectionsWindow);
 
-      selections.onUpdate(
-        newSelections => dispatch(Action.changeSelections(newSelections))
-      );
-      const getState = this.store.getState;
-      const { activity } = getState();
-      const activityPicker = new ActivityPicker(spec.activities, activity);
-      activityPicker.onActivitySelected(
-        activity => dispatch(Action.selectActivity(activity))
-      );
-      const topicView = new TopicView(activityPicker, selections);
+    return topicView;
+  };
 
-      this.showing = {
-        selections,
-        activityPicker,
-        topicView,
-        topic,
-        language,
-      };
-      this.store.subscribe(() => {
-        topicView.update(this.store.getState().markup.currently);
-      });
-
-      topicView.show();
-      return this.getMarkup({ topic, language });
-    }
-    return null;
-  }
-
-  hide() {
-    if (this.showing) {
-      const { topic, language } = this;
-      this.showing.topicView.hide();
-      this.dispatch(Action.restoreMarkup(this.getMarkup({ topic, language })));
-      this.showing = false;
-    }
-  }
-}
+  topicConfiguration
+    .map(({ topic, language }) => {
+      return (topic !== null) ? startTopic(topic, language) : null;
+    })
+    .scan((oldView, newView) => {
+      oldView && oldView.hide();
+      newView && newView.show();
+      return newView;
+    }, null)
+    .subscribe(() => null);
+};

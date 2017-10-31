@@ -1,39 +1,41 @@
-import fireEvent from './Events';
+import { Observable } from 'rxjs';
+import 'rxjs/add/observable/fromEvent';
+import 'rxjs/add/observable/merge';
+import createStore from './Store';
 
 const idPrefix = 'wertiview-toolbar';
 
-export default class Toolbar {
-  constructor() {
-    this.handlers = {
-      onSelectLanguage: [],
-      onSelectTopic: [],
+// register with all topic & language selects. Returns an observable of the lang/topic state
+export default (viewTopics) => {
+
+  // Returns null if topic is not v2
+  function getV2TopicConfiguration(topic, language) {
+    if (viewTopics[topic].version === 2) {
+      return {
+        title: viewTopics[topic].title,
+        ...viewTopics[topic].languages[language],
+      };
     };
+
+    return null;
   }
 
-  start() {
-    const handlers = this.handlers;
+  const languageSelect = document.getElementById(`${idPrefix}-language-menu`);
+  const language = Observable.fromEvent(languageSelect, 'change')
+        .map(() => store => ({ ...store, topic: null, language: languageSelect.value }));
 
-    // register with all topic & language selects;
-    const languageSelect = document.getElementById(`${idPrefix}-language-menu`);
-    languageSelect.addEventListener('change', () => {
-      fireEvent(handlers.onSelectLanguage, languageSelect.value);
-    });
+  const topics = [ 'de', 'en', 'ru' ].map(language => {
+    const topicSelect = document.getElementById(`${idPrefix}-topic-menu-${language}`);
+    return Observable.fromEvent(topicSelect, 'change')
+      .map(() => ({ language, ...store }) => ({
+        ...store,
+        language,
+        topic: getV2TopicConfiguration(topicSelect.value, language),
+      }));
+  });
 
-    [ 'de', 'en', 'ru' ].forEach(language => {
-      const topicSelect = document.getElementById(`${idPrefix}-topic-menu-${language}`);
-      topicSelect.addEventListener('change', () => {
-        fireEvent(handlers.onSelectTopic, topicSelect.value);
-      });
-    });
+  const configuration = createStore({ language: null, topic: null }, [language].concat(topics));
+  configuration.subscribe(store => console.log(store));
 
-    return this;
-  }
-
-  onSelectLanguage(f) {
-    this.handlers.onSelectLanguage.push(f);
-  }
-
-  onSelectTopic(f) {
-    this.handlers.onSelectTopic.push(f);
-  }
-}
+  return configuration;
+};
