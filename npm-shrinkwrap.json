@@ -119,6 +119,11 @@
         }
       }
     },
+    "immutable": {
+      "version": "3.8.2",
+      "from": "immutable@latest",
+      "resolved": "https://registry.npmjs.org/immutable/-/immutable-3.8.2.tgz"
+    },
     "jquery": {
       "version": "3.2.1",
       "from": "jquery@>=3.1.1 <4.0.0",
@@ -168,6 +173,11 @@
       "version": "2.2.0",
       "from": "redux-thunk@latest",
       "resolved": "https://registry.npmjs.org/redux-thunk/-/redux-thunk-2.2.0.tgz"
+    },
+    "rxjs": {
+      "version": "5.5.2",
+      "from": "rxjs@latest",
+      "resolved": "https://registry.npmjs.org/rxjs/-/rxjs-5.5.2.tgz"
     },
     "symbol-observable": {
       "version": "1.0.4",

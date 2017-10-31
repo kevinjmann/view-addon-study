@@ -76,12 +76,14 @@
   },
   "dependencies": {
     "firebase": "^4.1.2",
+    "immutable": "^3.8.2",
     "jquery": "^3.1.1",
     "jquery-ui": "^1.12.1",
     "nanomorph": "^5.1.2",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "rxjs": "^5.5.2"
   },
   "engines": {
     "firefox": ">=48.0a1"
