@@ -40,6 +40,7 @@ const language = (state = null, action) => {
 };
 
 const initialSelection = toConstraints(agreement.languages.de.selections);
+
 const selections = (state = initialSelection, action) => {
   if (action.type === Action.CHANGE_SELECTIONS) {
     return { ...toConstraints(action.selections) };
@@ -54,7 +55,7 @@ const initialMarkupState = {
   ready: false,
 };
 
-const markup = (state = {}, action) => {
+const markup = (state = initialMarkupState, action) => {
   switch (action.type) {
   case (Action.REQUEST_MARKUP):
     console.log('request markup');
