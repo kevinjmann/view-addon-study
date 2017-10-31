@@ -57,13 +57,26 @@ const renderSelections = (base, selections) => {
 };
 
 export default class Selections {
-  constructor(baseSelections) {
+  constructor(activityPicker, baseSelections) {
     this.selections = baseSelections;
     this.onUpdateHandlers = [];
+    this.onCloseButtonClickHandlers = [];
+    this.activityPicker = activityPicker.render();
   }
 
   render() {
-    return renderSelections(this, this.selections);
+    const container = renderSelections(this, this.selections);
+
+    container.append(this.activityPicker);
+
+    const button = document.createElement('button');
+    button.textContent = 'OK';
+    const clickHandlers = this.onCloseButtonClickHandlers;
+    button.onclick = () => fireEvent(clickHandlers, null);
+
+    container.append(button);
+
+    return container;
   }
 
   getSelections() {
@@ -72,5 +85,9 @@ export default class Selections {
 
   onUpdate(f) {
     this.onUpdateHandlers.push(f);
+  }
+
+  onCloseButtonClick(f) {
+    this.onCloseButtonClickHandlers.push(f);
   }
 }
