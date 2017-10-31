@@ -14,6 +14,8 @@ export const READY_FOR_ENHANCEMENT = 'ready for enhancement';
 export const ENHANCING = 'enhancing';
 export const ENHANCEMENT_READY = 'enhancement ready';
 export const RESET = 'reset';
+export const SHOW_SELECTIONS = 'show selections';
+export const HIDE_SELECTIONS = 'hide selections';
 
 export const selectLanguage = language => ({ type: SELECT_LANGUAGE, language });
 export const selectTopic = viewModel => topic => (dispatch, getState) => {
@@ -37,6 +39,9 @@ export const restoreMarkup = markup => (dispatch, getState) => {
   markup.restore(getState().markup.original);
   dispatch(reset());
 };
+
+export const showSelections = () => ({ type: SHOW_SELECTIONS });
+export const hideSelections = () => ({ type: HIDE_SELECTIONS });
 
 const requestMarkupFailed = error => ({ type: REQUEST_MARKUP_FAILED, error });
 const receiveMarkup = markup => ({ type: RECEIVE_MARKUP, markup });

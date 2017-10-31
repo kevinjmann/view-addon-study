@@ -108,10 +108,22 @@ const markup = (state = initialMarkupState, action) => {
   }
 };
 
+const userInterface = (state = { showSelections: true }, action) => {
+  switch (action.type) {
+  case(Action.SHOW_SELECTIONS):
+    return { ... state, showSelections: true };
+  case(Action.HIDE_SELECTIONS):
+    return { ... state, showSelections: false };
+  default:
+    return state;
+  }
+};
+
 export default combineReducers({
   selections,
   activity,
   topic,
   language,
   markup,
+  userInterface,
 });
