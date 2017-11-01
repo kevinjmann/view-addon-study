@@ -10,7 +10,7 @@ export default (viewTopics) => {
 
   // Returns null if topic is not v2
   function getV2TopicConfiguration(topic, language) {
-    if (viewTopics[topic].version === 2) {
+    if (topic && viewTopics[topic].version === 2) {
       return {
         title: viewTopics[topic].title,
         ...viewTopics[topic].languages[language],
@@ -20,9 +20,18 @@ export default (viewTopics) => {
     return null;
   }
 
+  function getSelectedTopic(language) {
+    const topicSelect = document.getElementById(`${idPrefix}-topic-menu-${language}`);
+    const topicName = topicSelect ? topicSelect.value : null;
+    if (topicName && topicName.indexOf('unselected') === 0) {
+      return null;
+    }
+    return getV2TopicConfiguration(topicName, language);
+  }
+
   const languageSelect = document.getElementById(`${idPrefix}-language-menu`);
   const language = Observable.fromEvent(languageSelect, 'change')
-        .map(() => store => ({ ...store, topic: null, language: languageSelect.value }));
+        .map(() => store => ({ ...store, topic: getSelectedTopic(languageSelect.value), language: languageSelect.value }));
 
   const topics = [ 'de', 'en', 'ru' ].map(language => {
     const topicSelect = document.getElementById(`${idPrefix}-topic-menu-${language}`);
