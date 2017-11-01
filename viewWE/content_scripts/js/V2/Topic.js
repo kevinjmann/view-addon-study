@@ -36,5 +36,5 @@ export default (store, topicConfiguration) => {
       newView && newView.show();
       return newView;
     }, null)
-    .subscribe(() => null);
+    .subscribe();
 };
