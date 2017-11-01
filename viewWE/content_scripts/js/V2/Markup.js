@@ -1,4 +1,5 @@
 import morph from 'nanomorph';
+import { Observable } from 'rxjs/Observable';
 
 function createNode(string, id) {
   const node = document.createElement('div');
@@ -11,39 +12,40 @@ function getContentElement() {
   return document.getElementById('wertiview-content');
 }
 
-export default class Markup {
-  constructor(server, data) {
-    this.data = data;
-    this.server = server;
-  }
+export default (server, topicConfiguration) => {
+  const original = getContentElement().innerHTML;
 
-  getOriginal() {
-    return getContentElement().innerHTML;
-  }
+  topicConfiguration
+  // inject special value 'restore' if we're navigating away from V2
+    .scan((previous, next) => {
+      if (next.topic === null && previous.topic) {
+        return 'restore';
+      }
+      return next;
+    })
+  // filter out everything that isn't restore or V2
+    .filter(value => value === 'restore' || (!!value.topic))
+  // Emit markup from server fetch request, or original if we're 'restore'ing
+    .switchMap((value) => {
+      if (value === 'restore') {
+        return Observable.from([original]);
+      }
 
-  fetch(original) {
-    return this.server.view({
-      ...this.data,
-      filter: 'no-filter',
-      document: original,
-    });
-  }
-
-  apply(enhanced) {
-    morph(
-      document.getElementById('wertiview-content'),
-      createNode(enhanced, 'wertiview-enhanced-content'),
-    );
-  }
-
-  restore(original) {
-    morph(
-      document.getElementById('wertiview-enhanced-content'),
-      createNode(original, 'wertiview-content'),
-    );
-  }
-
-  error(error) {
-    console.error(error);
-  }
-}
+      const { topic: { topic }, language } = value;
+      return Observable.fromPromise(
+        server.view({
+          topic,
+          language,
+          activity: 'click',
+          url: window.location.href,
+          filter: 'no-filter',
+          document: original,
+        })
+      ).catch(error => console.log('error fetching markup', error));
+    })
+  // Transform HTML document according to markup
+    .subscribe(markup => morph(
+      getContentElement(),
+      createNode(markup, 'wertiview-content')
+    ));
+};
