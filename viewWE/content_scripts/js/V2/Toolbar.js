@@ -7,6 +7,8 @@ const idPrefix = 'wertiview-toolbar';
 
 // register with all topic & language selects. Returns an observable of the lang/topic state
 export default (viewTopics) => {
+  // FIXME this needs a refactor, as the code to retrieve the topic is somewhat
+  // duplicated between the language event handler and the topic event handler.
 
   // Returns null if topic is not v2
   function getV2TopicConfiguration(topic, language) {
