@@ -14,7 +14,7 @@ export default (viewTopics) => {
   function getV2TopicConfiguration(topic, language) {
     if (topic && viewTopics[topic].version === 2) {
       return {
-        title: topic,
+        topic,
         ...viewTopics[topic].languages[language],
       };
     };
