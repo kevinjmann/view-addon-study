@@ -35,7 +35,5 @@ export default (viewTopics) => {
   });
 
   const configuration = createStore({ language: null, topic: null }, [language].concat(topics));
-  configuration.subscribe(store => console.log(store));
-
   return configuration;
 };
