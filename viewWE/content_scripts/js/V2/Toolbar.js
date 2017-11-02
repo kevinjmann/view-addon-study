@@ -1,6 +1,8 @@
 import { Observable } from 'rxjs';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/merge';
+import { Subject } from 'rxjs/Subject';
+
 import createStore from './Store';
 
 const idPrefix = 'wertiview-toolbar';
@@ -46,5 +48,5 @@ export default (viewTopics) => {
   });
 
   const configuration = createStore({ language: null, topic: null }, [language].concat(topics));
-  return configuration;
+  return configuration.multicast(new Subject());
 };
