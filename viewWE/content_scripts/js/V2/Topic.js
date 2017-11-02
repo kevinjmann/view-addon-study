@@ -2,26 +2,10 @@ import Selections from './Activity/Selections';
 import ActivityPicker from './ActivityPicker';
 import TopicView from './TopicView';
 
-import * as Action from './Actions';
-
-export default (store, topicConfiguration) => {
-  const dispatch = store.dispatch;
-
+export default (topicConfiguration) => {
   function startTopic({ title, activities, selections }, language) {
-    const { activity, markup: { currently } } = store.getState();
-    const activityPicker = new ActivityPicker(activities, activity);
+    const activityPicker = new ActivityPicker(activities, 'color');
     const selectionsWindow = new Selections(activityPicker, selections);
-
-    activityPicker.onActivitySelected(
-      activity => dispatch(Action.selectActivity(activity))
-    );
-    selectionsWindow.onUpdate(
-      newSelections => dispatch(Action.changeSelections(newSelections))
-    );
-    selectionsWindow.onCloseButtonClick(
-      () => dispatch(Action.hideSelections())
-    );
-
     const topicView = new TopicView(selectionsWindow);
 
     return topicView;
