@@ -6,5 +6,8 @@ export default ({ markup, enhancer }) => {
   const toolbar = document.getElementById('wertiview-toolbar');
   toolbar.insertBefore(statusDisplay, enhanceButton);
   const appStream = Observable.merge(markup, enhancer);
-  appStream.subscribe(status => statusDisplay.textContent = status);
+  appStream.subscribe(status => {
+    console.log('status', status);
+    statusDisplay.textContent = status;
+  });
 }
