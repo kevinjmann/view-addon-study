@@ -33,10 +33,8 @@ function show(container, view) {
 export default (container, baseSelections, activitySelect) => {
   const view = render(activitySelect, baseSelections);
   show(container, view).subscribe(f => f());
-  const activities = connectActivities(activitySelect);
+  const activity = connectActivities(activitySelect);
   const selections = connectSelections(baseSelections, view);
 
-  combineStore({ activity: activities, selections }).subscribe(console.log);
-
-  return selections;
+  return combineStore({ activity: activity, selections });
 };
