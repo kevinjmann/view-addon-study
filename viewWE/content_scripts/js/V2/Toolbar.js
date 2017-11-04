@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/observable/fromEvent';
 
-import createStore from './Store';
+import { mergeStore } from './Store';
 
 const idPrefix = 'wertiview-toolbar';
 
@@ -10,6 +10,7 @@ const idPrefix = 'wertiview-toolbar';
 export default (viewTopics) => {
   // FIXME this needs a refactor, as the code to retrieve the topic is somewhat
   // duplicated between the language event handler and the topic event handler.
+  // probably better to use combineStore!
 
   // Returns null if topic is not v2
   function getV2TopicConfiguration(topic, language) {
@@ -50,6 +51,6 @@ export default (viewTopics) => {
       }));
   });
 
-  const configuration = createStore({ language: null, topic: null }, [language].concat(topics));
+  const configuration = mergeStore({ language: null, topic: null }, [language].concat(topics));
   return configuration.multicast(new Subject());
 };

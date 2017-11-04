@@ -3,7 +3,7 @@ import { TestScheduler } from "rxjs/testing/TestScheduler";
 
 describe('Store', function() {
   describe('combineStore', function() {
-    it.only('emits combined values for a complex object', function() {
+    it('emits combined values for a complex object', function() {
       const mappings = {
         x: { stream1: 'a', stream2: 'c' },
         y: { stream1: 'b', stream2: 'c' },

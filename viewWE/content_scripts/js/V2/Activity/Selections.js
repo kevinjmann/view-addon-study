@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 
+import { combineStore } from '../Store';
 import render from './SelectionsView';
 import { connectSelections, connectActivities } from './SelectionsModel';
 
@@ -35,8 +36,7 @@ export default (container, baseSelections, activitySelect) => {
   const activities = connectActivities(activitySelect);
   const selections = connectSelections(baseSelections, view);
 
-  activities.subscribe(console.log);
-  selections.subscribe(console.log);
+  combineStore({ activity: activities, selections }).subscribe(console.log);
 
   return selections;
 };
