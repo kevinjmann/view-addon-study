@@ -16,10 +16,9 @@ const initialize = async chrome => {
 
   const toolbar = document.getElementById('wertiview-toolbar');
 
-  const selections = subscribeTopicInterface(toolbarConfiguration, toolbar);
-  selections.subscribe(s => console.log('selections', s));
   const markup = subscribeMarkup(server, toolbarConfiguration);
-  const enhancer = subscribeEnhancer(selections, markup);
+  const selections = subscribeTopicInterface(toolbarConfiguration, toolbar);
+  const enhancer = subscribeEnhancer(selections.concatAll(), markup);
   const statusDisplay = statusObservable({ markup, enhancer });
 
   toolbarConfiguration.connect(); // TODO unsubscribe on Toolbar closing

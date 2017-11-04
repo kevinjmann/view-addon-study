@@ -11,6 +11,7 @@ export default (topicConfiguration, container) => {
   function startTopic({ title, activities, selections }, language) {
     const activitySelect = activityPicker(activities, 'color');
     const selections$ = selectionStream(container, selections, activitySelect);
+    configuration.next(selections$);
     const topicView = new TopicView();
     return topicView;
   };

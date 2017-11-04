@@ -1,9 +1,14 @@
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+
 import Color from './Enhancements/Color';
 import Cloze from './Enhancements/Cloze';
 import MultipleChoice from './Enhancements/MultipleChoice';
 import Click from './Enhancements/Click';
 import Simple from './Enhancements/Simple';
 import * as Action from '../Actions';
+import { combineStore } from '../Store';
+import selectionsToConstraints from './SelectionsToConstraints';
 
 // FIXME: getHits should return a generator
 
@@ -32,11 +37,11 @@ const getHits = (selections) => {
   return nodes;
 };
 
-export default class Enhancer {
-  constructor(dispatch) {
-    this.dispatch = dispatch;
+class Enhancer {
+  constructor() {
     this.enhancement = null;
     this.nodes = [];
+    this.enhanced = false;
 
     this.enhancements = {
       'color': Color,
@@ -46,17 +51,17 @@ export default class Enhancer {
     };
   }
 
-  async start() {
+  async start(activity, selections) {
     const anchors = document.querySelectorAll('a');
     for (const anchor of anchors) {
       const href = anchor.getAttribute('href');
       anchor.removeAttribute('href');
       anchor.setAttribute('data-view-href', href);
     }
-    this.enhancement = new this.enhancements[this.activity]();
-    this.nodes = getHits(this.selections);
+    this.enhancement = new this.enhancements[activity]();
+    this.nodes = getHits(selections);
     for (const node of this.nodes) {
-      this.enhancement.enhance(node, this.activity, this.topic);
+      this.enhancement.enhance(node, activity);
     }
   }
 
@@ -74,30 +79,28 @@ export default class Enhancer {
     this.enhancement = null;
   }
 
-  needsUpdate(topic, activity, selections) {
-    return this.nodes.length === 0
-      || this.topic !== topic
-      || this.activity !== activity
-      || this.selections !== selections;
-  }
-
-  async update(currently, isV2Topic, topic, activity, selections) {
-    if ((currently === 'ready' || currently === 'enhancing') && !isV2Topic) {
-      this.dispatch(Action.destroyMarkup());
-      await this.stop();
-      return;
-    }
-
-    console.log('update', currently, isV2Topic, this.needsUpdate(topic, activity, selections));
-    if ((currently === 'ready for enhancement' || currently === 'ready')
-        && isV2Topic && (this.needsUpdate(topic, activity, selections))) {
-      this.dispatch(Action.enhancing());
-      await this.stop();
-      this.topic = topic;
-      this.activity = activity;
-      this.selections = selections;
-      await this.start();
-      this.dispatch(Action.enhancementReady());
-    }
+  async update(activity, selections) {
+    this.enhanced && await this.stop();
+    await this.start(activity, selections);
+    this.enhanced = true;
   }
 }
+
+export default (selections$, markup$) => {
+  const status = new Subject();
+  const enhancer = new Enhancer();
+  combineStore({ selectionConfig: selections$, markup: markup$ })
+    .filter(({ markup }) => markup === 'markup done')
+    .map(({ selectionConfig: { ...selectionConfig, selections }, ...config }) => ({
+      ...config, selectionConfig, constraints: selectionsToConstraints(selections)
+    }))
+    .subscribe(({ selectionConfig: { activity }, constraints }) => {
+      (async () => {
+        status.next('updating enhancements');
+        await enhancer.update(activity, constraints);
+        status.next('ready');
+      })();
+    }
+  );
+  return status;
+};
