@@ -1,7 +1,6 @@
 import { Observable } from 'rxjs';
-import 'rxjs/add/observable/fromEvent';
-import 'rxjs/add/observable/merge';
 import { Subject } from 'rxjs/Subject';
+import 'rxjs/add/observable/fromEvent';
 
 import createStore from './Store';
 
@@ -35,7 +34,11 @@ export default (viewTopics) => {
 
   const languageSelect = document.getElementById(`${idPrefix}-language-menu`);
   const language = Observable.fromEvent(languageSelect, 'change')
-        .map(() => store => ({ ...store, topic: getSelectedTopic(languageSelect.value), language: languageSelect.value }));
+        .map(() => store => ({
+          ...store,
+          topic: getSelectedTopic(languageSelect.value),
+          language: languageSelect.value
+        }));
 
   const topics = [ 'de', 'en', 'ru' ].map(language => {
     const topicSelect = document.getElementById(`${idPrefix}-topic-menu-${language}`);
