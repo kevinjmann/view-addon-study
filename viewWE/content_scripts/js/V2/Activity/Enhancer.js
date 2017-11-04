@@ -51,7 +51,7 @@ class Enhancer {
     };
   }
 
-  async start(activity, selections) {
+  start(activity, selections) {
     const anchors = document.querySelectorAll('a');
     for (const anchor of anchors) {
       const href = anchor.getAttribute('href');
@@ -65,7 +65,7 @@ class Enhancer {
     }
   }
 
-  async stop() {
+  stop() {
     const anchors = document.querySelectorAll('a');
     for (const anchor of anchors) {
       const href = anchor.getAttribute('data-href');
@@ -79,9 +79,9 @@ class Enhancer {
     this.enhancement = null;
   }
 
-  async update(activity, selections) {
-    this.enhanced && await this.stop();
-    await this.start(activity, selections);
+  update(activity, selections) {
+    this.enhanced && this.stop();
+    this.start(activity, selections);
     this.enhanced = true;
   }
 }
@@ -95,11 +95,9 @@ export default (selections$, markup$) => {
       ...config, selectionConfig, constraints: selectionsToConstraints(selections)
     }))
     .subscribe(({ selectionConfig: { activity }, constraints }) => {
-      (async () => {
-        status.next('updating enhancements');
-        await enhancer.update(activity, constraints);
-        status.next('ready');
-      })();
+      status.next('updating enhancements');
+      enhancer.update(activity, constraints);
+      status.next('ready');
     }
   );
   return status;
