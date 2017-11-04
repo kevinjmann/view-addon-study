@@ -36,7 +36,7 @@ const _postPlain = function(url, object) {
  * @return {Promise} Promise containing parsed JSON response
  */
 const _postJson = function(url, object) {
-  return _postPlain(url, object).then(result => JSON.stringify(result));
+  return _postPlain(url, object).then(result => JSON.parse(result));
 };
 
 export default class ViewServer {
