@@ -1,5 +1,3 @@
-import fireEvent from './Events';
-
 const getActivityList = function(activities) {
   const options = [];
 
@@ -33,31 +31,12 @@ const renderSelect = (activityList) => {
   return selectElement;
 };
 
-export default class ActivityPicker {
-  constructor(activities, activity) {
-    this.listeners = [];
-    this.activities = activities;
-    this.select = renderSelect(getActivityList(this.activities));
-    if (activity) {
-      this.select.value = activity;
-    }
+export default (activities, activity) => {
+  const select = renderSelect(getActivityList(activities));
+
+  if (activity) {
+    select.value = activity;
   }
 
-  onActivitySelected(f) {
-    this.listeners.push(f);
-  }
-
-  getActivity() {
-    return this.select.value;
-  }
-
-  render() {
-    const select = this.select;
-    const listeners = this.listeners;
-    select.addEventListener('change', () => {
-      fireEvent(listeners, select.value);
-    });
-
-    return select;
-  }
+  return select;
 }

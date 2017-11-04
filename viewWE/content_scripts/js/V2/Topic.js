@@ -1,13 +1,17 @@
-import Selections from './Activity/Selections';
-import ActivityPicker from './ActivityPicker';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import createStore from './Store';
+import selectionStream from './Activity/Selections';
+import activityPicker from './ActivityPicker';
 import TopicView from './TopicView';
 
-export default (topicConfiguration) => {
-  function startTopic({ title, activities, selections }, language) {
-    const activityPicker = new ActivityPicker(activities, 'color');
-    const selectionsWindow = new Selections(activityPicker, selections);
-    const topicView = new TopicView(selectionsWindow);
+export default (topicConfiguration, container) => {
+  const configuration = new Subject();
 
+  function startTopic({ title, activities, selections }, language) {
+    const activitySelect = activityPicker(activities, 'color');
+    const selections$ = selectionStream(container, selections, activitySelect);
+    const topicView = new TopicView();
     return topicView;
   };
 
@@ -21,4 +25,6 @@ export default (topicConfiguration) => {
       return newView;
     }, null)
     .subscribe();
+
+  return configuration;
 };

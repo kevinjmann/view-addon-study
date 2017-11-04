@@ -1,93 +1,42 @@
-import fireEvent from '../Events';
+import { Observable } from 'rxjs/Observable';
 
-const renderSelectionItem = (base, item, selectionIndex, itemIndex) => {
-  const id = `selection-${selectionIndex}-${itemIndex}`;
-  const checked = item.checked ? 'checked' : '';
+import render from './SelectionsView';
+import { connectSelections, connectActivities } from './SelectionsModel';
 
-  // title
-  const label = document.createElement('label');
-  label.setAttribute('for', id);
-  label.textContent = item.title;
+function show(container, view) {
+  const showButton = document.createElement('button');
+  showButton.textContent = 'selections';
 
-  // input
-  const input = document.createElement('input');
-  input.setAttribute('type', 'checkbox');
-  input.setAttribute('id', id);
-  if (checked) {
-    input.setAttribute('checked', true);
+  const hideButton = document.createElement('button');
+  hideButton.textContent = 'OK';
+
+  function showSelections() {
+    container.append(view);
+    container.removeChild(showButton);
   }
 
-  // event, use base.selections
-  input.onchange = () => {
-    base.selections[selectionIndex]['selectionItems'][itemIndex]['checked'] = input.checked;
-    fireEvent(base.onUpdateHandlers, base.getSelections());
-  };
-  label.prepend(input);
-
-  return label;
-};
-
-const renderSelection = (base, selection, selectionIndex) => {
-  // container for items
-  const container = document.createElement('div');
-  container.classList.add('selectionContainer');
-  container.innerHTML = `<h2>${selection.title}</h2>`;
-
-  const selectionItems = selection.selectionItems.map(
-    (selectionItem, index) => renderSelectionItem(base, selectionItem, selectionIndex, index)
-  );
-  selectionItems.map(selectionItem => container.append(selectionItem));
-
-  return container;
-};
-
-const renderSelections = (base, selections) => {
-  // container
-  const container = document.createElement('div');
-  container.setAttribute('id', 'selections-container');
-  container.innerHTML = `<h1>Selections</h1>`;
-
-  // add selections to container
-  const renderedSelections = selections.map(
-    (selection, index) => renderSelection(base, selection, index)
-  );
-  renderedSelections.map(renderedSelection => container.append(renderedSelection));
-
-  return container;
-};
-
-export default class Selections {
-  constructor(activityPicker, baseSelections) {
-    this.selections = baseSelections;
-    this.onUpdateHandlers = [];
-    this.onCloseButtonClickHandlers = [];
-    this.activityPicker = activityPicker.render();
+  function hideSelections() {
+    container.append(showButton);
+    container.removeChild(view);
   }
 
-  render() {
-    const container = renderSelections(this, this.selections);
+  view.append(hideButton);
+  container.append(showButton);
 
-    container.append(this.activityPicker);
-
-    const button = document.createElement('button');
-    button.textContent = 'OK';
-    const clickHandlers = this.onCloseButtonClickHandlers;
-    button.onclick = () => fireEvent(clickHandlers, null);
-
-    container.append(button);
-
-    return container;
-  }
-
-  getSelections() {
-    return this.selections;
-  }
-
-  onUpdate(f) {
-    this.onUpdateHandlers.push(f);
-  }
-
-  onCloseButtonClick(f) {
-    this.onCloseButtonClickHandlers.push(f);
-  }
+  return Observable.merge(
+    Observable.fromEvent(showButton, 'click').map(() => showSelections),
+    Observable.fromEvent(hideButton, 'click').map(() => hideSelections)
+  ).startWith(showSelections);
 }
+
+export default (container, baseSelections, activitySelect) => {
+  const view = render(activitySelect, baseSelections);
+  show(container, view).subscribe(f => f());
+  const activities = connectActivities(activitySelect);
+  const selections = connectSelections(baseSelections, view);
+
+  activities.subscribe(console.log);
+  selections.subscribe(console.log);
+
+  return selections;
+};

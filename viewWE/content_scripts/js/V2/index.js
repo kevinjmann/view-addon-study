@@ -14,10 +14,13 @@ const initialize = async chrome => {
   const server = new ViewServer(serverURL);
   const toolbarConfiguration = makeToolbarConfiguration(view.topics);
 
-  const selections = subscribeTopicInterface(toolbarConfiguration);
+  const toolbar = document.getElementById('wertiview-toolbar');
+
+  const selections = subscribeTopicInterface(toolbarConfiguration, toolbar);
+  selections.subscribe(s => console.log('selections', s));
   const markup = subscribeMarkup(server, toolbarConfiguration);
-  // const enhancer = subscribeEnhancer(selections, markup);
-  const statusDisplay = statusObservable({ markup, enhancer: new Subject() });
+  const enhancer = subscribeEnhancer(selections, markup);
+  const statusDisplay = statusObservable({ markup, enhancer });
 
   toolbarConfiguration.connect(); // TODO unsubscribe on Toolbar closing
 };
