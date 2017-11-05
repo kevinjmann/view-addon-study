@@ -1,6 +1,7 @@
 const $ = require('jquery');
 const toolbarHTML = require('../html/toolbar.html');
-import SelectorCache from '../../SelectorCache.js';
+import SelectorCache from '../../SelectorCache';
+import initv2 from './V2';
 
 module.exports = function(view) {
   return {
@@ -90,6 +91,16 @@ module.exports = function(view) {
       view.toolbar.toggle();
 
       view.blur.remove();
+
+      view.toolbar.initializeV2Topics();
+    },
+
+    /**
+     * Initialise all V2 topics: go through the topic list, look at all topics
+     * that are V2, and start them.
+     */
+    initializeV2Topics: function() {
+      (async () => initv2(chrome))();
     },
 
     /**
@@ -228,8 +239,11 @@ module.exports = function(view) {
         language !== unselected &&
           !topic.startsWith(unselected) &&
           view.topics[topic] &&
-          view.topics[topic][language]){
-        view.toolbar.enableAndShowActivities(language, topic);
+          view.topics[topic][language]) {
+        const topicSpec = view.topics[topic];
+        if (topicSpec.version !== 2) {
+          view.toolbar.enableAndShowActivities(language, topic);
+        }
       }
 
       view.toolbar.toggleEnhanceButton();

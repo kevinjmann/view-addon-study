@@ -21,7 +21,7 @@ describe("ViewServer", () => {
     xhr.restore();
   });
 
-  it('returns resolves promise', () => {
+  it('returns resolved promise', () => {
     const customTokenPromise = server.getCustomToken("token");
 
     expect(requests.length).to.equal(1);

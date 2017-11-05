@@ -74,7 +74,8 @@ module.exports = function(config) {
       /**
        * Mocha will report the full suite on first run, and less next time
        */
-      output: 'autowatch'
+      output: 'autowatch',
+      showDiff: true
     },
 
     /**

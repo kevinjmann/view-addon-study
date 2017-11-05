@@ -128,6 +128,16 @@
       "version": "5.1.2",
       "from": "nanomorph@>=5.1.2 <6.0.0",
       "resolved": "https://registry.npmjs.org/nanomorph/-/nanomorph-5.1.2.tgz"
+    },
+    "rxjs": {
+      "version": "5.5.2",
+      "from": "rxjs@latest",
+      "resolved": "https://registry.npmjs.org/rxjs/-/rxjs-5.5.2.tgz"
+    },
+    "symbol-observable": {
+      "version": "1.0.4",
+      "from": "symbol-observable@>=1.0.3 <2.0.0",
+      "resolved": "https://registry.npmjs.org/symbol-observable/-/symbol-observable-1.0.4.tgz"
     }
   }
 }
