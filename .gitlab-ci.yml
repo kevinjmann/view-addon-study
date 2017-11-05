@@ -3,14 +3,12 @@ image: adimit/docker-node-chromium:latest
 stages:
   - setup
   - test
-  - build
-  - dist
+  - bundle
 
 cache:
-  untracked: true
   key: "$CI_COMMIT_REF_NAME"
   paths:
-    - "./node-modules"
+    - "./node_modules"
 
 npm:
   stage: setup
@@ -27,34 +25,24 @@ karma:
     - node
     - chromium-headless
 
-webpack:
-  stage: build
+chromium:
+  stage: bundle
   script:
-    - npm run build
+    - npm run build:chromium
+    - npm run bundle
   artifacts:
-    expire_in: 1 hour
     paths:
-      - addon
-  tags:
-    - node
+      - "./*.zip"
   only:
     - master
 
-webext:
-  stage: dist
+firefox:
+  stage: bundle
   script:
-    - npm run bundle
-    - mkdir /tmp/addon && cp dist/*zip /tmp/addon
-    - rm -rf *
-    - unzip /tmp/addon/*zip
-    - find -name '*.map' -exec 'rm' '-f' '{}' ';'
-    - rm -rf .git*
-  tags:
-    - node
-  artifacts:
-    expire_in: 1 week
-    name: "view-addon-$CI_JOB_NAME"
-    paths:
-      - ./
+    - npm run build:firefox
+    - node_modules/.bin/web-ext sign -a . -s addon --api-key=${MOZILLA_USER} --api-secret=${MOZILLA_KEY} --id=${MOZILLA_ID}
   only:
-    - master
+    - tags
+  artifacts:
+    paths:
+      - "./*.xpi"
