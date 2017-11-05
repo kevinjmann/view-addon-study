@@ -17,12 +17,22 @@ const glob = require("glob");
 
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const StringReplacePlugin = require('string-replace-webpack-plugin');
+const webpack = require('webpack');
 
 const CssTextPlugin = new ExtractTextPlugin("[name].css");
 const HtmlTextPlugin = new ExtractTextPlugin("[name].html");
+const ExtractManifest = new ExtractTextPlugin('manifest.json');
 
 const addon = path.resolve(__dirname, "addon");
 const source_path = path.resolve(__dirname, "./viewWE");
+
+const environmentPlugin = new webpack.EnvironmentPlugin(
+  {
+    VERSION: 'test',
+    TARGET: 'firefox'
+  });
+
 
 module.exports = {
   entry: {
@@ -40,7 +50,9 @@ module.exports = {
       glob.sync(path.resolve(source_path, "content_scripts/css/**/*.css"))
     ).concat(
       glob.sync(path.resolve(source_path, "content_scripts/css/**/*.scss"))
-    )
+    ),
+
+    'manifest': path.resolve(source_path, `manifest-${process.env.TARGET}.json`)
   },
   devtool: 'source-map',
   output: {
@@ -49,18 +61,16 @@ module.exports = {
   },
   plugins: [
     new CopyWebpackPlugin([
-      /** Copies the icons and the manifest to the target location */
-      {
-        from: path.resolve(source_path, "manifest.json"),
-        to:   path.resolve(addon, "manifest.json")
-      },
+      /** Copies the icons to the target location */
       {
         from: path.resolve(source_path, "icons"),
         to:   path.resolve(addon, "icons")
       }
     ]),
     CssTextPlugin,
-    HtmlTextPlugin
+    HtmlTextPlugin,
+    ExtractManifest,
+    environmentPlugin
   ],
   resolve: {
     /** This hack is here because sinon uses 'require' in buggy ways */
@@ -73,6 +83,19 @@ module.exports = {
     noParse: [ /node_modules\/sinon$/ ],
 
     rules: [
+      {
+        test: /manifest.*\.json$/,
+        loader: ExtractManifest.extract({
+          use: StringReplacePlugin.replace({
+            replacements: [
+              {
+                pattern: /{{version}}/,
+                replacement: () => process.env.VERSION
+              }
+            ]
+          }, 'raw-loader')
+        })
+      },
       {
         /** run all js files through babel loader with es2015, except node_modules */
         test: /\.js$/,

@@ -3,13 +3,7 @@
   "homepage_url": "http://sifnos.sfs.uni-tuebingen.de/VIEW",
   "manifest_version": 2,
   "name": "VIEW",
-  "version": "1.1.0",
-
-  "applications": {
-    "gecko": {
-      "id": "view@mozilla.org"
-    }
-  },
+  "version": "{{version}}",
 
   "icons": {
     "48": "icons/view-48.png",
