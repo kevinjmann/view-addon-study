@@ -16,12 +16,6 @@
             "text": "Find the words matching your selections"
           }
         },
-        "mc": {
-          "instruction": {
-            "title": "Multiple Choice",
-            "text": "Choose a form from the drop-down list and VIEW will show you whether you guessed <span class='click-style-correct'>right</span> or <span class='click-style-incorrect'>wrong</span>. You can get help by clicking on <span class='view-style-hint'>?</span>."
-          }
-        },
         "cloze": {
           "instruction": {
             "title": "Fill in the blanks",
