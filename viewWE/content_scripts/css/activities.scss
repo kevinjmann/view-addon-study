@@ -43,4 +43,16 @@ viewenhancement {
       color: #0F0;
     }
   }
+
+  &.view-click {
+    cursor: pointer;
+
+    &-wrong {
+      background-color: #D00;
+    }
+
+    &-correct {
+      background-color: #0D0;
+    }
+  }
 }

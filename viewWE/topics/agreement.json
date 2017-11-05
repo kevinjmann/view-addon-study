@@ -10,6 +10,12 @@
             "text": "Spot different cases"
           }
         },
+        "click": {
+          "instruction": {
+            "title": "Click",
+            "text": "Find the words matching your selections"
+          }
+        },
         "mc": {
           "instruction": {
             "title": "Multiple Choice",

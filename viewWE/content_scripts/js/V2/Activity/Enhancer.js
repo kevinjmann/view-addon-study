@@ -65,14 +65,21 @@ class Enhancer {
 
   stop() {
     const anchors = document.querySelectorAll('a');
+
     for (const anchor of anchors) {
       const href = anchor.getAttribute('data-href');
       anchor.setAttribute('href', href);
       anchor.removeAttribute('data-view-href');
     }
+
     for (const node of this.nodes) {
       this.enhancement.clear(node);
     }
+
+    if (typeof this.enhancement.destroy === 'function') {
+      this.enhancement.destroy();
+    }
+
     this.nodes = [];
     this.enhancement = null;
   }
