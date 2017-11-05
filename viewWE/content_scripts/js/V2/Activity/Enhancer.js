@@ -5,7 +5,6 @@ import Color from './Enhancements/Color';
 import Cloze from './Enhancements/Cloze';
 import MultipleChoice from './Enhancements/MultipleChoice';
 import Click from './Enhancements/Click';
-import Simple from './Enhancements/Simple';
 import { combineStore } from '../Store';
 import selectionsToConstraints from './SelectionsToConstraints';
 
