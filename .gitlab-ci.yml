@@ -31,7 +31,8 @@ chromium:
     - npm run build:chromium
     - npm run bundle
   artifacts:
-    - "./*.zip"
+    paths:
+      - "./*.zip"
   only:
     - master
 
