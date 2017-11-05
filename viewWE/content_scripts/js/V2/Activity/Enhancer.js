@@ -76,9 +76,8 @@ class Enhancer {
       this.enhancement.clear(node);
     }
 
-    if (typeof this.enhancement.destroy === 'function') {
-      this.enhancement.destroy();
-    }
+    typeof this.enhancement.destroy === 'function'
+      && this.enhancement.destroy();
 
     this.nodes = [];
     this.enhancement = null;
