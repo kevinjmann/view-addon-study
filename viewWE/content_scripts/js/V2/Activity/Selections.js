@@ -3,8 +3,19 @@ import { Observable } from 'rxjs/Observable';
 import { combineStore } from '../Store';
 import render from './SelectionsView';
 import { connectSelections, connectActivities } from './SelectionsModel';
+import ActivityPicker from '../ActivityPicker';
 
-function show(container, view) {
+/**
+ * Renders the given view into the given container.
+ *
+ * Additionally, creates a show & hide button. The show button is inserted into
+ * the base container, the show button is inserted into the view.
+ *
+ * Return value is the destruction function. It unsubscribes from the event
+ * stream created for the buttons, and removes the hide button and the view from
+ * the container.
+ */
+function createView(container, view) {
   const showButton = document.createElement('button');
   showButton.textContent = 'selections';
 
@@ -24,17 +35,37 @@ function show(container, view) {
   view.append(hideButton);
   container.append(showButton);
 
-  return Observable.merge(
+  const subscription = Observable.merge(
     Observable.fromEvent(showButton, 'click').map(() => showSelections),
     Observable.fromEvent(hideButton, 'click').map(() => hideSelections)
-  ).startWith(showSelections);
+  ).startWith(showSelections).subscribe(f => f());
+
+  return () => {
+    subscription.unsubscribe();
+    container.contains(view) && container.removeChild(view);
+    container.contains(showButton) && container.removeChild(showButton);
+  };
 }
 
-export default (container, baseSelections, activitySelect) => {
-  const view = render(activitySelect, baseSelections);
-  show(container, view).subscribe(f => f());
-  const activity = connectActivities(activitySelect);
-  const selections = connectSelections(baseSelections, view);
+export default (commands, container) => {
+  let destroyView = () => 0;
+  return commands.flatMap(({ command, configuration }) => {
+    destroyView();
+    destroyView = () => 0;
 
-  return combineStore({ activity: activity, selections });
+    if (command === 'stop') {
+      return Observable.empty();
+    }
+
+    const { activities, selections } = configuration;
+    const activitySelect = ActivityPicker(activities, Object.keys(activities)[0]);
+
+    const html = render(activitySelect, selections);
+    destroyView = createView(container, html);
+
+    return combineStore({
+      activity: connectActivities(activitySelect),
+      selections: connectSelections(selections, html),
+    });
+  });
 };
