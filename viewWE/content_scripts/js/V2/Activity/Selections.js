@@ -49,7 +49,7 @@ function createView(container, view) {
 
 export default (commands, container) => {
   let destroyView = () => 0;
-  return commands.flatMap(({ command, configuration }) => {
+  return commands.map(({ command, configuration }) => {
     destroyView();
     destroyView = () => 0;
 
@@ -67,5 +67,5 @@ export default (commands, container) => {
       activity: connectActivities(activitySelect),
       selections: connectSelections(selections, html),
     });
-  });
+  }).concatAll();
 };
