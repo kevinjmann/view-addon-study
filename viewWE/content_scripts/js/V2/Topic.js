@@ -16,5 +16,5 @@ export default (configuration, container) => {
     }
   });
 
-  return topicView.update;
+  return status => topicView.update(status);
 };
