@@ -24,7 +24,6 @@ export default (commands, server) => {
 
   const status = new Subject();
 
-  console.log('commands', commands);
   // transforms commands into markup. The result of switchMap is HTML
   commands.switchMap(({ command, configuration }) => {
     // restore on stop
@@ -48,7 +47,7 @@ export default (commands, server) => {
         // Don't return any markup on error, leaving it unchanged
       ).catch(error => {
         status.next('error fetching markup, check console');
-        console.log('error fetching markup', error);
+        console.error('error fetching markup', error);
         return Observable.from([null]);
       });
     })
