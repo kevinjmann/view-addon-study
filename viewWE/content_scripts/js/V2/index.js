@@ -1,5 +1,4 @@
 import Browser from '../../../Browser';
-import makeToolbarConfiguration from './Toolbar';
 import ViewServer from '../../../ViewServer';
 import subscribeTopic from './Topic';
 import view from '../view';
