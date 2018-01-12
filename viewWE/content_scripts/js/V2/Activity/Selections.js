@@ -11,9 +11,9 @@ import ActivityPicker from '../ActivityPicker';
  * Additionally, creates a show & hide button. The show button is inserted into
  * the base container, the show button is inserted into the view.
  *
- * Return value is the hide function. It unsubscribes from the event stream
- * created for the buttons, and removes the hide button and the view from the
- * container.
+ * Return value is the destruction function. It unsubscribes from the event
+ * stream created for the buttons, and removes the hide button and the view from
+ * the container.
  */
 function createView(container, view) {
   const showButton = document.createElement('button');
@@ -41,6 +41,7 @@ function createView(container, view) {
   ).startWith(showSelections).subscribe(f => f());
 
   return () => {
+    subscription.unsubscribe();
     container.contains(view) && container.removeChild(view);
     container.contains(showButton) && container.removeChild(showButton);
   };
