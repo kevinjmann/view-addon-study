@@ -1,8 +1,8 @@
 export default class TopicView {
-  constructor() {
+  constructor(container) {
     this.shown = false;
 
-    this.toolbar = document.getElementById('wertiview-toolbar');
+    this.toolbar = container;
     this.enhanceButton = document.getElementById('wertiview-toolbar-enhance-button');
     this.activityMenu = document.querySelector('#wertiview-toolbar-activity-menu');
     this.indicator = document.createElement('label');
