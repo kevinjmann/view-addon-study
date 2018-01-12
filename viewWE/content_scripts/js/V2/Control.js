@@ -47,6 +47,7 @@ export default (viewTopics) => {
     Observable.fromEvent(topicSelectRu, 'change'),
   );
 
+  // map event streams to commands with payload
   const selectEvents = updates.map(() => {
     const language = getLanguage();
     const topic = getTopic();
@@ -65,5 +66,11 @@ export default (viewTopics) => {
   const closeButton = document.getElementById(`${idPrefix}-toggle-button`);
   const closeEvent = Observable.fromEvent(closeButton, 'click').map(() => ({ command: 'stop '}));
 
-  return Observable.merge(closeEvent, selectEvents).distinctUntilChanged();
+  return Observable.merge(closeEvent, selectEvents)
+  // suppress bogus 'stop' before the configuration is valid
+    .skipWhile(({ command }) => command === 'stop')
+  // suppress multiple 'stops'
+    .distinctUntilChanged((a, b) => {
+      return a.command === b.command && a.command === 'stop';
+    });
 }
