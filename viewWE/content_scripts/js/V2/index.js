@@ -6,6 +6,7 @@ import view from '../view';
 import subscribeMarkup from './Markup';
 import subscribeEnhancer from './Activity/Enhancer';
 import subscribeStatus from './Status';
+import subscribeSelections from './Activity/Selections';
 import { Subject } from 'rxjs/Subject';
 import control from './Control';
 import { Observable } from 'rxjs/Observable';
@@ -21,13 +22,10 @@ const initialize = async chrome => {
 
   const update = subscribeTopic(commands, toolbar);
   const status = subscribeMarkup(commands, server);
-  const selections = subscribeSelections(commands);
-  // const selections = 
-  // const enhancer = subscribeEnhancer(selections.concatAll(), status);
+  const selections = subscribeSelections(commands, toolbar);
+  selections.subscribe(console.log.bind(null, 'selections'));
 
-  // const activitySelect = activityPicker(activities, 'color');
-  // this.selections = createSelections(container, selections, activitySelect);
-  // configuration.next(this.selections.stream);
+  // const enhancer = subscribeEnhancer(selections.concatAll(), status);
   // const statusDisplay = subscribeStatus({ status, enhancer: Observable.empty() , update });
 };
 
