@@ -58,7 +58,71 @@
           "match": ["PRO", "ART"]
         }
       ],
-      "selections": []
+      "selections": [
+        {
+          "title": "Gender",
+          "data": "morph-gender",
+          "selectionItems": [
+            {
+              "title": "neuter",
+              "match": "Neut",
+              "checked": true
+            },
+            {
+              "title": "feminine",
+              "match": "Fem",
+              "checked": true
+            },
+            {
+              "title": "masculine",
+              "match": "Masc",
+              "checked": true
+            }
+          ]
+        },
+        {
+          "title": "Number",
+          "data": "morph-number",
+          "selectionItems": [
+            {
+              "title": "singular",
+              "match": "Sing",
+              "checked": true
+            },
+            {
+              "title": "plural",
+              "match": "Plur",
+              "checked": true
+            }
+          ]
+        },
+        {
+          "title": "Case",
+          "data": "morph-case",
+          "selectionItems": [
+            {
+              "title": "Accusative",
+              "match": "Acc",
+              "checked": true
+            },
+            {
+              "title": "Genitive",
+              "match": "Gen",
+              "checked": true
+            },
+            {
+              "title": "Nominative",
+              "match": "Nom",
+              "checked": false
+            },
+            {
+              "title": "Dative",
+              "match": "Dat",
+              "checked": true
+            }
+          ]
+        }
+      ]
     }
   }
 }
