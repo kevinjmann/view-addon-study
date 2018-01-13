@@ -23,6 +23,12 @@
           }
         }
       },
+      "targets": [
+        {
+          "data": "pos",
+          "match": ["at", "dt", "dti", "dts", "dtx"]
+        }
+      ],
       "selections": []
     },
     "de": {
@@ -46,6 +52,12 @@
           }
         }
       },
+      "targets": [
+        {
+          "data": "pos",
+          "match": ["PRO", "ART"]
+        }
+      ],
       "selections": []
     }
   }
