@@ -22,7 +22,7 @@ const initialize = async chrome => {
   const status = subscribeMarkup(commands, server);
   const selections = subscribeSelections(commands, toolbar);
 
-  const enhancer = subscribeEnhancer(selections, status);
+  const enhancer = subscribeEnhancer(selections, status, commands);
   Observable.merge(status, enhancer).subscribe(update);
 };
 
