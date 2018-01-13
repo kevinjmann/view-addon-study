@@ -6,7 +6,7 @@ import TopicView from './TopicView';
  */
 export default (configuration, container) => {
   let topicView = new TopicView(container);
-  configuration.subscribe(({ command, ...configuration }) => {
+  configuration.subscribe(({ command }) => {
     if (command === 'start') {
       topicView.show();
     }
