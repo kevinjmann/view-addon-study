@@ -8,8 +8,6 @@ import Click from './Enhancements/Click';
 import { combineStore } from '../Store';
 import selectionsToConstraints from './SelectionsToConstraints';
 
-// FIXME: getHits should return a generator
-
 const matchesSelections = (node, selections) => {
   const entries = Object.entries(selections);
   for (const [attribute, { match }] of entries) {
@@ -21,14 +19,23 @@ const matchesSelections = (node, selections) => {
   return true;
 };
 
-const getHits = (selections) => {
+const selectifyTargets = (targets) => {
+  const selections = {};
+  targets.forEach(({ data, match }) => selections[`data-${data}`] = { match: new Set(match) }) ;
+  console.log('newSelections', selections);
+  return selections;
+};
+
+const getHits = (selections, targets) => {
   const attributes = Object.keys(selections);
-  attributes.push('data-view-hit');
   const cssQuery = 'viewEnhancement' + attributes.map(attr => `[${attr}]`).join('');
+  console.log('cssQuery', cssQuery);
+  console.log('selections', selections);
   const nodeList = document.querySelectorAll(cssQuery);
   const nodes = [];
+  const constraints = Object.assign({}, selectifyTargets(targets), selections);
   for (var node of nodeList) {
-    if (matchesSelections(node, selections)) {
+    if (matchesSelections(node, constraints)) {
       nodes.push(node);
     }
   }
@@ -49,7 +56,7 @@ class Enhancer {
     };
   }
 
-  start(activity, selections) {
+  start(activity, selections, targets) {
     const anchors = document.querySelectorAll('a');
     for (const anchor of anchors) {
       const href = anchor.getAttribute('href');
@@ -57,7 +64,7 @@ class Enhancer {
       anchor.setAttribute('data-view-href', href);
     }
     this.enhancement = new this.enhancements[activity]();
-    this.nodes = getHits(selections);
+    this.nodes = getHits(selections, targets);
     for (const node of this.nodes) {
       this.enhancement.enhance(node, activity);
     }
@@ -65,7 +72,6 @@ class Enhancer {
 
   stop() {
     const anchors = document.querySelectorAll('a');
-
     for (const anchor of anchors) {
       const href = anchor.getAttribute('data-href');
       anchor.setAttribute('href', href);
@@ -83,24 +89,29 @@ class Enhancer {
     this.enhancement = null;
   }
 
-  update(activity, selections) {
+  update(activity, selections, targets) {
     this.enhanced && this.stop();
-    this.start(activity, selections);
+    this.start(activity, selections, targets);
     this.enhanced = true;
   }
 }
 
-export default (selections$, markup$) => {
+export default (selections$, markup$, command$) => {
   const status = new Subject();
   const enhancer = new Enhancer();
-  combineStore({ selectionConfig: selections$, markup: markup$ })
+  combineStore({ selectionConfig: selections$, markup: markup$, control: command$ })
     .filter(({ markup }) => markup === 'markup done')
+    .filter(({ control: { command } }) => command === 'start')
     .map(({ selectionConfig: { ...selectionConfig, selections }, ...config }) => ({
       ...config, selectionConfig, constraints: selectionsToConstraints(selections)
     }))
-    .subscribe(({ selectionConfig: { activity }, constraints }) => {
+    .subscribe(({
+      selectionConfig: { activity },
+      constraints,
+      control: { configuration: { targets }}
+    }) => {
       status.next('updating enhancements');
-      enhancer.update(activity, constraints);
+      enhancer.update(activity, constraints, targets);
       status.next('ready');
     }
   );
