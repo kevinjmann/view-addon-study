@@ -23,6 +23,12 @@
           }
         }
       },
+      "targets": [
+        {
+          "data": "pos",
+          "match": ["N", "ADJA"]
+        }
+      ],
       "selections": [
         {
           "title": "Gender",
