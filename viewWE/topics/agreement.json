@@ -23,6 +23,12 @@
           }
         }
       },
+      "targets": [
+        {
+          "data": "morph-pos",
+          "match": ["N", "ADJA"]
+        }
+      ],
       "selections": [
         {
           "title": "Gender",
