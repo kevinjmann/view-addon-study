@@ -3,7 +3,9 @@
 export default class Css {
   constructor() {
     this.indices = [];
-    this.styleSheet = document.styleSheets[0];
+    const style = document.createElement('style');
+    document.body.prepend(style);
+    this.styleSheet = document.styleSheets[document.styleSheets.length -1];
   }
 
   apply(css) {
