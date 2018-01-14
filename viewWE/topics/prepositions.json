@@ -3,48 +3,10 @@
   "version": 2,
   "languages": {
     "en": {
-      "enhance": [
+      "targets": [
         {
-          "type": "pos"
-        },
-        {
-          "type": "hit",
-          "on": [
-            {
-              "pos": ["to", "in"]
-            }
-          ]
-        },
-        {
-          "type": "distractor",
-          "on": "hit",
-          "static": [
-            "of",
-            "in",
-            "to",
-            "for",
-            "with",
-            "on",
-            "at",
-            "from",
-            "by",
-            "about",
-            "as",
-            "into",
-            "like",
-            "through",
-            "after",
-            "over",
-            "between",
-            "out",
-            "against",
-            "during",
-            "without",
-            "before",
-            "under",
-            "around",
-            "among"
-          ]
+          "data": "morph-pos",
+          "match": ["TO", "IN"]
         }
       ],
       "activities": {
@@ -70,42 +32,10 @@
       "selections": []
     },
     "de": {
-      "enhance": [
+      "targets": [
         {
-          "type": "pos"
-        },
-        {
-          "type": "hit",
-          "on": [
-            {
-              "pos": ["appr"]
-            }
-          ]
-        },
-        {
-          "type": "distractor",
-          "on": "hit",
-          "static": [
-            "in",
-            "von",
-            "mit",
-            "auf",
-            "nach",
-            "aus",
-            "an",
-            "zu",
-            "bei",
-            "vor",
-            "um",
-            "gegen",
-            "durch",
-            "bis",
-            "seit",
-            "unter",
-            "zwischen",
-            "wegen",
-            "ohne"
-          ]
+          "data": "morph-pos",
+          "match": ["appr"]
         }
       ],
       "activities": {
