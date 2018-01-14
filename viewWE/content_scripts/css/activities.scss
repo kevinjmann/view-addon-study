@@ -24,7 +24,7 @@ viewenhancement {
     background-color: #0A0;
   }
 
-  &.view-colorize-style {
+  &.view-colorize-agreement-de-style {
     font-weight: bold;
 
     &[data-morph-case="Nom"] {
@@ -41,6 +41,50 @@ viewenhancement {
 
     &[data-morph-case="Acc"] {
       color: #0F0;
+    }
+  }
+
+  &.view-colorize-prepositions-en-style {
+    font-weight: bold;
+    color: #B70;
+  }
+
+  &.view-colorize-prepositions-de-style {
+    font-weight: bold;
+    color: #B70;
+  }
+
+  &.view-colorize-determiners-en-style {
+    font-weight: bold;
+    color: #00F;
+  }
+
+  &.view-colorize-determiners-de-style {
+    font-weight: bold;
+    &[data-morph-case="Nom"] {
+      color: #F00;
+    }
+
+    &[data-morph-case="Gen"] {
+      color: #F0F;
+    }
+
+    &[data-morph-case="Dat"] {
+      color: #00F;
+    }
+
+    &[data-morph-case="Acc"] {
+      color: #0F0;
+    }
+  }
+
+  &.view-colorize-articles-en-style {
+    font-weight: bold;
+    &[data-original-text="a"] {
+      color: #B70;
+    }
+    &[data-original-text="the"] {
+      color: #7B0;
     }
   }
 

@@ -56,14 +56,14 @@ class Enhancer {
     };
   }
 
-  start(activity, selections, targets) {
+  start(activity, selections, targets, topic, language) {
     const anchors = document.querySelectorAll('a');
     for (const anchor of anchors) {
       const href = anchor.getAttribute('href');
       anchor.removeAttribute('href');
       anchor.setAttribute('data-view-href', href);
     }
-    this.enhancement = new this.enhancements[activity]();
+    this.enhancement = new this.enhancements[activity](topic, language);
     this.nodes = getHits(selections, targets);
     for (const node of this.nodes) {
       this.enhancement.enhance(node, activity);
@@ -89,9 +89,9 @@ class Enhancer {
     this.enhancement = null;
   }
 
-  update(activity, selections, targets) {
+  update(activity, selections, targets, topic, language) {
     this.enhanced && this.stop();
-    this.start(activity, selections, targets);
+    this.start(activity, selections, targets, topic, language);
     this.enhanced = true;
   }
 }
@@ -108,10 +108,10 @@ export default (selections$, markup$, command$) => {
     .subscribe(({
       selectionConfig: { activity },
       constraints,
-      control: { configuration: { targets }}
+      control: { configuration: { targets, topic, language }}
     }) => {
       status.next('updating enhancements');
-      enhancer.update(activity, constraints, targets);
+      enhancer.update(activity, constraints, targets, topic, language);
       status.next('ready');
     }
   );
