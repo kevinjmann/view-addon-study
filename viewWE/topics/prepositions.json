@@ -34,8 +34,8 @@
     "de": {
       "targets": [
         {
-          "data": "morph-pos",
-          "match": ["appr"]
+          "data": "pos",
+          "match": ["APPR"]
         }
       ],
       "activities": {
