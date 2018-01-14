@@ -37,7 +37,8 @@ const background = {
         determiners: require('./topics/determiners.json'),
         nouns: require('./topics/nouns.json'),
         adjectives: require('./topics/adjectives.json'),
-        agreement: require('./topics/agreement.json')
+        agreement: require('./topics/agreement.json'),
+        prepositions: require('./topics/prepositions.json')
       },
       ajaxTimeout: 60000
     });
