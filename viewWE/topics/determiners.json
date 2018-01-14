@@ -25,8 +25,8 @@
       },
       "targets": [
         {
-          "data": "pos",
-          "match": ["at", "dt", "dti", "dts", "dtx"]
+          "data": "morph-pos",
+          "match": ["AT", "DT", "DTI", "DTS", "DTX"]
         }
       ],
       "selections": []
