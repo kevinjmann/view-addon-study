@@ -11,7 +11,7 @@
     "build:firefox": "TARGET=firefox VERSION=\"$npm_package_version\" webpack && rm -f addon/manifest.js && find addon -name '*.map' -exec rm -f '{}' ';'",
     "build:chromium": "TARGET=chromium VERSION=\"$npm_package_version\" webpack && rm -f addon/manifest.js && find addon -name '*.map' -exec rm -f '{}' ';'",
     "bundle": "web-ext -s ./addon -a . build --overwrite-dest",
-    "clean": "rm -rf addon/*",
+    "clean": "rm -rf addon/* && rm -f view-${npm_package_version}.zip",
     "start": "concurrently --kill-others \"npm run watch:build\" \"npm run webext:run\"",
     "test": "npm-run-all test:*",
     "test:unit": "karma start --browsers ChromiumHeadless --single-run=true",
