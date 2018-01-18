@@ -7,10 +7,8 @@ export default (commands, markupStatus) => {
       ({ commands: { command }, markupStatus }) =>
         command === 'start' && markupStatus === 'markup done')
     .distinctUntilChanged(
-      (a, b) => {
-        return a.commands.configuration.topic === b.commands.configuration.topic && a.commands.configuration.language === b.commands.configuration.language;
-      }
-    )
+      (a, b) => a.commands.configuration.topic === b.commands.configuration.topic
+        && a.commands.configuration.language === b.commands.configuration.language)
     .subscribe(
       ({ commands: { configuration: { topic, language } } }) =>
         view.notification.add(`Topic ${language}/${topic} is ready`));

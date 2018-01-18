@@ -9,4 +9,5 @@ The changelog starts with version 1.2.5, prior versions are not covered.
 - Added a notification when V2 topics are ready
 
 ### Fixed
-- Fixed a bug where the lemma would be shown as 'null' when no lemma was marked up server side
+- Fixed a bug where the lemma would be shown as 'null' when no lemma was marked
+  up server side
