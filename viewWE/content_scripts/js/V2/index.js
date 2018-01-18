@@ -7,6 +7,7 @@ import subscribeEnhancer from './Activity/Enhancer';
 import subscribeSelections from './Activity/Selections';
 import { Subject } from 'rxjs/Subject';
 import control from './Control';
+import notifications from './Notifications';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/empty';
 
@@ -19,11 +20,12 @@ const initialize = async chrome => {
   const commands = control(view.topics);
 
   const update = subscribeTopic(commands, toolbar);
-  const status = subscribeMarkup(commands, server);
+  const markupStatus = subscribeMarkup(commands, server);
   const selections = subscribeSelections(commands, toolbar);
 
-  const enhancer = subscribeEnhancer(selections, status, commands);
-  Observable.merge(status, enhancer).subscribe(update);
+  const enhancerStatus = subscribeEnhancer(selections, markupStatus, commands);
+  Observable.merge(markupStatus, enhancerStatus).subscribe(update);
+  notifications(commands, markupStatus);
 };
 
 export default initialize;
