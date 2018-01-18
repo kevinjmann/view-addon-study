@@ -17,7 +17,10 @@ export default class Cloze {
     node.append(input);
     const clearNode = () => this.clear(node);
 
-    input.setAttribute('placeholder', node.getAttribute('data-lemma'));
+    const lemma = node.getAttribute('data-lemma');
+    if (typeof lemma === 'string') { // null and undefined aren't 'string'
+      input.setAttribute('placeholder', lemma);
+    }
     this.last['data-view-next'] = input;
     input['data-view-previous'] = this.last;
     this.last = input;
