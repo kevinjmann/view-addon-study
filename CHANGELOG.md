@@ -11,3 +11,4 @@ The changelog starts with version 1.2.5, prior versions are not covered.
 ### Fixed
 - Fixed a bug where the lemma would be shown as 'null' when no lemma was marked
   up server side
+- Fixed a bug where closing the toolbar would cause V2 topics to break
