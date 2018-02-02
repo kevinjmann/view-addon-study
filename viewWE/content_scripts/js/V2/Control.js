@@ -64,7 +64,7 @@ export default (viewTopics) => {
   });
 
   const closeButton = document.getElementById(`${idPrefix}-toggle-button`);
-  const closeEvent = Observable.fromEvent(closeButton, 'click').map(() => ({ command: 'stop '}));
+  const closeEvent = Observable.fromEvent(closeButton, 'click').map(() => ({ command: 'stop' }));
 
   return Observable.merge(closeEvent, selectEvents)
   // suppress bogus 'stop' before the configuration is valid
