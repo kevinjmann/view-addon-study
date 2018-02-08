@@ -59,6 +59,11 @@ viewenhancement {
     color: #00F;
   }
 
+  &.view-colorize-gerunds-en-style {
+    font-weight: bold;
+    color: #00F;
+  }
+
   &.view-colorize-determiners-de-style {
     font-weight: bold;
     &[data-morph-case="Nom"] {

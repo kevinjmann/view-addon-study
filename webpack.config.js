@@ -52,7 +52,7 @@ module.exports = {
       glob.sync(path.resolve(source_path, "content_scripts/css/**/*.scss"))
     ),
 
-    'manifest': path.resolve(source_path, `manifest-${process.env.TARGET}.json`)
+    'manifest': path.resolve(source_path, "manifest-firefox.json")
   },
   devtool: 'source-map',
   output: {

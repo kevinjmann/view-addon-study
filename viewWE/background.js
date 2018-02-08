@@ -38,7 +38,8 @@ const background = {
         nouns: require('./topics/nouns.json'),
         adjectives: require('./topics/adjectives.json'),
         agreement: require('./topics/agreement.json'),
-        prepositions: require('./topics/prepositions.json')
+        prepositions: require('./topics/prepositions.json'),
+        gerunds: require('./topics/gerunds.json')
       },
       ajaxTimeout: 60000
     });
