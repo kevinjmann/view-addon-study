@@ -67,6 +67,8 @@ view.statisticsMenu = require('./statistics-menu.js')(view);
 view.toolbar = require('./toolbar.js')(view);
 view.VIEWmenu = require('./view-menu.js')(view);
 
+// view.study = require('./study.js')(view);
+
 /* Activities */
 view.activityHelper = require('./activities/activityHelper.js')(view);
 view.click = require('./activities/click.js')(view);

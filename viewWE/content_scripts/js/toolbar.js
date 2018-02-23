@@ -40,9 +40,11 @@ module.exports = function(view) {
      * Toggle the toolbar, set storage items if necessary
      */
     toggleToolbar: function() {
+      console.log("toggle toolbar called");
       if (view.toolbarExists) {
         view.toolbar.toggle();
       } else {
+        console.log("is it breaking here?");
         view.setStorageItemsAndAddToolbar();
         view.toolbarExists = true;
       }
@@ -81,6 +83,8 @@ module.exports = function(view) {
       view.toolbar.initRestoreBtn();
 
       view.toolbar.initSignInBtn();
+
+      view.toolbar.initStudyBtn();
 
       view.toolbar.initAccountMenuBtn();
 
@@ -438,6 +442,70 @@ module.exports = function(view) {
         view.authenticator + "?action=sign-in"
       );
     },
+
+    /**
+     * Open new tab with exercise
+     */
+    initStudyBtn: function() {
+      view.toolbar.$cache.get(view.toolbar.selectorStart+"study-button").on(
+        "click",
+        view.toolbar.openSampleTab
+      );
+    },
+
+    openSampleTab: function() {
+      // view.toolbar.loadStudyPage("data/sampleArticle.html");
+      chrome.runtime.sendMessage({action:"openStudyPage", pageToOpen:"sampleArticle.html"});
+      // chrome.storage.local.set({
+      //   language: "en",
+      //   topic: "determiners",
+      //   filter: "",
+      //   activity: "cloze",
+      //   timestamp: Date.now()
+      // }, view.toolbar.prepareAndEnhance);
+
+    },
+    startStudyEnhancements: function(){
+      // chrome.storage.local.set({
+      //   language: "en",
+      //   topic: "determiners",
+      //   filter: "",
+      //   activity: "cloze",
+      //   timestamp: Date.now()
+      // }, view.toolbar.prepareAndEnhance);
+    },
+
+    loadStudyPage: function(path){
+      // const url = browser.extension.getURL(path);
+      // const promise = new Promise(function(resolve, reject){
+      //   var req = new XMLHttpRequest();
+      //   req.open('GET', url);
+      //   req.onload = function(){
+      //       if(req.status == 200 || req.status == 0){
+      //           resolve(req.responseText);
+      //       }
+      //       else{
+      //           reject(Error(req.statusText));
+      //       }
+      //   };
+      //   req.onerror = function(){
+      //       reject(Error('Network Error'));
+      //   };
+      //   req.send();
+      //   });
+      
+      // promise.then(function(result){
+      //   // window.open(result, "", "_blank");
+      //   browser.tabs.create({
+      //     url: "data/sampleArticle.html"
+      //   })
+      // }).catch(function(d){
+      //   console.log(d);
+      // })
+      // studyPage.document.write("<div>this is only a test</div>");
+      
+    },
+
 
     /**
      * Assign the authenticator to the href attribute of the given window

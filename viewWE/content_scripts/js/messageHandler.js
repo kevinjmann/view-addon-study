@@ -35,6 +35,9 @@ function processMessage(request) {
       break;
     case "signOut":
       view.toolbar.signOut();
+      break;
+    case "startStudyEnhancements":
+      view.toolbar.startStudyEnhancements();
   }
 }
 

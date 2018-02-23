@@ -64,6 +64,56 @@ viewenhancement {
     color: #00F;
   }
 
+  &.view-colorize-adjCompSuperl-en-style {
+    color: #2222FF;
+    font-weight: bold;
+  }
+
+  &.view-colorize-allSimpleVerbs-en-style {
+    color: #2222FF;
+    font-weight: bold;
+  }
+
+  &.view-colorize-passiveVsActiveInPast-en-style {
+    color: #2222FF;
+    font-weight: bold;
+  }
+
+  &.view-colorize-plusqVsPerf-en-style {
+    color: #2222FF;
+    font-weight: bold;
+  }
+
+  &.view-colorize-simPastPastProg-en-style {
+    color: #2222FF;
+    font-weight: bold;
+  }
+
+  &.view-colorize-simPastPresPerfPastProg-en-style {
+    color: #2222FF;
+    font-weight: bold;
+  }
+
+  &.view-colorize-simplePast-en-style {
+    color: #2222FF;
+    font-weight: bold;
+  }
+
+  &.view-colorize-simPresPresProg-en-style {
+    color: #2222FF;
+    font-weight: bold;
+  }
+
+  &.view-colorize-whoWhich-en-style {
+    color: #2222FF;
+    font-weight: bold;
+  }
+
+  &.view-colorize-willWouldHaveHad-en-style {
+    color: #2222FF;
+    font-weight: bold;
+  }
+
   &.view-colorize-determiners-de-style {
     font-weight: bold;
     &[data-morph-case="Nom"] {

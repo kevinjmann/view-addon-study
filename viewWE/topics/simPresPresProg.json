@@ -1,12 +1,12 @@
 {
-    "title": "Gerunds",
+    "title": "Simple Pres. vs Pres. Prog.",
     "version": 2,
     "languages": {
       "en": {
         "targets": [
           {
             "data": "morph-pos",
-            "match": ["VBG"]
+            "match": ["VBG", "VBP", "VBZ"]
           }
         ],
         "selections": [],
@@ -32,7 +32,7 @@
           "cloze": {
             "instruction": {
               "title": "Fill in the blanks",
-              "text": "Fill in the blanks with the <font color='green'><b>correct</b></font> gerund. If you guessed <span class='click-style-incorrect'>wrong</span> or you find it too difficult you can get help by clicking on <span class='view-style-hint'>?</span>."
+              "text": "Fill in the blanks with the <font color='green'><b>correct</b></font> form of the verb in either simple present or present progressive. If you guessed <span class='click-style-incorrect'>wrong</span> or you find it too difficult you can get help by clicking on <span class='view-style-hint'>?</span>."
             }
           }
         }

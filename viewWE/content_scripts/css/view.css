@@ -235,6 +235,55 @@
     font-weight: bold;
 }
 
+.colorize-style-adjCompSuperl {
+    color: #2222FF;
+    font-weight: bold;
+}
+
+.colorize-style-allSimpleVerbs {
+    color: #2222FF;
+    font-weight: bold;
+}
+
+.colorize-style-passiveVsActiveInPast {
+    color: #2222FF;
+    font-weight: bold;
+}
+
+.colorize-style-plusqVsPerf {
+    color: #2222FF;
+    font-weight: bold;
+}
+
+.colorize-style-simPastPastProg {
+    color: #2222FF;
+    font-weight: bold;
+}
+
+.colorize-style-simPastPresPerfPastProg {
+    color: #2222FF;
+    font-weight: bold;
+}
+
+.colorize-style-simplePast {
+    color: #2222FF;
+    font-weight: bold;
+}
+
+.colorize-style-simPresPresProg {
+    color: #2222FF;
+    font-weight: bold;
+}
+
+.colorize-style-whoWhich {
+    color: #2222FF;
+    font-weight: bold;
+}
+
+.colorize-style-willWouldHaveHad {
+    color: #2222FF;
+    font-weight: bold;
+}
 .colorize-style-preps {
     color: #A020F0;
     font-weight: bold;

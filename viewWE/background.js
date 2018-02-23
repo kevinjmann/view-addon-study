@@ -39,7 +39,20 @@ const background = {
         adjectives: require('./topics/adjectives.json'),
         agreement: require('./topics/agreement.json'),
         prepositions: require('./topics/prepositions.json'),
-        gerunds: require('./topics/gerunds.json')
+        gerunds: require('./topics/gerunds.json'),
+
+        adjCompSuperl: require('./topics/adjCompSuperl.json'),
+        allSimpleVerbs: require('./topics/allSimpleVerbs.json'),
+        passiveVsActiveInPast: require('./topics/passiveVsActiveInPast.json'),
+        plusqVsPerf: require('./topics/plusqVsPerf.json'),
+        simPastPastProg: require('./topics/simPastPastProg.json'),
+        simPastPresPerfPastProg: require('./topics/simPastPresPerfPastProg.json'),
+        simplePast: require('./topics/simplePast.json'),
+        simPresPresProg: require('./topics/simPresPresProg.json'),
+        whoWhich: require('./topics/whoWhich.json'),
+        willWouldHaveHad: require('./topics/willWouldHaveHad.json')
+
+
       },
       ajaxTimeout: 60000
     });
@@ -117,7 +130,6 @@ const background = {
     const tabId = tab.id;
 
     background.currentTabId = tabId;
-
     if(tab.status === "complete"){
       background.toggleToolbar(tabId);
     }
@@ -176,6 +188,14 @@ const background = {
       "There was no handler for message: " + JSON.stringify(request) + "!"
     );
     return undefined;
+  },
+
+  openStudyPage: function(parameters){
+    const request = parameters.request;
+    const page = request.pageToOpen;
+    const dataPath = "/data/"//"file:///home/kevin/Documents/ISCL/Thesis/VIEW/view-addon/addon/data/"
+    chrome.tabs.create({url: dataPath+page});
+    // chrome.tabs.sendMessage(background.currentTabId, {action:"startStudyEnhancements"});
   },
 
   /**

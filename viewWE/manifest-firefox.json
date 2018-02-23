@@ -46,7 +46,9 @@
   "options_ui": {
     "page": "options/options.html"
   },
-
+  "web_accessible_resources":[
+    "data/*"
+  ],
   "permissions": [
     "tabs",
     "storage",
@@ -55,6 +57,7 @@
     "*://sifnos.sfs.uni-tuebingen.de/*",
     "https://view.aleks.bg/*",
     "*://*.localhost/*",
-    "https://www.googleapis.com/*"
+    "https://www.googleapis.com/*",
+    "activeTab"
   ]
 }

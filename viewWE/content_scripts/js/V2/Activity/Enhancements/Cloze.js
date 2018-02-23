@@ -52,4 +52,5 @@ export default class Cloze {
     node.innerHTML = '';
     node.textContent = node.getAttribute('data-original-text');
   }
+
 }

@@ -8,6 +8,8 @@ import Click from './Enhancements/Click';
 import { combineStore } from '../Store';
 import selectionsToConstraints from './SelectionsToConstraints';
 
+import CamdenTownExercises from './CamdenTownExercises';
+
 const matchesSelections = (node, selections) => {
   const entries = Object.entries(selections);
   for (const [attribute, { match }] of entries) {
@@ -47,6 +49,7 @@ class Enhancer {
     this.enhancement = null;
     this.nodes = [];
     this.enhanced = false;
+    this.changedNodes=[];
 
     this.enhancements = {
       'color': Color,
@@ -65,8 +68,9 @@ class Enhancer {
     }
     this.enhancement = new this.enhancements[activity](topic, language);
     this.nodes = getHits(selections, targets);
+    [this.nodes, this.changedNodes]=CamdenTownExercises.filter(this.nodes, topic);
     for (const node of this.nodes) {
-      this.enhancement.enhance(node, activity);
+      this.enhancement.enhance(node, topic);
     }
   }
 
@@ -79,14 +83,23 @@ class Enhancer {
     }
 
     for (const node of this.nodes) {
+      if(node.hasAttribute('text-before-chunking')){ //restores original text before chunking operation
+        node.setAttribute('data-original-text', node.getAttribute('text-before-chunking'));
+        node.removeAttribute('text-before-chunking');
+      }
       this.enhancement.clear(node);
     }
-
+    for (const changedNode of this.changedNodes){ //restores nodes removed due to chunking
+      if(changedNode.textContent!=changedNode.getAttribute('data-original-text')){
+        changedNode.textContent=changedNode.getAttribute('data-original-text');
+      }
+    }
     typeof this.enhancement.destroy === 'function'
       && this.enhancement.destroy();
 
     this.nodes = [];
     this.enhancement = null;
+    this.changedNodes=[];
   }
 
   update(activity, selections, targets, topic, language) {
