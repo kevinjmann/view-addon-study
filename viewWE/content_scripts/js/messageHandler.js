@@ -37,7 +37,14 @@ function processMessage(request) {
       view.toolbar.signOut();
       break;
     case "startStudyEnhancements":
-      view.toolbar.startStudyEnhancements();
+      view.toolbar.startStudyEnhancements(request.topic);
+      break;
+    case "getRelevantTasksForStudy":
+      view.study.getRelevantTasks(request.tasksData);
+      break;
+    case "taskPerformanceForStudy":
+      view.study.populatePerformanceData(request.performancesData, request.topic, request.complexity);
+      break;
   }
 }
 

@@ -26,6 +26,7 @@ const initialize = async chrome => {
   const enhancerStatus = subscribeEnhancer(selections, markupStatus, commands);
   Observable.merge(markupStatus, enhancerStatus).subscribe(update);
   notifications(commands, markupStatus);
+
 };
 
 export default initialize;

@@ -3,6 +3,7 @@ import FirebaseAdapter from '../../firebaseAdapter.js';
 const view = {
   url: document.baseURI,
   title: document.title,
+  usePopupFeebdack: false,
 
   /**
    * Set all items from storage.
@@ -47,7 +48,42 @@ const view = {
     for (const item of changedItems) {
       view[item] = changes[item].newValue;
     }
-  }
+  },
+
+  /**
+     * Send a request to the background script to send task data
+     * and get the task id.
+     */
+    requestToSendTaskDataAndGetTaskId: function() {
+      return view.createTaskData().then(
+        taskData => {
+          chrome.runtime.sendMessage({
+            action: "sendTaskDataAndGetTaskId",
+            taskData: taskData,
+            serverTaskURL: view.serverTaskURL
+          });
+        }
+      );
+    },
+
+    /**
+     * Create task data to be sent to the server.
+     *
+     * @returns {object} the data of the latest task
+     */
+    createTaskData: async function() {
+      return {
+        token: await view.getToken(),
+        url: view.url,
+        title: view.title,
+        language: view.language,
+        topic: view.topic,
+        filter: view.filter,
+        activity: view.activity,
+        timestamp: view.timestamp,
+        "number-of-exercises": view.numberOfExercises
+      };
+    }
 };
 
 /* VIEW components */
@@ -66,8 +102,7 @@ view.notification = require('./notification.js')(view);
 view.statisticsMenu = require('./statistics-menu.js')(view);
 view.toolbar = require('./toolbar.js')(view);
 view.VIEWmenu = require('./view-menu.js')(view);
-
-// view.study = require('./study.js')(view);
+view.study = require('./study.js')(view);
 
 /* Activities */
 view.activityHelper = require('./activities/activityHelper.js')(view);
@@ -76,5 +111,7 @@ view.mc = require('./activities/mc.js')(view);
 view.cloze = require('./activities/cloze.js')(view);
 view.color = require('./activities/color.js');
 view.tracker = require('./activities/tracker.js')(view);
+
+// Opentip = require('./opentip-native.min.js');
 
 export default view;

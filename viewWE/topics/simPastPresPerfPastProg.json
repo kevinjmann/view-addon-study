@@ -14,19 +14,19 @@
           "color": {
             "instruction": {
               "title": "Color",
-              "text": "In the text, VIEW shows you the <span class='colorize-style-gerunds'>gerunds</span> <i>Vb-ing</i>."
+              "text": "In the text, VIEW shows you the <span class='colorize-style-gerunds'>simple past, present perfect, and past progressive verbs</span>."
             }
           },
           "click": {
             "instruction": {
               "title": "Click",
-              "text": "Click on each gerund you find in the text and VIEW will show you whether you guessed <span class='click-style-correct'>right</span> or <span class='click-style-incorrect'>wrong</span>."
+              "text": "Click on each simple past, present perfect, or past progressive verbs you find in the text and VIEW will show you whether you guessed <span class='click-style-correct'>right</span> or <span class='click-style-incorrect'>wrong</span>."
             }
           },
           "mc": {
             "instruction": {
               "title": "Multiple Choice",
-              "text": "Choose an gerund from the drop-down list and VIEW will show you whether you guessed <span class='click-style-correct'>right</span> or <span class='click-style-incorrect'>wrong</span>. You can get help by clicking on <span class='view-style-hint'>?</span>."
+              "text": "Choose the simple past, present perfect, or past progressive from the drop-down list and VIEW will show you whether you guessed <span class='click-style-correct'>right</span> or <span class='click-style-incorrect'>wrong</span>. You can get help by clicking on <span class='view-style-hint'>?</span>."
             }
           },
           "cloze": {

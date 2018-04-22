@@ -9,7 +9,7 @@ import { combineStore } from '../Store';
 import selectionsToConstraints from './SelectionsToConstraints';
 
 import CamdenTownExercises from './CamdenTownExercises';
-
+import view from '../../view';
 const matchesSelections = (node, selections) => {
   const entries = Object.entries(selections);
   for (const [attribute, { match }] of entries) {
@@ -61,25 +61,52 @@ class Enhancer {
 
   start(activity, selections, targets, topic, language) {
     const anchors = document.querySelectorAll('a');
-    for (const anchor of anchors) {
-      const href = anchor.getAttribute('href');
-      anchor.removeAttribute('href');
-      anchor.setAttribute('data-view-href', href);
+    const toolbar = document.getElementById('wertiview-toolbar-container');
+    var convertLinks = true;
+    if (toolbar){
+      var style = getComputedStyle(toolbar);
+      if(style.display==='none'){
+        convertLinks=false;
+      }
     }
+    if(convertLinks){
+      for (const anchor of anchors) {
+        const href = anchor.getAttribute('href');
+        anchor.removeAttribute('href');
+        anchor.setAttribute('data-view-href', href);
+      }
+    }
+    
     this.enhancement = new this.enhancements[activity](topic, language);
     this.nodes = getHits(selections, targets);
     [this.nodes, this.changedNodes]=CamdenTownExercises.filter(this.nodes, topic);
     for (const node of this.nodes) {
       this.enhancement.enhance(node, topic);
     }
+    //start tracking for task
+    view.language=language;
+    view.topic=topic;
+    view.activity=activity;
+    view.timestamp=Date.now();
+    view.requestToSendTaskDataAndGetTaskId();
+
+    view.study.handleTooltips();
+
   }
 
   stop() {
     const anchors = document.querySelectorAll('a');
-    for (const anchor of anchors) {
-      const href = anchor.getAttribute('data-href');
-      anchor.setAttribute('href', href);
-      anchor.removeAttribute('data-view-href');
+    for (var anchor of anchors) {
+    //   console.log('hello?');
+    //   if(anchor.hasAttribute('data-view-href')){
+    //     console.log('is this even getting triggered?');
+        var href = anchor.getAttribute('href');
+        anchor.setAttribute('data-view-href', href);
+        anchor.setAttribute('href', href);
+        // anchor.removeAttribute('data-view-href');
+
+    //   }
+      
     }
 
     for (const node of this.nodes) {
@@ -106,6 +133,7 @@ class Enhancer {
     this.enhanced && this.stop();
     this.start(activity, selections, targets, topic, language);
     this.enhanced = true;
+
   }
 }
 

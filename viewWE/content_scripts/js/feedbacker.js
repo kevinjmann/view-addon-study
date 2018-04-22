@@ -10,33 +10,35 @@ module.exports = function(view) {
      * server after tracking data was processed
      */
     showFeedback: function(submissionResponseData) {
-      const $Dialog = $("<div>");
-      $Dialog.attr("id", "view-feedback-dialog");
+      if(view.usePopupFeedback){
+        const $Dialog = $("<div>");
+        $Dialog.attr("id", "view-feedback-dialog");
 
-      const performanceData = submissionResponseData.performance;
-      const feedbackData = submissionResponseData.feedback;
+        const performanceData = submissionResponseData.performance;
+        const feedbackData = submissionResponseData.feedback;
 
-      view.feedbacker.addSubmissionResponseData($Dialog, performanceData, feedbackData);
+        view.feedbacker.addSubmissionResponseData($Dialog, performanceData, feedbackData);
 
-      const position = view.feedbacker.decideDialogPosition(performanceData["enhancement-id"]);
+        const position = view.feedbacker.decideDialogPosition(performanceData["enhancement-id"]);
 
-      const settings = {
-        title: "Feedback (try " + performanceData["number-of-tries"] + ")",
-        width: "auto",
-        height: "auto",
-        maxHeight: $(window).height() * 0.40,
-        position: position
-      };
+        const settings = {
+          title: "Feedback (try " + performanceData["number-of-tries"] + ")",
+          width: "auto",
+          height: "auto",
+          maxHeight: $(window).height() * 0.40,
+          position: position
+        };
 
-      view.lib.dialogSetup($Dialog, settings);
+        view.lib.dialogSetup($Dialog, settings);
 
-      view.lib.initDialogClose($Dialog);
+        view.lib.initDialogClose($Dialog);
 
-      view.feedbacker.initFeedbackRuleBtn(position);
+        view.feedbacker.initFeedbackRuleBtn(position);
 
-      view.feedbacker.initFeedbackHintBtn(position);
+        view.feedbacker.initFeedbackHintBtn(position);
 
-      $("#feedback-hint-btn-1").show();
+        $("#feedback-hint-btn-1").show();
+      }
     },
 
     /**

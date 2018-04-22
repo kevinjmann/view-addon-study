@@ -1,5 +1,6 @@
 import ViewServer from './ViewServer';
 import Storage from './Storage';
+import { subscribeOn } from 'rxjs/operator/subscribeOn';
 
 const theServerURL = "https://view.aleks.bg";
 /** @namespace */
@@ -9,6 +10,9 @@ const $ = require('jquery');
 const background = {
   tabs: [],
   currentTabId: -1,
+  studyMode: false,
+  readModeArticles: require('./fileNames.json'),
+  studyArticleData: require('./studyArticleData.json'),
 
   /**
    * Install the addon:
@@ -192,10 +196,61 @@ const background = {
 
   openStudyPage: function(parameters){
     const request = parameters.request;
-    const page = request.pageToOpen;
-    const dataPath = "/data/"//"file:///home/kevin/Documents/ISCL/Thesis/VIEW/view-addon/addon/data/"
+    const topic = request.topic;
+    const readingLevel=request.readingLevel;
+
+    //suitable page indices for the given topic and level
+    const possIdxs = background.studyArticleData[topic][readingLevel-1];
+    const randIdx = Math.floor(Math.random() * Math.floor(possIdxs.length));
+    const page = background.readModeArticles[possIdxs[randIdx]]+'-'+readingLevel+'.html';
+    const dataPath = "http://localhost:8000/";
+    background.studyMode=true;
     chrome.tabs.create({url: dataPath+page});
-    // chrome.tabs.sendMessage(background.currentTabId, {action:"startStudyEnhancements"});
+    if(background.studyMode){
+      chrome.tabs.query({active:true,windowType:"normal", currentWindow: true},
+        function(d){
+                  background.currentTabId=d[0].id
+                  //FIXME, HACK to handle wait time for tab to focus and VIEW to load in new tab
+                  setTimeout(function() {
+                    chrome.tabs.sendMessage(background.currentTabId, {action:"startStudyEnhancements", topic:request.topic});
+
+                  }, 3000);
+                }
+              );
+      ;
+    }
+    
+    
+  },
+
+  openPageForReadMode: function(parameters){
+    const request = parameters.request;
+    const readingLevel = request.level;
+    const dataPath = "http://localhost:8000/";
+    const pageIdx = Math.floor(Math.random()*background.readModeArticles.length);
+    var page = background.readModeArticles[pageIdx];
+    page = page+"-"+readingLevel.toString()+'.html';
+    chrome.tabs.create({url: dataPath+page});
+
+  },
+
+  studyPageOpenedListener: function(tab){
+    // if(background.studyMode){
+    //   chrome.tabs.query({active:true,windowType:"normal", currentWindow: true},
+    //     function(d){
+    //               // background.currentTabId=d[0].id
+    //               //FIXME, HACK to handle wait time for tab to focus, creates race condition
+    //               setTimeout(function() {
+    //                 // background.clickButton(background.currentTabId);
+    //                 // background.clickButton(background.currentTabId);
+    //                 chrome.tabs.sendMessage(background.currentTabId, {action:"startStudyEnhancements"});
+
+    //               }, 1000);
+    //             }
+    //           );
+    //   ;
+    // }
+    // background.studyMode=false;
   },
 
   /**
@@ -401,6 +456,30 @@ const background = {
     });
   },
 
+  getAllTasksForStudy: function(parameters) {
+    const request = parameters.request;
+    const ajaxTimeout = request.ajaxTimeout || 120000;
+    background.ajaxGet(request.serverTaskURL,
+      request.queryParam,
+      ajaxTimeout)
+    .done(function(data, textStatus, xhr) {
+      if (data) {
+        background.requestToSendTasksDataForStudy(data);
+      } else {
+        background.ajaxError(xhr, "no-task-data");
+      }
+    })
+    .fail(function(xhr, textStatus) {
+      background.ajaxError(xhr, textStatus);
+    });
+  },
+
+  requestToSendTasksDataForStudy: function(tasksData) {
+    chrome.tabs.sendMessage(background.currentTabId, {
+      action: "getRelevantTasksForStudy",
+      tasksData: tasksData
+    });
+  },
   /**
    * Send a request to the content script to call
    * view.statisticsMenu.showAllTasks(data).
@@ -453,6 +532,49 @@ const background = {
       performancesData: performancesData
     });
   },
+
+  /**
+   * Send the request from study.js to the
+   * server to get a list of performances for a task.
+   * If successful, request a call of view.study.populatePerformanceData(data).
+   *
+   * @param {object} parameters request, sender and sendResponse from
+   * processMessage
+   */
+  getTaskPerformanceForStudy: function(parameters) {
+    const request = parameters.request;
+    const ajaxTimeout = request.ajaxTimeout || 120000;
+    background.ajaxGet(request.serverTrackingURL,
+      request.queryParam,
+      ajaxTimeout)
+    .done(function(data, textStatus, xhr) {
+      if (data) {
+        background.requestToShowTaskPerformance(data, request.topic, request.complexity);
+      } else {
+        background.ajaxError(xhr, "no-performance-data");
+      }
+    })
+    .fail(function(xhr, textStatus) {
+      background.ajaxError(xhr, textStatus);
+    });
+  },
+
+  /**
+   * Send a request to the content script to call
+   * view.study.populatePerformanceData(data).
+   *
+   * @param {string} performancesData data containing all performances for
+   * a task
+   */
+  requestToShowTaskPerformance: function(performancesData, topic, complexity) {
+    chrome.tabs.sendMessage(background.currentTabId, {
+      action: "taskPerformanceForStudy",
+      performancesData: performancesData,
+      topic: topic,
+      complexity: complexity
+    });
+  },
+
 
   /**
    * Fire an ajaxError if anything went wrong when sending data from the
@@ -739,5 +861,6 @@ chrome.tabs.onUpdated.addListener(background.onUpdatedTab);
 chrome.browserAction.onClicked.addListener(background.clickButton);
 chrome.runtime.onMessage.addListener(background.processMessage);
 chrome.cookies.onChanged.addListener(background.observeUserId);
+chrome.tabs.onCreated.addListener(background.studyPageOpenedListener);
 
 export {background}

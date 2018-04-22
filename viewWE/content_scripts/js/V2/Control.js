@@ -1,6 +1,8 @@
 import { Observable } from 'rxjs';
 import 'rxjs/add/observable/fromEvent';
 const idPrefix = 'wertiview-toolbar';
+const $ = require('jquery');
+
 
 /**
  * This function assembles the main control stream for V2 topic configurations.
@@ -45,13 +47,13 @@ export default (viewTopics) => {
     Observable.fromEvent(topicSelectDe, 'change'),
     Observable.fromEvent(topicSelectEn, 'change'),
     Observable.fromEvent(topicSelectRu, 'change'),
+    Observable.fromEvent(document, "startStudy")
   );
 
   // map event streams to commands with payload
   const selectEvents = updates.map(() => {
     const language = getLanguage();
     const topic = getTopic();
-
     return { topic, language };
   }).map(({ topic, language }) => ({
     configuration: getV2TopicConfiguration(topic, language)
@@ -59,7 +61,6 @@ export default (viewTopics) => {
     if (configuration === null) {
       return { command: 'stop' };
     }
-
     return { command: 'start', configuration };
   });
 

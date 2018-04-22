@@ -39,7 +39,7 @@
       "js": [
         "content_scripts/view.js"
       ],
-      "run_at": "document_start"
+      "run_at": "document_idle"
     }
   ],
 
@@ -47,7 +47,9 @@
     "page": "options/options.html"
   },
   "web_accessible_resources":[
-    "data/*"
+    "data/*",
+    "fileNames.json",
+    "studyArticleData.json"
   ],
   "permissions": [
     "tabs",

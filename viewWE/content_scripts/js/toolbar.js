@@ -2,6 +2,8 @@ const $ = require('jquery');
 const toolbarHTML = require('../html/toolbar.html');
 import SelectorCache from '../../SelectorCache';
 import initv2 from './V2';
+import FirebaseAdapter from '../../firebaseAdapter';
+
 
 module.exports = function(view) {
   return {
@@ -10,6 +12,8 @@ module.exports = function(view) {
     $cache: new SelectorCache(),
 
     selectorStart: "#wertiview-toolbar-",
+
+    studyAllowed: false,
 
     /**
      * Create the toolbar ui and add it to the body.
@@ -40,11 +44,9 @@ module.exports = function(view) {
      * Toggle the toolbar, set storage items if necessary
      */
     toggleToolbar: function() {
-      console.log("toggle toolbar called");
       if (view.toolbarExists) {
         view.toolbar.toggle();
       } else {
-        console.log("is it breaking here?");
         view.setStorageItemsAndAddToolbar();
         view.toolbarExists = true;
       }
@@ -84,8 +86,6 @@ module.exports = function(view) {
 
       view.toolbar.initSignInBtn();
 
-      view.toolbar.initStudyBtn();
-
       view.toolbar.initAccountMenuBtn();
 
       view.toolbar.initToggleToolbarBtn();
@@ -97,6 +97,12 @@ module.exports = function(view) {
       view.blur.remove();
 
       view.toolbar.initializeV2Topics();
+      
+      view.toolbar.initStudyBtn();
+
+      view.toolbar.initReadBtn();
+
+
     },
 
     /**
@@ -444,66 +450,103 @@ module.exports = function(view) {
     },
 
     /**
-     * Open new tab with exercise
+     * Init the handler for the study button. (Directed study feature)
      */
     initStudyBtn: function() {
+
       view.toolbar.$cache.get(view.toolbar.selectorStart+"study-button").on(
         "click",
-        view.toolbar.openSampleTab
+        view.toolbar.initiateRequestForTrackingData
       );
     },
 
-    openSampleTab: function() {
-      // view.toolbar.loadStudyPage("data/sampleArticle.html");
-      chrome.runtime.sendMessage({action:"openStudyPage", pageToOpen:"sampleArticle.html"});
-      // chrome.storage.local.set({
-      //   language: "en",
-      //   topic: "determiners",
-      //   filter: "",
-      //   activity: "cloze",
-      //   timestamp: Date.now()
-      // }, view.toolbar.prepareAndEnhance);
+    /**
+     * Start point for chain of events leading to serving the user a page with exercises.
+     */
+    initiateRequestForTrackingData: function() {
+      const user = view.user;
+      if(user){
+        view.blur.add("Determining Study Topic");
+        view.study.requestToGetAllTasks();
+      }
+      else{
+        view.notification.add("User not signed in");
+      }
+      
 
     },
-    startStudyEnhancements: function(){
-      // chrome.storage.local.set({
-      //   language: "en",
-      //   topic: "determiners",
-      //   filter: "",
-      //   activity: "cloze",
-      //   timestamp: Date.now()
-      // }, view.toolbar.prepareAndEnhance);
+
+    /**
+     * Starts enhancements for study feature
+     */
+    startStudyEnhancements: function(topic){ 
+      
+        view.toolbar.studyAllowed=true;
+        view.toolbar.startStudyEnhancementsHelper(topic);
+        
+
     },
 
-    loadStudyPage: function(path){
-      // const url = browser.extension.getURL(path);
-      // const promise = new Promise(function(resolve, reject){
-      //   var req = new XMLHttpRequest();
-      //   req.open('GET', url);
-      //   req.onload = function(){
-      //       if(req.status == 200 || req.status == 0){
-      //           resolve(req.responseText);
-      //       }
-      //       else{
-      //           reject(Error(req.statusText));
-      //       }
-      //   };
-      //   req.onerror = function(){
-      //       reject(Error('Network Error'));
-      //   };
-      //   req.send();
-      //   });
+    /**
+     * Helper function for startStudyEnhancements. 
+     */
+    startStudyEnhancementsHelper: function(topic){
+      const idPrefix = 'wertiview-toolbar';
+      var language = "en";
+
+      view.toolbar.toggleToolbar();
+      setTimeout(function(){
+
+      const langMenu = $('#wertiview-toolbar-language-menu');
+      langMenu.val('en').trigger('change');
+      const event = document.createEvent("CustomEvent");
+      event.initEvent("startStudy", true, true);
+      document.dispatchEvent(event);
+      const activityMenu = $('#activityV2-picker');
+      setTimeout(function(){
+        activityMenu.val('cloze').trigger('change');
+      }, 500)
+        
+      view.language="en";
+      view.topic=topic;
+      view.activity="cloze";
+      view.timestamp=Date.now();
+      $('#wertiview-toolbar-topic-menu-en').val(topic).change();
+      document.dispatchEvent(event);
       
-      // promise.then(function(result){
-      //   // window.open(result, "", "_blank");
-      //   browser.tabs.create({
-      //     url: "data/sampleArticle.html"
-      //   })
-      // }).catch(function(d){
-      //   console.log(d);
-      // })
-      // studyPage.document.write("<div>this is only a test</div>");
+
+      }, 2000);
       
+
+    },
+
+    /**
+     * Init the handler for the study button. (Directed study feature)
+     */
+    initReadBtn: function() {
+
+      view.toolbar.$cache.get(view.toolbar.selectorStart+"read-button").on(
+        "click",
+        view.toolbar.handleReadBtn
+      );
+    },
+
+    /**
+     * Start point for chain of events leading to serving the user a page at their reading level.
+     */
+    handleReadBtn: function() {
+      const user = view.user;
+      if(user){
+        view.blur.add("Determining Reading Level");
+        view.study.readMode=true;
+        view.study.requestToGetAllTasks();
+      } else{
+        view.notification.add("User not signed in, choosing a random difficulty");
+        var readingLevel = Math.floor(Math.random()*5)+1;
+        chrome.runtime.sendMessage({action: "openPageForReadMode", level:readingLevel});
+      }
+      
+
     },
 
 

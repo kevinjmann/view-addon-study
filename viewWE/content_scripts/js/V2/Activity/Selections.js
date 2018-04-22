@@ -58,7 +58,7 @@ export default (commands, container) => {
     }
 
     const { activities, selections } = configuration;
-    const activitySelect = ActivityPicker(activities, Object.keys(activities)[0]);
+    const activitySelect = ActivityPicker(activities, Object.keys(activities).slice(-1)[0]);
 
     const html = render(activitySelect, selections);
     destroyView = createView(container, html);

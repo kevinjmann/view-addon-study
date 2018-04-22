@@ -14,19 +14,19 @@
           "color": {
             "instruction": {
               "title": "Color",
-              "text": "In the text, VIEW shows you the <span class='colorize-style-articles'>articles</span> <i>a, an, the</i>."
+              "text": "In the text, VIEW highlights the words <span class='colorize-style-articles'>who and which</span>."
             }
           },
           "click": {
             "instruction": {
               "title": "Click",
-              "text": "Click on each article you find in the text and VIEW will show you whether you guessed <span class='click-style-correct'>right</span> or <span class='click-style-incorrect'>wrong</span>."
+              "text": "Click on each instance of 'who' or 'which' you find in the text and VIEW will show you whether you guessed <span class='click-style-correct'>right</span> or <span class='click-style-incorrect'>wrong</span>."
             }
           },
           "mc": {
             "instruction": {
               "title": "Multiple Choice",
-              "text": "Choose an article from the drop-down list and VIEW will show you whether you guessed <span class='click-style-correct'>right</span> or <span class='click-style-incorrect'>wrong</span>. You can get help by clicking on <span class='view-style-hint'>?</span>."
+              "text": "Choose either 'who' or 'which' from the drop-down list and VIEW will show you whether you guessed <span class='click-style-correct'>right</span> or <span class='click-style-incorrect'>wrong</span>. You can get help by clicking on <span class='view-style-hint'>?</span>."
             }
           },
           "cloze": {

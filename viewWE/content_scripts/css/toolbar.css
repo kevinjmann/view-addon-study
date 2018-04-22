@@ -84,6 +84,10 @@
     cursor: initial;
 }
 
+#wertiview-toolbar-study-button:disabled {
+    opacity: 0.5;
+    cursor: initial;
+}
 #wertiview-toolbar-filter-no-filter {
     display: none;
 }
